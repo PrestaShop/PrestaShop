@@ -33,7 +33,8 @@ export type FormFieldTogglerParams = {
   targetSelector: string | null,
   switchEvent: string | null,
   disableOnMatch: boolean,
-  toggleType: ToggleType
+  toggleType: ToggleType,
+  reenableOnSubmit: boolean
 }
 export type InputFormFieldTogglerParams = Partial<FormFieldTogglerParams> & {
   disablingInputSelector: string,
@@ -60,6 +61,7 @@ export default class FormFieldToggler {
       targetSelector: null,
       switchEvent: null,
       toggleType: ToggleType.availability,
+      reenableOnSubmit: false,
       ...inputParams,
     };
 
@@ -110,7 +112,7 @@ export default class FormFieldToggler {
       disabledState = !disableOnMatch;
     }
 
-    this.toggle(targetSelector, disabledState, switchEvent);
+    this.toggle(targetSelector, disabledState, switchEvent, this.params.reenableOnSubmit);
   }
 
   private getInputValue(inputElement: HTMLInputElement): string | false | undefined {
@@ -137,6 +139,7 @@ export default class FormFieldToggler {
     targetSelector: string,
     disable: boolean,
     switchEvent: string | null,
+    reenableOnSubmit: boolean,
   ): void {
     if (switchEvent) {
       const {eventEmitter} = window.prestashop.instance;
@@ -178,6 +181,9 @@ export default class FormFieldToggler {
       formElements.forEach((element: Element) => {
         if (toggleByDisabling) {
           element.toggleAttribute('disabled', disable);
+          if (reenableOnSubmit) {
+            element.toggleAttribute('data-reenable-on-submit', disable);
+          }
         }
       });
     });

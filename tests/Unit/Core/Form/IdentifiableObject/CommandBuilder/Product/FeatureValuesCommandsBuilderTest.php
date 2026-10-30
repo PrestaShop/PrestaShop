@@ -110,6 +110,34 @@ class FeatureValuesCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
+        $localizedValues = [
+            1 => '0',
+            2 => '',
+        ];
+        $command = new SetProductFeatureValuesCommand(
+            $this->getProductId()->getValue(),
+            [
+                ['feature_id' => 42, 'custom_values' => $localizedValues],
+            ]
+        );
+        yield 'zero is accepted as a custom value' => [
+            [
+                'details' => [
+                    'features' => [
+                        'feature_collection' => [
+                            [
+                                'feature_id' => 42,
+                                'feature_values' => [
+                                    ['is_custom' => 1, 'custom_value' => $localizedValues],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
         $command = new SetProductFeatureValuesCommand(
             $this->getProductId()->getValue(),
             [

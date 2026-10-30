@@ -9,10 +9,12 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\BulkDeleteOrderReturnsCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\BulkDeleteProductsFromOrderReturnCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\DeleteProductFromOrderReturnCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\UpdateOrderReturnStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnProducts;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\OrderReturnProductForEditing;
@@ -132,6 +134,50 @@ class OrderReturnFeatureContext extends AbstractDomainFeatureContext
         } catch (Exception $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @When I try to delete from order return :orderReturnReference the unknown order detail :orderDetailId
+     */
+    public function tryDeleteUnknownOrderDetail(string $orderReturnReference, int $orderDetailId): void
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteProductFromOrderReturnCommand(
+                (int) $this->getSharedStorage()->get($orderReturnReference),
+                $orderDetailId
+            ));
+        } catch (Exception $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I try to bulk delete the order return :orderReturnReference and the unknown order return :unknownId
+     */
+    public function tryBulkDeleteWithUnknownOrderReturn(string $orderReturnReference, int $unknownId): void
+    {
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteOrderReturnsCommand([
+                $unknownId,
+                (int) $this->getSharedStorage()->get($orderReturnReference),
+            ]));
+        } catch (Exception $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then the order return :orderReturnReference should not exist
+     */
+    public function assertOrderReturnDoesNotExist(string $orderReturnReference): void
+    {
+        try {
+            $this->getQueryBus()->handle(new GetOrderReturnForEditing((int) $this->getSharedStorage()->get($orderReturnReference)));
+        } catch (OrderReturnNotFoundException) {
+            return;
+        }
+
+        throw new RuntimeException(sprintf('Order return "%s" still exists.', $orderReturnReference));
     }
 
     /**

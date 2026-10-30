@@ -28,6 +28,9 @@ use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactoryInterface;
  * Example:
  *   UpdateProductCommand::setRedirectOption(string $redirectType, int $redirectTarget)
  *      => expected input ['redirectOption' => ['redirectType' => '301-category', 'redirectTarget' => 42]]
+ *
+ * The parameters without default value are required in the sub object, and the sub object itself accepts null when
+ * the setter can be called with null alone (e.g. setMinimumAmount(null) removes the minimum amount).
  */
 class MultiParameterSetterAdapter implements OpenApiSchemaAdapterInterface
 {
@@ -56,11 +59,13 @@ class MultiParameterSetterAdapter implements OpenApiSchemaAdapterInterface
         }
 
         foreach ($methodsWithMultipleArguments as $methodPropertyName => $setterMethod) {
+            /** @var ArrayObject<string, mixed> $methodSchema */
             $methodSchema = new ArrayObject([
                 'type' => 'object',
                 'properties' => [
                 ],
             ]);
+            $requiredParameters = [];
             foreach ($setterMethod->getParameters() as $methodParameter) {
                 if (!$methodParameter->getType() instanceof ReflectionNamedType) {
                     continue 2;
@@ -72,7 +77,7 @@ class MultiParameterSetterAdapter implements OpenApiSchemaAdapterInterface
                     $format = $isDateImmutable ? 'date' : 'date-time';
                     $methodParameterSchema = new ArrayObject([
                         'format' => $format,
-                        'type' => 'string',
+                        'type' => $methodParameter->getType()->allowsNull() ? ['string', 'null'] : 'string',
                     ]);
                     if ($isDateImmutable) {
                         $methodParameterSchema['example'] = '2025-11-05';
@@ -85,13 +90,24 @@ class MultiParameterSetterAdapter implements OpenApiSchemaAdapterInterface
                         'example' => 42.99,
                     ]);
                 } elseif ($methodParameter->getType()->isBuiltin()) {
+                    $schemaType = $this->getSchemaType($methodParameter->getType()->getName());
                     $methodParameterSchema = new ArrayObject([
-                        'type' => $this->getSchemaType($methodParameter->getType()->getName()),
+                        'type' => $methodParameter->getType()->allowsNull() ? [$schemaType, 'null'] : $schemaType,
                     ]);
                 } else {
                     continue 2;
                 }
                 $methodSchema['properties'][$methodParameter->getName()] = $methodParameterSchema;
+                if (!$methodParameter->isOptional()) {
+                    $requiredParameters[] = $methodParameter->getName();
+                }
+            }
+            if (!empty($requiredParameters)) {
+                $methodSchema['required'] = $requiredParameters;
+            }
+            // A null sub object is set like any property, by calling the setter with null as its only argument
+            if ($setterMethod->getNumberOfRequiredParameters() <= 1 && $setterMethod->getParameters()[0]->allowsNull()) {
+                $methodSchema['type'] = ['object', 'null'];
             }
 
             foreach (array_keys($methodSchema['properties']) as $propertyName) {

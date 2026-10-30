@@ -6,11 +6,14 @@
 
 namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler;
 
+use CMSCategory;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
@@ -72,6 +75,16 @@ abstract class AbstractCmsPageCategoryHandler extends AbstractObjectModelHandler
             if (0 !== count($errors)) {
                 throw new CmsPageCategoryConstraintException(sprintf('Given description "%s" contains javascript events or script tags', $description), CmsPageCategoryConstraintException::INVALID_DESCRIPTION);
             }
+        }
+    }
+
+    /**
+     * @throws CmsPageCategoryNotFoundException
+     */
+    protected function assertParentCategoryExists(CmsPageCategoryId $parentId): void
+    {
+        if (!CMSCategory::existsInDatabase($parentId->getValue(), 'cms_category')) {
+            throw new CmsPageCategoryNotFoundException(sprintf('Parent cms page category with id "%d" was not found', $parentId->getValue()));
         }
     }
 }

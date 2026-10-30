@@ -1249,6 +1249,10 @@ class AdminTranslationsControllerCore extends AdminController
 
     public function renderKpis()
     {
+        if (!Configuration::get('PS_DISPLAY_BACKOFFICE_KPIS', null, null, null, true)) {
+            return '';
+        }
+
         $time = time();
         $kpis = [];
 

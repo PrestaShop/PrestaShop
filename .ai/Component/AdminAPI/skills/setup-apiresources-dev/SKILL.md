@@ -5,7 +5,7 @@ description: >
   to existing local clone or fresh clone with upstream + fork remotes), then
   provision the local test DB. Trigger: "set up ps_apiresources for development",
   "develop on the API module", "fix the API integration tests", "work on
-  ps_apiresources locally".
+  ps_apiresources locally", "work on a ps_apiresources PR", "run the API module tests".
 needs: []
 produces: "modules/ps_apiresources/ as a git checkout (in-place or symlinked) with upstream + fork remotes wired, and a provisioned local test DB ready for `composer run-api-module-tests-local`."
 ---
@@ -214,9 +214,9 @@ After this skill completes, refresh the module autoload once:
 composer dump-autoload --dev --working-dir=modules/ps_apiresources
 ```
 
-For day-to-day test commands (re-run the suite, run a single test class) see [`Component/AdminAPI/CONTEXT.md` → Conventions](../../CONTEXT.md#conventions). The `_PS_ROOT_DIR_` inlining requirement documented there is critical when the module is symlinked — a stale `_PS_ROOT_DIR_` exported from another shell silently misroutes everything.
+For day-to-day test commands (re-run the suite, run a single test class) see [`TESTING.md` → "Running the suite"](../../../../../modules/ps_apiresources/.ai/TESTING.md#running-the-suite) in the module. The `_PS_ROOT_DIR_` inlining requirement documented there is critical when the module is symlinked — a stale `_PS_ROOT_DIR_` exported from another shell silently misroutes everything.
 
 ## 11. Next steps / related
 
-- For new endpoints: invoke `/ps-api-endpoint`, or read [`skills/ps-api-endpoint/SKILL.md`](../ps-api-endpoint/SKILL.md) (chained symlink — the canonical file lives in `modules/ps_apiresources/.claude/skills/ps-api-endpoint/`).
+- For new endpoints: invoke `/ps-api-endpoint`, or read [`skills/ps-api-endpoint/SKILL.md`](../ps-api-endpoint/SKILL.md) (chained symlink — the canonical file lives in `modules/ps_apiresources/.ai/skills/ps-api-endpoint/`).
 - For pairing this module with a fork branch in a core PR: invoke `/link-apiresources-fork`.

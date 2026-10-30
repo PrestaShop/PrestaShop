@@ -33,6 +33,23 @@ class MailDevClient
         return json_decode($response->getContent(), true);
     }
 
+    /**
+     * The SMTP server accepts an email before maildev lists it, so reading the list right after
+     * sending can miss it. This polls the list until it holds at least $expectedCount emails or
+     * the timeout is reached, and returns the last list read.
+     */
+    public function waitForEmails(int $expectedCount, int $timeoutMs = 5000, int $intervalMs = 200): array
+    {
+        $deadline = microtime(true) + $timeoutMs / 1000;
+        while (true) {
+            $emails = $this->getAllEmails();
+            if (count($emails) >= $expectedCount || microtime(true) >= $deadline) {
+                return $emails;
+            }
+            usleep($intervalMs * 1000);
+        }
+    }
+
     public function getEmail(int $emailId): array
     {
         $response = $this->client->request('GET', $this->buildUrl('/email/' . $emailId));
