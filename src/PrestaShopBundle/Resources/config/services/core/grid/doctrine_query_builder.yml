@@ -322,6 +322,14 @@ services:
     public: true
     autowire: true
 
+  prestashop.core.grid.query_builder.attachment_product:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Query\AttachmentProductQueryBuilder'
+    parent: 'prestashop.core.grid.abstract_query_builder'
+    public: true
+    autowire: true
+    arguments:
+      $associatedEntityId: '@=service("request_stack").getCurrentRequest().attributes.getInt("attachmentId")'
+
   prestashop.core.grid.query_builder.attribute:
     class: 'PrestaShop\PrestaShop\Core\Grid\Query\AttributeQueryBuilder'
     parent: 'prestashop.core.grid.abstract_query_builder'

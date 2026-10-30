@@ -15,6 +15,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
@@ -97,10 +98,13 @@ final class AttachmentGridDefinitionFactory extends AbstractFilterableGridDefini
                     ])
             )
             ->add(
-                (new DataColumn('products'))
+                (new LinkColumn('products'))
                     ->setName($this->trans('Products', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'products',
+                        'route' => 'admin_attachments_edit',
+                        'route_param_name' => 'attachmentId',
+                        'route_param_field' => 'id_attachment',
                     ])
             )
             ->add((new ActionColumn('actions'))
@@ -177,10 +181,10 @@ final class AttachmentGridDefinitionFactory extends AbstractFilterableGridDefini
                     ->setAssociatedColumn('file_size')
             )
             ->add(
-                (new Filter('products', NumberType::class))
+                (new Filter('products', TextType::class))
                     ->setTypeOptions([
                         'attr' => [
-                            'placeholder' => $this->trans('Products', [], 'Admin.Catalog.Feature'),
+                            'placeholder' => $this->trans('Product ID, reference or name', [], 'Admin.Catalog.Feature'),
                         ],
                         'required' => false,
                     ])

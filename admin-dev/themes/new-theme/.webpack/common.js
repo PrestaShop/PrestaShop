@@ -71,6 +71,7 @@ module.exports = {
     administration: './js/pages/administration',
     api_client: './js/pages/api-client',
     api_client_form: './js/pages/api-client/form',
+    associated_products: './js/pages/associated-products',
     attachment: './js/pages/attachment',
     attribute: './js/pages/attribute',
     attribute_form: './js/pages/attribute/form',

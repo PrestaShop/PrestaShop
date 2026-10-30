@@ -68,3 +68,8 @@ services:
     autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository'
+
+  PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler\RemoveProductsFromAttachmentHandler:
+    autoconfigure: true
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository'
