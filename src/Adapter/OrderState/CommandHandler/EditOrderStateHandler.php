@@ -12,7 +12,6 @@ use PrestaShop\PrestaShop\Adapter\Domain\LocalizedObjectModelTrait;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Command\EditOrderStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\CommandHandler\EditOrderStateHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\MissingOrderStateRequiredFieldsException;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\OrderStateException;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\OrderStateFileUploaderInterface;
 
@@ -64,26 +63,6 @@ final class EditOrderStateHandler extends AbstractOrderStateHandler implements E
         if ($command->getFilePathName()) {
             $this->fileUploader->upload($command->getFilePathName(), $orderStateId->getValue(), $command->getFileSize());
         }
-    }
-
-    /**
-     * @throws MissingOrderStateRequiredFieldsException
-     */
-    protected function assertRequiredFieldsAreNotMissing(OrderState $orderState)
-    {
-        // Check that we have templates for all languages when send_email is on
-        $haveMissingTemplates = (
-            !is_array($orderState->template)
-            || count($orderState->template) != count(array_filter($orderState->template, function ($v) {
-                return (bool) strlen($v);
-            }))
-        );
-
-        if (true === $orderState->send_email && true === $haveMissingTemplates) {
-            throw new MissingOrderStateRequiredFieldsException(['template'], 'One or more required fields for order state are missing. Missing fields are: template');
-        }
-
-        parent::assertRequiredFieldsAreNotMissing($orderState);
     }
 
     private function updateOrderStateWithCommandData(OrderState $orderState, EditOrderStateCommand $command)

@@ -36,6 +36,19 @@ abstract class AbstractOrderStateHandler
      */
     protected function assertRequiredFieldsAreNotMissing(OrderState $orderState)
     {
+        // Check that we have templates for all languages when send_email is on (an empty list included)
+        $haveMissingTemplates = (
+            empty($orderState->template)
+            || !is_array($orderState->template)
+            || count($orderState->template) != count(array_filter($orderState->template, function ($v) {
+                return (bool) strlen($v);
+            }))
+        );
+
+        if (true === $orderState->send_email && true === $haveMissingTemplates) {
+            throw new MissingOrderStateRequiredFieldsException(['template'], 'One or more required fields for order state are missing. Missing fields are: template');
+        }
+
         $errors = $orderState->validateFieldsRequiredDatabase();
 
         if (!empty($errors)) {

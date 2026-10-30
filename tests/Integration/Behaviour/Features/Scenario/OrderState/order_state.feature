@@ -59,6 +59,43 @@ Feature: OrderState
     When I delete the order state "order_state_3rd"
     And the order state "order_state_3rd" should be deleted
 
+  Scenario: Add new order state sending e-mails
+    When I add a new order state "order_state_mail" with the following details:
+      | name[en-US]     | The mail Order State      |
+      | name[fr-FR]     | Le statut avec e-mail     |
+      | color           | #CDEF12                   |
+      | isLoggable      | 0                         |
+      | isInvoice       | 0                         |
+      | isHidden        | 0                         |
+      | hasSendMail     | 1                         |
+      | hasPdfInvoice   | 0                         |
+      | hasPdfDelivery  | 0                         |
+      | isShipped       | 0                         |
+      | isPaid          | 0                         |
+      | isDelivery      | 0                         |
+      | template[en-US] | account                   |
+      | template[fr-FR] | account                   |
+    Then the order state "order_state_mail" should have the following details:
+      | hasSendMail     | 1                         |
+      | template[en-US] | account                   |
+      | template[fr-FR] | account                   |
+
+  Scenario: Add new order state sending e-mails without templates
+    When I add a new order state "order_state_no_template" with the following details:
+      | name[en-US]     | The no template State     |
+      | name[fr-FR]     | Le statut sans modèle     |
+      | color           | #CDEF12                   |
+      | isLoggable      | 0                         |
+      | isInvoice       | 0                         |
+      | isHidden        | 0                         |
+      | hasSendMail     | 1                         |
+      | hasPdfInvoice   | 0                         |
+      | hasPdfDelivery  | 0                         |
+      | isShipped       | 0                         |
+      | isPaid          | 0                         |
+      | isDelivery      | 0                         |
+    Then I should get an error that the order state templates are missing
+
   Scenario: Edit order state
     When I update the order state "order_state_1st" with the following details:
       | color           | #345678                   |
