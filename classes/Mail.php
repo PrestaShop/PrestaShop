@@ -5,9 +5,11 @@
  */
 
 use Symfony\Component\Mailer\Exception\ExceptionInterface;
+use Symfony\Component\Mailer\Exception\TransportException;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\Transport\SendmailTransport;
 use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
+use Symfony\Component\Mailer\Transport\TransportInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Crypto\DkimSigner;
 use Symfony\Component\Mime\Email;
@@ -95,6 +97,76 @@ class MailCore extends ObjectModel
      * Disable mail, will return immediately after calling send method.
      */
     public const METHOD_DISABLE = 3;
+
+    /**
+     * Lets modules provide the transport for a shop's mail through the actionMailSelectTransport hook,
+     * instead of the native SMTP or sendmail settings.
+     *
+     * The hook runs in the destination shop's context, so only modules enabled for that shop answer.
+     * It receives the shop ID and the purpose ('message' or 'test'), never the message or the native
+     * SMTP credentials. Each module must return a TransportInterface to handle the mail, or false to
+     * decline. Returns null when every module declines or none is hooked, and the native transport is used.
+     *
+     * @throws TransportException for an invalid shop, an invalid answer or more than one transport
+     */
+    protected static function selectShopTransport(int $idShop, string $purpose): ?TransportInterface
+    {
+        $context = Context::getContext();
+        $oldShop = $context->shop;
+        $oldType = Shop::getContext();
+        $oldId = $oldType === Shop::CONTEXT_GROUP ? Shop::getContextShopGroupID() : Shop::getContextShopID();
+        if ($purpose === 'test' && $oldType !== Shop::CONTEXT_SHOP) {
+            throw new TransportException('Select a single shop before testing mail.');
+        }
+        $destination = new Shop($idShop);
+        if ($idShop <= 0 || !Validate::isLoadedObject($destination) || $destination->deleted) {
+            throw new TransportException('Invalid mail destination shop.');
+        }
+
+        try {
+            $context->shop = $destination;
+            Shop::setContext(Shop::CONTEXT_SHOP, $idShop);
+
+            return self::pickSelectedTransport(Hook::exec('actionMailSelectTransport', [
+                'id_shop' => $idShop,
+                'purpose' => $purpose,
+            ], null, true));
+        } finally {
+            $context->shop = $oldShop;
+            Shop::setContext($oldType, $oldId);
+        }
+    }
+
+    /**
+     * Hook::exec turns an exception thrown by a module into an empty string, so only an explicit false
+     * counts as declining: anything else that is not a transport fails the send instead of silently
+     * falling back to the native transport.
+     *
+     * @param mixed $results Hook::exec results in array mode
+     *
+     * @throws TransportException
+     */
+    protected static function pickSelectedTransport($results): ?TransportInterface
+    {
+        if (!is_array($results)) {
+            throw new TransportException('Invalid mail transport selection results.');
+        }
+        $transport = null;
+        foreach ($results as $candidate) {
+            if ($candidate === false) {
+                continue;
+            }
+            if (!$candidate instanceof TransportInterface) {
+                throw new TransportException('Invalid custom mail transport.');
+            }
+            if ($transport !== null) {
+                throw new TransportException('Multiple custom mail transports selected.');
+            }
+            $transport = $candidate;
+        }
+
+        return $transport;
+    }
 
     /**
      * Send Email.
@@ -349,8 +421,9 @@ class MailCore extends ObjectModel
 
         // Initialization of the mail transport
         try {
-            // Connect with the appropriate configuration, either SMTP or sendmail
-            if ($configuration['PS_MAIL_METHOD'] == self::METHOD_SMTP) {
+            $transport = self::selectShopTransport((int) $idShop, 'message');
+            // Otherwise connect with the appropriate configuration, either SMTP or sendmail
+            if ($transport === null && $configuration['PS_MAIL_METHOD'] == self::METHOD_SMTP) {
                 // Setup TLS configuration
                 $useImplicitTls = self::useImplicitTls($configuration['PS_MAIL_SMTP_ENCRYPTION'] ?? 'off');
                 $esmtpTransportParameter = $useImplicitTls ? null : false;
@@ -375,7 +448,7 @@ class MailCore extends ObjectModel
                     ->setUsername($configuration['PS_MAIL_USER'])
                     ->setPassword($configuration['PS_MAIL_PASSWD'])
                 ;
-            } else {
+            } elseif ($transport === null) {
                 $transport = new SendmailTransport();
             }
 
@@ -780,7 +853,8 @@ class MailCore extends ObjectModel
         $result = false;
 
         try {
-            if ($smtpChecked) {
+            $transport = self::selectShopTransport((int) Context::getContext()->shop->id, 'test');
+            if ($transport === null && $smtpChecked) {
                 $useImplicitTls = self::useImplicitTls($smtpEncryption);
                 $esmtpTransportParameter = $useImplicitTls ? null : false;
                 $transport = (new EsmtpTransport(
@@ -791,7 +865,7 @@ class MailCore extends ObjectModel
                     ->setUsername($smtpLogin)
                     ->setPassword($smtpPassword)
                 ;
-            } else {
+            } elseif ($transport === null) {
                 $transport = new SendmailTransport();
             }
 

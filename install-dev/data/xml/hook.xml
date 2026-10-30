@@ -5943,5 +5943,10 @@
       <title>Order detail product line</title>
       <description>This hook is displayed on each product line of the order's details in Front Office</description>
     </hook>
+    <hook id="actionMailSelectTransport">
+      <name>actionMailSelectTransport</name>
+      <title>Select the mail transport</title>
+      <description>This hook is called before an email is sent, in the destination shop's context, so that a module can return the transport to send it with, or false to keep the native one</description>
+    </hook>
   </entities>
 </entity_hook>
