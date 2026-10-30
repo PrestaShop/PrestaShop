@@ -185,3 +185,52 @@ Feature: Employee management
       | Language           | English (English)            |
       | Active             | true                         |
       | Permission profile | Logistician                  |
+
+  Scenario: I can edit only some fields of an employee
+    Given I Add new employee "partial_employee" to shop "shop1" with the following details:
+      | First name         | Ada                         |
+      | Last name          | Byron                       |
+      | Email address      | ada.byron@prestashop.com    |
+      | Password           | secretpassword              |
+      | Default page       | Products                    |
+      | Language           | English (English)           |
+      | Active             | true                        |
+      | Permission profile | Salesman                    |
+    When I edit employee "partial_employee" with the following details:
+      | Last name | Lovelace |
+    Then employee partial_employee should have the following details:
+      | First name         | Ada                         |
+      | Last name          | Lovelace                    |
+      | Email address      | ada.byron@prestashop.com    |
+      | Password           | secretpassword              |
+      | Default page       | Products                    |
+      | Language           | English (English)           |
+      | Active             | true                        |
+      | Permission profile | Salesman                    |
+      | Associated shops   | shop1                       |
+
+  Scenario: I cannot edit an employee that does not exist
+    Given I delete the employee partial_employee
+    When I edit employee "partial_employee" with the following details:
+      | Last name | Ghost |
+    Then I should get an error that the employee does not exist
+
+  Scenario: I can change the status of an employee and delete it without an employee in the context
+    Given I Add new employee "api_employee" to shop "shop1" with the following details:
+      | First name         | Grace                       |
+      | Last name          | Hopper                      |
+      | Email address      | grace.hopper@prestashop.com |
+      | Password           | secretpassword              |
+      | Default page       | Products                    |
+      | Language           | English (English)           |
+      | Active             | true                        |
+      | Permission profile | Salesman                    |
+    And there is no employee in the legacy context
+    When I toggle employee status for api_employee
+    Then employee api_employee should have the following details:
+      | Active | false |
+    When I bulk enable employees "api_employee"
+    Then employee api_employee should have the following details:
+      | Active | true |
+    When I delete the employee api_employee
+    Then employee api_employee does not exist
