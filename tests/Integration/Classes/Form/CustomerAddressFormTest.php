@@ -69,6 +69,21 @@ class CustomerAddressFormTest extends TestCase
         $this->assertSame([], $this->form->getField('postcode')->getErrors());
     }
 
+    public function testOtherAddressTextFieldsAreTrimmedToo(): void
+    {
+        $values = [
+            'firstname' => ' Anne Marie ',
+            'lastname' => ' Smith ',
+            'address1' => ' 10 Main Street ',
+            'city' => ' New York ',
+        ];
+        $this->form->fillWith(['id_country' => $this->country->id] + $values);
+
+        foreach ($values as $name => $value) {
+            $this->assertSame(trim($value), $this->form->getField($name)->getValue());
+        }
+    }
+
     public function testInvalidPostcodeIsStillRejected(): void
     {
         $this->form->fillWith(['id_country' => $this->country->id, 'postcode' => ' 00950 ']);

@@ -92,12 +92,6 @@ class CustomerAddressFormCore extends AbstractForm
 
         $this->formatter->setCountry($country);
 
-        // Spaces around the postcode (browser autofill, copy and paste) are not part of it,
-        // but the country's postcode format would reject them.
-        if (isset($params['postcode']) && is_string($params['postcode'])) {
-            $params['postcode'] = trim($params['postcode']);
-        }
-
         return parent::fillWith($params);
     }
 
