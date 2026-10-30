@@ -143,8 +143,49 @@ final class AttachmentQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
+            if ('products' === $filterName) {
+                $this->applyProductFilter($qb, trim((string) $value));
+
+                continue;
+            }
+
             $qb->andWhere($allowedFiltersMap[$filterName] . ' LIKE :' . $filterName)
                 ->setParameter($filterName, '%' . $value . '%');
         }
+    }
+
+    /**
+     * Keeps the files attached to a product with this ID, or with a part of this reference or name
+     */
+    private function applyProductFilter(QueryBuilder $qb, string $search): void
+    {
+        $productQb = $this->connection
+            ->createQueryBuilder()
+            ->select('1')
+            ->from($this->dbPrefix . 'product_attachment', 'filter_pa')
+            ->innerJoin('filter_pa', $this->dbPrefix . 'product', 'filter_p', 'filter_p.`id_product` = filter_pa.`id_product`')
+            ->leftJoin(
+                'filter_p',
+                $this->dbPrefix . 'product_lang',
+                'filter_pl',
+                'filter_pl.`id_product` = filter_p.`id_product` AND filter_pl.`id_lang` = :employee_id_lang'
+            )
+        ;
+        $conditions = [
+            $productQb->expr()->like('filter_p.`reference`', ':product_search'),
+            $productQb->expr()->like('filter_pl.`name`', ':product_search'),
+        ];
+        // A part of an ID would match nearly every product
+        if (ctype_digit($search)) {
+            $conditions[] = $productQb->expr()->eq('filter_p.`id_product`', ':product_id');
+            $qb->setParameter('product_id', (int) $search);
+        }
+        $productQb
+            ->where('filter_pa.`id_attachment` = a.`id_attachment`')
+            ->andWhere($productQb->expr()->or(...$conditions))
+        ;
+
+        $qb->andWhere('EXISTS (' . $productQb->getSQL() . ')')
+            ->setParameter('product_search', '%' . addcslashes($search, '%_\\') . '%');
     }
 }

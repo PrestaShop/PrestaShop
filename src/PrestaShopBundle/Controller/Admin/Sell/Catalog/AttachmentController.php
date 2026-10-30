@@ -9,6 +9,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\BulkDeleteAttachmentsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\DeleteAttachmentCommand;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\RemoveProductsFromAttachmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentUploadFailedException;
@@ -28,8 +29,10 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformati
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\EditableAttachment;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttachmentProductGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\AttachmentFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\AttachmentProductFilters;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
@@ -122,7 +125,10 @@ class AttachmentController extends PrestaShopAdminController
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.attachment_form_builder')]
         FormBuilderInterface $attachmentFormBuilder,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.attachment_form_handler')]
-        FormHandlerInterface $attachmentFormHandler
+        FormHandlerInterface $attachmentFormHandler,
+        AttachmentProductFilters $attachmentProductFilters,
+        #[Autowire(service: 'prestashop.core.grid.factory.attachment_product')]
+        GridFactoryInterface $attachmentProductGridFactory
     ): Response {
         try {
             /** @var EditableAttachment $attachmentInformation */
@@ -165,6 +171,7 @@ class AttachmentController extends PrestaShopAdminController
             ),
             'attachmentForm' => $attachmentForm->createView(),
             'attachmentId' => $attachmentId,
+            'attachmentProductGrid' => $this->presentGrid($attachmentProductGridFactory->getGrid($attachmentProductFilters)),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
     }
@@ -226,6 +233,23 @@ class AttachmentController extends PrestaShopAdminController
         }
 
         return $this->redirectToRoute('admin_attachments_index');
+    }
+
+    #[DemoRestricted(redirectRoute: 'admin_attachments_edit', redirectQueryParamsToKeep: ['attachmentId'])]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_attachments_edit', redirectQueryParamsToKeep: ['attachmentId'])]
+    public function removeProductAction(int $attachmentId, int $productId): RedirectResponse
+    {
+        return $this->removeProducts($attachmentId, [$productId]);
+    }
+
+    #[DemoRestricted(redirectRoute: 'admin_attachments_edit', redirectQueryParamsToKeep: ['attachmentId'])]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_attachments_edit', redirectQueryParamsToKeep: ['attachmentId'])]
+    public function removeProductsBulkAction(Request $request, int $attachmentId): RedirectResponse
+    {
+        return $this->removeProducts(
+            $attachmentId,
+            array_map('intval', $request->request->all(AttachmentProductGridDefinitionFactory::GRID_ID . '_bulk'))
+        );
     }
 
     /**
@@ -372,6 +396,21 @@ class AttachmentController extends PrestaShopAdminController
      *
      * @return array
      */
+    /**
+     * @param int[] $productIds
+     */
+    private function removeProducts(int $attachmentId, array $productIds): RedirectResponse
+    {
+        try {
+            $this->dispatchCommand(new RemoveProductsFromAttachmentCommand($attachmentId, $productIds));
+            $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_attachments_edit', ['attachmentId' => $attachmentId]);
+    }
+
     private function getBulkAttachmentsFromRequest(Request $request): array
     {
         $attachmentIds = $request->request->all('attachment_files_bulk');
