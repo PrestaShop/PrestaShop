@@ -48,4 +48,27 @@ class OrderReturnStateCore extends ObjectModel
         LEFT JOIN `' . _DB_PREFIX_ . 'order_return_state_lang` orsl ON (ors.`id_order_return_state` = orsl.`id_order_return_state` AND orsl.`id_lang` = ' . (int) $id_lang . ')
         ORDER BY ors.`id_order_return_state` ASC');
     }
+
+    /**
+     * Check if a localized name is already used by another order return state.
+     *
+     * WHY: the name identifies the state everywhere it is displayed, so two states sharing one are
+     * indistinguishable in the back office lists and in the customer's return history.
+     *
+     * @param string $name
+     * @param int $idLang
+     * @param int|null $excludeIdOrderReturnState ID of the order return state excluded from the search
+     *
+     * @return bool
+     */
+    public static function existsLocalizedNameInDatabase(string $name, int $idLang, ?int $excludeIdOrderReturnState): bool
+    {
+        return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            'SELECT COUNT(*) AS count' .
+            ' FROM ' . _DB_PREFIX_ . 'order_return_state_lang orsl' .
+            ' WHERE orsl.id_lang = ' . $idLang .
+            ' AND orsl.name = \'' . pSQL($name) . '\'' .
+            ($excludeIdOrderReturnState ? ' AND orsl.id_order_return_state != ' . $excludeIdOrderReturnState : '')
+        );
+    }
 }

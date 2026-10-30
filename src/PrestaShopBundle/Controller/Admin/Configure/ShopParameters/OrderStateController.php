@@ -11,6 +11,7 @@ use Exception;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\BulkDeleteOrderReturnStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\DeleteOrderReturnStateCommand;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Exception\DuplicateOrderReturnStateNameException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Exception\OrderReturnStateException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Query\GetOrderReturnStateForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Command\BulkDeleteOrderStateCommand;
@@ -460,6 +461,11 @@ class OrderStateController extends PrestaShopAdminController
             DuplicateOrderStateNameException::class => $this->trans(
                 'An order status with the same name already exists: %s',
                 [$e instanceof DuplicateOrderStateNameException ? $e->getName()->getValue() : ''],
+                'Admin.Shopparameters.Notification',
+            ),
+            DuplicateOrderReturnStateNameException::class => $this->trans(
+                'An order return status with the same name already exists: %s',
+                [$e instanceof DuplicateOrderReturnStateNameException ? $e->getName()->getValue() : ''],
                 'Admin.Shopparameters.Notification',
             ),
             OrderStateConstraintException::class => [
