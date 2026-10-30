@@ -66,6 +66,7 @@ Breaking changes are only allowed in major versions. See [ADR 0017](https://gith
 | UI | Playwright | `tests/UI/` |
 
 - **New behavior / bug fix must come with a test.** Add or adjust a unit test on the class actually touched; prefer Behat for command/handler behavior; if an existing E2E covers the area, unskip it and re-run rather than leaving a `@todo`/skip in place.
+- **Tests never shape the production code.** Do not add a constructor parameter, an injected closure, a widened visibility or a dependency only so a test can reach the code. A class that is not suited to unit tests (cache clearing, file locks, kernel boot…) gets an integration test instead; when no test is realistic, the PR says why and how the change was verified.
 
 ## PR hygiene
 
