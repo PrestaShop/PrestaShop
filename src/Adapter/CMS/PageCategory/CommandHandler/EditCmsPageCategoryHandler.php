@@ -48,6 +48,7 @@ final class EditCmsPageCategoryHandler extends AbstractCmsPageCategoryHandler im
             }
 
             if (null !== $command->getParentId()) {
+                $this->assertParentCategoryExists($command->getParentId());
                 $this->assertCmsCategoryCanBeMovedToParent(
                     $command->getCmsPageCategoryId()->getValue(),
                     $command->getParentId()->getValue()
