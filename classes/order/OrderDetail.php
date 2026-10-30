@@ -750,8 +750,7 @@ class OrderDetailCore extends ObjectModel
         $this->product_mpn = empty($product['mpn']) ? null : pSQL($product['mpn']);
         $this->product_reference = empty($product['reference']) ? null : pSQL($product['reference']);
         $this->product_supplier_reference = empty($product['supplier_reference']) ? null : pSQL($product['supplier_reference']);
-        $product_weight = $product['id_product_attribute'] ? (float) $product['weight_attribute'] : (float) $product['weight'];
-        $this->product_weight = $product_weight + Customization::getCustomizationWeight($product['id_customization']);
+        $this->product_weight = $product['id_product_attribute'] ? (float) $product['weight_attribute'] : (float) $product['weight'];
 
         // We get the real quantity of the product in stock and save how much of the ordered quantity was in stock
         $product_quantity_in_stock = (int) Product::getQuantity($this->product_id, $this->product_attribute_id);
