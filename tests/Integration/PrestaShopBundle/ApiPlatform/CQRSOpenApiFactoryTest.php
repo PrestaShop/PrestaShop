@@ -271,18 +271,20 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
 
         // UpdateDiscountCommand::setReductionAmount(DecimalNumber $amount, int $currencyId, bool $taxIncluded)
         $reductionAmount = (array) $schemas['Discount.UpdateDiscountCommand']['properties']['reductionAmount'];
-        $this->assertSame(['object', 'null'], $reductionAmount['type']);
+        $this->assertSame('object', $reductionAmount['type']);
+        $this->assertSame(['amount', 'currencyId', 'taxIncluded'], $reductionAmount['required']);
         $this->assertArrayNotHasKey('anyOf', $reductionAmount);
         $this->assertArrayNotHasKey('readOnly', $reductionAmount);
         $this->assertSame('number', $reductionAmount['properties']['amount']['type']);
         $this->assertSame('integer', $reductionAmount['properties']['currencyId']['type']);
         $this->assertSame('boolean', $reductionAmount['properties']['taxIncluded']['type']);
 
-        // UpdateDiscountCommand::setMinimumAmount(?DecimalNumber $amount, ...)
+        // UpdateDiscountCommand::setMinimumAmount(?DecimalNumber $amount, int $currencyId = 0, ...), null removes it
         $minimumAmount = (array) $schemas['Discount.UpdateDiscountCommand']['properties']['minimumAmount'];
         $this->assertSame(['object', 'null'], $minimumAmount['type']);
+        $this->assertSame(['amount'], $minimumAmount['required']);
         $this->assertArrayNotHasKey('anyOf', $minimumAmount);
-        $this->assertSame('number', $minimumAmount['properties']['amount']['type']);
+        $this->assertSame(['number', 'null'], $minimumAmount['properties']['amount']['type']);
 
         // The value objects are not documented anymore
         $this->assertArrayNotHasKey('Money', $schemas);
@@ -788,6 +790,7 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
                                 'type' => 'integer',
                             ]),
                         ],
+                        'required' => ['redirectType', 'redirectTarget'],
                     ]),
                     'packStockType' => new ArrayObject([
                         'type' => 'integer',
@@ -1069,7 +1072,6 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
                 'properties' => [
                     'customerId' => new ArrayObject([
                         'type' => 'integer',
-                        'example' => 1,
                     ]),
                     'personalInformation' => new ArrayObject([
                         '$ref' => '#/components/schemas/CustomerPersonalInformation',

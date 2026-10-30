@@ -25,7 +25,7 @@ class EditableCmsPageCategory
     private $isDisplayed;
 
     /**
-     * @var CmsPageCategoryId
+     * @var CmsPageCategoryId|null
      */
     private $parentId;
 
@@ -76,7 +76,8 @@ class EditableCmsPageCategory
     ) {
         $this->localisedName = $localisedName;
         $this->isDisplayed = $isDisplayed;
-        $this->parentId = new CmsPageCategoryId($parentId);
+        // The root category has no parent (id_parent 0), which CmsPageCategoryId rejects
+        $this->parentId = 0 === (int) $parentId ? null : new CmsPageCategoryId($parentId);
         $this->localisedDescription = $localisedDescription;
         $this->localisedMetaDescription = $localisedMetaDescription;
         $this->localisedFriendlyUrl = $localisedFriendlyUrl;
@@ -101,7 +102,7 @@ class EditableCmsPageCategory
     }
 
     /**
-     * @return CmsPageCategoryId
+     * @return CmsPageCategoryId|null null for the root category
      */
     public function getParentId()
     {

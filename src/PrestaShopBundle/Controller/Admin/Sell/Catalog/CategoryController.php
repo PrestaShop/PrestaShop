@@ -104,7 +104,7 @@ class CategoryController extends PrestaShopAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
             'categoriesGrid' => $this->presentGrid($categoryGrid),
-            'categoriesKpi' => $categoriesKpiFactory->build(),
+            'categoriesKpi' => ($this->getConfiguration()->get('PS_DISPLAY_BACKOFFICE_KPIS') ?? true) ? $categoriesKpiFactory->build() : null,
             'layoutHeaderToolbarBtn' => $this->getCategoryIndexToolbarButtons($request, $currentCategoryId),
             'currentCategoryView' => $categoryViewData,
             'deleteCategoriesForm' => $deleteCategoriesForm->createView(),

@@ -114,7 +114,7 @@ class TranslationsController extends PrestaShopAdminController
             'layoutTitle' => $this->trans('Translations', [], 'Admin.Navigation.Menu'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
-            'kpiRow' => $kpiRowFactory->build(),
+            'kpiRow' => ($this->getConfiguration()->get('PS_DISPLAY_BACKOFFICE_KPIS') ?? true) ? $kpiRowFactory->build() : null,
             'copyLanguageForm' => $copyLanguageForm->createView(),
             'exportCataloguesForm' => $exportCataloguesForm->createView(),
             'addUpdateLanguageForm' => $addUpdateLanguageForm->createView(),

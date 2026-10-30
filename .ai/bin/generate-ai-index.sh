@@ -2,7 +2,7 @@
 # generate-ai-index.sh
 #
 # Generates compact AI-friendly codebase index files into .ai/generated/
-# Output: cqrs.md, routes.md, entities.md, hooks.md
+# Output: cqrs.md, routes.md, entities.md, hooks.md, api-resources.md (when modules/ps_apiresources is installed)
 #
 # Usage:
 #   bash .ai/bin/generate-ai-index.sh
@@ -390,6 +390,81 @@ generate_hooks() {
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
+# 4b. api-resources.md — Admin API endpoints per domain (from modules/ps_apiresources when installed)
+# ─────────────────────────────────────────────────────────────────────────────
+# "name|path" lines, sorted by name: one per sub-folder and one per class at the root of Resources/.
+list_api_domains() {
+    local resources_dir="$1"
+    {
+        find -L "$resources_dir" -mindepth 1 -maxdepth 1 -type d | while IFS= read -r d; do echo "$(basename "$d")|$d"; done
+        find -L "$resources_dir" -maxdepth 1 -name "*.php" | while IFS= read -r f; do echo "$(basename "$f" .php)|$f"; done
+    } | sort -t '|' -k1,1
+}
+
+# One line per operation of a resource class. The method follows the operation attribute
+# (UpdatePosition is a PATCH, see PrestaShopBundle\ApiPlatform\Metadata\UpdatePosition).
+api_resource_operations() {
+    local php="$1" class
+    class="$(php_classname "$php")"
+    [[ -n "$class" ]] || return 0
+    awk -v cls="$class" '
+        /new (CQRSGet|CQRSCreate|CQRSPartialUpdate|CQRSUpdate|CQRSDelete|PaginatedList|CQRSPaginate|CQRSGetCollection|UpdatePosition|GetCollection|Get|Post|Patch|Put|Delete)\(/ {
+            match($0, /new [A-Za-z]+\(/); op = substr($0, RSTART + 4, RLENGTH - 5)
+        }
+        /uriTemplate: '"'"'/ && op != "" {
+            match($0, /uriTemplate: '"'"'[^'"'"']+'"'"'/); uri = substr($0, RSTART + 14, RLENGTH - 15)
+            method = "GET"
+            if (op ~ /Create|Post/) method = "POST"
+            if (op ~ /PartialUpdate|Patch|UpdatePosition/) method = "PATCH"
+            if (op == "CQRSUpdate" || op == "Put") method = "PUT"
+            if (op ~ /Delete/) method = "DELETE"
+            if (op ~ /PaginatedList|CQRSPaginate|GetCollection/) method = "GET (collection)"
+            printf "- %s %s → %s (%s)\n", method, uri, cls, op
+            op = ""
+        }' "$php"
+}
+
+generate_api_resources() {
+    local final="$OUTPUT_DIR/api-resources.md"
+    local outfile="$final.tmp"
+    # The module folder is gitignored and may be a symlink to a separate clone, hence find -L.
+    local resources_dir="$REPO_ROOT/modules/ps_apiresources/src/ApiPlatform/Resources"
+
+    if [[ ! -d "$resources_dir" ]]; then
+        printf "  - %-13s (skipped: modules/ps_apiresources not installed, previous file kept)\n" "api-resources"
+        return 0
+    fi
+
+    # A domain is a sub-folder, or a resource class sitting at the root of Resources/ (Hook.php)
+    local file_count domain_count
+    file_count=$(find -L "$resources_dir" -name "*.php" -not -path "*/Dto/*" | wc -l | tr -d ' ')
+    domain_count=$(list_api_domains "$resources_dir" | wc -l | tr -d ' ')
+
+    {
+        echo "# Admin API resources index (generated $TODAY)"
+        echo "# $file_count resource classes · $domain_count domains · source: modules/ps_apiresources/src/ApiPlatform/Resources"
+        echo "#"
+        echo "# One line per operation: METHOD uri → resource class (operation attribute). Sub objects live in {Domain}/Dto/."
+        echo "# Conventions: modules/ps_apiresources/.ai/CONTEXT.md · review checklist: modules/ps_apiresources/.ai/REVIEW.md"
+        echo ""
+
+        while IFS='|' read -r domain path; do
+            echo "## $domain"
+            if [[ -d "$path" ]]; then
+                while IFS= read -r php; do
+                    api_resource_operations "$php"
+                done < <(find -L "$path" -maxdepth 1 -name "*.php" | sort)
+            else
+                api_resource_operations "$path"
+            fi
+            echo ""
+        done < <(list_api_domains "$resources_dir")
+    } > "$outfile"
+
+    finalize_outfile "$final" "$outfile" "api-resources.md"
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
 # 5. skill symlinks — ensure every .ai skill is linked in .claude/skills/
 # ─────────────────────────────────────────────────────────────────────────────
 sync_skill_symlinks() {
@@ -416,6 +491,80 @@ sync_skill_symlinks() {
     done < <(find -L "$REPO_ROOT/.ai" -iname "skill.md" | sort)
 
     echo "  ✓ skill symlinks ($created created, $already already linked)"
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 5b. path-scoped rules — .ai/rules/*.md is the source (description + paths list + body); Claude Code reads it
+#     through a symlink, the other tools get a generated copy with their own frontmatter keys
+#     (see STRUCTURE.md → "Path-scoped rules")
+# ─────────────────────────────────────────────────────────────────────────────
+RULE_COPIES_WRITTEN=0
+RULE_COPIES_UNCHANGED=0
+
+# write_rule_copy <target> <frontmatter lines> <rule name> <body>
+write_rule_copy() {
+    local target="$1" frontmatter="$2" rule_name="$3" body="$4"
+    local tmp="$target.tmp"
+    mkdir -p "$(dirname "$target")"
+    # a former symlink to the source is replaced by the generated copy
+    [[ -L "$target" ]] && rm -f "$target"
+    {
+        echo "---"
+        echo "$frontmatter"
+        echo "---"
+        echo "<!-- Generated from .ai/rules/$rule_name.md by .ai/bin/generate-ai-index.sh: edit the source, not this copy -->"
+        echo "$body"
+    } > "$tmp"
+    if [[ -f "$target" ]] && cmp -s "$tmp" "$target"; then
+        rm -f "$tmp"
+        RULE_COPIES_UNCHANGED=$((RULE_COPIES_UNCHANGED + 1))
+    else
+        mv -f "$tmp" "$target"
+        RULE_COPIES_WRITTEN=$((RULE_COPIES_WRITTEN + 1))
+    fi
+}
+
+sync_rules() {
+    local rules_dir="$REPO_ROOT/.ai/rules"
+    [[ -d "$rules_dir" ]] || return 0
+
+    local links=0
+    while IFS= read -r rule_md; do
+        local rule_name description globs body link
+        rule_name="$(basename "$rule_md" .md)"
+        # frontmatter: `description: "..."` and `paths:` as a YAML list (one `- "glob"` per line)
+        description=$(awk '/^---$/ {c++; next} c == 1 && /^description:/ {sub(/^description:[[:space:]]*/, ""); print; exit}' "$rule_md")
+        globs=$(awk '
+            /^---$/ {c++; next}
+            c == 1 && /^paths:/ {p = 1; next}
+            c == 1 && p && /^[[:space:]]*-[[:space:]]*/ {sub(/^[[:space:]]*-[[:space:]]*/, ""); gsub(/"/, ""); printf "%s%s", (n++ ? "," : ""), $0; next}
+            c == 1 && p {p = 0}
+        ' "$rule_md")
+        body=$(awk '/^---$/ {c++; next} c >= 2 {print}' "$rule_md")
+        if [[ -z "$globs" ]]; then
+            echo "  ⚠ rule $rule_name: no \`paths:\` list in the frontmatter, skipped" >&2
+            continue
+        fi
+
+        # Claude Code reads `paths` natively: a symlink to the source
+        link="$REPO_ROOT/.claude/rules/$rule_name.md"
+        mkdir -p "$(dirname "$link")"
+        if [[ ! -L "$link" ]]; then
+            rm -f "$link"
+            ln -s "../../.ai/rules/$rule_name.md" "$link"
+            links=$((links + 1))
+        fi
+
+        # Cursor (`globs`, unquoted comma-separated), Windsurf (`trigger: glob` + `globs`), Copilot (`applyTo`)
+        write_rule_copy "$REPO_ROOT/.cursor/rules/$rule_name.mdc" \
+            "description: $description"$'\n'"globs: $globs"$'\n'"alwaysApply: false" "$rule_name" "$body"
+        write_rule_copy "$REPO_ROOT/.windsurf/rules/$rule_name.md" \
+            "trigger: glob"$'\n'"globs: $globs"$'\n'"description: $description" "$rule_name" "$body"
+        write_rule_copy "$REPO_ROOT/.github/instructions/$rule_name.instructions.md" \
+            "applyTo: \"$globs\"" "$rule_name" "$body"
+    done < <(find "$rules_dir" -maxdepth 1 -name "*.md" | sort)
+
+    echo "  ✓ rules          ($links Claude symlink(s) created, $RULE_COPIES_WRITTEN tool copies written, $RULE_COPIES_UNCHANGED unchanged)"
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -467,8 +616,10 @@ generate_cqrs
 generate_routes
 generate_entities
 generate_hooks
+generate_api_resources
 discover_module_skills
 sync_skill_symlinks
+sync_rules
 
 echo ""
 echo "Done. Files written to $OUTPUT_DIR/"

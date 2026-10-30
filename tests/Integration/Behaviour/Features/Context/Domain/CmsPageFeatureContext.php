@@ -19,8 +19,11 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\ToggleCmsPageStatusCommand
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsPageForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\ValueObject\CmsPageId;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\AddCmsPageCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoryForEditing;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryResult\EditableCmsPageCategory;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -276,6 +279,53 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
         }
 
         throw new NoExceptionAlthoughExpectedException('No exception was thrown in latest result');
+    }
+
+    /**
+     * @When I add CMS page category :name with parent id :parentId
+     */
+    public function addCmsPageCategoryWithParent(string $name, int $parentId): void
+    {
+        $command = new AddCmsPageCategoryCommand(
+            [$this->getDefaultLangId() => $name],
+            [$this->getDefaultLangId() => 'cms-category-' . $parentId],
+            $parentId,
+            true
+        );
+        $command->setLocalisedDescription([$this->getDefaultLangId() => '']);
+        $command->setLocalisedMetaTitle([$this->getDefaultLangId() => '']);
+        $command->setLocalisedMetaDescription([$this->getDefaultLangId() => '']);
+        $command->setShopAssociation([$this->getDefaultShopId()]);
+
+        try {
+            $this->getCommandBus()->handle($command);
+        } catch (CmsPageCategoryException $e) {
+            $this->latestException = $e;
+        }
+    }
+
+    /**
+     * @Then I should get an error that the cms page category was not found
+     */
+    public function assertLastErrorIsCmsPageCategoryNotFound(): void
+    {
+        if (!$this->latestException instanceof CmsPageCategoryNotFoundException) {
+            throw new NoExceptionAlthoughExpectedException(sprintf('Expected a CmsPageCategoryNotFoundException, got %s', null === $this->latestException ? 'none' : get_class($this->latestException)));
+        }
+        $this->latestException = null;
+    }
+
+    /**
+     * @Then the cms page category with id :id should have no parent
+     */
+    public function assertCmsPageCategoryHasNoParent(int $id): void
+    {
+        /** @var EditableCmsPageCategory $category */
+        $category = $this->getQueryBus()->handle(new GetCmsPageCategoryForEditing($id));
+
+        if (null !== $category->getParentId()) {
+            throw new RuntimeException(sprintf('Cms page category %d was expected to have no parent, got %d', $id, $category->getParentId()->getValue()));
+        }
     }
 
     /**

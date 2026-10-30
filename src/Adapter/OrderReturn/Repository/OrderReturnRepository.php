@@ -15,6 +15,7 @@ use PrestaShop\PrestaShop\Adapter\OrderReturn\Validator\OrderReturnValidator;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\DeleteProductFromOrderReturnException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnId;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -118,10 +119,28 @@ class OrderReturnRepository extends AbstractObjectModelRepository
     /**
      * Removes a single row from `order_return_detail`.
      *
+     * @throws OrderReturnProductNotFoundException when the line is not part of the order return
      * @throws DeleteProductFromOrderReturnException
      */
     public function deleteProductLine(OrderReturnId $orderReturnId, OrderReturnProductId $productId): void
     {
+        // The legacy delete succeeds when no row matches: check the line is part of the return first
+        $lineExists = (bool) Db::getInstance()->getValue(sprintf(
+            'SELECT 1 FROM `%sorder_return_detail` WHERE `id_order_return` = %d AND `id_order_detail` = %d AND `id_customization` = %d',
+            _DB_PREFIX_,
+            $orderReturnId->getValue(),
+            $productId->getOrderDetailId(),
+            $productId->getCustomizationId()
+        ));
+        if (!$lineExists) {
+            throw new OrderReturnProductNotFoundException(sprintf(
+                'Order detail %d (customization %d) is not part of order return %d.',
+                $productId->getOrderDetailId(),
+                $productId->getCustomizationId(),
+                $orderReturnId->getValue()
+            ));
+        }
+
         $deleted = OrderReturn::deleteOrderReturnDetail(
             $orderReturnId->getValue(),
             $productId->getOrderDetailId(),

@@ -13,10 +13,12 @@
   {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/change_orders_status_modal.html.twig') }}
 
   {% block orders_kpi %}
-    {{ render(controller(
-      'PrestaShopBundle\\Controller\\Admin\\CommonController::renderKpiRowAction',
-      {kpiRow: orderKpi},
-    )) }}
+    {% if orderKpi is not null %}
+      {{ render(controller(
+        'PrestaShopBundle\\Controller\\Admin\\CommonController::renderKpiRowAction',
+        {kpiRow: orderKpi},
+      )) }}
+    {% endif %}
   {% endblock %}
 
   {% block order_grid_row %}
