@@ -131,7 +131,7 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
         }
 
         // Allow changing profile and active status only when editing not own account.
-        if ($employee->id != $this->contextEmployeeProvider->getId()) {
+        if ((int) $employee->id !== $this->contextEmployeeProvider->getId()) {
             if (null !== $command->getProfileId()) {
                 $employee->id_profile = $command->getProfileId();
             }
