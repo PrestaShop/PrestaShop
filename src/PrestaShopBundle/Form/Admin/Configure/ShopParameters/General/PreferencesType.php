@@ -92,15 +92,23 @@ class PreferencesType extends TranslatorAwareType
 
         $showB2bShopMode = $this->featureFlagStateChecker?->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_B2B) ?? false;
 
-        if ($this->requestStack->getCurrentRequest()->isSecure()) {
-            $builder->add('enable_ssl', SwitchType::class, [
-                'label' => $this->trans('Enable SSL', 'Admin.Shopparameters.Feature'),
-                'help' => $this->trans(
+        // The switch is shown either way, and only switchable over HTTPS: turning SSL on from a shop
+        // that cannot serve HTTPS locks its own back office out. Hiding it left the page with no
+        // control at all and nothing saying why, which is what made this hard to follow.
+        $isSecureRequest = (bool) $this->requestStack->getCurrentRequest()?->isSecure();
+        $builder->add('enable_ssl', SwitchType::class, [
+            'disabled' => !$isSecureRequest,
+            'label' => $this->trans('Enable SSL', 'Admin.Shopparameters.Feature'),
+            'help' => $isSecureRequest
+                ? $this->trans(
                     'Enables or disables SSL encryption (https://) for your shop. This is a security standard and you should always keep this option enabled, unless there is a specific technical issue.',
                     'Admin.Shopparameters.Help'
+                )
+                : $this->trans(
+                    'This can only be changed over a secure connection, so that a shop whose certificate does not work cannot lock its own back office out. Reach this page over https:// to change it.',
+                    'Admin.Shopparameters.Help'
                 ),
-            ]);
-        }
+        ]);
 
         $builder
             ->add('enable_token', SwitchType::class, [
