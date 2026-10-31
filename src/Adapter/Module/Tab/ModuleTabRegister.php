@@ -29,7 +29,13 @@ class ModuleTabRegister
     /**
      * @var string
      */
-    private $defaultParent = 'DEFAULT';
+    /**
+     * Class name of the catch-all parent tab that module tabs are attached to when they declare no
+     * parent. It is a container, not a controller, so it must never be linked to on its own.
+     */
+    public const DEFAULT_PARENT_CLASS_NAME = 'DEFAULT';
+
+    private $defaultParent = self::DEFAULT_PARENT_CLASS_NAME;
 
     /**
      * @var LangRepository
