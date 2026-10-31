@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Tests\Integration\ApiPlatform\Serializer;
 
 use ApiPlatform\Metadata\HttpOperation;
+use ApiPlatform\Validator\Exception\ValidationException;
 use DateTimeImmutable;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\Module\APIResources\ApiPlatform\Resources\ApiClient\ApiClientList;
@@ -54,10 +55,12 @@ use PrestaShopBundle\ApiPlatform\Serializer\CQRSApiSerializer;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
+use Symfony\Component\Validator\ConstraintViolationInterface;
 use Tests\Integration\Utility\LanguageTrait;
 use Tests\Resources\ApiPlatform\Resources\BooleanCastItem;
 use Tests\Resources\ApiPlatform\Resources\BooleanCastResource;
 use Tests\Resources\ApiPlatform\Resources\LocalizedResource;
+use Tests\Resources\ApiPlatform\Resources\LocalizedSubObjectsResource;
 use Tests\Resources\ApiPlatform\Resources\UpdatePositionResource;
 use Tests\Resources\ApiPlatform\ScalarUnionResource;
 use Tests\Resources\Resetter\LanguageResetter;
@@ -623,6 +626,85 @@ class CQRSApiSerializerTest extends KernelTestCase
         $this->expectException(NotNormalizableValueException::class);
         $this->expectExceptionMessage('cannot be interpreted as a number');
         $serializer->denormalize(['amount' => 'abc'], ScalarUnionResource::class);
+    }
+
+    public function testDenormalizeMissingSetterParameterIsAViolation(): void
+    {
+        $serializer = self::getContainer()->get(CQRSApiSerializer::class);
+
+        try {
+            // UpdateDiscountCommand::setReductionAmount(DecimalNumber $amount, int $currencyId, bool $taxIncluded), fed by a mapped field
+            $serializer->denormalize(
+                ['discountId' => 42, 'discountAmount' => ['currencyId' => 1]],
+                UpdateDiscountCommand::class,
+                null,
+                [NormalizationMapper::NORMALIZATION_MAPPING => ['[discountAmount]' => '[reductionAmount]']]
+            );
+            $this->fail('A ValidationException was expected');
+        } catch (ValidationException $e) {
+            $this->assertSame(422, $e->getStatusCode());
+            $violations = array_map(
+                fn (ConstraintViolationInterface $violation) => [$violation->getPropertyPath(), $violation->getMessage()],
+                iterator_to_array($e->getConstraintViolationList())
+            );
+            $this->assertSame([
+                ['discountAmount.amount', 'This value should not be null.'],
+                ['discountAmount.taxIncluded', 'This value should not be null.'],
+            ], $violations);
+        }
+    }
+
+    public function testLocalizedValuesOfSubObjects(): void
+    {
+        $serializer = self::getContainer()->get(CQRSApiSerializer::class);
+        $byId = fn (string $value) => [self::EN_LANG_ID => $value, self::getFrenchId() => $value . ' fr'];
+        $byLocale = fn (string $value) => ['en-US' => $value, 'fr-FR' => $value . ' fr'];
+
+        // A query result (indexed by language ID) denormalized into the resource is indexed by locale at every level
+        $resource = $serializer->denormalize([
+            'names' => $byId('root'),
+            'item' => ['id' => 1, 'names' => $byId('item'), 'child' => ['id' => 2, 'names' => $byId('child')]],
+            'items' => [['id' => 3, 'names' => $byId('first')], ['id' => 4, 'names' => $byId('second')]],
+        ], LocalizedSubObjectsResource::class);
+        $this->assertSame($byLocale('root'), $resource->names);
+        $this->assertSame($byLocale('item'), $resource->item->names);
+        $this->assertSame($byLocale('child'), $resource->item->child->names);
+        $this->assertSame($byLocale('first'), $resource->items[0]->names);
+        $this->assertSame($byLocale('second'), $resource->items[1]->names);
+
+        // The normalized resource keeps the locales at every level
+        $normalized = $serializer->normalize($resource);
+        $this->assertSame($byLocale('child'), $normalized['item']['child']['names']);
+        $this->assertSame($byLocale('second'), $normalized['items'][1]['names']);
+
+        // A request body converted into another input class (a CQRS command) gets the language IDs in its sub objects
+        $input = $serializer->denormalize([
+            'names' => $byLocale('root'),
+            'item' => ['id' => 1, 'names' => $byLocale('item')],
+            'items' => [['id' => 3, 'names' => $byLocale('first')]],
+        ], LocalizedSubObjectsResource::class, null, ['input' => ['class' => BooleanCastResource::class]]);
+        $this->assertSame($byId('item'), $input->item->names);
+        $this->assertSame($byId('first'), $input->items[0]->names);
+    }
+
+    public function testLocalizedValuesOfSubObjectsAreValidatedOnTheRequestLocales(): void
+    {
+        $serializer = self::getContainer()->get(CQRSApiSerializer::class);
+
+        try {
+            $serializer->denormalize(
+                ['names' => ['en-US' => 'root'], 'item' => ['id' => 1, 'names' => ['en-US' => str_repeat('a', 21)]]],
+                LocalizedSubObjectsResource::class,
+                null,
+                ['input' => ['class' => AddProductCommand::class], 'operation' => new CQRSCreate()]
+            );
+            $this->fail('A ValidationException was expected');
+        } catch (ValidationException $e) {
+            $this->assertSame(
+                ['item.names[en-US]'],
+                array_map(fn (ConstraintViolationInterface $violation) => $violation->getPropertyPath(), iterator_to_array($e->getConstraintViolationList()))
+            );
+        }
     }
 
     public function testDenormalizeCastsBooleansAtEveryLevel(): void

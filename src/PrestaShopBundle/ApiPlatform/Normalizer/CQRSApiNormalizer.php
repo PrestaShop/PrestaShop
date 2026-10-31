@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Normalizer;
 
+use ApiPlatform\Validator\Exception\ValidationException;
 use BackedEnum;
 use PrestaShopBundle\ApiPlatform\DomainObjectDetector;
 use PrestaShopBundle\ApiPlatform\LocalizedValueUpdater;
@@ -28,6 +29,9 @@ use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactoryInterface;
 use Symfony\Component\Serializer\NameConverter\NameConverterInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 /**
  * This normalizer is based on the Symfony ObjectNormalizer, but it handles some specific normalization for
@@ -47,6 +51,11 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 #[AutoconfigureTag('prestashop.api.normalizers')]
 class CQRSApiNormalizer extends ObjectNormalizer
 {
+    /**
+     * The request values the resource is validated on, before the conversions made for the CQRS command
+     */
+    public const RESOURCE_DATA = 'cqrs_resource_data';
+
     public function __construct(
         protected readonly DomainObjectDetector $domainObjectDetector,
         protected readonly LocalizedValueUpdater $localizedValueUpdater,
@@ -66,10 +75,11 @@ class CQRSApiNormalizer extends ObjectNormalizer
     {
         if (!empty($context['input']['class']) && $this->isDomainObject($context['input']['class'], [])) {
             $inputType = $context['input']['class'];
-            unset($context['input']);
+            $resourceData = $context[self::RESOURCE_DATA] ?? $data;
+            unset($context['input'], $context[self::RESOURCE_DATA]);
 
             if (!empty($context['operation']) && $this->CQRSApiValidator->hasConstraints($type)) {
-                $apiResource = parent::denormalize($data, $type, $format, $context);
+                $apiResource = parent::denormalize($resourceData, $type, $format, $context);
                 $this->CQRSApiValidator->validate($apiResource, $context['operation']);
             }
 
@@ -136,7 +146,7 @@ class CQRSApiNormalizer extends ObjectNormalizer
     protected function instantiateObject(array &$data, string $class, array &$context, ReflectionClass $reflectionClass, bool|array $allowedAttributes, ?string $format = null)
     {
         $object = parent::instantiateObject($data, $class, $context, $reflectionClass, $allowedAttributes, $format);
-        $methodsWithMultipleArguments = $this->findMethodsWithMultipleArguments($reflectionClass, $data);
+        $methodsWithMultipleArguments = $this->findMethodsWithMultipleArguments($reflectionClass, $data, $context);
         $this->executeMethodsWithMultipleArguments($data, $object, $methodsWithMultipleArguments, $context, $format);
 
         return $object;
@@ -266,12 +276,16 @@ class CQRSApiNormalizer extends ObjectNormalizer
     /**
      * @param ReflectionClass $reflectionClass
      * @param array $normalizedData
+     * @param array $context
      *
      * @return array<string, ReflectionMethod>
+     *
+     * @throws ValidationException when a required parameter is missing in a sub object
      */
-    protected function findMethodsWithMultipleArguments(ReflectionClass $reflectionClass, array $normalizedData): array
+    protected function findMethodsWithMultipleArguments(ReflectionClass $reflectionClass, array $normalizedData, array $context = []): array
     {
         $methodsWithMultipleArguments = [];
+        $violations = new ConstraintViolationList();
         foreach ($reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC) as $reflectionMethod) {
             // We only look into public method that can be setters with multiple parameters
             if (
@@ -302,15 +316,51 @@ class CQRSApiNormalizer extends ObjectNormalizer
                 throw new InvalidArgumentException(sprintf('Value for method "%s" should be an array', $reflectionMethod->getName()));
             }
 
-            // Now check that all required parameters are present
+            // Now check that all required parameters are present, a missing one is reported like a constraint violation
             foreach ($reflectionMethod->getParameters() as $reflectionParameter) {
                 if (!$reflectionParameter->isOptional() && !isset($methodParameters[$reflectionParameter->getName()])) {
-                    throw new InvalidArgumentException(sprintf('Missing required parameter "%s" for method "%s"', $reflectionParameter->getName(), $reflectionMethod->getName()));
+                    $violations->add($this->buildMissingParameterViolation($methodPropertyName, $reflectionParameter->getName(), $context));
                 }
             }
             $methodsWithMultipleArguments[$methodPropertyName] = $reflectionMethod;
         }
 
+        if (count($violations) > 0) {
+            throw new ValidationException($violations);
+        }
+
         return $methodsWithMultipleArguments;
+    }
+
+    /**
+     * The violation is reported on the field of the request (the CQRS command mapping is reverted), e.g. reductionAmount.amount
+     */
+    protected function buildMissingParameterViolation(string $propertyName, string $parameterName, array $context): ConstraintViolation
+    {
+        $commandPath = '[' . $propertyName . ']';
+        $requestPath = $commandPath . '[' . $parameterName . ']';
+        foreach ($context[NormalizationMapper::APPLIED_NORMALIZATION_MAPPING] ?? $context[NormalizationMapper::NORMALIZATION_MAPPING] ?? [] as $apiPath => $mappedPath) {
+            if ($mappedPath === $commandPath . '[' . $parameterName . ']') {
+                $requestPath = $apiPath;
+                break;
+            }
+            if ($mappedPath === $commandPath) {
+                $requestPath = $apiPath . '[' . $parameterName . ']';
+            }
+        }
+
+        $constraint = new NotNull();
+
+        return new ConstraintViolation(
+            $constraint->message,
+            $constraint->message,
+            [],
+            null,
+            str_replace('][', '.', trim($requestPath, '[]')),
+            null,
+            null,
+            NotNull::IS_NULL_ERROR,
+            $constraint,
+        );
     }
 }
