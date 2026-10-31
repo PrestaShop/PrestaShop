@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Order\OrderPriceColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
@@ -41,9 +42,25 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 /**
  * Creates definition for Orders grid
  */
-final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
+final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory implements SqlExportableGridDefinitionFactoryInterface
 {
     public const GRID_ID = 'order';
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFiltersClass(): string
+    {
+        return OrderFilters::class;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getGridFactoryServiceId(): string
+    {
+        return 'prestashop.core.grid.factory.order';
+    }
 
     /**
      * @var ConfigurationInterface
