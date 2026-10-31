@@ -1,0 +1,7 @@
+<?php
+/*
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+
+// Blank guard file, mimics the index.php PrestaShop generates in every folder.
