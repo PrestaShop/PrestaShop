@@ -101,3 +101,21 @@ Feature: Update product related products from Back Office (BO)
       | product4 | Reading glasses |           | http://myshop.com/img/p/{image2}-home_default.jpg      |
     When I remove all related products from product product1
     Then product product1 should have no related products
+
+  Scenario: Related products are listed in a stable order whatever the order they were set in
+    When I set following related products to product product1:
+      | product4 |
+      | product3 |
+      | product2 |
+    Then product product1 should have following related products:
+      | product  | name                 | reference | image url                                              |
+      | product2 | book of love         | ref2      | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | product3 | lovely books package |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | product4 | Reading glasses      |           | http://myshop.com/img/p/{image2}-home_default.jpg      |
+    When I update product "product4" with following values:
+      | reference | ref4 |
+    Then product product1 should have following related products:
+      | product  | name                 | reference | image url                                              |
+      | product2 | book of love         | ref2      | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | product3 | lovely books package |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | product4 | Reading glasses      | ref4      | http://myshop.com/img/p/{image2}-home_default.jpg      |
