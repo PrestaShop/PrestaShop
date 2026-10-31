@@ -40,6 +40,11 @@ class UpdateCombinationCommand
     private $isDefault;
 
     /**
+     * @var bool|null
+     */
+    private $active;
+
+    /**
      * @var Gtin|null
      */
     private $gtin;
@@ -156,6 +161,18 @@ class UpdateCombinationCommand
     public function setIsDefault(?bool $isDefault): self
     {
         $this->isDefault = $isDefault;
+
+        return $this;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
 
         return $this;
     }
