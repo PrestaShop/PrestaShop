@@ -9,6 +9,7 @@ services:
       - '@translator'
       - '@=service("prestashop.adapter.legacy.configuration").get("_PS_MODE_DEMO_")'
       - '@PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertiesFormDataPersister'
+      - '@PrestaShop\PrestaShop\Core\ActivityLog\AdminActivityLoggerInterface'
 
   prestashop.core.form.identifiable_object.sql_request_form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
@@ -57,12 +58,14 @@ services:
     factory: [ '@prestashop.core.form.identifiable_object.handler.form_handler_factory', 'create' ]
     arguments:
       - '@prestashop.core.form.identifiable_object.data_handler.category_form_data_handler'
+      - 'Category'
 
   prestashop.core.form.identifiable_object.handler.root_category_form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
     factory: [ '@prestashop.core.form.identifiable_object.handler.form_handler_factory', 'create' ]
     arguments:
       - '@prestashop.core.form.identifiable_object.data_handler.root_category_form_data_handler'
+      - 'Category'
 
   prestashop.core.form.identifiable_object.handler.contact_form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
@@ -231,6 +234,7 @@ services:
     factory: [ '@prestashop.core.form.identifiable_object.handler.form_handler_factory', 'create' ]
     arguments:
       - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ProductFormDataHandler'
+      - 'Product'
 
   prestashop.core.form.identifiable_object.product_shops_form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'

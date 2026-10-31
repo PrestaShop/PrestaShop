@@ -6,6 +6,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler;
 
+use PrestaShop\PrestaShop\Core\ActivityLog\AdminActivity;
+use PrestaShop\PrestaShop\Core\ActivityLog\AdminActivityLoggerInterface;
+use PrestaShop\PrestaShop\Core\ActivityLog\AdminActivityType;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\ValueObject\CreatedApiClient;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertiesFormDataPersister;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
@@ -46,24 +49,40 @@ final class FormHandler implements FormHandlerInterface
     private $extraPropertiesFormDataPersister;
 
     /**
+     * @var AdminActivityLoggerInterface|null
+     */
+    private $adminActivityLogger;
+
+    /**
+     * @var string|null
+     */
+    private $activityLogObjectType;
+
+    /**
      * @param FormDataHandlerInterface $dataHandler
      * @param HookDispatcherInterface $hookDispatcher
      * @param TranslatorInterface $translator
      * @param bool $isDemoModeEnabled
      * @param ExtraPropertiesFormDataPersister $extraPropertiesFormDataPersister
+     * @param AdminActivityLoggerInterface|null $adminActivityLogger
+     * @param string|null $activityLogObjectType
      */
     public function __construct(
         FormDataHandlerInterface $dataHandler,
         HookDispatcherInterface $hookDispatcher,
         TranslatorInterface $translator,
         $isDemoModeEnabled,
-        ExtraPropertiesFormDataPersister $extraPropertiesFormDataPersister
+        ExtraPropertiesFormDataPersister $extraPropertiesFormDataPersister,
+        ?AdminActivityLoggerInterface $adminActivityLogger = null,
+        ?string $activityLogObjectType = null
     ) {
         $this->dataHandler = $dataHandler;
         $this->hookDispatcher = $hookDispatcher;
         $this->translator = $translator;
         $this->isDemoModeEnabled = $isDemoModeEnabled;
         $this->extraPropertiesFormDataPersister = $extraPropertiesFormDataPersister;
+        $this->adminActivityLogger = $adminActivityLogger;
+        $this->activityLogObjectType = $activityLogObjectType;
     }
 
     /**
@@ -133,6 +152,7 @@ final class FormHandler implements FormHandlerInterface
         $newId = $this->dataHandler->update($id, $data);
 
         $entityId = $this->resolveExtraPropertyEntityId($newId ?? $id);
+
         if (null !== $entityId) {
             $this->extraPropertiesFormDataPersister->persist(
                 $form,
@@ -145,6 +165,11 @@ final class FormHandler implements FormHandlerInterface
             'id' => $id,
             'form_data' => &$data,
         ]);
+
+        $this->logAdminActivity(
+            AdminActivityType::UPDATE,
+            $id
+        );
 
         return FormHandlerResult::createWithId($newId ?? $id);
     }
@@ -179,6 +204,11 @@ final class FormHandler implements FormHandlerInterface
             'id' => $id,
             'form_data' => &$data,
         ]);
+
+        $this->logAdminActivity(
+            AdminActivityType::CREATE,
+            (int) $id
+        );
 
         return FormHandlerResult::createWithId($id);
     }
@@ -222,5 +252,23 @@ final class FormHandler implements FormHandlerInterface
         }
 
         return null;
+    }
+
+    private function logAdminActivity(
+        AdminActivityType $operationType,
+        ?int $objectId
+    ): void {
+        if (null === $this->adminActivityLogger || null === $this->activityLogObjectType || null === $objectId) {
+            return;
+        }
+
+        $this->adminActivityLogger->log(
+            new AdminActivity(
+                $operationType,
+                $this->activityLogObjectType,
+                $objectId,
+                $objectId
+            )
+        );
     }
 }
