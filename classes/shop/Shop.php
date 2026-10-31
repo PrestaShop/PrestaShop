@@ -283,6 +283,16 @@ class ShopCore extends ObjectModel
         // Remove carrier restrictions
         $res = $res && Db::getInstance()->delete('module_carrier', 'id_shop = ' . (int) $this->id);
 
+        $res = $res && Db::getInstance()->execute(
+            'DELETE cl FROM `' . _DB_PREFIX_ . 'configuration_lang` cl
+            INNER JOIN `' . _DB_PREFIX_ . 'configuration` c ON c.`id_configuration` = cl.`id_configuration`
+            WHERE c.`id_shop` = ' . (int) $this->id
+        );
+        $res = $res && Db::getInstance()->delete('configuration', 'id_shop = ' . (int) $this->id);
+        $res = $res && Db::getInstance()->delete('specific_price', 'id_shop = ' . (int) $this->id);
+        $res = $res && Db::getInstance()->delete('product_carrier', 'id_shop = ' . (int) $this->id);
+        $res = $res && Db::getInstance()->delete('cart_rule_shop', 'id_shop = ' . (int) $this->id);
+
         Shop::cacheShops(true);
 
         return $res;
