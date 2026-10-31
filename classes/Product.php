@@ -4331,7 +4331,11 @@ class ProductCore extends ObjectModel
 
         $check_stock = !Configuration::get('PS_DISP_UNAVAILABLE_ATTR');
         if (!$res = Db::getInstance()->executeS(
-            'SELECT pa.`id_product`, a.`color`, pac.`id_product_attribute`, ' . ($check_stock ? 'SUM(IF(stock.`quantity` > 0, 1, 0))' : '0') . ' qty, a.`id_attribute`, al.`name`, IF(color = "", a.id_attribute, color) group_by
+            // WHY: a color groups several combinations (one per size, etc.); without picking
+            // explicitly, GROUP BY returns an arbitrary one, so the color swatch could link to a
+            // non-default combination. Prefer the default combination of the group, then the
+            // lowest id, so the swatch points to the expected (default) combination deterministically.
+            'SELECT pa.`id_product`, a.`color`, COALESCE(MAX(IF(product_attribute_shop.`default_on` = 1, pac.`id_product_attribute`, NULL)), MIN(pac.`id_product_attribute`)) AS `id_product_attribute`, ' . ($check_stock ? 'SUM(IF(stock.`quantity` > 0, 1, 0))' : '0') . ' qty, a.`id_attribute`, al.`name`, IF(color = "", a.id_attribute, color) group_by
             FROM `' . _DB_PREFIX_ . 'product_attribute` pa
             ' . Shop::addSqlAssociation('product_attribute', 'pa') .
             ($check_stock ? Product::sqlStock('pa', 'pa') : '') . '
