@@ -40,3 +40,7 @@ services:
   PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\ModuleExtraPropertyDefinitionAccessibilityChecker:
     autowire: true
     public: false
+  PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\DeleteShopGroupAccessibilityChecker:
+    public: false
+  PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\DeleteShopUrlAccessibilityChecker:
+    public: false
