@@ -1072,6 +1072,7 @@ abstract class ModuleCore implements ModuleInterface
 
         // set active to 1 in the module table
         Db::getInstance()->update('module', ['active' => 1], 'id_module = ' . (int) $this->id);
+        Cache::clean('Module::isEnabled*');
 
         if ($moduleActivated) {
             $this->loadBuiltInTranslations();
@@ -1190,6 +1191,8 @@ abstract class ModuleCore implements ModuleInterface
         if (!$this->hasShopAssociations()) {
             $result &= Db::getInstance()->update('module', ['active' => 0], 'id_module = ' . (int) $this->id);
         }
+
+        Cache::clean('Module::isEnabled*');
 
         return (bool) $result;
     }
@@ -2331,26 +2334,29 @@ abstract class ModuleCore implements ModuleInterface
 
     /**
      * @param string $module_name
+     * @param int|null $idShop Shop to check, the context shop when null
      *
      * @return bool
      *
      * @deprecated since 1.7
      * @see  PrestaShop\PrestaShop\Core\Module\ModuleManager->isEnabled($name)
      */
-    public static function isEnabled($module_name)
+    public static function isEnabled($module_name, ?int $idShop = null)
     {
-        if (!Cache::isStored('Module::isEnabled' . $module_name)) {
+        $idShop ??= (int) Context::getContext()->shop->id;
+        $cacheKey = 'Module::isEnabled' . $module_name . '_' . $idShop;
+        if (!Cache::isStored($cacheKey)) {
             $active = false;
             $id_module = Module::getModuleIdByName($module_name);
-            if (Db::getInstance()->getValue('SELECT `id_module` FROM `' . _DB_PREFIX_ . 'module_shop` WHERE `id_module` = ' . (int) $id_module . ' AND `id_shop` = ' . (int) Context::getContext()->shop->id)) {
+            if (Db::getInstance()->getValue('SELECT `id_module` FROM `' . _DB_PREFIX_ . 'module_shop` WHERE `id_module` = ' . (int) $id_module . ' AND `id_shop` = ' . $idShop)) {
                 $active = true;
             }
-            Cache::store('Module::isEnabled' . $module_name, (bool) $active);
+            Cache::store($cacheKey, (bool) $active);
 
             return (bool) $active;
         }
 
-        return Cache::retrieve('Module::isEnabled' . $module_name);
+        return Cache::retrieve($cacheKey);
     }
 
     /**
