@@ -309,6 +309,10 @@
     <access id="access_1_327" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSEARCHENGINES_READ"/>
     <access id="access_1_328" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSEARCHENGINES_UPDATE"/>
     <access id="access_1_329" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSEARCHENGINES_DELETE"/>
+    <access id="access_1_528" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSHIPMENTS_CREATE"/>
+    <access id="access_1_529" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSHIPMENTS_READ"/>
+    <access id="access_1_530" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSHIPMENTS_UPDATE"/>
+    <access id="access_1_531" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSHIPMENTS_DELETE"/>
     <access id="access_1_330" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSHIPPING_CREATE"/>
     <access id="access_1_331" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSHIPPING_READ"/>
     <access id="access_1_332" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSHIPPING_UPDATE"/>
