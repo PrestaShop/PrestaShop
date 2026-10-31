@@ -94,8 +94,11 @@ class PageVoter extends Voter
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
     {
-        /** @var Employee $user */
         $user = $token->getUser();
+        // Back office pages are granted to employees only, an Admin API client has no profile
+        if (!$user instanceof Employee) {
+            return false;
+        }
         $employeeProfileId = $user->getProfile()->getId();
         $action = $this->buildAction((string) $subject, (string) $attribute);
 

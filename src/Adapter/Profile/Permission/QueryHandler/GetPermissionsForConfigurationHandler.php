@@ -16,6 +16,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryResult\Configurabl
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\ControllerPermission;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
+use PrestaShop\PrestaShop\Core\Security\AccessCheckerInterface;
 use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Service\Form\ImprovedB2bTabsToggler;
 use Profile;
@@ -64,6 +65,7 @@ class GetPermissionsForConfigurationHandler implements GetPermissionsForConfigur
         int $languageId,
         array $nonConfigurableTabs,
         private readonly ?FeatureFlagStateCheckerInterface $featureFlagStateChecker = null,
+        private readonly ?AccessCheckerInterface $accessChecker = null,
     ) {
         $this->authorizationChecker = $authorizationChecker;
         $this->languageId = $languageId;
@@ -82,7 +84,10 @@ class GetPermissionsForConfigurationHandler implements GetPermissionsForConfigur
         $modulePermissionsForProfiles = $this->getModulePermissionsForProfiles($profiles);
 
         $employeeProfileId = $query->getEmployeeProfileId()->getValue();
-        $canEmployeeEditPermissions = $this->authorizationChecker->isGranted(Permission::UPDATE, 'AdminAccess');
+        // Computed for the profile of the query: the Admin API has no logged-in employee to ask the voters about
+        $canEmployeeEditPermissions = null !== $this->accessChecker
+            ? $this->accessChecker->isEmployeeGranted('AdminAccess_' . Permission::UPDATE, $employeeProfileId)
+            : $this->authorizationChecker->isGranted(Permission::UPDATE, 'AdminAccess');
 
         $bulkConfigurationPermissions = $this->getBulkConfigurationForProfiles(
             $employeeProfileId,

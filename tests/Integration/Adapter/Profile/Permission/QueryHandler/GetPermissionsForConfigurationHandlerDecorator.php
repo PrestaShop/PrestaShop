@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Adapter\Profile\Permission\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Profile\Permission\QueryHandler\GetPermissionsForConfigurationHandler;
+use PrestaShop\PrestaShop\Core\Security\AccessCheckerInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -20,8 +21,9 @@ class GetPermissionsForConfigurationHandlerDecorator extends GetPermissionsForCo
     public function __construct(
         AuthorizationCheckerInterface $authorizationChecker,
         int $languageId,
-        array $nonConfigurableTabs
+        array $nonConfigurableTabs,
+        AccessCheckerInterface $accessChecker
     ) {
-        parent::__construct($authorizationChecker, $languageId, $nonConfigurableTabs);
+        parent::__construct($authorizationChecker, $languageId, $nonConfigurableTabs, null, $accessChecker);
     }
 }
