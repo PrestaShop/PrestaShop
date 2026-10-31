@@ -22,6 +22,17 @@ class CartRuleCollection implements Iterator
         $this->cartRules[] = $cartRule;
     }
 
+    /**
+     * Read the rules without moving the iterator cursor, so a caller can look at the collection while
+     * something else is iterating it.
+     *
+     * @return CartRuleData[]
+     */
+    public function getCartRules(): array
+    {
+        return $this->cartRules;
+    }
+
     public function rewind(): void
     {
         $this->iteratorPosition = 0;
