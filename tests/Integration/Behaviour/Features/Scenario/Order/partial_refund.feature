@@ -258,13 +258,13 @@ Feature: Refund Order from Back Office (BO)
       | shipping_refund             |                          | 5.5    |
     Then "bo_order_refund" has 1 credit slips
     # Weird behavior, we are in tax EXCLUDED display, so total_products_tax_excl contains the initial refund
-    # amount, and total_products_tax_incl the real one (minus voucher) If we had been in tax INCLUDED display
-    # it would have been the opposite
+    # amount, and total_products_tax_incl the real one (minus the refunded share of the voucher) If we had
+    # been in tax INCLUDED display it would have been the opposite
     Then "bo_order_refund" last credit slip is:
       | amount                  | 8.0  |
       | shipping_cost_amount    | 5.83 |
       | total_products_tax_excl | 8.0  |
-      | total_products_tax_incl | 3.18 |
+      | total_products_tax_incl | 7.292263 |
     And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
       | product_quantity            | 2 |
       | product_quantity_refunded   | 0 |
@@ -617,7 +617,7 @@ Feature: Refund Order from Back Office (BO)
 
   @order-refund
   @order-partial-refund
-  Scenario: Partial refund of products paid partially with a big voucher, too high refund
+  Scenario: Partial refund of products paid partially with a big voucher
     Given I use a voucher "PROMO20" for a discount of 20.0 on the cart "dummy_cart"
     And I add order "bo_order_refund" with the following details:
       | cart                | dummy_cart                 |
@@ -634,8 +634,13 @@ Feature: Refund Order from Back Office (BO)
       | product_name                | quantity                 | amount |
       | Mug Today is a good day     | 1                        | 8      |
       | shipping_refund             |                          | 5.5    |
-    Then I should get error that refund amount is invalid
-    Then "bo_order_refund" has 0 credit slips
+    Then "bo_order_refund" has 1 credit slips
+    # Only this product's share of the 20 discount is deducted. Deducting the whole discount used to make
+    # the refund negative, so refunding a single product from a heavily discounted order was impossible.
+    Then "bo_order_refund" last credit slip is:
+      | amount                  | 8.0 |
+      | total_products_tax_excl | 8.0 |
+      | total_products_tax_incl | 3.729049 |
 
   @order-refund
   @order-partial-refund
