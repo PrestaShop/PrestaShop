@@ -59,22 +59,15 @@ class TabTest extends TestCase
         $classNameTab->add();
 
         $this->assertExpectedRoles($expectedRoles);
-
-        // testDeleteTabWithClassName
-        $unexpectedRoles = [
-            'ROLE_MOD_TAB_ADMINCLASSNAMETEST_CREATE',
-            'ROLE_MOD_TAB_ADMINCLASSNAMETEST_READ',
-            'ROLE_MOD_TAB_ADMINCLASSNAMETEST_UPDATE',
-            'ROLE_MOD_TAB_ADMINCLASSNAMETEST_DELETE',
-        ];
-        $this->assertExpectedRoles($unexpectedRoles);
+        $roleIds = $this->getRoleIds($expectedRoles);
 
         $tab = new Tab(Tab::getIdFromClassName('AdminClassNameTest'));
         $this->assertNotFalse($tab->id);
         $this->assertEquals('AdminClassNameTest', $tab->class_name);
         $tab->delete();
 
-        $this->assertUnexpectedRoles($unexpectedRoles);
+        $this->assertUnexpectedRoles($expectedRoles);
+        $this->assertNoAccessForRoleIds($roleIds);
     }
 
     public function testAddMultipleTabsWithClassName(): void
@@ -91,7 +84,7 @@ class TabTest extends TestCase
         for ($i = 0; $i < 3; ++$i) {
             $classNameTab = new Tab();
             $classNameTab->active = true;
-            $classNameTab->class_name = 'AdminClassNameTest';
+            $classNameTab->class_name = 0 === $i ? 'AdminClassNameTest' : 'adminclassnameTEST';
             $classNameTab->name = [];
             foreach (Language::getLanguages(true) as $lang) {
                 $classNameTab->name[$lang['id_lang']] = 'Class name tab';
@@ -108,6 +101,26 @@ class TabTest extends TestCase
             'ROLE_MOD_TAB_ADMINCLASSNAMETEST_DELETE',
         ];
         $this->assertExpectedRoles($expectedRoles);
+        $roleIds = $this->getRoleIds($expectedRoles);
+
+        $tabs = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            'SELECT `id_tab` FROM `' . _DB_PREFIX_ . 'tab` WHERE `module` = "module_test_tab" ORDER BY `id_tab`',
+            true,
+            false
+        );
+        $this->assertCount(3, $tabs);
+
+        foreach ($tabs as $key => $tabRow) {
+            $tab = new Tab($tabRow['id_tab']);
+            $this->assertTrue($tab->delete());
+
+            if ($key < 2) {
+                $this->assertExpectedRoles($expectedRoles);
+            }
+        }
+
+        $this->assertUnexpectedRoles($expectedRoles);
+        $this->assertNoAccessForRoleIds($roleIds);
     }
 
     public function testAddTabWithRouteName(): void
@@ -235,5 +248,36 @@ class TabTest extends TestCase
             );
             $this->assertEmpty($roles);
         }
+    }
+
+    /**
+     * @param array $roles
+     *
+     * @return array<int, int>
+     */
+    private function getRoleIds(array $roles): array
+    {
+        $roleIds = [];
+        foreach ($roles as $role) {
+            $roleIds[] = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+                'SELECT `id_authorization_role` FROM `' . _DB_PREFIX_ . 'authorization_role` WHERE `slug` = "' . $role . '"'
+            );
+        }
+
+        return $roleIds;
+    }
+
+    /**
+     * @param array<int, int> $roleIds
+     */
+    private function assertNoAccessForRoleIds(array $roleIds): void
+    {
+        $accesses = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            'SELECT `id_authorization_role` FROM `' . _DB_PREFIX_ . 'access` WHERE `id_authorization_role` IN (' . implode(', ', $roleIds) . ')',
+            true,
+            false
+        );
+
+        $this->assertEmpty($accesses);
     }
 }

@@ -160,14 +160,42 @@ class TabCore extends ObjectModel
     public function delete()
     {
         if (parent::delete()) {
-            $slug = Permission::PREFIX_TAB . strtoupper($this->class_name);
-
-            foreach (['CREATE', 'READ', 'UPDATE', 'DELETE'] as $action) {
-                Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'authorization_role` WHERE `slug` = "' . $slug . '_' . $action . '"');
-            }
-
             if (is_array(self::$_getIdFromClassName) && isset(self::$_getIdFromClassName[strtolower($this->class_name)])) {
                 self::$_getIdFromClassName = null;
+            }
+
+            $slug = Permission::PREFIX_TAB . strtoupper($this->class_name);
+            // Multiple tabs can share the same class name and authorization roles.
+            $remainingTabs = Db::getInstance()->getValue(
+                'SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'tab` WHERE LOWER(`class_name`) = "' . pSQL(Tools::strtolower($this->class_name)) . '"'
+            );
+
+            if (false === $remainingTabs) {
+                return false;
+            }
+
+            if (0 === (int) $remainingTabs) {
+                $roleSlugs = [];
+                foreach (['CREATE', 'READ', 'UPDATE', 'DELETE'] as $action) {
+                    $roleSlugs[] = '"' . pSQL($slug . '_' . $action) . '"';
+                }
+
+                $roleSlugs = implode(', ', $roleSlugs);
+
+                // Remove associated access records before deleting authorization roles to avoid orphan records.
+                if (!Db::getInstance()->execute(
+                    'DELETE a FROM `' . _DB_PREFIX_ . 'access` a
+                    INNER JOIN `' . _DB_PREFIX_ . 'authorization_role` ar ON ar.`id_authorization_role` = a.`id_authorization_role`
+                    WHERE ar.`slug` IN (' . $roleSlugs . ')'
+                )) {
+                    return false;
+                }
+
+                if (!Db::getInstance()->execute(
+                    'DELETE FROM `' . _DB_PREFIX_ . 'authorization_role` WHERE `slug` IN (' . $roleSlugs . ')'
+                )) {
+                    return false;
+                }
             }
 
             return $this->cleanPositions($this->id_parent);
