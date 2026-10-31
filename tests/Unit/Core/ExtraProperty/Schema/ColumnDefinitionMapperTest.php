@@ -186,7 +186,7 @@ class ColumnDefinitionMapperTest extends TestCase
      * are doubled, so the injected text stays inside the string literal.
      *
      * The same escapeStringLiteral() builds the ENUM literals; enum values additionally refuse
-     * the backslash at construction (see ExtraPropertyDefinitionConstructorTest), so the DEFAULT
+     * the backslash at construction (see ExtraPropertyDefinitionTest), so the DEFAULT
      * clause is the only path a backslash can still reach the mapper through.
      */
     public function testDefaultValueNeutralisesLiteralBreakoutAttempt(): void
@@ -200,5 +200,23 @@ class ColumnDefinitionMapperTest extends TestCase
             "VARCHAR(255) NULL DEFAULT 'a\\\\'' , ADD COLUMN pwned INT'",
             ColumnDefinitionMapper::getSqlDefinition($options)
         );
+    }
+
+    /**
+     * @dataProvider enumColumnTypeProvider
+     */
+    public function testParseEnumValuesFromSqlColumnType(string $sqlColumnType, ?array $expected): void
+    {
+        $this->assertSame($expected, ColumnDefinitionMapper::parseEnumValues($sqlColumnType));
+    }
+
+    public static function enumColumnTypeProvider(): iterable
+    {
+        yield 'plain enum' => ["enum('box','bag','pallet')", ['box', 'bag', 'pallet']];
+        yield 'uppercase enum' => ["ENUM('a','b')", ['a', 'b']];
+        yield 'escaped quote in literal' => ["enum('it''s','plain')", ["it's", 'plain']];
+        yield 'varchar is not enum' => ['varchar(255)', null];
+        yield 'int is not enum' => ['int(11)', null];
+        yield 'set is not enum' => ["set('a','b')", null];
     }
 }

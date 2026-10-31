@@ -566,7 +566,7 @@ class ExtraPropertyConstraintParser
                 return null;
         }
 
-        if (1 === preg_match('/^-?\d+$/', $raw)) {
+        if (1 === preg_match('/^-?\d+$/D', $raw)) {
             return (int) $raw;
         }
 
