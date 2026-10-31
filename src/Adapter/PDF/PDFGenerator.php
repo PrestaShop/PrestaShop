@@ -7,6 +7,7 @@
 namespace PrestaShop\PrestaShop\Adapter\PDF;
 
 use PrestaShop\PrestaShop\Adapter\Entity\PDF;
+use PrestaShop\PrestaShop\Core\PDF\GeneratedPdf;
 use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use PrestaShop\PrestaShop\Core\PDF\PDFTemplateTypeProviderInterface;
 use Smarty;
@@ -48,5 +49,12 @@ final class PDFGenerator implements PDFGeneratorInterface
             $pdf->filename = $filename;
         }
         $pdf->render($display);
+    }
+
+    public function generatePDFForResponse(array $objectCollection): GeneratedPdf
+    {
+        $pdf = new PDF($objectCollection, $this->templateTypeProvider->getPDFTemplateType(), $this->smarty);
+
+        return new GeneratedPdf($pdf->render(false), $pdf->getFilename());
     }
 }

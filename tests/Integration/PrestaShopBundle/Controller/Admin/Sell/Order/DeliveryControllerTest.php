@@ -18,10 +18,13 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Tests\Integration\Utility\LoginTrait;
+use Tests\Resources\DatabaseDump;
 
 class DeliveryControllerTest extends WebTestCase
 {
     use LoginTrait;
+    use PdfDownloadTrait;
+
     /**
      * @var KernelBrowser
      */
@@ -34,6 +37,18 @@ class DeliveryControllerTest extends WebTestCase
      * @var CsrfTokenManager
      */
     protected $tokenManager;
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        self::addOrderInvoice();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+        DatabaseDump::restoreTables(['order_invoice']);
+    }
 
     protected function setUp(): void
     {
@@ -183,5 +198,19 @@ class DeliveryControllerTest extends WebTestCase
             $session->getFlashBag()->all()
         );
         $this->assertStringContainsString('/sell/orders/delivery-slips/?_token', $response->getTargetUrl());
+    }
+
+    public function testPdfActionWithValidData(): void
+    {
+        $range = self::getDocumentDateRange();
+        $this->client->request('POST', $this->router->generate('admin_order_delivery_slip_pdf'), [
+            'slip_pdf_form' => [
+                'date_from' => $range['from'],
+                'date_to' => $range['to'],
+                '_token' => $this->tokenManager->getToken('slip_pdf_form')->getValue(),
+            ],
+        ]);
+
+        $this->assertResponseIsPdf();
     }
 }

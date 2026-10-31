@@ -36,6 +36,17 @@ final class OrderInvoiceDataProvider implements OrderInvoiceDataProviderInterfac
     }
 
     /**
+     * @return OrderInvoice[]
+     */
+    public function getByDeliveryDateInterval(DateTimeInterface $dateFrom, DateTimeInterface $dateTo): array
+    {
+        return OrderInvoice::getByDeliveryDateInterval(
+            $dateFrom->format('Y-m-d'),
+            $dateTo->format('Y-m-d')
+        );
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getNextInvoiceNumber()
