@@ -137,15 +137,13 @@ class CategoryDisplayNameBuilder
      */
     private function fetchBreadcrumbs(array $categoryIds, LanguageId $languageId): array
     {
-        $duplicateCategoriesBreadcrumbs = [];
-        foreach ($categoryIds as $categoryId) {
-            $duplicateCategoriesBreadcrumbs[$categoryId->getValue()] = $this->categoryRepository->getBreadcrumbParts(
-                $categoryId,
-                $languageId
-            );
-        }
+        // Fetch every breadcrumb with a single query instead of two queries per category, which
+        // could mean tens of thousands of queries when many categories share the same name.
+        $ids = array_map(static function (CategoryId $categoryId): int {
+            return $categoryId->getValue();
+        }, $categoryIds);
 
-        return $duplicateCategoriesBreadcrumbs;
+        return $this->categoryRepository->getBreadcrumbPartsForCategories($ids, $languageId);
     }
 
     /**
