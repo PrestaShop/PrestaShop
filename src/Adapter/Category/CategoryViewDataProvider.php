@@ -78,7 +78,14 @@ class CategoryViewDataProvider
             && !$this->multishopFeature->isUsed()
             && $categoriesWithoutParentCount > 1
         ) {
-            $categoriesTree = [['name' => $categoryName]];
+            // The breadcrumb reads id_parent and id_category off every entry, so a stand-in that
+            // carries only the name breaks the template it is built for. This entry stands for the
+            // category being viewed, so it describes that category.
+            $categoriesTree = [[
+                'id_category' => $category->id,
+                'id_parent' => $category->id_parent,
+                'name' => $categoryName,
+            ]];
         }
 
         $categoriesTree = array_reverse($categoriesTree);
