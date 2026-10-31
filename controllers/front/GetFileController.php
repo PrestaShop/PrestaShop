@@ -329,11 +329,12 @@ class GetFileControllerCore extends FrontController
             'Expiration date exceeded' => $this->trans('The product expiration date has passed, preventing you from download this product.', [], 'Shop.Notifications.Error'),
             'Expiration date has passed, you cannot download this product' => $this->trans('Expiration date has passed, you cannot download this product.', [], 'Shop.Notifications.Error'),
             'You have reached the maximum number of allowed downloads.' => $this->trans('You have reached the maximum number of downloads allowed.', [], 'Shop.Notifications.Error'),
-        ]; ?>
+        ];
+        $message = html_entity_decode($translations[$msg] ?? $msg, ENT_QUOTES, 'UTF-8'); ?>
         <script type="text/javascript">
         //<![CDATA[
-        alert("<?php echo isset($translations[$msg]) ? html_entity_decode($translations[$msg], ENT_QUOTES, 'utf-8') : html_entity_decode($msg, ENT_QUOTES, 'utf-8'); ?>");
-        window.location.href = '<?php echo __PS_BASE_URI__; ?>';
+        alert(<?php echo json_encode($message, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>);
+        window.location.href = <?php echo json_encode(__PS_BASE_URI__, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
         //]]>
         </script>
         <?php
