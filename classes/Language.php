@@ -445,7 +445,12 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
         // Theme files
         if (!$check || ((string) $iso_from) != 'en') {
-            $files_theme[$tPath_from . 'lang/' . (string) $iso_from . '.php'] = ($copy ? $tPath_to . 'lang/' . (string) $iso_to . '.php' : ++$number);
+            // Listed only when it is there, as every other entry below already does. A theme without a
+            // lang directory, which is every theme shipped since the move to XLIFF, otherwise puts a
+            // source that does not exist into the list and the copy reports it as a failure.
+            if (file_exists($tPath_from . 'lang/' . (string) $iso_from . '.php')) {
+                $files_theme[$tPath_from . 'lang/' . (string) $iso_from . '.php'] = ($copy ? $tPath_to . 'lang/' . (string) $iso_to . '.php' : ++$number);
+            }
 
             // Override for pdf files in the theme
             if (file_exists($pPath_from . 'lang/' . (string) $iso_from . '.php')) {
