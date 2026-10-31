@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Tests\Unit\PrestaShopBundle\ApiPlatform\Normalizer;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneException;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneNotFoundException;
 use PrestaShopBundle\ApiPlatform\Normalizer\ProblemStatusNormalizer;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
@@ -26,6 +27,17 @@ class ProblemStatusNormalizerTest extends TestCase
 
         $this->assertSame(Response::HTTP_NOT_FOUND, $payload['status']);
         $this->assertSame('Zone not found', $payload['detail']);
+    }
+
+    public function testBaseExceptionDescription(): void
+    {
+        $normalizer = new ProblemStatusNormalizer(new ProblemNormalizer(false));
+        $exception = FlattenException::createFromThrowable(new ZoneException('Zone could not be saved'));
+
+        $payload = $normalizer->normalize($exception, 'json', ['statusCode' => Response::HTTP_UNPROCESSABLE_ENTITY]);
+
+        $this->assertSame(Response::HTTP_UNPROCESSABLE_ENTITY, $payload['status']);
+        $this->assertSame('Zone error', $payload['detail']);
     }
 
     public function testUnmappedExceptionIsUnchanged(): void

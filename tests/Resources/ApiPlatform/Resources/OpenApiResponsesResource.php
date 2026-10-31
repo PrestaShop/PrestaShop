@@ -9,6 +9,8 @@ declare(strict_types=1);
 namespace Tests\Resources\ApiPlatform\Resources;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\OpenApi\Model\Operation as OpenApiOperation;
+use ApiPlatform\OpenApi\Model\Response as OpenApiResponse;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\BulkDeleteCountriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Command\AddZoneCommand;
@@ -16,6 +18,7 @@ use PrestaShop\PrestaShop\Core\Domain\Zone\Command\BulkDeleteZoneCommand;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Command\DeleteZoneCommand;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Command\ToggleZoneStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\MissingZoneRequiredFieldsException;
+use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneException;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Query\GetZoneForEditing;
 use PrestaShopBundle\ApiPlatform\Metadata\CQRSCreate;
@@ -43,6 +46,20 @@ use Symfony\Component\HttpFoundation\Response;
             uriTemplate: '/test/open-api/zones/{zoneId}/own-mapping',
             requirements: ['zoneId' => '\d+'],
             exceptionToStatus: [ZoneNotFoundException::class => Response::HTTP_NOT_FOUND],
+            CQRSQuery: GetZoneForEditing::class,
+        ),
+        new CQRSGet(
+            uriTemplate: '/test/open-api/zones/{zoneId}/own-responses',
+            requirements: ['zoneId' => '\d+'],
+            openapi: new OpenApiOperation(
+                responses: [
+                    '404' => new OpenApiResponse('The zone does not exist'),
+                ],
+            ),
+            exceptionToStatus: [
+                ZoneNotFoundException::class => Response::HTTP_NOT_FOUND,
+                ZoneException::class => Response::HTTP_UNPROCESSABLE_ENTITY,
+            ],
             CQRSQuery: GetZoneForEditing::class,
         ),
         new CQRSCreate(

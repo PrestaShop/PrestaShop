@@ -687,6 +687,26 @@ class CQRSApiSerializerTest extends KernelTestCase
         $this->assertSame($byId('first'), $input->items[0]->names);
     }
 
+    public function testLocalizedValuesOfSubObjectsAreValidatedOnTheRequestLocales(): void
+    {
+        $serializer = self::getContainer()->get(CQRSApiSerializer::class);
+
+        try {
+            $serializer->denormalize(
+                ['names' => ['en-US' => 'root'], 'item' => ['id' => 1, 'names' => ['en-US' => str_repeat('a', 21)]]],
+                LocalizedSubObjectsResource::class,
+                null,
+                ['input' => ['class' => AddProductCommand::class], 'operation' => new CQRSCreate()]
+            );
+            $this->fail('A ValidationException was expected');
+        } catch (ValidationException $e) {
+            $this->assertSame(
+                ['item.names[en-US]'],
+                array_map(fn (ConstraintViolationInterface $violation) => $violation->getPropertyPath(), iterator_to_array($e->getConstraintViolationList()))
+            );
+        }
+    }
+
     public function testDenormalizeCastsBooleansAtEveryLevel(): void
     {
         $serializer = self::getContainer()->get(CQRSApiSerializer::class);

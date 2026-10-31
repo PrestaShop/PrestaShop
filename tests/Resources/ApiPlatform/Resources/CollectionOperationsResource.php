@@ -64,6 +64,12 @@ use PrestaShopBundle\ApiPlatform\Metadata\CQRSUpdateCollection;
             CQRSQuery: GetProductFeatureValues::class,
             CQRSQueryMapping: self::QUERY_MAPPING,
         ),
+        // Without query and with a command returning nothing, nothing is answered
+        new CQRSDeleteCollection(
+            uriTemplate: '/test/collections/products/{productId}/feature-value-ids',
+            requirements: ['productId' => '\d+'],
+            CQRSCommand: RemoveAllFeatureValuesFromProductCommand::class,
+        ),
         new CQRSDeleteCollection(
             uriTemplate: '/test/collections/products/{productId}/feature-values/bulk-delete',
             requirements: ['productId' => '\d+'],

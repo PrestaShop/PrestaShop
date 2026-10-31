@@ -12,6 +12,7 @@ use PrestaShopBundle\ApiPlatform\DefaultValuesTrait;
 use PrestaShopBundle\ApiPlatform\LocalizedValueUpdater;
 use PrestaShopBundle\ApiPlatform\Metadata\LocalizedValue;
 use PrestaShopBundle\ApiPlatform\NormalizationMapper;
+use PrestaShopBundle\ApiPlatform\Normalizer\CQRSApiNormalizer;
 use PrestaShopBundle\ApiPlatform\PositionCollectionUpdater;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\Type;
@@ -91,9 +92,13 @@ class CQRSApiSerializer implements SerializerInterface, ContextAwareNormalizerIn
 
         // A request body is converted into a CQRS command based on language IDs: the localized values of its sub objects
         // are converted before the mapping, so that the mapped copies are converted too (the root ones are handled by the
-        // CQRSApiNormalizer)
+        // CQRSApiNormalizer). The resource is validated on the request values, so the data before the conversion is kept.
         $isCommandInput = is_array($data) && !empty($context['input']['class']) && $context['input']['class'] !== $type;
         if ($isCommandInput) {
+            $resourceData = $data;
+            $resourceContext = $context;
+            $this->normalizationMapper->mapNormalizedData($resourceData, $resourceContext);
+            $context[CQRSApiNormalizer::RESOURCE_DATA] = $this->denormalizeLocalizedValues($resourceData, $type, $resourceContext);
             $data = $this->updateSubObjectsLocalizedValues($data, $type, [LocalizedValue::DENORMALIZED_KEY => LocalizedValue::ID_KEY], true);
         }
 

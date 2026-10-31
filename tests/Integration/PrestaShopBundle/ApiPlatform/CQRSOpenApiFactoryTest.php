@@ -270,6 +270,12 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
         $this->assertSame(['200', '404'], array_map('strval', array_keys($responses)));
         $this->assertSame('Zone not found', $responses['404']->getDescription());
 
+        // A response written by the resource is kept as is, a base exception is described as an error of its domain
+        $responses = $paths->getPath('/test/open-api/zones/{zoneId}/own-responses')->getGet()->getResponses();
+        $this->assertSame(['200', '404', '422'], array_map('strval', array_keys($responses)));
+        $this->assertSame('The zone does not exist', $responses['404']->getDescription());
+        $this->assertSame('Zone error', $responses['422']->getDescription());
+
         // A status documented by API Platform keeps its description, completed by the exceptions
         $responses = $paths->getPath('/test/open-api/zones')->getPost()->getResponses();
         $this->assertSame(['201', '400', '404', '422'], array_map('strval', array_keys($responses)));
@@ -352,6 +358,12 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
         // Without query, the creation answers the list of the IDs returned by the command
         $createWithoutQuery = $openApi->getPaths()->getPath('/test/collections/products/{productId}/feature-value-ids')->getPost();
         $this->assertEquals($listContent, $createWithoutQuery->getResponses()['201']->getContent()['application/json']->getSchema()->getArrayCopy());
+        $this->assertSame('The endpoint returns nothing', $createWithoutQuery->getResponses()['204']->getDescription());
+
+        // Without query, the removal answers the list returned by the command, or nothing
+        $deleteWithoutQuery = $openApi->getPaths()->getPath('/test/collections/products/{productId}/feature-value-ids')->getDelete();
+        $this->assertSame(['200', '204'], array_map('strval', array_keys($deleteWithoutQuery->getResponses())));
+        $this->assertEquals($listContent, $deleteWithoutQuery->getResponses()['200']->getContent()['application/json']->getSchema()->getArrayCopy());
 
         // A bulk delete documents its body as one resource, and answers the list
         $bulkDelete = $openApi->getPaths()->getPath('/test/collections/products/{productId}/feature-values/bulk-delete')->getDelete();

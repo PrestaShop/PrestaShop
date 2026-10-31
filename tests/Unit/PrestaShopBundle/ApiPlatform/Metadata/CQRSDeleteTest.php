@@ -602,4 +602,12 @@ class CQRSDeleteTest extends TestCase
             $operation->getExtraProperties()
         );
     }
+
+    public function testCollectionOperationWithoutQuery(): void
+    {
+        // The list returned by the command is answered (the processor answers a 204 when the command returns nothing)
+        $operation = new CQRSDeleteCollection(uriTemplate: '/parents/{parentId}/rows', CQRSCommand: 'Command');
+        $this->assertEquals(Response::HTTP_OK, $operation->getStatus());
+        $this->assertNull($operation->getOutput());
+    }
 }

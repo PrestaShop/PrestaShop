@@ -51,6 +51,11 @@ use Symfony\Component\Validator\ConstraintViolationList;
 #[AutoconfigureTag('prestashop.api.normalizers')]
 class CQRSApiNormalizer extends ObjectNormalizer
 {
+    /**
+     * The request values the resource is validated on, before the conversions made for the CQRS command
+     */
+    public const RESOURCE_DATA = 'cqrs_resource_data';
+
     public function __construct(
         protected readonly DomainObjectDetector $domainObjectDetector,
         protected readonly LocalizedValueUpdater $localizedValueUpdater,
@@ -70,10 +75,11 @@ class CQRSApiNormalizer extends ObjectNormalizer
     {
         if (!empty($context['input']['class']) && $this->isDomainObject($context['input']['class'], [])) {
             $inputType = $context['input']['class'];
-            unset($context['input']);
+            $resourceData = $context[self::RESOURCE_DATA] ?? $data;
+            unset($context['input'], $context[self::RESOURCE_DATA]);
 
             if (!empty($context['operation']) && $this->CQRSApiValidator->hasConstraints($type)) {
-                $apiResource = parent::denormalize($data, $type, $format, $context);
+                $apiResource = parent::denormalize($resourceData, $type, $format, $context);
                 $this->CQRSApiValidator->validate($apiResource, $context['operation']);
             }
 

@@ -18,6 +18,7 @@ use PrestaShopBundle\ApiPlatform\NormalizationMapper;
 use PrestaShopBundle\ApiPlatform\QueryResultSerializerTrait;
 use PrestaShopBundle\ApiPlatform\Serializer\CQRSApiSerializer;
 use ReflectionException;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 
 class CommandProcessor implements ProcessorInterface
@@ -61,6 +62,12 @@ class CommandProcessor implements ProcessorInterface
             $command = $this->domainSerializer->denormalize($commandParameters, $CQRSCommandClass, null, [NormalizationMapper::NORMALIZATION_MAPPING => $this->getCQRSCommandMapping($operation)]);
         }
         $commandResult = $this->commandBus->handle($command);
+
+        // A collection operation without query answers the list returned by the command, nothing when it returns nothing
+        if ($commandResult === null && empty($extraProperties['CQRSQuery']) && $operation instanceof CollectionOperationInterface) {
+            return new Response(null, Response::HTTP_NO_CONTENT);
+        }
+
         $allowEmptyBody = $operation->getExtraProperties()['allowEmptyBody'] ?? null;
 
         // If no result is returned and no query is configured the API returns nothing

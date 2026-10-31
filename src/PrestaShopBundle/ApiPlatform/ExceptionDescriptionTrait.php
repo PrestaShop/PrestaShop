@@ -14,7 +14,7 @@ namespace PrestaShopBundle\ApiPlatform;
 trait ExceptionDescriptionTrait
 {
     /**
-     * ShopNotFoundException => "Shop not found"
+     * ShopNotFoundException => "Shop not found", ShopException => "Shop error"
      */
     protected function getExceptionDescription(string $exceptionClass): string
     {
@@ -23,6 +23,9 @@ trait ExceptionDescriptionTrait
             $shortName = substr($shortName, 0, -strlen('Exception'));
         }
 
-        return ucfirst(strtolower(trim((string) preg_replace('/(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/', ' ', $shortName))));
+        $description = ucfirst(strtolower(trim((string) preg_replace('/(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/', ' ', $shortName))));
+
+        // A base exception only names its domain
+        return str_contains($description, ' ') ? $description : $description . ' error';
     }
 }

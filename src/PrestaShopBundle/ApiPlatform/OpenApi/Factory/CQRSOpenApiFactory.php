@@ -202,6 +202,7 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
                         }
                         $updatedOperation = $this->adaptCollectionRequestBody($updatedOperation, $httpOperationsByUri[$path][$httpMethod]);
                         $updatedOperation = $this->adaptCollectionCreateResponse($updatedOperation, $httpOperationsByUri[$path][$httpMethod]);
+                        $updatedOperation = $this->adaptCollectionNoContentResponse($updatedOperation, $httpOperationsByUri[$path][$httpMethod]);
                     }
 
                     // Add multishop context parameters if needed
@@ -322,8 +323,8 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
     /**
      * API Platform documents generic error responses (400 and 422 on writes, 404 on item routes). The statuses mapped by
      * the exceptionToStatus of the operation (the resource one when the operation has none, like at runtime) are added,
-     * described by their exceptions, the generic 404 is only kept when an exception is mapped to it, and the commands
-     * of a bulk handler document their 207 (some items failed).
+     * described by their exceptions (a response written by the resource is kept as is), the generic 404 is only kept
+     * when an exception is mapped to it, and the commands of a bulk handler document their 207 (some items failed).
      */
     protected function adaptResponses(OpenApiOperation $openApiOperation, HttpOperation $operation): OpenApiOperation
     {
@@ -333,17 +334,20 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
         }
 
         $responses = $openApiOperation->getResponses() ?? [];
-        if (isset($responses[HttpResponse::HTTP_NOT_FOUND]) && !isset($exceptionsByStatus[HttpResponse::HTTP_NOT_FOUND])) {
+        $notFoundResponse = $responses[HttpResponse::HTTP_NOT_FOUND] ?? null;
+        if ($notFoundResponse instanceof Response && 'Resource not found' === $notFoundResponse->getDescription() && !isset($exceptionsByStatus[HttpResponse::HTTP_NOT_FOUND])) {
             unset($responses[HttpResponse::HTTP_NOT_FOUND]);
         }
 
         foreach ($exceptionsByStatus as $status => $descriptions) {
             $description = implode(', ', array_unique($descriptions));
             $existingResponse = $responses[$status] ?? null;
-            if ($existingResponse instanceof Response && null === $existingResponse->getContent() && 'Resource not found' !== $existingResponse->getDescription()) {
-                $description = $existingResponse->getDescription() . ': ' . $description;
+            if (!$existingResponse instanceof Response || in_array($existingResponse->getDescription(), ['', 'Resource not found'], true)) {
+                $responses[$status] = ($existingResponse instanceof Response ? $existingResponse : new Response())->withDescription($description);
+            } elseif (in_array($existingResponse->getDescription(), ['Invalid input', 'Unprocessable entity'], true)) {
+                $responses[$status] = $existingResponse->withDescription($existingResponse->getDescription() . ': ' . $description);
             }
-            $responses[$status] = ($existingResponse instanceof Response ? $existingResponse : new Response())->withDescription($description);
+            // A response written by the resource is kept as is
         }
 
         if (in_array($operation->getExtraProperties()['CQRSCommand'] ?? null, $this->bulkCommands, true)) {
@@ -432,6 +436,24 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
         }
         $responses = $openApiOperation->getResponses();
         $responses[$successStatus] = $response->withContent($content);
+
+        return $openApiOperation->withResponses($responses);
+    }
+
+    /**
+     * A write collection operation without query answers the list returned by its command, or nothing when the command
+     * returns nothing.
+     */
+    protected function adaptCollectionNoContentResponse(OpenApiOperation $openApiOperation, HttpOperation $operation): OpenApiOperation
+    {
+        $responses = $openApiOperation->getResponses() ?? [];
+        if (!$operation instanceof CollectionOperationInterface || HttpOperation::METHOD_GET === $operation->getMethod()
+            || !empty($operation->getExtraProperties()['CQRSQuery']) || isset($responses[HttpResponse::HTTP_NO_CONTENT])) {
+            return $openApiOperation;
+        }
+
+        $responses[HttpResponse::HTTP_NO_CONTENT] = new Response('The endpoint returns nothing');
+        uksort($responses, fn ($status1, $status2) => strcmp((string) $status1, (string) $status2));
 
         return $openApiOperation->withResponses($responses);
     }

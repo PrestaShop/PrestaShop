@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Metadata;
 
+use ApiPlatform\Metadata\CollectionOperationInterface;
 use ApiPlatform\Metadata\Parameters;
 use ApiPlatform\OpenApi\Attributes\Webhook;
 use ApiPlatform\OpenApi\Model\Operation as OpenApiOperation;
@@ -116,10 +117,11 @@ class CQRSDelete extends CQRSCommand
         $passedArguments = \get_defined_vars();
         $passedArguments['method'] = self::METHOD_DELETE;
         // Usually DELETE operation has nothing to show so no output is needed, unless a query reads the resource back
-        // after the command (e.g. a bulk removal of some rows answering the updated parent)
-        $hasQuery = !empty($CQRSQuery) || !empty($extraProperties['CQRSQuery']);
-        $passedArguments['output'] = $output ?? ($hasQuery ? null : false);
-        $passedArguments['status'] = $status ?? ($hasQuery ? Response::HTTP_OK : null);
+        // after the command (e.g. a bulk removal of some rows answering the updated parent), or a collection answers the
+        // list returned by its command (nothing, so a 204, when the command returns nothing)
+        $hasOutput = !empty($CQRSQuery) || !empty($extraProperties['CQRSQuery']) || $this instanceof CollectionOperationInterface;
+        $passedArguments['output'] = $output ?? ($hasOutput ? null : false);
+        $passedArguments['status'] = $status ?? ($hasOutput ? Response::HTTP_OK : null);
         // By default, the ReadProvider will trigger a 404 exception with DELETE method, so we disable it unless said otherwise
         $passedArguments['read'] = $read ?? false;
         // For methods POST, PUT and PATCH deserialization is automatically enabled, not with DELETE and we need it to deserialize the command input

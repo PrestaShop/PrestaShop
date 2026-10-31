@@ -104,6 +104,16 @@ class CQRSCollectionOperationsEndpointTest extends ApiTestCase
         $this->assertSame([], $featureValues);
     }
 
+    public function testDeleteCollectionWithoutQuery(): void
+    {
+        $options = ['auth_bearer' => $this->getBearerToken()];
+        $response = static::createClient()->request('DELETE', '/test/collections/products/3/feature-value-ids', $options);
+
+        // The command returns nothing
+        self::assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
+        $this->assertSame('', $response->getContent());
+    }
+
     /**
      * The test operations have no scope, any token is accepted.
      */

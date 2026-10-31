@@ -151,6 +151,13 @@ services:
     arguments:
       $decorated: '@.inner'
 
+  # This decorator ignores the resources written for a newer core (an operation class or argument this core doesn't have)
+  PrestaShopBundle\ApiPlatform\Metadata\Resource\Factory\UnsupportedApiResourceMetadataCollectionFactoryDecorator:
+    decorates: api_platform.metadata.resource.metadata_collection_factory.attributes
+    autowire: true
+    arguments:
+      $decorated: '@.inner'
+
   # This decorator allows filtering the available ApiPlatform resources when they are base on non existing CQRS classes
   PrestaShopBundle\ApiPlatform\Metadata\Resource\Factory\CQRSNotFoundMetadataCollectionFactoryDecorator:
     # It is important to decorate early in the decoration chain, because InputOutputResourceMetadataCollectionFactory checks the existence
