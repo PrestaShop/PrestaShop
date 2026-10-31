@@ -7,12 +7,16 @@
 namespace PrestaShop\PrestaShop\Core\Localization\Locale;
 
 use PrestaShop\Decimal\Operation\Rounding;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleInterface as CldrLocaleInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository as CldrLocaleRepository;
+use PrestaShop\PrestaShop\Core\Localization\Currency;
+use PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyInstalled;
 use PrestaShop\PrestaShop\Core\Localization\Currency\RepositoryInterface as CurrencyRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Number\Formatter as NumberFormatter;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Factory as SpecificationFactory;
+use PrestaShop\PrestaShop\Core\Localization\Specification\LazyNumberCollection;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberCollection as PriceSpecificationMap;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
@@ -98,6 +102,13 @@ class Repository implements RepositoryInterface
      */
     protected $specificationFactory;
 
+    /**
+     * When set, price specifications are built on first use instead of for every installed currency.
+     *
+     * @var CurrencyInstalled|null
+     */
+    protected $installedCurrencies;
+
     public function __construct(
         CldrLocaleRepository $cldrLocaleRepository,
         CurrencyRepositoryInterface $currencyRepository,
@@ -105,8 +116,10 @@ class Repository implements RepositoryInterface
         $numberingSystem = Locale::NUMBERING_SYSTEM_LATIN,
         $currencyDisplayType = PriceSpecification::CURRENCY_DISPLAY_SYMBOL,
         $groupingUsed = true,
-        $maxFractionDigits = self::MAX_FRACTION_DIGITS
+        $maxFractionDigits = self::MAX_FRACTION_DIGITS,
+        ?CurrencyInstalled $installedCurrencies = null
     ) {
+        $this->installedCurrencies = $installedCurrencies;
         $this->cldrLocaleRepository = $cldrLocaleRepository;
         $this->currencyRepository = $currencyRepository;
         $this->roundingMode = $roundingMode;
@@ -183,19 +196,23 @@ class Repository implements RepositoryInterface
             throw new LocalizationException('CLDR locale not found for locale code "' . $localeCode . '"');
         }
 
+        if (null !== $this->installedCurrencies) {
+            return new LazyNumberCollection(
+                $this->installedCurrencies->getAllInstalledCurrencyIsoCodes(),
+                fn (string $currencyCode): PriceSpecification => $this->buildPriceSpecification(
+                    $localeCode,
+                    $cldrLocale,
+                    $this->currencyRepository->getCurrency($currencyCode, $localeCode)
+                )
+            );
+        }
+
         $currencies = $this->currencyRepository->getAllInstalledCurrencies($localeCode);
 
         $priceSpecifications = new PriceSpecificationMap();
         foreach ($currencies as $currency) {
             // Build the spec
-            $thisPriceSpecification = (new SpecificationFactory())->buildPriceSpecification(
-                $localeCode,
-                $cldrLocale,
-                $currency,
-                $this->numberGroupingUsed,
-                $this->currencyDisplayType,
-                (int) $currency->getDecimalPrecision()
-            );
+            $thisPriceSpecification = $this->buildPriceSpecification($localeCode, $cldrLocale, $currency);
 
             // Add the spec to the collection
             $priceSpecifications->add(
@@ -205,6 +222,18 @@ class Repository implements RepositoryInterface
         }
 
         return $priceSpecifications;
+    }
+
+    private function buildPriceSpecification(string $localeCode, CldrLocaleInterface $cldrLocale, Currency $currency): PriceSpecification
+    {
+        return $this->specificationFactory->buildPriceSpecification(
+            $localeCode,
+            $cldrLocale,
+            $currency,
+            $this->numberGroupingUsed,
+            $this->currencyDisplayType,
+            (int) $currency->getDecimalPrecision()
+        );
     }
 
     /**
