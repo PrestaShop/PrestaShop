@@ -214,19 +214,8 @@ class Calculator
     {
         $amount = new AmountImmutable();
         foreach ($this->cartRows as $cartRow) {
-            /*
-             * We round the tax included price only, to keep the calculations using
-             * the displayed prices the user sees. If he sees 999 EUR, we will use this
-             * rounded values for calculations, no magic 999.5 EUR behind this.
-             *
-             * For tax excluded price however, we keep the non-rounded value, because we could
-             * have a big difference at the end of the calculation. We will round the tax
-             * excluded price as a last thing.
-             *
-             * If we decide one day to support using tax excluded price as the primary one, we
-             * can reverse this the other way around.
-             */
-            $amount = $amount->add($this->roundedTaxIncluded($cartRow->getInitialTotalPrice(), $this->computePrecision));
+            // Already rounded per item or per line when the round type asks for it, never in round-total mode
+            $amount = $amount->add($cartRow->getInitialTotalPrice());
         }
 
         return $amount;
@@ -390,24 +379,6 @@ class Calculator
         return new AmountImmutable(
             Tools::ps_round($amount->getTaxIncluded(), $computePrecision),
             Tools::ps_round($amount->getTaxExcluded(), $computePrecision)
-        );
-    }
-
-    /**
-     * Rounds only tax included price by given precision and leaves the tax
-     * excluded price with original precision. Useful for inter-calculations
-     * when we have one primary price to use.
-     *
-     * @param AmountImmutable $amount
-     * @param int $computePrecision
-     *
-     * @return AmountImmutable
-     */
-    private function roundedTaxIncluded(AmountImmutable $amount, int $computePrecision): AmountImmutable
-    {
-        return new AmountImmutable(
-            Tools::ps_round($amount->getTaxIncluded(), $computePrecision),
-            $amount->getTaxExcluded()
         );
     }
 }
