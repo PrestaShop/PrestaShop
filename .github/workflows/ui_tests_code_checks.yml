@@ -2,6 +2,12 @@ name: UI tests code checks
 
 on:
   push:
+    branches-ignore:
+      - 'chore/**'
+      - 'dependabot/**'
+      - 'merge-*'
+    tags:
+      - '**'
     paths:
       - 'tests/UI/**'
       - '.github/workflows/ui_tests_code_checks.yml'
