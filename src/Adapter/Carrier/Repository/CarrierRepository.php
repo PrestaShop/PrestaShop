@@ -226,23 +226,21 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
      */
     public function updateAssociatedZones(CarrierId $carrierId, array $zoneIds): void
     {
-        $this->connection->beginTransaction();
+        $this->connection->transactional(function () use ($carrierId, $zoneIds): void {
+            $this->connection->delete($this->prefix . 'carrier_zone', [
+                'id_carrier' => $carrierId->getValue(),
+            ]);
 
-        $this->connection->delete($this->prefix . 'carrier_zone', [
-            'id_carrier' => $carrierId->getValue(),
-        ]);
-
-        foreach ($zoneIds as $zoneId) {
-            $this->connection->insert(
-                $this->prefix . 'carrier_zone',
-                [
-                    'id_carrier' => $carrierId->getValue(),
-                    'id_zone' => $zoneId,
-                ]
-            );
-        }
-
-        $this->connection->commit();
+            foreach ($zoneIds as $zoneId) {
+                $this->connection->insert(
+                    $this->prefix . 'carrier_zone',
+                    [
+                        'id_carrier' => $carrierId->getValue(),
+                        'id_zone' => $zoneId,
+                    ]
+                );
+            }
+        });
     }
 
     public function getTaxRulesGroup(CarrierId $carrierId, ShopConstraint $shopConstraint): int
