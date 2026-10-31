@@ -6,6 +6,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order\Refund;
 
+use Configuration;
 use Currency;
 use Customer;
 use Group;
@@ -52,6 +53,7 @@ class OrderRefundCalculator
 
         $orderDetailList = $this->getOrderDetailList($orderDetailRefunds);
         $productRefunds = $this->flattenCheckedProductRefunds(
+            $order,
             $orderDetailRefunds,
             $isTaxIncluded,
             $orderDetailList,
@@ -132,6 +134,7 @@ class OrderRefundCalculator
     }
 
     /**
+     * @param Order $order
      * @param array $orderDetailRefunds
      * @param bool $isTaxIncluded
      * @param array $orderDetails
@@ -142,6 +145,7 @@ class OrderRefundCalculator
      * @throws InvalidCancelProductException
      */
     private function flattenCheckedProductRefunds(
+        Order $order,
         array $orderDetailRefunds,
         bool $isTaxIncluded,
         array $orderDetails,
@@ -164,9 +168,12 @@ class OrderRefundCalculator
                 'id_order_detail' => $orderDetailId,
             ];
 
-            // Compute max refund by product (based on quantity left and already refunded amount)
-            $productUnitPrice = $isTaxIncluded ? (float) $orderDetail->unit_price_tax_incl : (float) $orderDetail->unit_price_tax_excl;
-            $productMaxRefund = (int) $quantity * $productUnitPrice;
+            // Compute max refund by product: what was paid for this quantity, rounded like the order, without exceeding what is left to refund
+            $leftTaxIncl = max(0.0, (float) $orderDetail->total_price_tax_incl - (float) $orderDetail->total_refunded_tax_incl);
+            $leftTaxExcl = max(0.0, (float) $orderDetail->total_price_tax_excl - (float) $orderDetail->total_refunded_tax_excl);
+            $paidTaxIncl = min($this->getPaidAmount($order, (float) $orderDetail->unit_price_tax_incl, $quantity, $precision), $leftTaxIncl);
+            $paidTaxExcl = min($this->getPaidAmount($order, (float) $orderDetail->unit_price_tax_excl, $quantity, $precision), $leftTaxExcl);
+            $productMaxRefund = $isTaxIncluded ? $paidTaxIncl : $paidTaxExcl;
 
             // If refunded amount is null it means the whole product is refunded (used for standard refund, and return product)
             if (null === $orderDetailRefund->getRefundedAmount()) {
@@ -184,12 +191,16 @@ class OrderRefundCalculator
             $taxCalculator = $orderDetail->getTaxCalculator();
 
             // Add data for OrderDetail updates, it's important to round because too many decimals will fail in Validate::isPrice
-            if ($isTaxIncluded) {
-                $productRefunds[$orderDetailId]['total_refunded_tax_incl'] = Tools::ps_round($productRefundAmount, $precision);
-                $productRefunds[$orderDetailId]['total_refunded_tax_excl'] = Tools::ps_round($taxCalculator->removeTaxes($productRefundAmount), $precision);
+            $roundMode = (int) $order->round_mode;
+            if (null === $orderDetailRefund->getRefundedAmount()) {
+                $productRefunds[$orderDetailId]['total_refunded_tax_incl'] = Tools::ps_round($paidTaxIncl, $precision, $roundMode);
+                $productRefunds[$orderDetailId]['total_refunded_tax_excl'] = Tools::ps_round($paidTaxExcl, $precision, $roundMode);
+            } elseif ($isTaxIncluded) {
+                $productRefunds[$orderDetailId]['total_refunded_tax_incl'] = Tools::ps_round($productRefundAmount, $precision, $roundMode);
+                $productRefunds[$orderDetailId]['total_refunded_tax_excl'] = Tools::ps_round(min($taxCalculator->removeTaxes($productRefundAmount), $leftTaxExcl), $precision, $roundMode);
             } else {
-                $productRefunds[$orderDetailId]['total_refunded_tax_excl'] = Tools::ps_round($productRefundAmount, $precision);
-                $productRefunds[$orderDetailId]['total_refunded_tax_incl'] = Tools::ps_round($taxCalculator->addTaxes($productRefundAmount), $precision);
+                $productRefunds[$orderDetailId]['total_refunded_tax_excl'] = Tools::ps_round($productRefundAmount, $precision, $roundMode);
+                $productRefunds[$orderDetailId]['total_refunded_tax_incl'] = Tools::ps_round(min($taxCalculator->addTaxes($productRefundAmount), $leftTaxIncl), $precision, $roundMode);
             }
 
             // Add missing fields
@@ -200,6 +211,23 @@ class OrderRefundCalculator
         }
 
         return $productRefunds;
+    }
+
+    /**
+     * Amount paid for a quantity of a product line, rounded with the rounding type and mode of the order
+     */
+    private function getPaidAmount(Order $order, float $unitPrice, int $quantity, int $precision): float
+    {
+        $roundMode = (int) $order->round_mode;
+
+        switch ((int) $order->round_type ?: (int) Configuration::get('PS_ROUND_TYPE')) {
+            case Order::ROUND_ITEM:
+                return Tools::ps_round($unitPrice, $precision, $roundMode) * $quantity;
+            case Order::ROUND_LINE:
+                return Tools::ps_round($unitPrice * $quantity, $precision, $roundMode);
+            default:
+                return $unitPrice * $quantity;
+        }
     }
 
     /**

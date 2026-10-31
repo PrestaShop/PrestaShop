@@ -263,7 +263,7 @@ class OrderDetailUpdater
     private function prepareOrderContext(Order $order): array
     {
         $shopConstraint = ShopConstraint::shop((int) $order->id_shop);
-        $roundType = (int) $this->shopConfiguration->get('PS_ROUND_TYPE', null, $shopConstraint);
+        $roundType = (int) $order->round_type ?: (int) $this->shopConfiguration->get('PS_ROUND_TYPE', null, $shopConstraint);
         $taxAddressType = $this->shopConfiguration->get('PS_TAX_ADDRESS_TYPE', null, $shopConstraint);
         $taxAddress = new Address($order->{$taxAddressType});
         $country = new Country($taxAddress->id_country);

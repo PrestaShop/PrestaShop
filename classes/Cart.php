@@ -2365,6 +2365,10 @@ class CartCore extends ObjectModel
         $useEcotax = $this->configuration->get('PS_USE_ECOTAX');
         $precision = Context::getContext()->getComputingPrecision();
         $configRoundType = $this->configuration->get('PS_ROUND_TYPE');
+        if (null !== $orderId) {
+            // An existing order keeps the rounding type it was placed with
+            $configRoundType = (int) (new Order($orderId))->round_type ?: $configRoundType;
+        }
         $roundTypes = [
             Order::ROUND_TOTAL => CartRow::ROUND_MODE_TOTAL,
             Order::ROUND_LINE => CartRow::ROUND_MODE_LINE,
