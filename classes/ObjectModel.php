@@ -15,7 +15,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyValidatorIn
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertiesBag;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyWriterInterface;
 use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
-use PrestaShopBundle\Translation\TranslatorComponent;
+use PrestaShopBundle\Translation\TranslatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -109,7 +109,7 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
     /** @var string file type of image files. */
     protected $image_format = 'jpg';
 
-    /** @var TranslatorComponent */
+    /** @var TranslatorInterface */
     protected $translator;
 
     /**
@@ -184,7 +184,7 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
      * @param int|null $id if specified, loads and existing object from DB (optional)
      * @param int|null $id_lang required if object is multilingual (optional)
      * @param int|null $id_shop ID shop for objects with multishop tables
-     * @param TranslatorComponent|null $translator
+     * @param TranslatorInterface|null $translator
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
