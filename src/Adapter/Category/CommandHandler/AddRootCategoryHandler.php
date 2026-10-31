@@ -9,6 +9,7 @@ namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 use Category;
 use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
 use PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryImageUploader;
+use PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameCacheInvalidator;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
@@ -27,8 +28,13 @@ final class AddRootCategoryHandler extends AbstractEditCategoryHandler implement
         private readonly ConfigurationInterface $configuration,
         CategoryImageUploader $categoryImageUploader,
         CategoryRepository $categoryRepository,
+        CategoryDisplayNameCacheInvalidator $categoryDisplayNameCacheInvalidator,
     ) {
-        parent::__construct($categoryImageUploader, $categoryRepository);
+        parent::__construct(
+            $categoryImageUploader,
+            $categoryRepository,
+            $categoryDisplayNameCacheInvalidator,
+        );
     }
 
     /**
@@ -40,6 +46,8 @@ final class AddRootCategoryHandler extends AbstractEditCategoryHandler implement
         $category = $this->createRootCategoryFromCommand($command);
 
         $categoryId = new CategoryId((int) $category->id);
+
+        $this->categoryDisplayNameCacheInvalidator->invalidate();
 
         $this->categoryImageUploader->uploadImages(
             $categoryId,
