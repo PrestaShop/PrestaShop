@@ -5,7 +5,7 @@
  */
 
 use PrestaShop\PrestaShop\Core\Util\CacheClearLocker;
-use Symfony\Component\Dotenv\Dotenv;
+use PrestaShop\PrestaShop\Core\Util\DotEnvLoader;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -21,8 +21,8 @@ require_once _PS_FRONT_DIR_ . '/config/config.inc.php';
 require_once _PS_FRONT_DIR_ . '/vendor/autoload.php';
 define('_PS_APP_ID_', FrontKernel::APP_ID);
 
-// Load .env file from the root of project if present
-(new Dotenv(false))->loadEnv(_PS_FRONT_DIR_ . '/.env');
+// Loads the .env files from the root of project if present
+DotEnvLoader::load(_PS_FRONT_DIR_ . '/.env');
 
 // If we want to use new container access in front (Warning: Experimental feature from now!)
 if (isset($_ENV['PS_FF_FRONT_CONTAINER_V2']) && filter_var($_ENV['PS_FF_FRONT_CONTAINER_V2'], \FILTER_VALIDATE_BOOL)) {
