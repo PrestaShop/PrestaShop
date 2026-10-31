@@ -350,7 +350,17 @@ class OrderDetailCore extends ObjectModel
         $taxes = [];
         if ($results = Db::getInstance()->executeS($sql)) {
             foreach ($results as $result) {
-                $taxes[] = new Tax((int) $result['id_tax']);
+                $tax = new Tax((int) $result['id_tax']);
+                // WHY: order_detail_tax can carry an id_tax that resolves to nothing - a tax-free line
+                // stores 0, and a tax deleted since the order was placed leaves its id behind. new Tax()
+                // then returns an unloaded object whose rate is null, and TaxCalculator's abs($tax->rate)
+                // is deprecated on PHP 8 and a TypeError on PHP 9. Such a row also carries no rate to
+                // apply, so leaving it out changes no amount: getTaxesAmount() simply stops returning an
+                // entry keyed by the empty string, which Order::getProductTaxesDetails() would otherwise
+                // write straight back as another id_tax = 0 row.
+                if (Validate::isLoadedObject($tax)) {
+                    $taxes[] = $tax;
+                }
                 $computation_method = $result['tax_computation_method'];
             }
         }
