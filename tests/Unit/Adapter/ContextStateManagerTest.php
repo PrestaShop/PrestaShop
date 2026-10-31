@@ -8,6 +8,7 @@ namespace Tests\Unit\Adapter;
 
 use AdminController;
 use Cart;
+use Context;
 use Country;
 use Currency;
 use Customer;
@@ -135,6 +136,77 @@ class ContextStateManagerTest extends ContextStateTestCase
         $contextStateManager->restorePreviousContext();
         $this->assertEquals(42, $context->currency->id);
         $this->assertNull($contextStateManager->getContextFieldsStack());
+    }
+
+    public function testCurrencyChangeResetsComputingPrecision(): void
+    {
+        $context = new Context();
+        $context->currency = $this->createCurrencyMock(42, 0);
+        LegacyContext::setInstanceForTesting($context);
+
+        // The first call stores the precision in cache, like early calls in a back office request
+        $this->assertSame(0, $context->getComputingPrecision());
+
+        $contextStateManager = new ContextStateManager($this->legacyContext);
+        $contextStateManager->setCurrency($this->createCurrencyMock(51, 2));
+        $this->assertSame(2, $context->getComputingPrecision());
+
+        $contextStateManager->saveCurrentContext();
+        $contextStateManager->setCurrency($this->createCurrencyMock(69, 3));
+        $this->assertSame(3, $context->getComputingPrecision());
+
+        $contextStateManager->restorePreviousContext();
+        $this->assertEquals(51, $context->currency->id);
+        $this->assertSame(2, $context->getComputingPrecision());
+
+        $contextStateManager->restorePreviousContext();
+        $this->assertEquals(42, $context->currency->id);
+        $this->assertSame(0, $context->getComputingPrecision());
+        $this->assertNull($contextStateManager->getContextFieldsStack());
+    }
+
+    public function testComputingPrecisionIsKeptWhenNoCurrencyIsRestored(): void
+    {
+        // In a back office request, the legacy context has no currency until the context builders set it
+        $context = new Context();
+        $context->currency = null;
+        LegacyContext::setInstanceForTesting($context);
+
+        $contextStateManager = new ContextStateManager($this->legacyContext);
+        $contextStateManager->setCurrency($this->createCurrencyMock(42, 0));
+        $this->assertSame(0, $context->getComputingPrecision());
+
+        // A handler sets the currency in the same layer, so restoring the context brings back the null currency
+        $contextStateManager->setCurrency($this->createCurrencyMock(51, 2));
+        $this->assertSame(2, $context->getComputingPrecision());
+
+        // A nested service saves the context, sets the currency and restores it, no precision is read in between
+        $contextStateManager->saveCurrentContext();
+        $contextStateManager->setCurrency($this->createCurrencyMock(69, 2));
+        $contextStateManager->restorePreviousContext();
+
+        $contextStateManager->restorePreviousContext();
+        $this->assertNull($context->currency);
+        $this->assertNull($contextStateManager->getContextFieldsStack());
+        // Without currency the precision cannot be computed, the last computed value is kept
+        $this->assertSame(2, $context->getComputingPrecision());
+    }
+
+    public function testComputingPrecisionIsKeptWhenCurrencyHasNoPrecision(): void
+    {
+        $context = new Context();
+        $context->currency = $this->createCurrencyMock(42, 2);
+        LegacyContext::setInstanceForTesting($context);
+        $this->assertSame(2, $context->getComputingPrecision());
+
+        // A currency loaded with an unknown id has no precision, it must not break the context
+        $contextStateManager = new ContextStateManager($this->legacyContext);
+        $contextStateManager->setCurrency($this->createContextFieldMock(Currency::class, 0));
+        $this->assertSame(2, $context->getComputingPrecision());
+
+        $contextStateManager->restorePreviousContext();
+        $this->assertEquals(42, $context->currency->id);
+        $this->assertSame(2, $context->getComputingPrecision());
     }
 
     public function testCustomerState()
@@ -566,6 +638,15 @@ class ContextStateManagerTest extends ContextStateTestCase
         $contextStateManager->restorePreviousContext();
         $this->assertEquals(42, $context->language->id);
         $this->assertNull($contextStateManager->getContextFieldsStack());
+    }
+
+    private function createCurrencyMock(int $currencyId, int $precision): Currency|MockObject
+    {
+        /** @var Currency|MockObject $currency */
+        $currency = $this->createContextFieldMock(Currency::class, $currencyId);
+        $currency->precision = $precision;
+
+        return $currency;
     }
 
     private function createLocalizationLocaleMock(string $code): LocaleInterface|MockObject
