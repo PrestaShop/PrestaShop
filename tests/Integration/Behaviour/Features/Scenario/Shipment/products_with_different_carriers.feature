@@ -163,6 +163,8 @@ Feature: Product associated with different carriers
       | shipment | quantity |
       | shipment2 |       1 |
       | shipment3 |       1 |
+    And the product "saucisson" of order "bo_order1" should be in shipments "shipment2,shipment3"
+    And the product "bottle of beer" of order "bo_order1" should be in shipments "shipment1"
 
     # Merge product into a shipment with specified quantity
     When I merge product from "shipment2" into "shipment1" with following information:

@@ -15,6 +15,8 @@ use OrderDetail;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotFindProductInOrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderProductsForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\CreateShipment;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\DeleteProductFromShipment;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\EditShipment;
@@ -121,6 +123,27 @@ class ShipmentFeatureContext extends AbstractDomainFeatureContext
             Assert::assertEqualsWithDelta((float) $shipmentData['shipping_cost_tax_incl'], (float) (string) $shipment->getShippingCostTaxIncluded(), 0.001, 'Wrong shipping cost tax included for ' . $carrierReference);
             SharedStorage::getStorage()->set($shipmentData['shipment'], $shipment->getId());
         }
+    }
+
+    /**
+     * A product may be split into several order lines, the shipments of all its lines are checked.
+     *
+     * @Then the product :productName of order :orderReference should be in shipments :shipmentReferences
+     */
+    public function assertOrderProductShipments(string $productName, string $orderReference, string $shipmentReferences): void
+    {
+        /** @var OrderProductsForViewing $orderProducts */
+        $orderProducts = $this->getQueryBus()->handle(GetOrderProductsForViewing::all($this->referenceToId($orderReference)));
+
+        $shipmentIds = [];
+        foreach ($orderProducts->getProducts() as $orderProduct) {
+            if ($orderProduct->getName() === $productName) {
+                $shipmentIds = array_merge($shipmentIds, $orderProduct->getShipmentIds());
+            }
+        }
+        sort($shipmentIds);
+
+        Assert::assertSame($this->referencesToIds($shipmentReferences), $shipmentIds);
     }
 
     /**
