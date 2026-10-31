@@ -125,6 +125,31 @@ function smarty_modifier_htmlentitiesUTF8($string)
     return Tools::htmlentitiesUTF8($string);
 }
 
+/**
+ * Keeps the markup of a label while removing anything that could be used to attack the page.
+ *
+ * This is the Smarty counterpart of the raw_purified Twig filter, for labels that legitimately carry
+ * markup but may also come from the database.
+ *
+ * WHY the fallback escapes instead of returning the value: without the container there is no
+ * purifier, and these labels are not trusted, so the only safe answer is the escaped string.
+ *
+ * @param string|null $string
+ *
+ * @return string
+ */
+function smarty_modifier_purify($string)
+{
+    $string = (string) $string;
+    $container = PrestaShop\PrestaShop\Adapter\SymfonyContainer::getInstance();
+
+    if ($container === null) {
+        return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
+    }
+
+    return $container->get('prestashop.utils.html_purifier')->purify($string);
+}
+
 function smartyRegisterFunction($smarty, $type, $function, $params, $lazy = true, $initial_lazy_register = null)
 {
     if (!in_array($type, array('function', 'modifier', 'block'))) {
