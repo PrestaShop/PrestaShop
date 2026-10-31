@@ -47,7 +47,8 @@ class RoundingCalculatorTest extends TestCase
 
     public function testRoundsFinalPriceDown(): void
     {
-        $roundingService = new RoundingService(0);
+        // PS_ROUND_UP would take 29.49 up to 30; half-up is the mode that can round down here.
+        $roundingService = new RoundingService(PS_ROUND_HALF_UP);
         $calculator = new RoundingCalculator($roundingService);
 
         $productPrice = ProductPrice::create(1, 0);
