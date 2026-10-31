@@ -87,3 +87,32 @@ Feature: Update product combination details in Back Office (BO)
       | reference          |       |
       | upc                |       |
       | impact on weight   | 0     |
+
+  Scenario: I set an impact on shipping fees per combination:
+    Given I add product "product2" with following information:
+      | name[en-US] | shipped T-shirt |
+      | type        | combinations    |
+    And I generate combinations for product product2 using following attributes:
+      | Size | [S,M] |
+    And product "product2" should have following combinations:
+      | id reference | combination name | reference | attributes | impact on price | quantity | is default |
+      | product2S    | Size - S         |           | [Size:S]   | 0               | 0        | true       |
+      | product2M    | Size - M         |           | [Size:M]   | 0               | 0        | false      |
+    # A combination starts with no impact of its own, so the product's own shipping fee applies alone.
+    And combination "product2S" should have following details:
+      | combination detail       | value |
+      | impact on shipping fees  | 0     |
+    When I update combination "product2S" with following values:
+      | impact on shipping fees | 2.5 |
+    Then combination "product2S" should have following details:
+      | combination detail      | value |
+      | impact on shipping fees | 2.5   |
+    # The impact belongs to one combination and must not spread to its siblings.
+    And combination "product2M" should have following details:
+      | combination detail      | value |
+      | impact on shipping fees | 0     |
+    When I update combination "product2S" with following values:
+      | impact on shipping fees | 0 |
+    Then combination "product2S" should have following details:
+      | combination detail      | value |
+      | impact on shipping fees | 0     |
