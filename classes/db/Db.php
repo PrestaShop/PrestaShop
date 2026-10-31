@@ -641,7 +641,7 @@ abstract class DbCore
                 Cache::getInstance()->incrementQueryCounter($sql);
                 $this->last_cached = true;
 
-                return $result;
+                return $result === [] ? false : $result;
             }
         }
 
