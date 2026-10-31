@@ -130,7 +130,8 @@ class SearchCore
 
         // First, we take the string and clean it as a whole.
         // This removes special characters, tags, blacklisted words, hyphens etc.
-        // So, "Prestashop Tést A-1000" becomes "prestashop test a 1000";
+        // For a search query, "Prestashop Tést A-1000" becomes "prestashop test a 1000".
+        // Indexing also adds "a1000" and filters words below the configured minimum length.
         $sanitizedString = Search::sanitize($string, $id_lang, $indexation, $iso_code, false);
 
         // And we separate it by words to get array
@@ -200,6 +201,19 @@ class SearchCore
         $string = implode(' ', $terms);
 
         if ($indexation) {
+            // Add joined forms of separator-containing words before applying the index filters.
+            if (!$keepHyphens && strpbrk($string, '-._') !== false) {
+                foreach (preg_split('/\s+/u', $string) as $indexWord) {
+                    if (strpbrk($indexWord, '-._') !== false) {
+                        $joinedWord = str_replace(['-', '.', '_'], '', $indexWord);
+                        if ($joinedWord !== '') {
+                            $string .= ' ' . $joinedWord;
+                        }
+                    }
+                }
+            }
+
+            // Split dots and underscores, and optionally hyphens, into separate index words.
             if (!$keepHyphens) {
                 $string = str_replace(['.', '_', '-'], ' ', $string);
             } else {
