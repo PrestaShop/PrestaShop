@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\ExtraProperty;
 
+use Closure;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -29,8 +30,7 @@ use PrestaShop\PrestaShop\Core\Shop\ShopListResolverInterface;
 /**
  * Covers ExtraPropertyWriter::writeAll() with the grouped [module => [property => value]]
  * input: scope routing, storage column resolution, lang array/scalar handling, nullable
- * NULL handling, shop fan-out (one multi-row UPSERT per table covering every shop of the
- * constraint's scope) and the SHOP-scope association rule (broad scopes only refresh the
+ * NULL handling, shop fan-out (one UPDATE per row) and the SHOP-scope association rule (broad scopes only refresh the
  * shops the entity is associated with). The shop list resolver is stubbed with a 2-shop
  * installation (shop 1 and shop 2, both in group 1); the {entity}_shop association query
  * is stubbed through Connection::fetchAllAssociative (both shops associated by default).
@@ -67,22 +67,23 @@ class ExtraPropertyWriterTest extends TestCase
             ],
         ], ShopConstraint::shop(3));
 
-        $this->assertCount(3, $this->statements);
+        $this->assertCount(4, $this->statements);
 
-        // Common scope: one UPSERT with both columns.
+        // Common scope: one UPDATE with both columns, data bound before the key.
         $common = $this->statements[0];
         $this->assertStringContainsString('ps_product_extra`', $common['sql']);
         $this->assertStringContainsString('demoextrafield_reference_code', $common['sql']);
         $this->assertStringContainsString('demoextrafield_is_dangerous', $common['sql']);
-        $this->assertSame([7, 'REF-1', 1], $common['params']);
+        $this->assertSame(['REF-1', 1, 7], $common['params']);
 
-        // Lang scope: ONE multi-row UPSERT, one row per language (entityId, shopId, idLang, value).
+        // Lang scope: one UPDATE per language, with the full storage identity.
         $this->assertStringContainsString('ps_product_extra_lang', $this->statements[1]['sql']);
-        $this->assertSame([7, 3, 1, 'https://en', 7, 3, 2, 'https://fr'], $this->statements[1]['params']);
+        $this->assertSame(['https://en', 7, 3, 1], $this->statements[1]['params']);
+        $this->assertSame(['https://fr', 7, 3, 2], $this->statements[2]['params']);
 
-        // Shop scope: (entityId, shopId, value).
-        $this->assertStringContainsString('ps_product_extra_shop', $this->statements[2]['sql']);
-        $this->assertSame([7, 3, '2026-06-12 10:00:00'], $this->statements[2]['params']);
+        // Shop scope: (value, entityId, shopId).
+        $this->assertStringContainsString('ps_product_extra_shop', $this->statements[3]['sql']);
+        $this->assertSame(['2026-06-12 10:00:00', 7, 3], $this->statements[3]['params']);
     }
 
     public function testLangScalarUsesDefaultLangIdAndIsSkippedWithoutIt(): void
@@ -93,7 +94,7 @@ class ExtraPropertyWriterTest extends TestCase
         ], ShopConstraint::shop(1), 2);
 
         $this->assertCount(1, $this->statements);
-        $this->assertSame([7, 1, 2, 'https://scalar'], $this->statements[0]['params']);
+        $this->assertSame(['https://scalar', 7, 1, 2], $this->statements[0]['params']);
 
         $this->statements = [];
         $writer = $this->buildWriter();
@@ -117,8 +118,8 @@ class ExtraPropertyWriterTest extends TestCase
 
         $this->assertCount(2, $this->statements);
         $this->assertStringNotContainsString('is_dangerous', $this->statements[0]['sql']);
-        $this->assertSame([7, null], $this->statements[0]['params']);
-        $this->assertSame([7, 1, 1, null], $this->statements[1]['params']);
+        $this->assertSame([null, 7], $this->statements[0]['params']);
+        $this->assertSame([null, 7, 1, 1], $this->statements[1]['params']);
     }
 
     public function testAllShopsConstraintFansOutLangAndShopWritesInBatchedStatements(): void
@@ -132,11 +133,13 @@ class ExtraPropertyWriterTest extends TestCase
             ],
         ], ShopConstraint::allShops());
 
-        // 1 common + ONE lang statement covering every shop + ONE shop statement covering every shop.
-        $this->assertCount(3, $this->statements);
+        // One common UPDATE, two lang UPDATEs and two shop UPDATEs.
+        $this->assertCount(5, $this->statements);
         $this->assertStringContainsString('ps_product_extra`', $this->statements[0]['sql']);
-        $this->assertSame([7, 1, 1, 'https://en', 7, 2, 1, 'https://en'], $this->statements[1]['params']);
-        $this->assertSame([7, 1, '2026-06-12 10:00:00', 7, 2, '2026-06-12 10:00:00'], $this->statements[2]['params']);
+        $this->assertSame(['https://en', 7, 1, 1], $this->statements[1]['params']);
+        $this->assertSame(['https://en', 7, 2, 1], $this->statements[2]['params']);
+        $this->assertSame(['2026-06-12 10:00:00', 7, 1], $this->statements[3]['params']);
+        $this->assertSame(['2026-06-12 10:00:00', 7, 2], $this->statements[4]['params']);
     }
 
     public function testBroadShopScopeWritesOnlyTheAssociatedShops(): void
@@ -154,9 +157,10 @@ class ExtraPropertyWriterTest extends TestCase
             ],
         ], ShopConstraint::allShops());
 
-        $this->assertCount(2, $this->statements);
-        $this->assertSame([7, 1, 1, 'https://en', 7, 2, 1, 'https://en'], $this->statements[0]['params']);
-        $this->assertSame([7, 2, '2026-06-12 10:00:00'], $this->statements[1]['params']);
+        $this->assertCount(3, $this->statements);
+        $this->assertSame(['https://en', 7, 1, 1], $this->statements[0]['params']);
+        $this->assertSame(['https://en', 7, 2, 1], $this->statements[1]['params']);
+        $this->assertSame(['2026-06-12 10:00:00', 7, 2], $this->statements[2]['params']);
     }
 
     public function testBroadShopScopeWithoutAnyAssociationWritesNothing(): void
@@ -182,22 +186,23 @@ class ExtraPropertyWriterTest extends TestCase
         ], ShopCollection::shops([2]));
 
         $this->assertCount(1, $this->statements);
-        $this->assertSame([7, 2, '2026-06-12 10:00:00'], $this->statements[0]['params']);
+        $this->assertSame(['2026-06-12 10:00:00', 7, 2], $this->statements[0]['params']);
     }
 
     public function testLangWriteOnNonMultishopLangEntityOmitsShopColumn(): void
     {
         // contact_lang has no id_shop: the extra lang table mirrors it, so no shop column,
-        // no shop fan-out — one row per language shared by every shop, in one statement.
+        // no shop fan-out — one row per language shared by every shop.
         $writer = $this->buildWriter();
         $writer->writeAll('contact', 'id_contact', 5, [
             'demoextrafield' => ['job_title' => [1 => 'CEO', 2 => 'PDG']],
         ], ShopConstraint::allShops());
 
-        $this->assertCount(1, $this->statements);
+        $this->assertCount(2, $this->statements);
         $this->assertStringContainsString('ps_contact_extra_lang', $this->statements[0]['sql']);
         $this->assertStringNotContainsString('id_shop', $this->statements[0]['sql']);
-        $this->assertSame([5, 1, 'CEO', 5, 2, 'PDG'], $this->statements[0]['params']);
+        $this->assertSame(['CEO', 5, 1], $this->statements[0]['params']);
+        $this->assertSame(['PDG', 5, 2], $this->statements[1]['params']);
     }
 
     public function testDefinitionRestrictionIntersectsTheFanOutPerDefinition(): void
@@ -213,15 +218,16 @@ class ExtraPropertyWriterTest extends TestCase
             ],
         ], ShopConstraint::allShops());
 
-        $this->assertCount(2, $this->statements);
-        $this->assertSame([7, 1, 1, 'https://en', 7, 2, 1, 'https://en'], $this->statements[0]['params']);
-        $this->assertSame([7, 2, '2026-06-12 10:00:00'], $this->statements[1]['params']);
+        $this->assertCount(3, $this->statements);
+        $this->assertSame(['https://en', 7, 1, 1], $this->statements[0]['params']);
+        $this->assertSame(['https://en', 7, 2, 1], $this->statements[1]['params']);
+        $this->assertSame(['2026-06-12 10:00:00', 7, 2], $this->statements[2]['params']);
     }
 
     public function testDefinitionsWithDifferentRestrictionsGetSeparateStatements(): void
     {
         // Two SHOP-scope definitions with different effective shop sets cannot share one
-        // multi-row upsert: each bucket gets its own statement covering its own shops.
+        // batch: each bucket covers its own shops.
         $writer = $this->buildWriter(['custom_date' => [1]]);
 
         $writer->writeAll('product', 'id_product', 7, [
@@ -231,9 +237,10 @@ class ExtraPropertyWriterTest extends TestCase
             ],
         ], ShopConstraint::allShops());
 
-        $this->assertCount(2, $this->statements);
-        $this->assertSame([7, 1, '2026-06-12 10:00:00'], $this->statements[0]['params']);
-        $this->assertSame([7, 1, 'hello', 7, 2, 'hello'], $this->statements[1]['params']);
+        $this->assertCount(3, $this->statements);
+        $this->assertSame(['2026-06-12 10:00:00', 7, 1], $this->statements[0]['params']);
+        $this->assertSame(['hello', 7, 1], $this->statements[1]['params']);
+        $this->assertSame(['hello', 7, 2], $this->statements[2]['params']);
     }
 
     public function testDefinitionNotAvailableInTheScopeIsSkippedEntirely(): void
@@ -260,7 +267,7 @@ class ExtraPropertyWriterTest extends TestCase
         ], ShopConstraint::allShops());
 
         $this->assertCount(1, $this->statements);
-        $this->assertSame([7, 2, 1, 'https://en'], $this->statements[0]['params']);
+        $this->assertSame(['https://en', 7, 2, 1], $this->statements[0]['params']);
     }
 
     public function testToggleIsANoOpWhenTheDefinitionIsNotAvailableOnTheShop(): void
@@ -288,11 +295,11 @@ class ExtraPropertyWriterTest extends TestCase
             ShopConstraint::allShops()
         );
 
-        // COMMON rows are shared by every shop: a single upsert, no shop fan-out.
+        // COMMON rows are shared by every shop: a single UPDATE, no shop fan-out.
         $this->assertCount(1, $this->statements);
         $this->assertStringContainsString('`ps_product_extra`', $this->statements[0]['sql']);
         $this->assertStringContainsString('`id_product`', $this->statements[0]['sql']);
-        $this->assertSame([7, 1], $this->statements[0]['params']);
+        $this->assertSame([1, 7], $this->statements[0]['params']);
     }
 
     public function testToggleShopScopeUsesConstraintShopId(): void
@@ -307,13 +314,13 @@ class ExtraPropertyWriterTest extends TestCase
 
         $this->assertCount(1, $this->statements);
         $this->assertStringContainsString('`ps_product_extra_shop`', $this->statements[0]['sql']);
-        $this->assertSame([7, 3, 1], $this->statements[0]['params']);
+        $this->assertSame([1, 7, 3], $this->statements[0]['params']);
     }
 
     public function testToggleShopScopeFansOutAndUniformizesAcrossConstraintShops(): void
     {
         // The representative shop's current value (true) decides the target (false),
-        // written to every associated shop of the scope in ONE multi-row statement —
+        // written to every associated shop of the scope in an atomic batch —
         // divergent shops end up aligned.
         $this->currentToggleValue = '1';
         $writer = $this->buildWriter();
@@ -324,8 +331,9 @@ class ExtraPropertyWriterTest extends TestCase
             ShopConstraint::allShops()
         );
 
-        $this->assertCount(1, $this->statements);
-        $this->assertSame([7, 1, 0, 7, 2, 0], $this->statements[0]['params']);
+        $this->assertCount(2, $this->statements);
+        $this->assertSame([0, 7, 1], $this->statements[0]['params']);
+        $this->assertSame([0, 7, 2], $this->statements[1]['params']);
     }
 
     public function testToggleShopScopeOnlyTouchesAssociatedShops(): void
@@ -340,7 +348,7 @@ class ExtraPropertyWriterTest extends TestCase
         );
 
         $this->assertCount(1, $this->statements);
-        $this->assertSame([7, 2, 1], $this->statements[0]['params']);
+        $this->assertSame([1, 7, 2], $this->statements[0]['params']);
     }
 
     public function testToggleShopScopeUsesPhysicalTableNameForAssociationLookup(): void
@@ -370,7 +378,7 @@ class ExtraPropertyWriterTest extends TestCase
         $this->assertStringContainsString('a.`id_cms` = :entityId', $this->associationQueries[0]);
         $this->assertCount(1, $this->statements);
         $this->assertStringContainsString('`ps_cms_extra_shop`', $this->statements[0]['sql']);
-        $this->assertSame([7, 1, 1], $this->statements[0]['params']);
+        $this->assertSame([1, 7, 1], $this->statements[0]['params']);
     }
 
     public function testToggleLangScopeWritesLangAndShopColumns(): void
@@ -386,7 +394,7 @@ class ExtraPropertyWriterTest extends TestCase
 
         $this->assertCount(1, $this->statements);
         $this->assertStringContainsString('`ps_product_extra_lang`', $this->statements[0]['sql']);
-        $this->assertSame([7, 3, 2, 1], $this->statements[0]['params']);
+        $this->assertSame([1, 7, 3, 2], $this->statements[0]['params']);
     }
 
     public function testToggleLangScopeWithoutLangIdThrows(): void
@@ -431,6 +439,9 @@ class ExtraPropertyWriterTest extends TestCase
             static fn (string $identifier): string => '`' . $identifier . '`'
         );
         $connection->method('getDatabasePlatform')->willReturn(new MySQLPlatform());
+        $connection->method('transactional')->willReturnCallback(static function (Closure $write): void {
+            $write();
+        });
         $connection->method('createQueryBuilder')->willReturnCallback(
             fn (): QueryBuilder => new QueryBuilder($connection)
         );
@@ -444,9 +455,15 @@ class ExtraPropertyWriterTest extends TestCase
         $connection->method('fetchOne')->willReturnCallback(
             fn (): bool|string|null => $this->currentToggleValue
         );
-        // The only fetchAllAssociative issued by the writer is the {entity}_shop association lookup.
+        // Storage rows exist for routing tests; association queries retain their own fixture.
         $connection->method('fetchAllAssociative')->willReturnCallback(
-            function (string $sql): array {
+            function (string $sql, array $params = []): array {
+                if (str_ends_with($sql, ' FOR UPDATE')) {
+                    preg_match('/^SELECT (.+) FROM /', $sql, $matches);
+                    $columns = array_map(static fn (string $column): string => trim($column, ' `'), explode(',', $matches[1]));
+
+                    return array_map(static fn (array $keys): array => array_combine($columns, $keys), array_chunk($params, count($columns)));
+                }
                 $this->associationQueries[] = $sql;
 
                 return $this->associationRows;
