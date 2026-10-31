@@ -5328,16 +5328,16 @@
         },
         {
             "name": "prestashop/productcomments",
-            "version": "v9.0.0",
+            "version": "v9.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/productcomments.git",
-                "reference": "6f12e718cc7bbdfff988f0308e3cd04413d30adc"
+                "reference": "46921bd5860cf8dc91387626634bbc8f2943f023"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/productcomments/zipball/6f12e718cc7bbdfff988f0308e3cd04413d30adc",
-                "reference": "6f12e718cc7bbdfff988f0308e3cd04413d30adc",
+                "url": "https://api.github.com/repos/PrestaShop/productcomments/zipball/46921bd5860cf8dc91387626634bbc8f2943f023",
+                "reference": "46921bd5860cf8dc91387626634bbc8f2943f023",
                 "shasum": ""
             },
             "require": {
@@ -5370,9 +5370,10 @@
             "homepage": "https://github.com/PrestaShop/productcomments",
             "support": {
                 "issues": "https://github.com/PrestaShop/productcomments/issues",
-                "source": "https://github.com/PrestaShop/productcomments/tree/v9.0.0"
+                "source": "https://github.com/PrestaShop/productcomments/tree/v9.0.1"
             },
-            "time": "2026-09-09T10:43:36+00:00"
+            "time": "2026-10-27T14:19:10+00:00",
+            "published-time": "2026-10-27T14:22:05+00:00"
         },
         {
             "name": "prestashop/ps_apiresources",
@@ -6151,16 +6152,16 @@
         },
         {
             "name": "prestashop/ps_emailsubscription",
-            "version": "v3.0.0",
+            "version": "v3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_emailsubscription.git",
-                "reference": "e2546357dcef79c676565f006fb3cbbe9e5a2d3e"
+                "reference": "0dc8168e5c058adb9e16a72f3bbdbb0b2b36145e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_emailsubscription/zipball/e2546357dcef79c676565f006fb3cbbe9e5a2d3e",
-                "reference": "e2546357dcef79c676565f006fb3cbbe9e5a2d3e",
+                "url": "https://api.github.com/repos/PrestaShop/ps_emailsubscription/zipball/0dc8168e5c058adb9e16a72f3bbdbb0b2b36145e",
+                "reference": "0dc8168e5c058adb9e16a72f3bbdbb0b2b36145e",
                 "shasum": ""
             },
             "require": {
@@ -6189,9 +6190,10 @@
             "homepage": "https://github.com/PrestaShop/ps_emailsubscription",
             "support": {
                 "issues": "https://github.com/PrestaShop/ps_emailsubscription/issues",
-                "source": "https://github.com/PrestaShop/ps_emailsubscription/tree/v3.0.0"
+                "source": "https://github.com/PrestaShop/ps_emailsubscription/tree/v3.0.1"
             },
-            "time": "2026-06-22T15:03:01+00:00"
+            "time": "2026-10-28T10:26:55+00:00",
+            "published-time": "2026-10-28T10:28:32+00:00"
         },
         {
             "name": "prestashop/ps_facetedsearch",
@@ -18939,5 +18941,5 @@
     "platform-overrides": {
         "php": "8.1.0"
     },
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.11.0"
 }
