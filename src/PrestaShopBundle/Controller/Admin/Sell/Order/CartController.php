@@ -22,6 +22,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartDeliverySettingsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartLanguageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartOrderMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductPriceInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CannotDeleteCartException;
@@ -418,6 +419,31 @@ class CartController extends PrestaShopAdminController
                 $giftSettingsEnabled ? $request->request->getBoolean('isAGift') : null,
                 $recycledPackagingEnabled ? $request->request->getBoolean('useRecycledPackaging', false) : null,
                 $request->request->get('giftMessage')
+            ));
+
+            return $this->json($this->getCartInfo($cartId));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e, $iniConfiguration))],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+    }
+
+    /**
+     * Stores the order message of a cart that has no order yet, so a draft written while preparing
+     * an order in the back office is not lost when the page is left.
+     */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
+    public function updateOrderMessageAction(
+        Request $request,
+        int $cartId,
+        IniConfiguration $iniConfiguration
+    ): JsonResponse {
+        try {
+            $this->dispatchCommand(new UpdateCartOrderMessageCommand(
+                $cartId,
+                (string) $request->request->get('orderMessage', '')
             ));
 
             return $this->json($this->getCartInfo($cartId));
