@@ -15,6 +15,13 @@ class DeliveryOptionsFinderCore implements DeliveryOptionsInterface
     private $translator;
     private $priceFormatter;
 
+    /**
+     * Memoized getDeliveryOptions() result, keyed by delivery address id.
+     *
+     * @var array<int, array>
+     */
+    private $deliveryOptionsByAddress = [];
+
     public function __construct(
         Context $context,
         TranslatorInterface $translator,
@@ -27,23 +34,15 @@ class DeliveryOptionsFinderCore implements DeliveryOptionsInterface
         $this->priceFormatter = $priceFormatter;
     }
 
-    private function isFreeShipping($cart, array $carrier)
+    private function cartHasFreeShippingCartRule($cart)
     {
-        $free_shipping = false;
-
-        if ($carrier['is_free']) {
-            $free_shipping = true;
-        } else {
-            foreach ($cart->getCartRules() as $rule) {
-                if ($rule['free_shipping'] && !$rule['carrier_restriction']) {
-                    $free_shipping = true;
-
-                    break;
-                }
+        foreach ($cart->getCartRules() as $rule) {
+            if ($rule['free_shipping'] && !$rule['carrier_restriction']) {
+                return true;
             }
         }
 
-        return $free_shipping;
+        return false;
     }
 
     public function getSelectedDeliveryOption()
@@ -53,11 +52,24 @@ class DeliveryOptionsFinderCore implements DeliveryOptionsInterface
 
     public function getDeliveryOptions()
     {
+        // The carrier set only changes with the delivery address within a request, so memoize per
+        // address: a checkout render calls this from several steps, and each call re-presents every
+        // carrier (firing the per-carrier presentation hooks) on top of the already-cached matrix.
+        $idAddressDelivery = (int) $this->context->cart->id_address_delivery;
+        if (isset($this->deliveryOptionsByAddress[$idAddressDelivery])) {
+            return $this->deliveryOptionsByAddress[$idAddressDelivery];
+        }
+
         $delivery_option_list = $this->context->cart->getDeliveryOptionList();
         $include_taxes = !Product::getTaxCalculationMethod((int) $this->context->cart->id_customer) && (int) Configuration::get('PS_TAX');
         $display_taxes_label = (Configuration::get('PS_TAX') && $this->context->country->display_tax_label);
 
         $carriers_available = [];
+
+        // A free-shipping cart rule applies to the whole cart, not to a specific carrier, so
+        // evaluate it once here instead of re-running getCartRules() (and its uncached cart-rule
+        // resolution) for every carrier in the matrix below.
+        $cartHasFreeShippingRule = $this->cartHasFreeShippingCartRule($this->context->cart);
 
         if (isset($delivery_option_list[$this->context->cart->id_address_delivery])) {
             foreach ($delivery_option_list[$this->context->cart->id_address_delivery] as $id_carriers_list => $carriers_list) {
@@ -68,7 +80,7 @@ class DeliveryOptionsFinderCore implements DeliveryOptionsInterface
                             $delay = $carrier['delay'][$this->context->language->id];
                             unset($carrier['instance'], $carrier['delay']);
                             $carrier['delay'] = $delay;
-                            if ($this->isFreeShipping($this->context->cart, $carriers_list)) {
+                            if ($carriers_list['is_free'] || $cartHasFreeShippingRule) {
                                 $carrier['price'] = $this->translator->trans(
                                     'Free',
                                     [],
@@ -117,6 +129,8 @@ class DeliveryOptionsFinderCore implements DeliveryOptionsInterface
                 }
             }
         }
+
+        $this->deliveryOptionsByAddress[$idAddressDelivery] = $carriers_available;
 
         return $carriers_available;
     }
