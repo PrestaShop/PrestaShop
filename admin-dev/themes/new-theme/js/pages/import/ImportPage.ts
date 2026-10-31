@@ -37,7 +37,6 @@ export default class ImportPage {
       const $this = $(this);
 
       if ($this.find('input[name="truncate"]:checked').val() === '1') {
-        /* eslint-disable-next-line max-len */
         return window.confirm(
           `${$this.data('delete-confirm-message')} ${$.trim(
             $('#entity > option:selected')
