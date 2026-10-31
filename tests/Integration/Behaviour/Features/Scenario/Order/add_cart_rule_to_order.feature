@@ -53,6 +53,19 @@ Feature: Add discounts to order from Back Office (BO)
     And order "bo_order1" should have 1 cart rule
     And order "bo_order1" should have a cart rule with name "<<"
 
+  Scenario: Add tax excluded amount type discount to order which has no invoices
+    Given order "bo_order1" does not have any invoices
+    When I add discount to order "bo_order1" with following details:
+      | name         | discount fpf |
+      | type         | amount       |
+      | value        | 5.50         |
+      | tax_included | 0            |
+    Then order "bo_order1" should have following details:
+      | total_discounts_tax_excl | 5.5   |
+      | total_discounts_tax_incl | 5.83  |
+      | total_paid_tax_excl      | 25.3  |
+      | total_paid_tax_incl      | 26.82 |
+
   Scenario: Add amount type discount to order which has no invoices
     Given order "bo_order1" does not have any invoices
     When I add discount to order "bo_order1" with following details:
