@@ -5380,12 +5380,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jolelievre/ps_apiresources.git",
-                "reference": "5cbe6e0f65ef1613b2608d31a5feb7c4a8acaf46"
+                "reference": "5fe9492030dfbdd6636e33703f1ed8d7c428273a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jolelievre/ps_apiresources/zipball/5cbe6e0f65ef1613b2608d31a5feb7c4a8acaf46",
-                "reference": "5cbe6e0f65ef1613b2608d31a5feb7c4a8acaf46",
+                "url": "https://api.github.com/repos/jolelievre/ps_apiresources/zipball/5fe9492030dfbdd6636e33703f1ed8d7c428273a",
+                "reference": "5fe9492030dfbdd6636e33703f1ed8d7c428273a",
                 "shasum": ""
             },
             "require": {
@@ -5406,6 +5406,9 @@
                 },
                 "classmap": [
                     "ps_apiresources.php"
+                ],
+                "files": [
+                    "polyfill/autoload.php"
                 ]
             },
             "autoload-dev": {
@@ -5471,7 +5474,7 @@
             "support": {
                 "source": "https://github.com/jolelievre/ps_apiresources/tree/api-generic-follow-ups"
             },
-            "time": "2026-10-30T11:05:27+00:00"
+            "time": "2026-10-31T12:15:54+00:00"
         },
         {
             "name": "prestashop/ps_banner",
