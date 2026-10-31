@@ -22,11 +22,21 @@ jobs:
         with:
           node-version: '16.x'
 
+      - name: Install `new-theme` dependencies
+        uses: ./.github/actions/npm-install
+        with:
+          DIRECTORY: ./admin-dev/themes/new-theme
+
+      - name: Install `default` dependencies
+        uses: ./.github/actions/npm-install
+        with:
+          DIRECTORY: ./admin-dev/themes/default
+
       - name: BackOffice Theme `new-theme`
-        run: cd ./admin-dev/themes/new-theme && npm ci && npm run scss-lint
+        run: cd ./admin-dev/themes/new-theme && npm run scss-lint
 
       - name: BackOffice Theme `default`
-        run: cd ./admin-dev/themes/default && npm ci && npm run scss-lint
+        run: cd ./admin-dev/themes/default && npm run scss-lint
 
   eslint:
     if: github.event_name != 'push' || !github.event.repository.private
@@ -40,17 +50,27 @@ jobs:
         with:
           node-version: '16.x'
 
-      - name: Validate npm config
-        run: >-
-            (cd admin-dev/themes/default && npm ci)
-            && (cd admin-dev/themes/new-theme && npm ci)
-            && (cd themes && npm ci)
+      # npm ci checks the npm config of each package, it runs whenever its package.json or package-lock.json changes
+      - name: Install `default` dependencies
+        uses: ./.github/actions/npm-install
+        with:
+          DIRECTORY: ./admin-dev/themes/default
+
+      - name: Install `new-theme` dependencies
+        uses: ./.github/actions/npm-install
+        with:
+          DIRECTORY: ./admin-dev/themes/new-theme
+
+      - name: Install `themes` dependencies
+        uses: ./.github/actions/npm-install
+        with:
+          DIRECTORY: ./themes
 
       - name: BackOffice Theme `default`
-        run: cd ./admin-dev/themes/default && npm ci && npm run lint
+        run: cd ./admin-dev/themes/default && npm run lint
 
       - name: BackOffice Theme `new-theme`
-        run: cd ./admin-dev/themes/new-theme && npm ci && npm run lint
+        run: cd ./admin-dev/themes/new-theme && npm run lint
 
   yamllint_sf:
     if: github.event_name != 'push' || !github.event.repository.private

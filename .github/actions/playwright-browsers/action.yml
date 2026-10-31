@@ -1,0 +1,35 @@
+name: Install Playwright browser
+description: Restores a Playwright browser for the installed Playwright version, or downloads it, then installs its system dependencies
+
+inputs:
+  DIRECTORY:
+    description: Folder of the package.json requiring Playwright, with its node_modules installed
+    required: true
+  BROWSER:
+    description: Browser to install
+    required: false
+    default: 'chromium'
+
+runs:
+  using: 'composite'
+  steps:
+    # Each Playwright version requires its own browser builds
+    - name: Get Playwright version
+      if: github.repository == 'PrestaShop/PrestaShop'
+      id: version
+      shell: bash
+      working-directory: ${{ inputs.DIRECTORY }}
+      run: echo "version=$(npx playwright --version | cut -d' ' -f2)" >> $GITHUB_OUTPUT
+
+    - name: Cache Playwright browser
+      if: github.repository == 'PrestaShop/PrestaShop'
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/ms-playwright
+        key: ${{ runner.os }}-playwright-${{ steps.version.outputs.version }}-${{ inputs.BROWSER }}
+
+    # Only the system dependencies are installed when the browser was restored
+    - name: Install browser
+      shell: bash
+      working-directory: ${{ inputs.DIRECTORY }}
+      run: npx playwright install ${{ inputs.BROWSER }} --with-deps
