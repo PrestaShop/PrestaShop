@@ -324,7 +324,11 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
 
         $resultsPerPage = (int) Tools::getValue('resultsPerPage');
         if ($resultsPerPage <= 0) {
-            $resultsPerPage = Configuration::get('PS_PRODUCTS_PER_PAGE');
+            $resultsPerPage = (int) Configuration::get('PS_PRODUCTS_PER_PAGE');
+        }
+        $maxProductsPerPage = $this->getMaxProductsPerPage();
+        if ($maxProductsPerPage > 0) {
+            $resultsPerPage = min($resultsPerPage, $maxProductsPerPage);
         }
 
         // we need to set a few parameters from back-end preferences

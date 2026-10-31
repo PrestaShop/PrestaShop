@@ -19,6 +19,7 @@ class PaginationConfiguration extends AbstractMultistoreConfiguration
 {
     private const CONFIGURATION_FIELDS = [
         'products_per_page',
+        'max_products_per_page',
         'default_order_by',
         'default_order_way',
     ];
@@ -37,6 +38,7 @@ class PaginationConfiguration extends AbstractMultistoreConfiguration
 
         return [
             'products_per_page' => (int) $this->configuration->get('PS_PRODUCTS_PER_PAGE', 12, $shopConstraint),
+            'max_products_per_page' => (int) $this->configuration->get('PS_PRODUCTS_PER_PAGE_MAX', 96, $shopConstraint),
             'default_order_by' => (int) $this->configuration->get('PS_PRODUCTS_ORDER_BY', 0, $shopConstraint),
             'default_order_way' => (int) $this->configuration->get('PS_PRODUCTS_ORDER_WAY', 0, $shopConstraint),
         ];
@@ -52,6 +54,7 @@ class PaginationConfiguration extends AbstractMultistoreConfiguration
         if ($this->validateConfiguration($config)) {
             $shopConstraint = $this->getShopConstraint();
             $this->updateConfigurationValue('PS_PRODUCTS_PER_PAGE', 'products_per_page', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_PRODUCTS_PER_PAGE_MAX', 'max_products_per_page', $config, $shopConstraint);
             $this->updateConfigurationValue('PS_PRODUCTS_ORDER_BY', 'default_order_by', $config, $shopConstraint);
             $this->updateConfigurationValue('PS_PRODUCTS_ORDER_WAY', 'default_order_way', $config, $shopConstraint);
         }
@@ -67,6 +70,7 @@ class PaginationConfiguration extends AbstractMultistoreConfiguration
         return (new OptionsResolver())
             ->setDefined(self::CONFIGURATION_FIELDS)
             ->setAllowedTypes('products_per_page', 'int')
+            ->setAllowedTypes('max_products_per_page', 'int')
             ->setAllowedTypes('default_order_by', 'int')
             ->setAllowedTypes('default_order_way', 'int');
     }
