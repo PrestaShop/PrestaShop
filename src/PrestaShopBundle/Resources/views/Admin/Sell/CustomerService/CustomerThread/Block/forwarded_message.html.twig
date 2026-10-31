@@ -1,0 +1,26 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+<div class="infoEmployee">
+  {% if threadUrl %}
+    <a class="btn btn-default pull-right" href="{{ threadUrl }}">
+      {{ 'View this thread'|trans({}, 'Admin.Orderscustomers.Feature') }}
+    </a>
+  {% endif %}
+  <dl class="dl-horizontal">
+    <dt>{{ 'Sent by:'|trans({}, 'Admin.Orderscustomers.Feature') }}</dt>
+    <dd>
+      {% if message.customer_name is not empty %}
+        {{ message.customer_name }} ({{ message.email }})
+      {% else %}
+        {{ message.email }}
+      {% endif %}
+    </dd>
+  </dl>
+  <dl class="dl-horizontal">
+    <dt>{{ 'Message:'|trans({}, 'Admin.Orderscustomers.Feature') }}</dt>
+    <dd>{{ message.message|nl2br }}</dd>
+  </dl>
+</div>

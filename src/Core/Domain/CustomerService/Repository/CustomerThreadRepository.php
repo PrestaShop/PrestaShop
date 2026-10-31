@@ -16,6 +16,8 @@ use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
 /**
  * Methods to access data storage for customerThread
+ *
+ * @deprecated since 9.3, will be removed in the next major version - use \PrestaShop\PrestaShop\Adapter\CustomerService\Repository\CustomerThreadRepository instead
  */
 class CustomerThreadRepository extends AbstractObjectModelRepository
 {
