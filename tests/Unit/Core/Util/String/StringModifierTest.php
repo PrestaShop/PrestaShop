@@ -22,6 +22,30 @@ class StringModifierTest extends TestCase
         $this->stringModifier = new StringModifier();
     }
 
+    /**
+     * Square brackets survive the character filter and then collapse to a space, so one at the end of a
+     * name became a trailing dash in the friendly URL, while round brackets - dropped outright by the
+     * filter - did not. Brackets still separate words, they just no longer dangle.
+     *
+     * @dataProvider getStringsWithBrackets
+     */
+    public function testItDoesNotLeaveASeparatorDanglingInAUrl(string $string, string $expected): void
+    {
+        $this->assertSame($expected, $this->stringModifier->str2url($string, false));
+    }
+
+    public static function getStringsWithBrackets(): Generator
+    {
+        yield 'trailing square brackets' => ['Product name [text]', 'product-name-text'];
+        yield 'leading square brackets' => ['[text] Product name', 'text-product-name'];
+        yield 'brackets inside still separate words' => ['Red car[big]', 'red-car-big'];
+        yield 'round brackets are dropped, as before' => ['Product name (text)', 'product-name-text'];
+        yield 'trailing dash' => ['Product name -', 'product-name'];
+        yield 'trailing colon' => ['Product name:', 'product-name'];
+        yield 'no separators at the edges' => ['Product name text', 'product-name-text'];
+        yield 'inner punctuation is unaffected' => ['Red car / big', 'red-car-big'];
+    }
+
     public function testItTransformsCamelCaseToSplitWords(): void
     {
         $data = [
@@ -157,11 +181,11 @@ class StringModifierTest extends TestCase
     {
         yield ['!@#$%^&*()_+-={}[]|:;"<>,.?/', '-', false];
         yield ['Some !@#$%^&*()_+-={}[]|:;"<>,.?/ text', 'some-text', false];
-        yield ['Some text 123 !@#$%^&*()_+-={}[]|:;"<>,.?/', 'some-text-123-', false];
+        yield ['Some text 123 !@#$%^&*()_+-={}[]|:;"<>,.?/', 'some-text-123', false];
         yield ['Some text 123 with unicode characters: áéíóú', 'some-text-123-with-unicode-characters-aeiou', false];
         yield ['!@#$%^&*()_+-={}[]|:;"<>,.?/', '-', false];
         yield ['Some !@#$%^&*()_+-={}[]|:;"<>,.?/ text', 'some-text', false];
-        yield ['Some text 123 !@#$%^&*()_+-={}[]|:;"<>,.?/', 'some-text-123-', false];
+        yield ['Some text 123 !@#$%^&*()_+-={}[]|:;"<>,.?/', 'some-text-123', false];
         yield ['Some text 123 with unicode characters: áéíóú', 'some-text-123-with-unicode-characters-aeiou', false];
         yield ['Some text 123 with unicode characters: áéíóú', 'some-text-123-with-unicode-characters-áéíóú', true];
     }
