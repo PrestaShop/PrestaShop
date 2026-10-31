@@ -4788,6 +4788,11 @@
       <title>Modify back office login options form content</title>
       <description>This hook allows to modify back office login options form FormBuilder</description>
     </hook>
+    <hook id="actionBackOfficeLoginCheck">
+      <name>actionBackOfficeLoginCheck</name>
+      <title>Check a back office login attempt before the employee is authenticated</title>
+      <description>This hook allows to refuse a back office login attempt, for instance after checking a captcha added through actionBackOfficeLoginForm. Return false to refuse the attempt; returning anything else, including null, lets it continue.</description>
+    </hook>
     <hook id="actionEmployeeRequestPasswordResetForm">
       <name>actionEmployeeRequestPasswordResetForm</name>
       <title>Modify employee request password reset options form content</title>
