@@ -1,3 +1,9 @@
+parameters:
+  # Separator placed between two attributes of a combination name, as in "Size: M, Color: Blue".
+  # Declared here rather than inline so a shop or a module can redefine it in one place, and so it
+  # can be shared by any other service that has to render the same list.
+  ps_combination_attributes_separator: ', '
+
 services:
   _defaults:
     public: true
@@ -9,9 +15,7 @@ services:
     public: false
     arguments:
       - '@translator'
-      # separator between attributes (ex : size: M, color: blue), to be replaced by a configuration parameter (env or php const)
-      # https://github.com/PrestaShop/PrestaShop/issues/28512
-      - ', '
+      - '%ps_combination_attributes_separator%'
       - '@=service("prestashop.adapter.legacy.configuration").get("PS_ATTRIBUTE_ANCHOR_SEPARATOR")'
 
   PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface: '@PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilder'
