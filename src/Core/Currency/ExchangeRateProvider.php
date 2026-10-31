@@ -21,9 +21,10 @@ use Symfony\Component\Cache\Adapter\AdapterInterface as CacheInterface;
 class ExchangeRateProvider
 {
     /**
-     * This url was set in the _PS_CURRENCY_FEED_URL_ const but it is not accessible in every
-     * context because it is weirdly defined in defines_uri.inc.php So it is safer to define
-     * it properly here.
+     * Default value of the _PS_CURRENCY_FEED_URL_ define, which defines_uri.inc.php builds from
+     * _PS_API_URL_ and which this service is given. A shop that redefines either of them in
+     * config/defines_custom.inc.php is followed by this provider and by
+     * Currency::refreshCurrencies() alike.
      */
     public const CURRENCY_FEED_URL = 'http://api.prestashop.com/xml/currencies.xml';
 
