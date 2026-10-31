@@ -18,6 +18,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration as AdapterConfiguration;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\OrderDetailUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
+use PrestaShop\PrestaShop\Adapter\Order\ProductSaleUpdater;
 use PrestaShop\PrestaShop\Adapter\Shipment\ShipmentProductQuantityUpdater;
 use PrestaShop\PrestaShop\Adapter\Shipment\ShipmentShippingCostUpdater;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
@@ -48,6 +49,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderCommandHandler impl
         private FeatureFlagStateCheckerInterface $featureflagStateCheckerInterface,
         private ShipmentShippingCostUpdater $shipmentShippingCostUpdater,
         private AdapterConfiguration $configuration,
+        private ProductSaleUpdater $productSaleUpdater,
     ) {
     }
 
@@ -62,6 +64,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderCommandHandler impl
             $this->setOrderContext($this->contextStateManager, $order);
 
             $orderDetail = new OrderDetail($command->getOrderDetailId());
+            $previousQuantity = (int) $orderDetail->product_quantity;
             $orderInvoice = null;
             if (!empty($command->getOrderInvoiceId())) {
                 $orderInvoice = new OrderInvoice($command->getOrderInvoiceId());
@@ -109,6 +112,13 @@ final class UpdateProductInOrderHandler extends AbstractOrderCommandHandler impl
 
             // Update order_detail_tax table without modifying prices
             $this->orderDetailUpdater->updateOrderDetailTaxTableOnly($order);
+
+            if ($order->valid) {
+                $this->productSaleUpdater->updateQuantity(
+                    (int) $orderDetail->product_id,
+                    (int) $orderDetail->product_quantity - $previousQuantity
+                );
+            }
 
             Hook::exec('actionOrderEdited', ['order' => $order]);
         } catch (Exception $e) {
