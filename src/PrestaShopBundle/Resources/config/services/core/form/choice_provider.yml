@@ -47,6 +47,13 @@ services:
     arguments:
       - '@prestashop.adapter.data_provider.group'
 
+  # Same provider but restricted to the customer groups of the current shop context (e.g. payment restrictions)
+  prestashop.core.form.choice_provider.group_by_id_shop_filtered:
+    class: PrestaShop\PrestaShop\Core\Form\ChoiceProvider\GroupByIdChoiceProvider
+    arguments:
+      $groupDataProvider: '@prestashop.adapter.data_provider.group'
+      $filterByShop: true
+
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CarrierByReferenceChoiceProvider:
     arguments:
       - '@prestashop.adapter.data_provider.carrier'
