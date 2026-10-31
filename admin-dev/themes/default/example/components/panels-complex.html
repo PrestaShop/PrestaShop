@@ -15,7 +15,7 @@
      <i class="process-icon-refresh"></i>
      </span>
      </a>
-     <a class="list-toolbar-btn" href="javascript:void(0);" onclick="$('.leadin').first().append('<div class=\'alert alert-info\'>' + $('#sql_query_tax_rules_group').val() + '</div>'); $(this).attr('onclick', '');">
+     <a class="list-toolbar-btn" href="javascript:void(0);" onclick="$('.leadin').first().append($('<div class=\'alert alert-info\'></div>').text($('#sql_query_tax_rules_group').val())); $(this).attr('onclick', '');">
      <span class="label-tooltip" data-toggle="tooltip" data-original-title="Voir la requête SQL" data-html="true" data-placement="top">
      <i class="process-icon-terminal"></i>
      </span>
