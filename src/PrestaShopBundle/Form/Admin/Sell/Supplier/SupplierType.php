@@ -219,7 +219,10 @@ class SupplierType extends TranslatorAwareType
             ->add('id_state', ChoiceType::class, [
                 'label' => $this->trans('State', 'Admin.Global'),
                 'required' => true,
-                'choices' => $this->statesChoiceProvider->getChoices(['id_country' => $countryId]),
+                'choices' => $this->statesChoiceProvider->getChoices([
+                    'id_country' => $countryId,
+                    'kept_state_id' => (int) ($data['id_state'] ?? 0),
+                ]),
                 'constraints' => [
                     new AddressStateRequired([
                         'id_country' => $countryId,
