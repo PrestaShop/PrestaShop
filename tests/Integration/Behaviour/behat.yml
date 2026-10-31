@@ -329,6 +329,7 @@ default:
         - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
         - Tests\Integration\Behaviour\Features\Context\LegacyProductFeatureContext
         - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\TaxFeatureContext
         - Tests\Integration\Behaviour\Features\Transform\CurrencyTransformContext
         - Tests\Integration\Behaviour\Features\Context\Domain\ManufacturerFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\SupplierFeatureContext
