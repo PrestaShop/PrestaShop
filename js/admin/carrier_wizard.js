@@ -107,9 +107,22 @@ function onShowStepCallback()
 	$('#carrier_logo_block').prependTo($('div.content').filter(function() { return $(this).css('display') != 'none' }).find('.defaultForm').find('fieldset'));
 }
 
+/**
+ * TinyMCE keeps what is typed inside its own editor and only writes it back to the textarea when the
+ * form is submitted natively. Every step of this wizard is sent with serialize() instead, so without
+ * this the textarea still holds its original value and the edit is silently dropped.
+ */
+function syncRichTextEditors()
+{
+	if (typeof tinyMCE !== 'undefined' && typeof tinyMCE.triggerSave === 'function') {
+		tinyMCE.triggerSave();
+	}
+}
+
 function onFinishCallback(obj, context)
 {
 	$('.wizard_error').remove();
+	syncRichTextEditors();
 	$.ajax({
 		type:"POST",
 		url : validate_url,
@@ -271,6 +284,7 @@ function validateSteps(fromStep, toStep)
 	if (is_ok)
 	{
 		form = $('#carrier_wizard #step-'+fromStep+' form');
+		syncRichTextEditors();
 		$.ajax({
 			type:"POST",
 			url : validate_url,
