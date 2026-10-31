@@ -65,6 +65,22 @@ class PositionUpdateFactoryTest extends TestCase
         $this->assertEquals(42, $positionUpdate->getParentId());
     }
 
+    public function testHandleDataWithRootLevelParent()
+    {
+        $definition = $this->getDefinitionWithParent();
+        $data = [
+            'positions' => [
+                ['rowId' => 1, 'oldPosition' => 1, 'newPosition' => 2],
+            ],
+            'parentId' => 0,
+        ];
+
+        $positionUpdateFactory = $this->getPositionUpdateFactory();
+        $positionUpdate = $positionUpdateFactory->buildPositionUpdate($data, $definition);
+
+        $this->assertSame(0, $positionUpdate->getParentId());
+    }
+
     public function testDataPositionsValidation()
     {
         $this->checkDataValidation([], 'Missing positions in your data.');
