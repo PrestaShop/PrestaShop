@@ -1071,9 +1071,9 @@ class AdminControllerCore extends Controller
                 unset($this->fields_list[$key]);
             } else {
                 if ('ID' === $datas['title']) {
-                    $headers[] = strtolower(Tools::htmlentitiesDecodeUTF8($datas['title']));
+                    $headers[] = $this->sanitizeCsvFieldValue(strtolower(Tools::htmlentitiesDecodeUTF8($datas['title'])));
                 } else {
-                    $headers[] = Tools::htmlentitiesDecodeUTF8($datas['title']);
+                    $headers[] = $this->sanitizeCsvFieldValue(Tools::htmlentitiesDecodeUTF8($datas['title']));
                 }
             }
         }
@@ -1097,12 +1097,33 @@ class AdminControllerCore extends Controller
                         $field_value = call_user_func_array([$callback_obj, $params['callback']], [$field_value, $row]);
                     }
                 }
-                $content[] = $field_value;
+                $content[] = $this->sanitizeCsvFieldValue($field_value);
             }
             fputcsv($fd, $content, ';', $text_delimiter, '');
         }
         @fclose($fd);
         die;
+    }
+
+    /**
+     * Neutralize spreadsheet formula injection in a value written to a CSV
+     * export. A value starting with =, +, -, @, a tab or a carriage return is
+     * prefixed with a single quote so spreadsheet applications read it as text
+     * instead of executing it. This follows the same policy as
+     * CsvResponse::sanitizeRow and ModuleGraph::escapeCell.
+     *
+     * @param string $value value to write in the export
+     *
+     * @return string
+     */
+    private function sanitizeCsvFieldValue($value)
+    {
+        $value = (string) $value;
+        if (isset($value[0]) && in_array($value[0], ['=', '+', '-', '@', "\t", "\r"], true)) {
+            $value = "'" . $value;
+        }
+
+        return $value;
     }
 
     /**
