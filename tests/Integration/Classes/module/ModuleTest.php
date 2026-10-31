@@ -7,6 +7,7 @@
 namespace Tests\Integration\Classes\module;
 
 use Cache;
+use Db;
 use Module;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
@@ -107,6 +108,76 @@ class ModuleTest extends TestCase
         $this->assertEquals('paymentOptions', $possibleHooksList[2]['name']);
 
         Module::getInstanceByName('bankwire')->uninstall();
+    }
+
+    public function testDisableKeepsOverridesWhileAnotherShopStillUsesTheModule(): void
+    {
+        HelperModule::addModule('pscsx3241');
+        $cartOverridePath = _PS_OVERRIDE_DIR_ . 'classes/Cart.php';
+
+        try {
+            $this->assertTrue((bool) ModuleManagerBuilder::getInstance()->build()->install('pscsx3241'));
+            $module = Module::getInstanceByName('pscsx3241');
+            $this->assertTrue($this->fileContainsModuleOverride($cartOverridePath));
+
+            // Simulates another shop, outside the current shop context, where the module stays enabled
+            $otherShopId = (int) Db::getInstance()->getValue('SELECT MAX(`id_shop`) FROM `' . _DB_PREFIX_ . 'shop`') + 1;
+            Db::getInstance()->insert('module_shop', ['id_module' => (int) $module->id, 'id_shop' => $otherShopId]);
+
+            $this->assertTrue($module->disable());
+            $this->assertTrue($module->hasShopAssociations());
+            $this->assertTrue($this->fileContainsModuleOverride($cartOverridePath));
+
+            $this->assertTrue($module->disable(true));
+            $this->assertFalse($module->hasShopAssociations());
+            $this->assertFalse($this->fileContainsModuleOverride($cartOverridePath));
+        } finally {
+            if (Module::isInstalled('pscsx3241')) {
+                Module::getInstanceByName('pscsx3241')->uninstall();
+            }
+            HelperModule::removeModule('pscsx3241');
+        }
+    }
+
+    public function testEnableDoesNotReinstallOverridesAlreadyUsedByAnotherShop(): void
+    {
+        HelperModule::addModule('pscsx3241');
+        $cartOverridePath = _PS_OVERRIDE_DIR_ . 'classes/Cart.php';
+
+        try {
+            $this->assertTrue((bool) ModuleManagerBuilder::getInstance()->build()->install('pscsx3241'));
+            $module = Module::getInstanceByName('pscsx3241');
+            $overrideContent = file_get_contents($cartOverridePath);
+
+            // Simulates another shop, outside the current shop context, where the module stays enabled
+            $otherShopId = (int) Db::getInstance()->getValue('SELECT MAX(`id_shop`) FROM `' . _DB_PREFIX_ . 'shop`') + 1;
+            Db::getInstance()->insert('module_shop', ['id_module' => (int) $module->id, 'id_shop' => $otherShopId]);
+            $this->assertTrue($module->disable());
+
+            $this->assertTrue($module->enable());
+            $this->assertEmpty($module->getErrors());
+            $this->assertTrue($module->isEnabledForShopContext());
+            $this->assertSame(
+                $this->stripOverrideDates($overrideContent),
+                $this->stripOverrideDates(file_get_contents($cartOverridePath))
+            );
+            $this->assertSame(1, substr_count(file_get_contents($cartOverridePath), 'function deleteProduct('));
+        } finally {
+            if (Module::isInstalled('pscsx3241')) {
+                Module::getInstanceByName('pscsx3241')->uninstall();
+            }
+            HelperModule::removeModule('pscsx3241');
+        }
+    }
+
+    private function stripOverrideDates(string $content): string
+    {
+        return preg_replace('#\* date: .*?\n#m', '', $content);
+    }
+
+    private function fileContainsModuleOverride(string $overridePath): bool
+    {
+        return is_file($overridePath) && str_contains(file_get_contents($overridePath), 'ppbsDeleteCartProduct');
     }
 }
 
