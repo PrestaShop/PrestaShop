@@ -20,8 +20,14 @@ trait UnsupportedApiResourceTrait
 {
     protected function isUnsupportedApiResource(Error $error): bool
     {
-        // Raised by the declaration of the attributes itself, not by the code they run
-        $origin = $error->getTrace()[0] ?? [];
+        // Raised by the declaration of the attributes itself, not by the code they run (PHP 8.4+ adds a frame for the
+        // evaluated expression before the instantiation of the attribute)
+        $origin = [];
+        foreach ($error->getTrace() as $origin) {
+            if ('[constant expression]' !== ($origin['function'] ?? null)) {
+                break;
+            }
+        }
         if (ReflectionAttribute::class !== ($origin['class'] ?? null) || 'newInstance' !== ($origin['function'] ?? null)) {
             return false;
         }
