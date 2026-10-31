@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Exception;
 use Doctrine\DBAL\Exception as ExceptionAlias;
@@ -829,6 +830,47 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
         ;
 
         return $qb->executeQuery()->fetchAllAssociative();
+    }
+
+    /**
+     * Reads the names of the given products in one language, for the rows the back office grid needs
+     * when the employee's own language has none.
+     *
+     * @param int[] $productIds
+     * @param int $languageId
+     * @param int|null $shopId null falls back to each product's default shop, like the grid does when
+     *                         no single shop is in context
+     *
+     * @return array<int, string> product id => name
+     */
+    public function getProductNames(array $productIds, int $languageId, ?int $shopId = null): array
+    {
+        if (empty($productIds)) {
+            return [];
+        }
+
+        $qb = $this->connection->createQueryBuilder()
+            ->select('pl.id_product, pl.name')
+            ->from($this->dbPrefix . 'product_lang', 'pl')
+            ->innerJoin('pl', $this->dbPrefix . 'product', 'p', 'p.id_product = pl.id_product')
+            ->where('pl.id_product IN (:productIds)')
+            ->andWhere('pl.id_lang = :languageId')
+            ->setParameter('productIds', array_map('intval', $productIds), ArrayParameterType::INTEGER)
+            ->setParameter('languageId', $languageId)
+        ;
+
+        if (null !== $shopId) {
+            $qb->andWhere('pl.id_shop = :shopId')->setParameter('shopId', $shopId);
+        } else {
+            $qb->andWhere('pl.id_shop = p.id_shop_default');
+        }
+
+        $names = [];
+        foreach ($qb->executeQuery()->fetchAllAssociative() as $row) {
+            $names[(int) $row['id_product']] = (string) $row['name'];
+        }
+
+        return $names;
     }
 
     public function hasAnyProduct(): bool
