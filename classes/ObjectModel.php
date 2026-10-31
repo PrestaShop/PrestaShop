@@ -1244,8 +1244,13 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
                 throw new PrestaShopException($this->trans('Validation function not found: %s.', [$data['validate']], 'Admin.Notifications.Error'));
             }
 
-            // isRequiredWhenActive and defaultLanguageRequiredWhenActive validators must be called especially when the value is empty
-            $isEmptyValidationMethod = Tools::strtolower($data['validate']) === 'isrequiredwhenactive' || Tools::strtolower($data['validate']) === 'defaultlanguagerequiredwhenactive';
+            // These validators exist precisely to reject an empty or zero value, so skipping them
+            // because the value is empty makes them unreachable. They must run on every value.
+            $isEmptyValidationMethod = in_array(Tools::strtolower($data['validate']), [
+                'isrequiredwhenactive',
+                'defaultlanguagerequiredwhenactive',
+                'ispositiveprice',
+            ], true);
             if (!empty($value) || $isEmptyValidationMethod) {
                 $res = $this->callValidateMethod($data['validate'], $value, isset($id_lang) ? (int) $id_lang : null);
                 if (!$res) {
