@@ -47,6 +47,11 @@ class HookCore extends ObjectModel
      */
     public static $executed_hooks = [];
 
+    /**
+     * @deprecated since 8.0.0 - the PS_DISABLE_NON_NATIVE_MODULE setting this served was replaced by the
+     *             bulk "disable non-native modules" action in Advanced Parameters > Performance, and its
+     *             back-office switch was removed in the same change. Nothing populates this any more.
+     */
     public static $native_module;
 
     protected static $disabledHookModules = [];
@@ -918,14 +923,6 @@ class HookCore extends ObjectModel
             $array_return = false;
         }
 
-        // Check if we should execute non native modules
-        static $disable_non_native_modules = null;
-        if ($disable_non_native_modules === null) {
-            $disable_non_native_modules = (bool) Configuration::get(
-                'PS_DISABLE_NON_NATIVE_MODULE'
-            );
-        }
-
         // Check arguments validity
         if (
             ($id_module && !is_numeric($id_module))
@@ -961,12 +958,6 @@ class HookCore extends ObjectModel
         $altern = 0;
         $output = $array_return ? [] : '';
 
-        // If non native modules are disabled, we must get the list of native ones
-        // that came bundled with the store.
-        if ($disable_non_native_modules && !isset(Hook::$native_module)) {
-            Hook::$native_module = Module::getNativeModuleList();
-        }
-
         $different_shop = false;
         if (
             $id_shop !== null
@@ -987,16 +978,6 @@ class HookCore extends ObjectModel
             // If the caller provided a specific module ID for which ONLY this hook
             // should be executed, we check if it matches.
             if ($id_module && $id_module != $hookRegistration['id_module']) {
-                continue;
-            }
-
-            // If non native modules are disabled and this module is not a native one.
-            if (
-                (bool) $disable_non_native_modules
-                && Hook::$native_module
-                && count(Hook::$native_module)
-                && !in_array($hookRegistration['module'], Hook::$native_module)
-            ) {
                 continue;
             }
 
