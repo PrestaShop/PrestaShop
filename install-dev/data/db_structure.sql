@@ -256,7 +256,6 @@ CREATE TABLE `PREFIX_cart_rule_combination` (
   PRIMARY KEY (
     `id_cart_rule_1`, `id_cart_rule_2`
   ),
-  KEY `id_cart_rule_1` (`id_cart_rule_1`),
   KEY `id_cart_rule_2` (`id_cart_rule_2`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
