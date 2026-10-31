@@ -19,9 +19,14 @@ class HelperKpiRowCore extends Helper
 
     public function generate()
     {
+        $kpis = array_values(array_filter($this->kpis, static fn ($kpi) => $kpi !== ''));
+        if (empty($kpis)) {
+            return '';
+        }
+
         $this->tpl = $this->createTemplate($this->base_tpl);
 
-        $this->tpl->assign('kpis', $this->kpis);
+        $this->tpl->assign('kpis', $kpis);
         $this->tpl->assign('refresh', $this->refresh);
 
         return $this->tpl->fetch();
