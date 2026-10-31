@@ -1228,6 +1228,7 @@ class OrderController extends PrestaShopAdminController
                 $result[] = [
                     'orderDetailId' => $product->getOrderDetailId(),
                     'unitPrice' => $product->getUnitPrice(),
+                    'unitPriceOtherTaxMethod' => $product->getUnitPriceOtherTaxMethod(),
                     'unitPriceTaxExclRaw' => $product->getUnitPriceTaxExclRaw(),
                     'unitPriceTaxInclRaw' => $product->getUnitPriceTaxInclRaw(),
                     'quantity' => $product->getQuantity(),
