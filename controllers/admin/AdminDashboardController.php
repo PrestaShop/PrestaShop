@@ -5,7 +5,7 @@
  */
 class AdminDashboardControllerCore extends AdminController
 {
-    private const DASHBOARD_ALLOWED_HOOKS = ['dashboardData', 'dashboardZoneOne', 'dashboardZoneTwo', 'displayDashboardToolbarIcons', 'displayDashboardToolbarTopMenu', 'displayDashboardTop'];
+    private const DASHBOARD_ALLOWED_HOOKS = ['dashboardData', 'dashboardZoneOne', 'dashboardZoneThree', 'dashboardZoneTwo', 'displayDashboardToolbarIcons', 'displayDashboardToolbarTopMenu', 'displayDashboardTop'];
 
     public function __construct()
     {
