@@ -187,6 +187,23 @@ class OrderPaymentForViewing
     /**
      * @return string|null
      */
+    /**
+     * Whether this payment carries any of the card details the order page can show.
+     *
+     * WHY: the four card columns are only ever written by a payment module that has card data to
+     * record. For a bank wire, a cheque or a cash on delivery there is nothing to put in them, and the
+     * details panel then shows four rows of "Not defined", which is what PrestaShop/PrestaShop#22120
+     * reports. Asking the payment whether it has anything to show keeps that decision in one place
+     * instead of repeating four emptiness checks in the template.
+     */
+    public function hasCardDetails(): bool
+    {
+        return '' !== $this->cardNumber
+            || '' !== $this->cardBrand
+            || '' !== $this->cardExpiration
+            || '' !== $this->cardHolder;
+    }
+
     public function getEmployeeName(): ?string
     {
         return $this->employeeName;
