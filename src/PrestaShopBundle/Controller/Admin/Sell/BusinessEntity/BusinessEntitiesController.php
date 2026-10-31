@@ -11,6 +11,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\BusinessEntity;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\BulkDeleteBusinessEntityCommand;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\DeleteBusinessEntityCommand;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\UpdateBusinessEntityStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BulkDeleteBusinessEntityException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityBillingAddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityConstraintException;
@@ -19,9 +20,11 @@ use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityNot
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\CannotDeleteBusinessEntityException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\CannotUpdateBusinessEntityException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\UnableToCreateBusinessEntityAddress;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Query\GetBusinessEntityForEditing;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Query\GetBusinessEntityForViewing;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Query\GetPendingBusinessEntitiesCount;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\QueryResult\BusinessEntityForViewing;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\QueryResult\EditableBusinessEntity;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\BusinessEntityGridDefinitionFactory;
@@ -32,9 +35,11 @@ use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
 use PrestaShopBundle\Form\Admin\Sell\BusinessEntity\BusinessEntityAddressType;
 use PrestaShopBundle\Form\Admin\Sell\BusinessEntity\BusinessEntityType;
+use PrestaShopBundle\Form\Admin\Sell\BusinessEntity\EditBusinessEntityStatusType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -239,6 +244,70 @@ class BusinessEntitiesController extends PrestaShopAdminController
                 'help_link' => $this->generateSidebarLink('AdminBusinessEntities'),
             ]
         );
+    }
+
+    #[AdminSecurity("is_granted('update', 'AdminBusinessEntities')")]
+    public function getStatusFormAction(int $businessEntityId): Response
+    {
+        try {
+            /** @var EditableBusinessEntity $businessEntity */
+            $businessEntity = $this->dispatchQuery(new GetBusinessEntityForEditing($businessEntityId));
+        } catch (BusinessEntityException $e) {
+            return new Response(
+                $this->getErrorMessageForException($e, $this->getErrorMessages()),
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        $form = $this->createForm(EditBusinessEntityStatusType::class, [
+            EditBusinessEntityStatusType::FIELD_STATUS => $businessEntity->getStatus(),
+        ]);
+
+        return $this->render(
+            '@PrestaShop/Admin/Sell/BusinessEntity/Blocks/status_form.html.twig',
+            [
+                'editStatusForm' => $form->createView(),
+                'businessEntityName' => $businessEntity->getName(),
+                'businessEntityId' => $businessEntityId,
+            ]
+        );
+    }
+
+    #[DemoRestricted(redirectRoute: 'admin_business_entities_list')]
+    #[AdminSecurity("is_granted('update', 'AdminBusinessEntities')", message: 'You do not have permission to edit this.', redirectRoute: 'admin_business_entities_list', jsonResponse: true)]
+    public function updateStatusAction(int $businessEntityId, Request $request): JsonResponse
+    {
+        $form = $this->createForm(EditBusinessEntityStatusType::class);
+        $form->handleRequest($request);
+
+        if (!$form->isSubmitted() || !$form->isValid()) {
+            return new JsonResponse([
+                'error' => $this->trans('Form contains invalid values', [], 'Admin.Notifications.Error'),
+                'form_errors' => $this->getFormErrorsForJS($form),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $data = $form->getData();
+
+        try {
+            $this->dispatchCommand(new UpdateBusinessEntityStatusCommand(
+                $businessEntityId,
+                $data[EditBusinessEntityStatusType::FIELD_STATUS],
+                $data[EditBusinessEntityStatusType::FIELD_COMMENT]
+            ));
+        } catch (Exception $e) {
+            return new JsonResponse(
+                ['error' => $this->getErrorMessageForException($e, $this->getErrorMessages())],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        $this->addFlash(
+            'success',
+            $this->trans('Successful update.', [], 'Admin.Notifications.Success')
+        );
+
+        return new JsonResponse(['success' => true]);
     }
 
     #[DemoRestricted(redirectRoute: 'admin_business_entities_list')]
