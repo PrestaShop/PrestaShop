@@ -2686,8 +2686,17 @@ class AdminControllerCore extends Controller
             $this->addJqueryUI(['ui.slider', 'ui.datepicker']);
 
             $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/js/vendor/bootstrap.min.js');
+
+            // Modernizr is not used by the core and is loaded only for backward compatibility with modules.
             $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/js/vendor/modernizr.min.js');
-            $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/js/modernizr-loads.js');
+
+            // Load the default theme scripts in dependency order
+            $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/default/js/vendor/enquire.min.js');
+            $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/default/js/bundle/utils/animations.js');
+            $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/default/js/bundle/components/navbar-transition-handler.js');
+            $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/default/js/admin-theme.js');
+
+            // Load date handling and the theme bundle
             $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/js/vendor/moment-with-langs.min.js');
             $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/public/theme.bundle.js?v=' . _PS_VERSION_);
 
