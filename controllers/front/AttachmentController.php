@@ -3,6 +3,10 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+
+use Symfony\Component\HttpFoundation\HeaderUtils;
+use Symfony\Component\String\UnicodeString;
+
 class AttachmentControllerCore extends FrontController
 {
     public function postProcess(): void
@@ -14,48 +18,28 @@ class AttachmentControllerCore extends FrontController
 
         Hook::exec('actionDownloadAttachment', ['attachment' => &$attachment]);
 
-        if (ob_get_level() && ob_get_length() > 0) {
-            ob_end_clean();
+        $attachmentPath = _PS_DOWNLOAD_DIR_ . $attachment->file;
+
+        if (!file_exists($attachmentPath)) {
+            Tools::redirect('pagenotfound');
         }
+
+        while (ob_get_level() && @ob_end_clean()) {
+        }
+
+        $disposition = HeaderUtils::makeDisposition(
+            HeaderUtils::DISPOSITION_ATTACHMENT,
+            $attachment->file_name,
+            (new UnicodeString($attachment->file_name))->ascii(),
+        );
 
         header('Content-Transfer-Encoding: binary');
         header('Content-Type: ' . $attachment->mime);
-        header('Content-Length: ' . filesize(_PS_DOWNLOAD_DIR_ . $attachment->file));
-        header('Content-Disposition: attachment; filename="' . utf8_decode($attachment->file_name) . '"');
+        header('Content-Length: ' . filesize($attachmentPath));
+        header('Content-Disposition: ' . $disposition);
         @set_time_limit(0);
-        $this->readfileChunked(_PS_DOWNLOAD_DIR_ . $attachment->file);
+        readfile($attachmentPath);
+
         exit;
-    }
-
-    /**
-     * @see   http://ca2.php.net/manual/en/function.readfile.php#54295
-     */
-    public function readfileChunked(string $filename, bool $retbytes = true)
-    {
-        // how many bytes per chunk
-        $chunksize = 1 * (1024 * 1024);
-        $buffer = '';
-        $totalBytes = 0;
-
-        $handle = fopen($filename, 'rb');
-        if ($handle === false) {
-            return false;
-        }
-        while (!feof($handle)) {
-            $buffer = fread($handle, $chunksize);
-            echo $buffer;
-            ob_flush();
-            flush();
-            if ($retbytes) {
-                $totalBytes += strlen($buffer);
-            }
-        }
-        $status = fclose($handle);
-        if ($retbytes && $status) {
-            // return num. bytes delivered like readfile() does.
-            return $totalBytes;
-        }
-
-        return $status;
     }
 }
