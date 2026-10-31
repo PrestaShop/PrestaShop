@@ -185,6 +185,14 @@ admin_orders_resend_email:
     orderHistoryId: \d+
     orderStatusId: \d+
 
+admin_orders_send_invoice:
+  path: /{orderId}/send-invoice
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::sendInvoiceAction
+  requirements:
+    orderId: \d+
+
 admin_orders_preview:
   path: /{orderId}/preview
   methods: [ GET ]
