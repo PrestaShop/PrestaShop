@@ -37,6 +37,9 @@ Feature: Order from Back Office (BO)
       | payment module name | dummy_payment              |
       | status              | Awaiting bank wire payment |
 
+  Scenario: A cart ordered from the back office keeps the carrier the order was created with
+    Then cart "dummy_cart" should have "default_carrier" as a carrier
+
   # Even without a customer message, the employee who created the order from the BO must be
   # recorded in the order messages block (regression from 1.6, see issue #9676).
   Scenario: An order created from the BO with no customer message still records its creating employee
