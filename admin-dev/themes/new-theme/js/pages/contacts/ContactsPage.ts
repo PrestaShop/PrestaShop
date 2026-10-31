@@ -14,6 +14,7 @@ export default class ContactsPage {
     contactGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
     contactGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
     contactGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+    contactGrid.addExtension(new window.prestashop.component.GridExtensions.PositionExtension(contactGrid));
     contactGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
     contactGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitGridActionExtension());
     contactGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
