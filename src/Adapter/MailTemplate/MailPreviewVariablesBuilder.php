@@ -350,7 +350,16 @@ final class MailPreviewVariablesBuilder
     {
         $cart = new Cart($order->id_cart);
         $packageList = $cart->getPackageList();
-        $package = current(current($packageList));
+
+        // The preview picks the most recent order, whose cart may no longer resolve to a deliverable
+        // package - an emptied cart, or products removed since. There is then nothing to list, which is
+        // not a reason to fail the whole preview.
+        $addressPackages = current($packageList);
+        $package = is_array($addressPackages) ? current($addressPackages) : false;
+        if (!is_array($package) || !isset($package['product_list'])) {
+            return [];
+        }
+
         $productList = $package['product_list'];
 
         $productTemplateList = [];
