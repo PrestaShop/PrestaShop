@@ -551,10 +551,11 @@ class CarrierCore extends ObjectModel
      *                             - ALL_CARRIERS
      * @param bool $active Returns only active carriers when true
      * @param array|string|null $ids_group
+     * @param array|null $ids_carrier IDs of the carriers to check
      *
      * @return array Carriers
      */
-    public static function getCarriers($id_lang, $active = false, $delete = false, $id_zone = false, $ids_group = null, $modules_filters = self::PS_CARRIERS_ONLY)
+    public static function getCarriers($id_lang, $active = false, $delete = false, $id_zone = false, $ids_group = null, $modules_filters = self::PS_CARRIERS_ONLY, $ids_carrier = null)
     {
         // Filter by groups and no groups => return empty array
         if ($ids_group && !is_array($ids_group)) {
@@ -568,6 +569,9 @@ class CarrierCore extends ObjectModel
                 ($id_zone ? 'LEFT JOIN `' . _DB_PREFIX_ . 'zone` z ON (z.`id_zone` = ' . (int) $id_zone . ')' : '') . '
                 ' . Shop::addSqlAssociation('carrier', 'c') . '
                 WHERE c.`deleted` = ' . ($delete ? '1' : '0');
+        if (!empty($ids_carrier)) {
+            $sql .= ' AND c.`id_carrier` IN (' . implode(',', array_map('intval', $ids_carrier)) . ') ';
+        }
         if ($active) {
             $sql .= ' AND c.`active` = 1 ';
         }
@@ -722,10 +726,11 @@ class CarrierCore extends ObjectModel
      * @param array|null $groups Group of the Customer
      * @param CartCore|null $cart Optional Cart object
      * @param array $error Contains an error message if an error occurs
+     * @param array|null $ids_carrier IDs of the carriers to check
      *
      * @return array Carriers for the order
      */
-    public static function getCarriersForOrder($id_zone, $groups = null, $cart = null, &$error = [])
+    public static function getCarriersForOrder($id_zone, $groups = null, $cart = null, &$error = [], $ids_carrier = null)
     {
         // First, initialize the context, language, currency
         $context = Context::getContext();
@@ -743,10 +748,22 @@ class CarrierCore extends ObjectModel
         }
 
         // And get all carriers available in the system
-        $result = Carrier::getCarriers($id_lang, true, false, (int) $id_zone, $groups, self::PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
+        $result = Carrier::getCarriers($id_lang, true, false, (int) $id_zone, $groups, self::PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE, $ids_carrier);
         $results_array = [];
 
         foreach ($result as $k => $row) {
+            $cache_id = 'Carrier::getCarriersForOrder_' . (int) $id_zone . '-' . (int) $row['id_carrier'] . '-' . (int) $cart->id . '-' . (int) ($id_currency ?? 0);
+            if (Cache::isStored($cache_id)) {
+                $cached = Cache::retrieve($cache_id);
+                if ($cached['available']) {
+                    $results_array[] = $cached['row'];
+                } elseif (null !== $cached['error']) {
+                    $error[(int) $row['id_carrier']] = $cached['error'];
+                }
+
+                continue;
+            }
+
             $carrier = new Carrier((int) $row['id_carrier']);
             $shipping_method = $carrier->getShippingMethod();
             if ($shipping_method != Carrier::SHIPPING_METHOD_FREE) {
@@ -757,13 +774,13 @@ class CarrierCore extends ObjectModel
                  * If yes, we must still check the behavior of the carrier for out-of-range prices below.
                  */
                 if ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && $carrier->getMaxDeliveryPriceByWeight($id_zone) === false) {
-                    $error[$carrier->id] = Carrier::SHIPPING_WEIGHT_EXCEPTION;
+                    self::rejectCarrierForOrder($cache_id, (int) $carrier->id, Carrier::SHIPPING_WEIGHT_EXCEPTION, $error);
                     unset($result[$k]);
 
                     continue;
                 }
                 if ($shipping_method == Carrier::SHIPPING_METHOD_PRICE && $carrier->getMaxDeliveryPriceByPrice($id_zone) === false) {
-                    $error[$carrier->id] = Carrier::SHIPPING_PRICE_EXCEPTION;
+                    self::rejectCarrierForOrder($cache_id, (int) $carrier->id, Carrier::SHIPPING_PRICE_EXCEPTION, $error);
                     unset($result[$k]);
 
                     continue;
@@ -785,7 +802,7 @@ class CarrierCore extends ObjectModel
                     // Get only carriers that have a range compatible with cart
                     if ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT
                         && (Carrier::checkDeliveryPriceByWeight($row['id_carrier'], $cart->getTotalWeight(), $id_zone) === false)) {
-                        $error[$carrier->id] = Carrier::SHIPPING_WEIGHT_EXCEPTION;
+                        self::rejectCarrierForOrder($cache_id, (int) $carrier->id, Carrier::SHIPPING_WEIGHT_EXCEPTION, $error);
                         unset($result[$k]);
 
                         continue;
@@ -793,7 +810,7 @@ class CarrierCore extends ObjectModel
 
                     if ($shipping_method == Carrier::SHIPPING_METHOD_PRICE
                         && (Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING), $id_zone, $id_currency ?? null) === false)) {
-                        $error[$carrier->id] = Carrier::SHIPPING_PRICE_EXCEPTION;
+                        self::rejectCarrierForOrder($cache_id, (int) $carrier->id, Carrier::SHIPPING_PRICE_EXCEPTION, $error);
                         unset($result[$k]);
 
                         continue;
@@ -807,6 +824,7 @@ class CarrierCore extends ObjectModel
 
             // If price is false, then the carrier is unavailable (carrier module)
             if ($row['price'] === false) {
+                self::rejectCarrierForOrder($cache_id, (int) $row['id_carrier'], null, $error);
                 unset($result[$k]);
 
                 continue;
@@ -815,6 +833,7 @@ class CarrierCore extends ObjectModel
             // Locate an image (original resolution, we should probably move to use a presenter and thumbnails here)
             $row['img'] = file_exists(_PS_SHIP_IMG_DIR_ . (int) $row['id_carrier'] . '.jpg') ? _THEME_SHIP_DIR_ . (int) $row['id_carrier'] . '.jpg' : '';
 
+            Cache::store($cache_id, ['available' => true, 'row' => $row, 'error' => null]);
             $results_array[] = $row;
         }
 
@@ -832,6 +851,22 @@ class CarrierCore extends ObjectModel
         }
 
         return $results_array;
+    }
+
+    /**
+     * Remembers that a carrier is unavailable for this cart, so the next product does not evaluate it again.
+     *
+     * @param string $cache_id
+     * @param int $id_carrier
+     * @param int|null $error_code Carrier::SHIPPING_*_EXCEPTION, or null when a carrier module returned no price
+     * @param array $error
+     */
+    private static function rejectCarrierForOrder($cache_id, $id_carrier, $error_code, &$error)
+    {
+        if (null !== $error_code) {
+            $error[$id_carrier] = $error_code;
+        }
+        Cache::store($cache_id, ['available' => false, 'row' => null, 'error' => $error_code]);
     }
 
     public static function checkCarrierZone($id_carrier, $id_zone)
@@ -1616,11 +1651,11 @@ class CarrierCore extends ObjectModel
         }
 
         $available_carrier_list = [];
-        $cache_id = 'Carrier::getAvailableCarrierList_getCarriersForOrder_' . (int) $id_zone . '-' . (int) $cart->id;
+        $cache_id = 'Carrier::getAvailableCarrierList_getCarriersForOrder_' . (int) $id_zone . '-' . (int) $cart->id . '-' . (int) $product->id;
         if (!Cache::isStored($cache_id)) {
             $customer = new Customer($cart->id_customer);
             $carrier_error = [];
-            $carriers = Carrier::getCarriersForOrder($id_zone, $customer->getGroups(), $cart, $carrier_error);
+            $carriers = Carrier::getCarriersForOrder($id_zone, $customer->getGroups(), $cart, $carrier_error, !empty($carrier_list) ? $carrier_list : null);
             Cache::store($cache_id, [$carriers, $carrier_error]);
         } else {
             list($carriers, $carrier_error) = Cache::retrieve($cache_id);
