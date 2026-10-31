@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Tag\CommandHandler;
 
+use Language;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Tag\Command\AddTagCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tag\CommandHandler\AddTagCommandHandlerInterface;
@@ -24,11 +25,28 @@ class AddTagHandler implements AddTagCommandHandlerInterface
 {
     public function handle(AddTagCommand $command): TagId
     {
+        $this->assertTagNameIsSearchable($command->getName(), (int) $command->getLanguageId());
         $this->assertTagIsNotDuplicate($command);
 
         $tag = $this->createLegacyTagFromCommand($command);
 
         return new TagId((int) $tag->id);
+    }
+
+    /**
+     * Asserts that the tag name yields at least one keyword when passed through the search
+     * indexer - otherwise the tag would be saved but never findable in the front-office search.
+     *
+     * @throws TagConstraintException
+     */
+    protected function assertTagNameIsSearchable(?string $name, int $idLang): void
+    {
+        if (!Validate::isSearchableName((string) $name, $idLang, (string) Language::getIsoById($idLang))) {
+            throw new TagConstraintException(
+                sprintf('Tag "%s" cannot be found by the search engine', $name),
+                TagConstraintException::INVALID_NAME
+            );
+        }
     }
 
     /**

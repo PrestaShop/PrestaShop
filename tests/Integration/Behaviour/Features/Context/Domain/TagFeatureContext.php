@@ -15,6 +15,7 @@ use PrestaShop\PrestaShop\Core\Domain\Tag\Command\BulkDeleteTagCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tag\Command\DeleteTagCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tag\Command\EditTagCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tag\Exception\DuplicateTagException;
+use PrestaShop\PrestaShop\Core\Domain\Tag\Exception\TagConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Tag\Exception\TagNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Tag\Query\GetTagForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Tag\QueryResult\EditableTag;
@@ -95,6 +96,14 @@ class TagFeatureContext extends AbstractDomainFeatureContext
     public function assertLastErrorIsDuplicateTag(): void
     {
         $this->assertLastErrorIs(DuplicateTagException::class);
+    }
+
+    /**
+     * @Then I should get error that tag name is invalid
+     */
+    public function assertLastErrorIsInvalidTagName(): void
+    {
+        $this->assertLastErrorIs(TagConstraintException::class, TagConstraintException::INVALID_NAME);
     }
 
     /**
