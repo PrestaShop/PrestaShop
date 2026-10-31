@@ -30,6 +30,11 @@ class EditableCategory
     private $isActive;
 
     /**
+     * @var bool
+     */
+    private $indexation;
+
+    /**
      * @var string[]
      */
     private $description;
@@ -129,11 +134,13 @@ class EditableCategory
         $coverImage = null,
         $thumbnailImage = null,
         array $subCategories = [],
-        array $additionalDescription = []
+        array $additionalDescription = [],
+        bool $indexation = true
     ) {
         $this->id = $id;
         $this->name = $name;
         $this->isActive = $isActive;
+        $this->indexation = $indexation;
         $this->description = $description;
         $this->parentId = $parentId;
         $this->metaTitle = $metaTitle;
@@ -172,6 +179,14 @@ class EditableCategory
     public function isActive()
     {
         return $this->isActive;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIndexation(): bool
+    {
+        return $this->indexation;
     }
 
     /**
