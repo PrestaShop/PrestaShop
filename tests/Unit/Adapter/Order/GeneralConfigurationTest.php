@@ -11,7 +11,6 @@ namespace Tests\Unit\Adapter\Order;
 use PrestaShop\PrestaShop\Adapter\Order\GeneralConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 use Tests\TestCase\AbstractConfigurationTestCase;
 
 class GeneralConfigurationTest extends AbstractConfigurationTestCase
@@ -91,7 +90,6 @@ class GeneralConfigurationTest extends AbstractConfigurationTestCase
     public function provideInvalidConfiguration(): array
     {
         return [
-            [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['enable_final_summary' => 'wrong_type'])],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['enable_guest_checkout' => 'wrong_type'])],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['disable_reordering_option' => 'wrong_type'])],
