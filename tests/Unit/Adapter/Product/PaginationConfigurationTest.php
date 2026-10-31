@@ -70,16 +70,25 @@ class PaginationConfigurationTest extends AbstractConfigurationTestCase
         ];
     }
 
-    public function testSuccessfulUpdate(): void
+    /**
+     * @dataProvider provideMaxProductsPerPage
+     */
+    public function testSuccessfulUpdate(int $maxProductsPerPage): void
     {
         $paginationConfiguration = new PaginationConfiguration($this->mockConfiguration, $this->mockShopConfiguration, $this->mockMultistoreFeature);
 
         $this->assertSame([], $paginationConfiguration->updateConfiguration([
             'products_per_page' => 12,
-            'max_products_per_page' => 96,
+            'max_products_per_page' => $maxProductsPerPage,
             'default_order_by' => 4,
             'default_order_way' => 0,
         ]));
+    }
+
+    public static function provideMaxProductsPerPage(): iterable
+    {
+        yield 'limited' => [96];
+        yield 'no limit' => [0];
     }
 
     public static function provideShopConstraints(): array

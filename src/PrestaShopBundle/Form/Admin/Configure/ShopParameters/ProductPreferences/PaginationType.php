@@ -40,7 +40,7 @@ class PaginationType extends TranslatorAwareType
                     'Maximum products per page',
                     'Admin.Shopparameters.Feature'
                 ),
-                'help' => $this->trans('Highest number of products a page can display when the theme lets customers choose. Default is 96', 'Admin.Shopparameters.Help'),
+                'help' => $this->trans('Highest number of products a page can display when the theme lets customers choose. Set to 0 for no limit. Default is 96', 'Admin.Shopparameters.Help'),
                 'required' => false,
                 'multistore_configuration_key' => 'PS_PRODUCTS_PER_PAGE_MAX',
             ])
