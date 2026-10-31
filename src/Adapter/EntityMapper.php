@@ -119,4 +119,124 @@ class EntityMapper
             }
         }
     }
+
+    /**
+     * Warm the ObjectModel cache for a whole set of ids in two batched queries instead of the two
+     * queries load() runs per object (issue #14979). Each entry is stored under the exact same
+     * cache_id and with the exact same payload load() would produce, so a subsequent
+     * `new <Entity>($id, $id_lang, $id_shop)` is served from cache via load()'s cache-hit branch
+     * with no behavioural change. A no-op when object caching is off, or for ids already cached, or
+     * for ids whose base row is absent (left for load() to resolve exactly as today).
+     *
+     * @param int[] $ids
+     * @param int $id_lang
+     * @param ObjectModelCore $entity a sample entity of the target class (no id required)
+     * @param array<string,string|array> $entity_defs
+     * @param int $id_shop
+     * @param bool $should_cache_objects
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public function prefetch(array $ids, $id_lang, $entity, $entity_defs, $id_shop, $should_cache_objects)
+    {
+        if (!$should_cache_objects) {
+            return;
+        }
+        $id_lang = (int) $id_lang;
+        $id_shop = (int) $id_shop;
+        $primary = $entity_defs['primary'];
+
+        $missing = [];
+        foreach (array_unique(array_map('intval', $ids)) as $id) {
+            if ($id && !Cache::isStored('objectmodel_' . $entity_defs['classname'] . '_' . $id . '_' . $id_shop . '_' . $id_lang)) {
+                $missing[] = $id;
+            }
+        }
+        if (empty($missing)) {
+            return;
+        }
+
+        // Same base query load() builds, with IN() instead of a single id.
+        $sql = new DbQuery();
+        $sql->from($entity_defs['table'], 'a');
+        $sql->where('a.`' . bqSQL($primary) . '` IN (' . implode(',', $missing) . ')');
+        if ($id_lang && isset($entity_defs['multilang']) && $entity_defs['multilang']) {
+            $sql->leftJoin($entity_defs['table'] . '_lang', 'b', 'a.`' . bqSQL($primary) . '` = b.`' . bqSQL($primary) . '` AND b.`id_lang` = ' . $id_lang);
+            if ($id_shop && !empty($entity_defs['multilang_shop'])) {
+                $sql->where('b.`id_shop` = ' . $id_shop);
+            }
+        }
+        if (Shop::isTableAssociated($entity_defs['table'])) {
+            $sql->leftJoin($entity_defs['table'] . '_shop', 'c', 'a.`' . bqSQL($primary) . '` = c.`' . bqSQL($primary) . '` AND c.`id_shop` = ' . $id_shop);
+        }
+        $base_rows = Db::getInstance()->executeS($sql);
+        if (!is_array($base_rows)) {
+            return;
+        }
+        $base_by_id = [];
+        foreach ($base_rows as $row) {
+            $base_by_id[(int) $row[$primary]] = $row;
+        }
+
+        // Same all-languages query load() runs when no language is requested.
+        $lang_by_id = [];
+        if (!$id_lang && isset($entity_defs['multilang']) && $entity_defs['multilang']) {
+            $lang_sql = 'SELECT * FROM `' . bqSQL(_DB_PREFIX_ . $entity_defs['table']) . '_lang`
+                WHERE `' . bqSQL($primary) . '` IN (' . implode(',', $missing) . ')'
+                . (($id_shop && $entity->isLangMultishop()) ? ' AND `id_shop` = ' . $id_shop : '');
+            $lang_rows = Db::getInstance()->executeS($lang_sql);
+            if (is_array($lang_rows)) {
+                foreach ($lang_rows as $row) {
+                    $lang_by_id[(int) $row[$primary]][] = $row;
+                }
+            }
+        }
+
+        // In the all-languages path, load() initialises every multilang field to ''
+        // for each language when an entity has no _lang rows; mirror that here so the
+        // primed object is identical to what load() would produce.
+        $allLanguages = (!$id_lang && isset($entity_defs['multilang']) && $entity_defs['multilang'])
+            ? Language::getLanguages()
+            : [];
+
+        $objectVars = get_object_vars($entity);
+        foreach ($missing as $id) {
+            if (!isset($base_by_id[$id])) {
+                // load() would get false here and cache nothing; leave it untouched.
+                continue;
+            }
+            $object_datas = $base_by_id[$id];
+
+            if (isset($lang_by_id[$id])) {
+                foreach ($lang_by_id[$id] as $row) {
+                    foreach ($row as $key => $value) {
+                        if ($key != $primary && array_key_exists($key, $objectVars)) {
+                            if (!isset($object_datas[$key]) || !is_array($object_datas[$key])) {
+                                $object_datas[$key] = [];
+                            }
+                            $object_datas[$key][$row['id_lang']] = $value;
+                        }
+                    }
+                }
+            } elseif (!empty($allLanguages)) {
+                // No _lang rows for this entity: replicate load()'s empty-init else branch.
+                foreach ($entity_defs['fields'] as $key => $field) {
+                    if (!empty($field['lang'])) {
+                        foreach ($allLanguages as $language) {
+                            $object_datas[$key][$language['id_lang']] = '';
+                        }
+                    }
+                }
+            }
+
+            // Same field filter load() applies before Cache::store().
+            foreach ($object_datas as $key => $value) {
+                if (!array_key_exists($key, $entity_defs['fields']) && !array_key_exists($key, $objectVars)) {
+                    unset($object_datas[$key]);
+                }
+            }
+
+            Cache::store('objectmodel_' . $entity_defs['classname'] . '_' . $id . '_' . $id_shop . '_' . $id_lang, $object_datas);
+        }
+    }
 }
