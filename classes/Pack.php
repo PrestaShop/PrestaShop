@@ -302,6 +302,14 @@ class PackCore extends Product
                 $idProduct,
                 $idProductAttribute
             );
+
+            if (!empty($cart)) {
+                $cartProduct = $cart->getProductQuantity($idProduct, $idProductAttribute, $idCustomization);
+
+                if (!empty($cartProduct['deep_quantity'])) {
+                    $packQuantity -= $cartProduct['deep_quantity'];
+                }
+            }
         }
 
         // If the quantity of the pack depends on the products inside, or both pack and products,
@@ -328,12 +336,6 @@ class PackCore extends Product
                 if ($nbPackAvailableForItem < $packQuantity) {
                     $packQuantity = $nbPackAvailableForItem;
                 }
-            }
-        } elseif (!empty($cart)) {
-            $cartProduct = $cart->getProductQuantity($idProduct, $idProductAttribute, $idCustomization);
-
-            if (!empty($cartProduct['deep_quantity'])) {
-                $packQuantity -= $cartProduct['deep_quantity'];
             }
         }
 
