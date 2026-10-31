@@ -1373,13 +1373,15 @@ class ShopCore extends ObjectModel
     }
 
     /**
+     * Returns the active shop URLs served by the given host, longest URI first.
+     *
      * @param string $host
      *
      * @return array
      *
      * @throws PrestaShopDatabaseException
      */
-    private static function findShopByHost($host)
+    public static function findShopByHost($host)
     {
         $sql = 'SELECT s.id_shop, CONCAT(su.physical_uri, su.virtual_uri) AS uri, su.domain, su.main
                     FROM ' . _DB_PREFIX_ . 'shop_url su
