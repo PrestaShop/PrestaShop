@@ -1202,11 +1202,11 @@ class WebserviceRequestCore
 
                                     return false;
                                 } else {
-                                    if (isset($this->resourceConfiguration['retrieveData']['tableAlias'])) {
-                                        $sql_filter .= $this->getSQLRetrieveFilter($this->resourceConfiguration['fields'][$field]['sqlId'], $url_param, $this->resourceConfiguration['retrieveData']['tableAlias'] . '.');
-                                    } else {
-                                        $sql_filter .= $this->getSQLRetrieveFilter($this->resourceConfiguration['fields'][$field]['sqlId'], $url_param);
-                                    }
+                                    $sql_filter .= $this->getSQLRetrieveFilter(
+                                        $this->resourceConfiguration['fields'][$field]['sqlId'],
+                                        $url_param,
+                                        $this->getFilterTableAlias($this->resourceConfiguration['fields'][$field]['sqlId'])
+                                    );
                                 }
                             }
                         }
@@ -1695,6 +1695,42 @@ class WebserviceRequestCore
         }
 
         return false;
+    }
+
+    /**
+     * Returns the table alias a filter on $sqlId has to be qualified with.
+     *
+     * A shop-scoped field exists in two tables: the base one and the shop one. For a multishop
+     * association, getWebserviceObjectList() joins the shop table as `multi_shop_<table>` and the
+     * response is read from there, so qualifying the filter with `main` compares a different column
+     * from the one the response reports.
+     *
+     * @param string $sqlId
+     *
+     * @return string
+     */
+    protected function getFilterTableAlias($sqlId)
+    {
+        $defaultAlias = isset($this->resourceConfiguration['retrieveData']['tableAlias'])
+            ? $this->resourceConfiguration['retrieveData']['tableAlias'] . '.'
+            : 'main.';
+
+        if (!isset($this->resourceConfiguration['retrieveData']['className'])) {
+            return $defaultAlias;
+        }
+
+        $definition = ObjectModel::getDefinition($this->resourceConfiguration['retrieveData']['className']);
+        if (empty($definition['fields'][$sqlId]['shop'])) {
+            return $defaultAlias;
+        }
+
+        // Only a non fk_shop association produces the multi_shop_<table> join.
+        $assoc = Shop::getAssoTable($definition['table']);
+        if ($assoc === false || $assoc['type'] === 'fk_shop') {
+            return $defaultAlias;
+        }
+
+        return 'multi_shop_' . $definition['table'] . '.';
     }
 
     /**
