@@ -55,7 +55,7 @@ class LanguageFormDataProviderTest extends TestCase
         ], $formDataProvider->getData(2));
     }
 
-    public function tetItProvidesDefaultFormDataForLanguageCreatingWhenMultistoreFeatureIsOff()
+    public function testItProvidesDefaultFormDataForLanguageCreatingWhenMultistoreFeatureIsOff()
     {
         $formDataProvider = new LanguageFormDataProvider(
             $this->createQueryBusMock(),
@@ -71,7 +71,7 @@ class LanguageFormDataProviderTest extends TestCase
         ], $formDataProvider->getDefaultData());
     }
 
-    public function tetItProvidesDefaultFormDataForLanguageCreatingWhenMultistoreFeatureIsUsed()
+    public function testItProvidesDefaultFormDataForLanguageCreatingWhenMultistoreFeatureIsUsed()
     {
         $defaultShopAssociation = [1, 2, 3];
 
