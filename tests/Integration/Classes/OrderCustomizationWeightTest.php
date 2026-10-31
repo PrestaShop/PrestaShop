@@ -24,17 +24,12 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use Product;
 use ProductAttribute;
 use StockAvailable;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\HttpKernel\KernelInterface;
-use Tests\Integration\Utility\ContextMocker;
 use Tests\Resources\DatabaseDump;
+use Tests\TestCase\SymfonyIntegrationTestCase;
 
-final class OrderCustomizationWeightTest extends KernelTestCase
+final class OrderCustomizationWeightTest extends SymfonyIntegrationTestCase
 {
     private const WEIGHT_DELTA = 0.000001;
-
-    private ?ContextMocker $contextMocker = null;
-    private ?KernelInterface $previousKernel = null;
 
     public static function tearDownAfterClass(): void
     {
@@ -52,30 +47,12 @@ final class OrderCustomizationWeightTest extends KernelTestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        global $kernel;
-        $this->previousKernel = $kernel;
+        // Restore fixtures before the base class initializes the context and kernel.
         DatabaseDump::restoreAllTables();
-        self::bootKernel();
-        $kernel = self::$kernel;
-        $this->contextMocker = (new ContextMocker())->mockContext();
+        parent::setUp();
 
         Configuration::updateValue('PS_CUSTOMIZATION_FEATURE_ACTIVE', 1);
         Configuration::updateValue('PS_COMBINATION_FEATURE_ACTIVE', 1);
-    }
-
-    protected function tearDown(): void
-    {
-        try {
-            if (null !== $this->contextMocker) {
-                $this->contextMocker->resetContext();
-            }
-        } finally {
-            global $kernel;
-            $kernel = $this->previousKernel;
-            parent::tearDown();
-        }
     }
 
     /**
