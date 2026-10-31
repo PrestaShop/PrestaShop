@@ -17,6 +17,8 @@ use PrestaShop\PrestaShop\Core\Domain\ImageSettings\Exception\ImageTypeException
 use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Process\PhpExecutableFinder;
+use Symfony\Component\Process\Process;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -24,8 +26,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class ImageThumbnailsRegenerator
 {
+    public const WORKER_TIMEOUT_EXIT_CODE = 3;
+
     private int $maxExecutionTime = 7200;
     private int $startTime = 0;
+    private int $workerCount = 1;
+    private ?int $workerIndex = null;
+    private bool $workersErasePreviousImages = false;
 
     public function __construct(
         private readonly ProductImageRepository $productImageRepository,
@@ -35,11 +42,36 @@ class ImageThumbnailsRegenerator
         private readonly TranslatorInterface $translator,
         #[Autowire('@prestashop.adapter.product.image.product_image_filesystem_path_factory')]
         private readonly ProductImagePathFactory $productImagePathFactory,
+        #[Autowire('%kernel.environment%')]
+        private readonly string $environment = 'prod',
+        #[Autowire('%kernel.debug%')]
+        private readonly bool $debug = false,
     ) {
         // Save start time to calculate remaining time and to avoid timeout on long running processes
         $this->startTime = time();
         ini_set('max_execution_time', $this->maxExecutionTime); // ini_set may be disabled, we need the real value
         $this->maxExecutionTime = (int) ini_get('max_execution_time');
+    }
+
+    /**
+     * Splits product images between $workerCount processes. Without $workerIndex, this process starts the workers,
+     * otherwise it only handles the product images of worker $workerIndex.
+     */
+    public function setWorkers(int $workerCount, ?int $workerIndex = null): void
+    {
+        $this->workerCount = $workerCount;
+        $this->workerIndex = $workerIndex;
+        $this->workersErasePreviousImages = false;
+    }
+
+    private function delegatesToWorkers(): bool
+    {
+        return $this->workerCount > 1 && $this->workerIndex === null;
+    }
+
+    private function isHandledByThisProcess(int $imageId): bool
+    {
+        return $this->workerIndex === null || $imageId % $this->workerCount === $this->workerIndex;
     }
 
     /**
@@ -70,18 +102,25 @@ class ImageThumbnailsRegenerator
          * Scan all files in the given folder.
          * We do this also in case of products, because it will take care of placeholder thumbnails, hence the second regex.
          */
-        $filesToDelete = scandir($dir, SCANDIR_SORT_NONE);
-        foreach ($filesToDelete as $file) {
-            if ((preg_match($regexStandard, $file) || preg_match($regexPlaceholders, $file)) && file_exists($dir . $file)) {
-                unlink($dir . $file);
+        if ($this->workerIndex === null) {
+            $filesToDelete = scandir($dir, SCANDIR_SORT_NONE);
+            foreach ($filesToDelete as $file) {
+                if ((preg_match($regexStandard, $file) || preg_match($regexPlaceholders, $file)) && file_exists($dir . $file)) {
+                    unlink($dir . $file);
+                }
             }
         }
 
-        // Delete product images
-        if ($isProduct) {
+        // Workers delete the thumbnails of their own product images before regenerating them
+        if ($isProduct && $this->delegatesToWorkers()) {
+            $this->workersErasePreviousImages = true;
+        } elseif ($isProduct) {
             // Get all product images in the shop
             $productsImages = $this->productImageRepository->iterateImagesForThumbnailGeneration();
             foreach ($productsImages as $image) {
+                if (!$this->isHandledByThisProcess($image->getImageId()->getValue())) {
+                    continue;
+                }
                 // Get path to current image folder, example: /img/p/1/2/3
                 $pathToImageFolder = $this->productImagePathFactory->getImageFolder($image->getImageId());
                 if (file_exists($pathToImageFolder)) {
@@ -180,8 +219,13 @@ class ImageThumbnailsRegenerator
                     }
                 }
             }
+        } elseif ($this->delegatesToWorkers()) {
+            return $this->regenerateProductImagesInWorkers($type);
         } else {
             foreach ($this->productImageRepository->iterateImagesForThumbnailGeneration() as $imageForThumbnailGeneration) {
+                if (!$this->isHandledByThisProcess($imageForThumbnailGeneration->getImageId()->getValue())) {
+                    continue;
+                }
                 $originalImagePath = $this->productImagePathFactory->getPath(
                     $imageForThumbnailGeneration->getImageId()
                 );
@@ -247,9 +291,66 @@ class ImageThumbnailsRegenerator
         return $errors;
     }
 
+    /**
+     * @return string[]
+     */
+    private function regenerateProductImagesInWorkers(array $types): array
+    {
+        if ($types === []) {
+            return [];
+        }
+        $imageTypeId = count($types) === 1 ? (string) reset($types)->getId() : '0';
+        $processes = [];
+        for ($workerIndex = 0; $workerIndex < $this->workerCount; ++$workerIndex) {
+            $process = new Process([
+                ...$this->getWorkerCommand(),
+                'products',
+                $imageTypeId,
+                '--worker=' . $workerIndex . '/' . $this->workerCount,
+                ...($this->workersErasePreviousImages ? ['--delete'] : []),
+            ]);
+            $process->setTimeout(null);
+            $process->start();
+            $processes[] = $process;
+        }
+
+        $errors = [];
+        foreach ($processes as $process) {
+            $exitCode = $process->wait();
+            if ($exitCode === self::WORKER_TIMEOUT_EXIT_CODE) {
+                $errors[] = 'timeout';
+            } elseif ($exitCode !== 0) {
+                $errors[] = trim($process->getOutput() . $process->getErrorOutput());
+            }
+        }
+
+        return array_values(array_unique($errors));
+    }
+
+    /**
+     * @return string[] Console command regenerating thumbnails, run by each worker with its own arguments
+     */
+    protected function getWorkerCommand(): array
+    {
+        return [
+            (new PhpExecutableFinder())->find(false) ?: PHP_BINARY,
+            '-d',
+            'memory_limit=' . ini_get('memory_limit'),
+            _PS_ROOT_DIR_ . '/bin/console',
+            'prestashop:thumbnails:regenerate',
+            '--env=' . $this->environment,
+            ...($this->debug ? [] : ['--no-debug']),
+        ];
+    }
+
     /* Hook watermark optimization */
     public function regenerateWatermark(string $dir, ?array $formats = null): bool|string
     {
+        // Workers apply the watermark to their own product images
+        if ($this->delegatesToWorkers()) {
+            return true;
+        }
+
         $result = Db::getInstance()->executeS('
 		SELECT m.`name` FROM `' . _DB_PREFIX_ . 'module` m
 		LEFT JOIN `' . _DB_PREFIX_ . 'hook_module` hm ON hm.`id_module` = m.`id_module`
@@ -259,6 +360,9 @@ class ImageThumbnailsRegenerator
         if ($result && count($result)) {
             $productsImages = $this->productImageRepository->iterateImagesForThumbnailGeneration();
             foreach ($productsImages as $imageForThumbnailGeneration) {
+                if (!$this->isHandledByThisProcess($imageForThumbnailGeneration->getImageId()->getValue())) {
+                    continue;
+                }
                 if (file_exists($this->productImagePathFactory->getPath($imageForThumbnailGeneration->getImageId()))) {
                     foreach ($result as $module) {
                         $moduleInstance = LegacyModule::getInstanceByName($module['name']);
@@ -295,6 +399,10 @@ class ImageThumbnailsRegenerator
      */
     public function regenerateNoPictureImages(string $dir, array $type, array $languages): bool
     {
+        if ($this->workerIndex !== null) {
+            return false;
+        }
+
         $defaultLang = $this->langRepository->findOneBy(['id' => (int) $this->configuration->get('PS_LANG_DEFAULT')]);
         $errors = false;
 

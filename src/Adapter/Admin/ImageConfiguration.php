@@ -33,6 +33,7 @@ class ImageConfiguration implements DataConfigurationInterface
             'formats' => $this->configuration->get('PS_IMAGE_FORMAT'),
             'base-format' => $this->configuration->get('PS_IMAGE_QUALITY'),
             'avif-quality' => (int) $this->configuration->get('PS_AVIF_QUALITY'),
+            'avif-speed' => (int) $this->configuration->get('PS_AVIF_SPEED', 6),
             'jpeg-quality' => (int) $this->configuration->get('PS_JPEG_QUALITY'),
             'png-quality' => (int) $this->configuration->get('PS_PNG_QUALITY'),
             'webp-quality' => (int) $this->configuration->get('PS_WEBP_QUALITY'),
@@ -54,6 +55,9 @@ class ImageConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_IMAGE_FORMAT', $configuration['formats']);
             $this->configuration->set('PS_IMAGE_QUALITY', $configuration['base-format']);
             $this->configuration->set('PS_AVIF_QUALITY', (int) $configuration['avif-quality']);
+            if (isset($configuration['avif-speed'])) {
+                $this->configuration->set('PS_AVIF_SPEED', (int) $configuration['avif-speed']);
+            }
             $this->configuration->set('PS_JPEG_QUALITY', (int) $configuration['jpeg-quality']);
             $this->configuration->set('PS_PNG_QUALITY', (int) $configuration['png-quality']);
             $this->configuration->set('PS_WEBP_QUALITY', (int) $configuration['webp-quality']);

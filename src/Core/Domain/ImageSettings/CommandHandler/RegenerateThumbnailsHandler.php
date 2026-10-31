@@ -41,6 +41,8 @@ final class RegenerateThumbnailsHandler extends AbstractObjectModelHandler imple
      */
     public function handle(RegenerateThumbnailsCommand $command): void
     {
+        $this->imageThumbnailsRegenerator->setWorkers($command->getWorkerCount(), $command->getWorkerIndex());
+
         // Get all languages
         $languages = $this->langRepository->findAll();
 

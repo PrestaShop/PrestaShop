@@ -26,6 +26,7 @@ class EditableImageSettingsTest extends TestCase
             499,
             123,
             456,
+            9,
         );
 
         $this->assertSame(['jpg', 'avif'], $instance->getFormats());
@@ -38,5 +39,6 @@ class EditableImageSettingsTest extends TestCase
         $this->assertSame(499, $instance->getPictureMaxSize());
         $this->assertSame(123, $instance->getPictureMaxWidth());
         $this->assertSame(456, $instance->getPictureMaxHeight());
+        $this->assertSame(9, $instance->getAvifSpeed());
     }
 }

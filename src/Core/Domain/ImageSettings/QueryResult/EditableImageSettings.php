@@ -22,7 +22,8 @@ class EditableImageSettings
         private readonly int $generationMethod,
         private readonly int $pictureMaxSize,
         private readonly int $pictureMaxWidth,
-        private readonly int $pictureMaxHeight
+        private readonly int $pictureMaxHeight,
+        private readonly int $avifSpeed = 6
     ) {
     }
 
@@ -39,6 +40,11 @@ class EditableImageSettings
     public function getAvifQuality(): int
     {
         return $this->avifQuality;
+    }
+
+    public function getAvifSpeed(): int
+    {
+        return $this->avifSpeed;
     }
 
     public function getJpegQuality(): int
