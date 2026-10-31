@@ -37,10 +37,13 @@ use Throwable;
  *    requests, or other opened tabs) may start and start booting the kernel while its cache is being
  *    built, and it creates bugs with multiple cache folders being used. To avoid this we use a custom
  *    lock system At the very moment the SymfonyCacheClear::clear method is called we lock the current
- *    application, so all the following request will be stalled and will remain in a waiting state until
- *    the lock is released. When we clear the other applications/environments we also lock them one by
- *    one and unlock them after they are cleared, at the end of the clear operations (when all environments
- *    have been cleared) we finally release the current process which initiated the global clearing
+ *    application and all the other applications/environments, so all the following requests will be stalled
+ *    and will remain in a waiting state until the lock is released. They must all be locked right away, before
+ *    the response is sent: a request booting before its lock exists (the redirection that follows a form
+ *    submit, for example) would not wait and would load a container while it is being removed. The other
+ *    applications/environments are unlocked once they are cleared, at the end of the clear operations (when
+ *    all environments have been cleared) we finally release the current process which initiated the global
+ *    clearing
  *  - not all environments are similar and some have strong restrictions (unable to use exec function
  *    php binary not accessible in the cache, ...) so no solution is guaranteed to work everywhere, which
  *    is why we implemented multiple KernelCacheClearerInterface that can adapt to the environment, this
@@ -52,6 +55,10 @@ use Throwable;
 final class SymfonyCacheClearer implements CacheClearerInterface
 {
     use SafeLoggerTrait;
+
+    private const ENVIRONMENTS = ['prod', 'dev'];
+
+    private const APPLICATION_KERNEL_CLASSES = [AdminKernel::class, AdminAPIKernel::class, FrontKernel::class];
 
     private bool $clearCacheRequested = false;
 
@@ -86,7 +93,10 @@ final class SymfonyCacheClearer implements CacheClearerInterface
             return;
         }
 
-        // If we reach here it means the clear lock file is locked, we register a shutdown function that will clear the cache once
+        // Lock all the other applications and environments right away too, the lock must exist before the response is sent
+        $this->lockOtherApps($kernel);
+
+        // If we reach here it means the clear lock files are locked, we register a shutdown function that will clear the cache once
         // the current process is over.
         register_shutdown_function(function () use ($kernel) {
             try {
@@ -94,22 +104,16 @@ final class SymfonyCacheClearer implements CacheClearerInterface
                 @set_time_limit(0);
                 @ini_set('memory_limit', '-1');
 
-                $environments = ['prod', 'dev'];
-                $applicationKernelClasses = [AdminKernel::class, AdminAPIKernel::class, FrontKernel::class];
-                foreach ($environments as $environment) {
+                foreach (self::ENVIRONMENTS as $environment) {
                     /** @var AppKernel[] $applicationKernels */
                     $applicationKernels = [];
 
-                    // Start by locking all the applications for this environment, since the legacy cache is only bound
-                    // to an environment, not a particular App, it is potentially shared by these applications. So we lock
-                    // them all, clear them all, clear the common legacy cache And only then can we unlock them all
-                    foreach ($applicationKernelClasses as $applicationKernelClass) {
-                        /** @var AppKernel $applicationKernel */
-                        $applicationKernel = new $applicationKernelClass($environment, false);
-                        // Lock the app for this particular environment and app
-                        CacheClearLocker::lock($applicationKernel->getEnvironment(), $applicationKernel->getAppId());
+                    // All the applications are already locked (see lockOtherApps), since the legacy cache is only bound
+                    // to an environment, not a particular App, it is potentially shared by these applications. So we clear
+                    // them all, clear the common legacy cache And only then can we unlock them all
+                    foreach (self::APPLICATION_KERNEL_CLASSES as $applicationKernelClass) {
                         // Store each kernel to avoid creating them again in the other loops
-                        $applicationKernels[] = $applicationKernel;
+                        $applicationKernels[] = new $applicationKernelClass($environment, false);
                     }
 
                     // Now clear the kernels' cache
@@ -164,10 +168,31 @@ final class SymfonyCacheClearer implements CacheClearerInterface
                 $this->logError('SymfonyCacheClearer: Something went wrong while clearing cache: ' . $e->getMessage());
             } finally {
                 Hook::exec('actionClearSf2Cache');
+                // If something went wrong some other applications may still be locked, unlock them before the current one
+                foreach (self::ENVIRONMENTS as $environment) {
+                    foreach (self::APPLICATION_KERNEL_CLASSES as $applicationKernelClass) {
+                        $this->unlockOtherApp($kernel, $environment, $applicationKernelClass::APP_ID);
+                    }
+                }
                 // Finally unlock the current App
                 CacheClearLocker::unlock($kernel->getEnvironment(), $kernel->getAppId());
             }
         });
+    }
+
+    protected function lockOtherApps(AppKernel $currentKernel): void
+    {
+        foreach (self::ENVIRONMENTS as $environment) {
+            foreach (self::APPLICATION_KERNEL_CLASSES as $applicationKernelClass) {
+                // The current App is already locked
+                if ($environment === $currentKernel->getEnvironment() && $applicationKernelClass::APP_ID === $currentKernel->getAppId()) {
+                    continue;
+                }
+
+                // If another process is already clearing this App its lock fails, the App remains locked by that process
+                CacheClearLocker::lock($environment, $applicationKernelClass::APP_ID);
+            }
+        }
     }
 
     protected function unlockOtherApp(AppKernel $currentKernel, string $otherEnvironment, string $otherAppId): void
