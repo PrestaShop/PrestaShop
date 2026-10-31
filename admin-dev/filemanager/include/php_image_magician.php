@@ -1150,8 +1150,6 @@ class imageLib
       imagecopy($comp, $filter, 0, 0, 0, 0, $width, $height);
       imagecopymerge($im, $comp, 0, 0, 0, 0, $width, $height, $amount);
 
-      imagedestroy($comp);
-
       return $im;
   }
 
@@ -1261,8 +1259,6 @@ class imageLib
 
       $this->imageResized = $final;
 
-      imagedestroy($li);
-      imagedestroy($im);
   }
 
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -1550,9 +1546,6 @@ class imageLib
 
       $this->imageResized = $rgb;
 
-      imagedestroy($image);
-      imagedestroy($newImage);
-      imagedestroy($shadow);
   }
 
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -2624,8 +2617,6 @@ class imageLib
                 break;
         }
 
-    //imagedestroy($this->imageResized);
-
     // *** Display error if a file type is not supported.
     if ($error != '') {
         $this->errorArray[] = $error . ' support is NOT enabled. File not saved.';
@@ -2687,8 +2678,6 @@ class imageLib
         // *** No extension - No save.
                 break;
         }
-
-    //imagedestroy($this->imageResized);
   }
 
 ## --------------------------------------------------------
@@ -3361,9 +3350,7 @@ class imageLib
 
     public function __destruct()
     {
-        if (is_resource($this->imageResized) || ($this->imageResized instanceof \GdImage)) {
-            imagedestroy($this->imageResized);
-        }
+
     }
 
 ## --------------------------------------------------------
