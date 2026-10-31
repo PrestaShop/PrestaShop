@@ -17,6 +17,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderState\Command\DeleteOrderStateCommand
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Command\EditOrderStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\BulkDeleteOrderStateException;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\DeleteOrderStateException;
+use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\MissingOrderStateRequiredFieldsException;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\OrderStateException;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\OrderStateNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Query\GetOrderStateForEditing;
@@ -50,7 +51,7 @@ class OrderStateFeatureContext extends AbstractDomainFeatureContext
                 (bool) $data['isShipped'],
                 (bool) $data['isPaid'],
                 (bool) $data['isDelivery'],
-                []
+                $data['template'] ?? []
             ));
 
             SharedStorage::getStorage()->set($orderStateReference, $orderStateId->getValue());
@@ -160,6 +161,14 @@ class OrderStateFeatureContext extends AbstractDomainFeatureContext
         $orderState = new OrderState((int) SharedStorage::getStorage()->get($orderStateReference));
         $orderState->unremovable = true;
         $orderState->update();
+    }
+
+    /**
+     * @Then I should get an error that the order state templates are missing
+     */
+    public function assertMissingTemplatesError(): void
+    {
+        $this->assertLastErrorIs(MissingOrderStateRequiredFieldsException::class);
     }
 
     /**
