@@ -33,7 +33,8 @@ class PaymentOptionsFinderCore extends HookFinder
         // Payment options coming from regular Advanced API
         $this->hookName = 'paymentOptions';
         $this->expectedInstanceClasses = ['PrestaShop\PrestaShop\Core\Payment\PaymentOption'];
-        $paymentOptions = array_merge($paymentOptions, parent::find());
+        $configurableOptions = parent::find();
+        $paymentOptions = array_merge($paymentOptions, $configurableOptions);
 
         // Safety check
         foreach ($paymentOptions as $moduleName => $paymentOption) {
@@ -42,7 +43,49 @@ class PaymentOptionsFinderCore extends HookFinder
             }
         }
 
-        return $paymentOptions;
+        return $this->putConfigurableOptionsFirst($paymentOptions, array_keys($configurableOptions));
+    }
+
+    /**
+     * The three hooks are merged in a fixed order, and a module's position only orders it against the
+     * other modules of its own hook - positions are a per-hook sequence, so they are not comparable
+     * across hooks. That left every module on the deprecated hooks ahead of every configured one,
+     * whatever the merchant had set.
+     *
+     * `paymentOptions` is the hook the merchant actually orders, and the one Module::getPaymentModules()
+     * treats as the payment hook, so it defines the order here. Modules that only supply options
+     * through the deprecated hooks keep their relative order and follow instead of leading.
+     *
+     * The merge itself is untouched, so which entry wins when a module answers on more than one hook
+     * is unchanged.
+     *
+     * @param array $paymentOptions merged options, keyed by module name
+     * @param string[] $configurableModules module names that answered on the paymentOptions hook
+     *
+     * @return array
+     */
+    protected function putConfigurableOptionsFirst(array $paymentOptions, array $configurableModules)
+    {
+        $configured = [];
+        $legacy = [];
+
+        foreach ($paymentOptions as $moduleName => $options) {
+            if (in_array($moduleName, $configurableModules, true)) {
+                $configured[$moduleName] = $options;
+            } else {
+                $legacy[$moduleName] = $options;
+            }
+        }
+
+        // Keep the merchant order inside the configured group.
+        $ordered = [];
+        foreach ($configurableModules as $moduleName) {
+            if (isset($configured[$moduleName])) {
+                $ordered[$moduleName] = $configured[$moduleName];
+            }
+        }
+
+        return $ordered + $legacy;
     }
 
     public function findFree()
