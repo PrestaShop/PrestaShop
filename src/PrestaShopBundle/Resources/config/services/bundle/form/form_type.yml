@@ -491,7 +491,7 @@ services:
       $productRepository: '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
       $attributeRepository: '@PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
       $specificPriceCombinationListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\SpecificPriceCombinationListener'
-      $combinationNameBuilder: '@PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilder'
+      $combinationNameBuilder: '@PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPricePriorityType:
     arguments:
