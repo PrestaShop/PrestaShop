@@ -731,13 +731,15 @@ class CarrierCore extends ObjectModel
         }
 
         // And get all carriers available in the system
-        $result = Carrier::getCarriers($id_lang, true, false, (int) $id_zone, $groups, self::PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
+        $result = Carrier::getCarriers($id_lang, true, false, (int) $id_zone, $groups, self::ALL_CARRIERS);
         $results_array = [];
 
         foreach ($result as $k => $row) {
             $carrier = new Carrier((int) $row['id_carrier']);
             $shipping_method = $carrier->getShippingMethod();
-            if ($shipping_method != Carrier::SHIPPING_METHOD_FREE) {
+            // Module carriers without ranges are priced by getOrderShippingCostExternal()
+            $computesItsOwnPrice = $carrier->is_module && $carrier->shipping_external && !$carrier->need_range;
+            if ($shipping_method != Carrier::SHIPPING_METHOD_FREE && !$computesItsOwnPrice) {
                 /*
                  * First, we check loosely if the carrier is available for the zone with at least one range.
                  * No weight, no price, just check if the carrier has any ranges for the zone.
