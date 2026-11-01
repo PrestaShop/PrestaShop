@@ -11,12 +11,15 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use Country;
 use Currency;
+use DateTime;
 use DateTimeInterface;
 use Group;
 use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\AddCatalogPriceRuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\EditCatalogPriceRuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleListForProduct;
@@ -55,6 +58,45 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
         } catch (CatalogPriceRuleException|DomainConstraintException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @When I edit catalog price rule :catalogPriceRuleReference with following details:
+     *
+     * @param string $catalogPriceRuleReference
+     * @param TableNode $tableNode
+     */
+    public function editCatalogPriceRule(string $catalogPriceRuleReference, TableNode $tableNode): void
+    {
+        $dataRows = $tableNode->getRowsHash();
+
+        try {
+            $command = new EditCatalogPriceRuleCommand((int) $this->getSharedStorage()->get($catalogPriceRuleReference));
+            if (isset($dataRows['name'])) {
+                $command->setName($dataRows['name']);
+            }
+            if (isset($dataRows['from'])) {
+                $command->setDateTimeFrom($dataRows['from']);
+            }
+            if (isset($dataRows['to'])) {
+                $command->setDateTimeTo($dataRows['to']);
+            }
+
+            $this->getCommandBus()->handle($command);
+        } catch (CatalogPriceRuleException|DomainConstraintException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then I should get error that catalog price rule date range is invalid
+     */
+    public function assertLastErrorIsInvalidDateRange(): void
+    {
+        $this->assertLastErrorIs(
+            CatalogPriceRuleConstraintException::class,
+            CatalogPriceRuleConstraintException::INVALID_DATE_RANGE
+        );
     }
 
     /**
@@ -253,6 +295,12 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
             PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['includes tax']),
             (float) $dataRows['price']
         );
+        if (!empty($dataRows['from'])) {
+            $addCommand->setDateTimeFrom($dataRows['from']);
+        }
+        if (!empty($dataRows['to'])) {
+            $addCommand->setDateTimeTo($dataRows['to']);
+        }
 
         return $addCommand;
     }
@@ -302,8 +350,8 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
             new DecimalNumber($dataRows['price']),
             new Reduction($dataRows['reduction type'], $dataRows['reduction value']),
             PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['includes tax']),
-            null,
-            null
+            !empty($dataRows['from']) ? new DateTime($dataRows['from']) : null,
+            !empty($dataRows['to']) ? new DateTime($dataRows['to']) : null
         );
     }
 
