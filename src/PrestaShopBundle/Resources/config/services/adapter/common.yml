@@ -75,3 +75,7 @@ services:
       - '%database_prefix%'
 
   PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository: ~
+
+  prestashop.adapter.memcache_server.manager:
+    class: 'PrestaShop\PrestaShop\Adapter\Cache\MemcacheServerManager'
+    arguments: [ '@doctrine.dbal.default_connection', '%database_prefix%' ]

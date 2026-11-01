@@ -63,6 +63,7 @@ framework:
   http_method_override: true
   http_client: ~
   cache:
+    default_memcached_provider: prestashop.cache.memcached_connection
     pools:
       '%cache.driver%':
         adapter: '%cache.adapter%'
