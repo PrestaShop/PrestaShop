@@ -4898,6 +4898,10 @@ class CartCore extends ObjectModel
             return true;
         }
 
+        if ($carrier->isPricedByItsModule()) {
+            return true;
+        }
+
         // If the carrier is free, we return true
         if ($shipping_method == Carrier::SHIPPING_METHOD_FREE) {
             return true;
