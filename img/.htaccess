@@ -13,4 +13,8 @@
     <Files ~ "(?i)^.*\.(jpg|jpeg|gif|png|bmp|tiff|svg|pdf|mov|mpeg|mp4|avi|mpg|wma|flv|webm|ico|webp|avif)$">
         Require all granted
     </Files>
+    # Grant a missing asset so Apache returns 404 instead of 403.
+    <If "! -e %{REQUEST_FILENAME} && %{REQUEST_URI} =~ /(?i)\.(jpg|jpeg|gif|png|bmp|tiff|svg|pdf|mov|mpeg|mp4|avi|mpg|wma|flv|webm|ico|webp|avif)$/">
+        Require all granted
+    </If>
 </IfModule>
