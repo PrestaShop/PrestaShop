@@ -39,7 +39,7 @@ export default class ExportToSqlManagerExtension {
 
     if (this.isServerSideExport(grid)) {
       // The SQL is no longer in the page, so fetch it from the authorized endpoint for preview.
-      $.post($sqlManagerForm.attr('action'), $sqlManagerForm.serialize(), (response: {sql: string}) => {
+      $.post(<string>$sqlManagerForm.attr('action'), $sqlManagerForm.serialize(), (response: {sql: string}) => {
         $sqlManagerForm.find('textarea[name="sql"]').val(response.sql);
         $sqlManagerForm.find('input[name="name"]').val(this.getNameFromBreadcrumb());
       });

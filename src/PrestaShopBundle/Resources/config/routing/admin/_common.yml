@@ -56,7 +56,6 @@ admin_common_grid_sql:
   methods: [ POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\CommonController::exportGridSqlAction'
-    _legacy_controller: AdminRequestSql
 
 admin_common_secured_file_image_reader:
   path: /secured/upload/document
