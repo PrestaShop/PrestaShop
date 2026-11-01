@@ -60,6 +60,11 @@ class CacheMemcacheCore extends Cache
             return false;
         }
 
+        // Memcache reads a lifetime above 30 days as a Unix timestamp
+        if ($ttl > 30 * 86400) {
+            $ttl += time();
+        }
+
         $result = $this->memcache->set($key, $value, 0, $ttl);
 
         if ($result === false) {

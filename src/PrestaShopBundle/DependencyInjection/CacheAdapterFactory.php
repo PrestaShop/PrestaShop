@@ -19,13 +19,15 @@ use Symfony\Component\Cache\Adapter\MemcachedAdapter;
  */
 class CacheAdapterFactory
 {
-    public function getCacheAdapter(string $driver): AdapterInterface
+    public function getCacheAdapter(string $driver, int $defaultLifetime = 0): AdapterInterface
     {
         if ($driver === 'apcu') {
-            return new ApcuAdapter();
+            return new ApcuAdapter('', $defaultLifetime);
         } elseif ($driver === 'memcached') {
             return new MemcachedAdapter(
-                AbstractAdapter::createConnection('memcached://localhost', ['lazy' => true])
+                AbstractAdapter::createConnection('memcached://localhost', ['lazy' => true]),
+                '',
+                $defaultLifetime
             );
         }
 
