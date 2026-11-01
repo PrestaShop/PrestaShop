@@ -713,19 +713,21 @@ class CurrencyCore extends ObjectModel
     }
 
     /**
-     * Get Currencies by Shop ID.
+     * Get non deleted currencies by shop ID.
      *
      * @param int $idShop Shop ID
+     * @param int $keptCurrencyId a currency returned even if it was deleted (e.g. the currency of an order)
      *
      * @return array|Currency
      */
-    public static function getCurrenciesByIdShop($idShop = 0)
+    public static function getCurrenciesByIdShop($idShop = 0, $keptCurrencyId = 0)
     {
         $currencies = Db::getInstance()->executeS('
 		SELECT *
 		FROM `' . _DB_PREFIX_ . 'currency` c
 		LEFT JOIN `' . _DB_PREFIX_ . 'currency_shop` cs ON (cs.`id_currency` = c.`id_currency`)
-        ' . ($idShop ? ' WHERE cs.`id_shop` = ' . (int) $idShop : '') . '
+		WHERE (c.`deleted` = 0' . ($keptCurrencyId ? ' OR c.`id_currency` = ' . (int) $keptCurrencyId : '') . ')'
+            . ($idShop ? ' AND cs.`id_shop` = ' . (int) $idShop : '') . '
 		ORDER BY `iso_code` ASC');
 
         return self::addCldrDatasToCurrency($currencies);
