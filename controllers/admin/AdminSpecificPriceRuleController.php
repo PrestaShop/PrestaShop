@@ -356,12 +356,13 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 
         $from = Tools::getValue('from');
         $to = Tools::getValue('to');
-        if (!DateTimeUtil::isNull($from) && !DateTimeUtil::isNull($to)
-            && false !== strtotime($from) && false !== strtotime($to)
-            && strtotime($from) > strtotime($to)
-        ) {
-            // Errors set before saving prevent the object from being saved and keep the submitted values in the form
-            $this->errors[] = $this->trans('The selected date range is not valid.', [], 'Admin.Notifications.Error');
+        if (!DateTimeUtil::isNull($from) && !DateTimeUtil::isNull($to)) {
+            $fromTimestamp = strtotime($from);
+            $toTimestamp = strtotime($to);
+            if (false !== $fromTimestamp && false !== $toTimestamp && $fromTimestamp > $toTimestamp) {
+                // Errors set before saving prevent the object from being saved and keep the submitted values in the form
+                $this->errors[] = $this->trans('The selected date range is not valid.', [], 'Admin.Notifications.Error');
+            }
         }
 
         /** @var SpecificPriceRule $object */
