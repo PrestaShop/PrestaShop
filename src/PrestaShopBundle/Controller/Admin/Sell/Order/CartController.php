@@ -22,6 +22,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartDeliverySettingsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartLanguageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartOrderMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductPriceInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CannotDeleteCartException;
@@ -429,6 +430,27 @@ class CartController extends PrestaShopAdminController
         }
     }
 
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
+    public function updateOrderMessageAction(
+        Request $request,
+        int $cartId,
+        IniConfiguration $iniConfiguration
+    ): JsonResponse {
+        try {
+            $this->dispatchCommand(new UpdateCartOrderMessageCommand(
+                $cartId,
+                (string) $request->request->get('orderMessage', '')
+            ));
+
+            return $this->json([]);
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e, $iniConfiguration))],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+    }
+
     /**
      * Adds cart rule to cart
      *
@@ -702,6 +724,11 @@ class CartController extends PrestaShopAdminController
                     'Same product quantity is already in cart',
                     [],
                     'Admin.Notifications.Error'
+                ),
+                CartConstraintException::INVALID_ORDER_MESSAGE => $this->trans(
+                    'The order message given is invalid.',
+                    [],
+                    'Admin.Orderscustomers.Notification'
                 ),
             ],
             LanguageException::class => [
