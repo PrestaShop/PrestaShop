@@ -10,6 +10,8 @@ namespace Tests\Unit\PrestaShopBundle\DependencyInjection;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\DependencyInjection\CacheAdapterFactory;
+use ReflectionProperty;
+use Symfony\Component\Cache\Adapter\AbstractAdapter;
 use Symfony\Component\Cache\Adapter\ApcuAdapter;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\MemcachedAdapter;
@@ -48,5 +50,25 @@ class CacheAdapterFactoryTest extends TestCase
             ['array', ArrayAdapter::class],
             ['other', ArrayAdapter::class],
         ];
+    }
+
+    /**
+     * An adapter that outlives the request keeps an entry forever when its default lifetime is 0, so
+     * the lifetime configured for the pool has to reach the adapter.
+     */
+    public function testTheConfiguredLifetimeReachesTheAdapter(): void
+    {
+        if (!ApcuAdapter::isSupported()) {
+            $this->markTestSkipped('apcu is not supported');
+        }
+
+        $adapter = $this->cacheAdapterFactory->getCacheAdapter('apcu', 3600);
+
+        // Reflect on the class that declares it: the property is private and comes from a trait used
+        // by AbstractAdapter, so asking ApcuAdapter for it raises "property does not exist".
+        $property = new ReflectionProperty(AbstractAdapter::class, 'defaultLifetime');
+        $property->setAccessible(true);
+
+        $this->assertSame(3600, (int) $property->getValue($adapter));
     }
 }
