@@ -25,6 +25,10 @@ export default class OrderProductCancel {
 
   discountsAmount: number;
 
+  productsAmount: number;
+
+  discountsShared: boolean;
+
   currencyFormatter: NumberFormatter;
 
   useAmountInputs: boolean;
@@ -36,6 +40,8 @@ export default class OrderProductCancel {
     this.orderDelivered = parseInt(this.cancelProductForm.data('isDelivered'), 10) === 1;
     this.isTaxIncluded = parseInt(this.cancelProductForm.data('isTaxIncluded'), 10) === 1;
     this.discountsAmount = parseFloat(this.cancelProductForm.data('discountsAmount'));
+    this.productsAmount = parseFloat(this.cancelProductForm.data('productsAmount'));
+    this.discountsShared = parseInt(this.cancelProductForm.data('discountsShared'), 10) === 1;
     this.currencyFormatter = NumberFormatter.build(
       this.cancelProductForm.data('priceSpecification'),
     );
@@ -208,6 +214,17 @@ export default class OrderProductCancel {
     return totalAmount;
   }
 
+  /**
+   * Share of the order discounts carried by the refunded amount, the whole discounts when every product is refunded.
+   */
+  private getRefundedShareOfDiscounts(refundAmount: number): number {
+    if (!this.discountsShared || !(this.productsAmount > 0) || refundAmount >= this.productsAmount) {
+      return this.discountsAmount;
+    }
+
+    return (this.discountsAmount * refundAmount) / this.productsAmount;
+  }
+
   updateVoucherRefund(): void {
     const refundAmount = this.getRefundAmount();
 
@@ -215,7 +232,7 @@ export default class OrderProductCancel {
       $(OrderViewPageMap.cancelProduct.radios.voucherRefundType.productPrices),
       refundAmount,
     );
-    const refundVoucherExcluded = refundAmount - this.discountsAmount;
+    const refundVoucherExcluded = refundAmount - this.getRefundedShareOfDiscounts(refundAmount);
     this.updateVoucherRefundTypeLabel(
       $(OrderViewPageMap.cancelProduct.radios.voucherRefundType.productPricesVoucherExcluded),
       refundVoucherExcluded,

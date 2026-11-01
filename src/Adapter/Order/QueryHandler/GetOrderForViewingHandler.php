@@ -9,6 +9,7 @@ namespace PrestaShop\PrestaShop\Adapter\Order\QueryHandler;
 use Address;
 use Carrier;
 use Cart;
+use CartRule;
 use ConnectionsSource;
 use Context;
 use Country;
@@ -839,7 +840,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
                 (int) $discount['id_order_cart_rule'],
                 $discount['name'],
                 new DecimalNumber((string) $discountAmount),
-                $this->locale->formatPrice($discountAmount, $currency->iso_code)
+                $this->locale->formatPrice($discountAmount, $currency->iso_code),
+                (int) (new CartRule((int) $discount['id_cart_rule']))->reduction_product > 0
             );
         }
 

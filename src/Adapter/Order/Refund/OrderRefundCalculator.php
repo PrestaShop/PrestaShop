@@ -6,6 +6,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order\Refund;
 
+use CartRule;
 use Currency;
 use Customer;
 use Group;
@@ -68,7 +69,7 @@ class OrderRefundCalculator
         $voucherChosen = false;
         $voucherAmount = $numberZero;
         if ($voucherRefundType === VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND) {
-            $voucherAmount = new DecimalNumber((string) $order->total_discounts);
+            $voucherAmount = $this->getRefundedShareOfOrderDiscount($order, $productRefunds, $precision);
             $refundedAmount = $refundedAmount->minus($voucherAmount);
         } elseif ($voucherRefundType === VoucherRefundType::SPECIFIC_AMOUNT_REFUND) {
             $voucherChosen = true;
@@ -200,6 +201,46 @@ class OrderRefundCalculator
         }
 
         return $productRefunds;
+    }
+
+    /**
+     * Share of the order discount carried by the refunded amounts, the whole discount when every product is refunded.
+     * A cart rule granting free shipping stores that part in the same discount, so it is shared across the products.
+     *
+     * @param Order $order
+     * @param array $productRefunds
+     * @param int $precision
+     *
+     * @return DecimalNumber
+     */
+    private function getRefundedShareOfOrderDiscount(Order $order, array $productRefunds, int $precision): DecimalNumber
+    {
+        $orderDiscount = new DecimalNumber((string) $order->total_discounts);
+        $orderProductsTotal = new DecimalNumber((string) $order->total_products_wt);
+
+        if (!$orderProductsTotal->isGreaterThanZero()) {
+            return $orderDiscount;
+        }
+
+        $refundedProductsTotal = new DecimalNumber('0');
+        foreach ($productRefunds as $productRefund) {
+            $refundedProductsTotal = $refundedProductsTotal->plus(new DecimalNumber((string) $productRefund['total_refunded_tax_incl']));
+        }
+
+        if ($refundedProductsTotal->isGreaterOrEqualThan($orderProductsTotal)) {
+            return $orderDiscount;
+        }
+
+        // A rule reducing a single product is not shared by the others, so the whole discount is deducted as before
+        foreach ($order->getCartRules() as $orderCartRule) {
+            if ((int) (new CartRule((int) $orderCartRule['id_cart_rule']))->reduction_product > 0) {
+                return $orderDiscount;
+            }
+        }
+
+        $share = $orderDiscount->times($refundedProductsTotal)->dividedBy($orderProductsTotal);
+
+        return new DecimalNumber((string) Tools::ps_round((float) (string) $share, $precision));
     }
 
     /**
