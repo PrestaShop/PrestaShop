@@ -53,7 +53,7 @@ class LegacyCompilerPass implements CompilerPassInterface
         $definition
             ->setPublic(true)
             ->setFactory([new Reference(CacheAdapterFactory::class), 'getCacheAdapter'])
-            ->setArguments([$cacheDriver])
+            ->setArguments([$cacheDriver, new Reference('prestashop.adapter.memcache_server.manager')])
         ;
 
         $container->setDefinition($cacheDriver, $definition);
