@@ -21,6 +21,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerByEmailNotFound
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerDefaultGroupAccessException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerGroupShopAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerTransformationException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
@@ -943,6 +944,11 @@ class CustomerController extends PrestaShopAdminController
             CustomerDefaultGroupAccessException::class => $this->trans(
                 'A default customer group must be selected in group box.',
                 [],
+                'Admin.Orderscustomers.Notification'
+            ),
+            CustomerGroupShopAssociationException::class => $this->trans(
+                'The customer group with ID %id% is not available in the store of this customer.',
+                ['%id%' => $e instanceof CustomerGroupShopAssociationException ? $e->getGroupId() : 0],
                 'Admin.Orderscustomers.Notification'
             ),
             CustomerByEmailNotFoundException::class => $this->trans(
