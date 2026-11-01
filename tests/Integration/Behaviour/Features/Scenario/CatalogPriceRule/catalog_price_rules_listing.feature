@@ -1,4 +1,5 @@
 #./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s catalog_price_rule --tags catalog-price-rule-listing
+@restore-all-tables-before-feature
 @restore-products-before-feature
 @clear-cache-before-feature
 @catalog-price-rule
