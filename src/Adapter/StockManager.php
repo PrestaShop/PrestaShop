@@ -149,30 +149,40 @@ class StockManager
             ? 'o.id_shop_group = :stock_shop_group_id'
             : 'o.id_shop = :stock_shop_id';
 
+        // The narrowing that bounds the updated stock lines is repeated in the sum, so it reads only those products
+        $reservedCondition = $idProduct ? ' AND od.product_id = :product_id' : '';
+        if ($idOrder) {
+            $reservedCondition .= ' AND od.product_id IN (SELECT product_id FROM {table_prefix}order_detail WHERE id_order = :order_id)';
+        }
+
         // WHY: product_quantity and product_quantity_refunded are UNSIGNED, so an over-refunded order
         // line (refunded > ordered) makes the subtraction underflow and MySQL aborts the whole update
         // with "BIGINT UNSIGNED value is out of range", which prevented orders from being processed.
         // Clamp each line to >= 0 (such a line reserves nothing) by casting to SIGNED before subtracting.
         // @see https://github.com/PrestaShop/PrestaShop/issues/37338
         $updateReservedQuantityQuery .= '
-            SET sa.reserved_quantity = (
-                SELECT SUM(GREATEST(CAST(od.product_quantity AS SIGNED) - CAST(od.product_quantity_refunded AS SIGNED), 0))
+            LEFT JOIN (
+                SELECT
+                    od.product_id,
+                    od.product_attribute_id,
+                    SUM(GREATEST(CAST(od.product_quantity AS SIGNED) - CAST(od.product_quantity_refunded AS SIGNED), 0)) AS reserved_quantity
                 FROM {table_prefix}orders o
                 INNER JOIN {table_prefix}order_detail od ON od.id_order = o.id_order
                 INNER JOIN {table_prefix}order_state os ON os.id_order_state = o.current_state
-                WHERE ' . $orderScopeCondition . ' AND
+                WHERE ' . $orderScopeCondition . $reservedCondition . ' AND
                 os.shipped != 1 AND (
                     o.valid = 1 OR (
                         os.id_order_state != :error_state AND
                         os.id_order_state != :cancellation_state
                     )
-                ) AND sa.id_product = od.product_id AND
-                sa.id_product_attribute = od.product_attribute_id
+                )
                 GROUP BY od.product_id, od.product_attribute_id
-            )
+            ) reserved
+            ON reserved.product_id = sa.id_product AND reserved.product_attribute_id = sa.id_product_attribute
+            SET sa.reserved_quantity = COALESCE(reserved.reserved_quantity, 0)
             WHERE
-                sa.id_shop = :stock_shop_id AND 
-                sa.id_shop_group = :stock_shop_group_id 
+                sa.id_shop = :stock_shop_id AND
+                sa.id_shop_group = :stock_shop_group_id
         ';
 
         $strParams = [

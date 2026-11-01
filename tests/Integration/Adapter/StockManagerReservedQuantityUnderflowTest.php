@@ -30,12 +30,15 @@ class StockManagerReservedQuantityUnderflowTest extends KernelTestCase
 
     private int $orderId = 0;
 
+    private string $sqlMode = '';
+
     protected function setUp(): void
     {
         parent::setUp();
         self::bootKernel();
 
         $db = Db::getInstance();
+        $this->sqlMode = (string) $db->getValue('SELECT @@SESSION.sql_mode');
         // A stock_available row whose reserved quantity will be recomputed.
         // Stock is not shared at group level on a standard install, so stock_available rows are stored
         // with id_shop_group = 0 (the "not group-scoped" sentinel getStockContext() looks for).
@@ -87,6 +90,7 @@ class StockManagerReservedQuantityUnderflowTest extends KernelTestCase
     protected function tearDown(): void
     {
         $db = Db::getInstance();
+        $db->execute("SET SESSION sql_mode = '" . pSQL($this->sqlMode) . "'");
         if ($this->orderId) {
             $db->delete('order_detail', 'id_order = ' . $this->orderId);
             $db->delete('orders', 'id_order = ' . $this->orderId);
@@ -116,6 +120,59 @@ class StockManagerReservedQuantityUnderflowTest extends KernelTestCase
              WHERE id_product = ' . self::PRODUCT_ID . ' AND id_product_attribute = 0 AND id_shop = 1'
         );
         $this->assertSame('0', (string) $reserved);
+    }
+
+    public function testAStockLineNoOrderRefersToIsResetToZeroUnderAStrictSqlMode(): void
+    {
+        $db = Db::getInstance();
+        $db->insert('stock_available', [
+            'id_product' => self::PRODUCT_ID, 'id_product_attribute' => 5, 'id_shop' => 1, 'id_shop_group' => 0,
+            'quantity' => 7, 'physical_quantity' => 0, 'reserved_quantity' => 42,
+        ]);
+        $db->execute("SET SESSION sql_mode = 'STRICT_TRANS_TABLES'");
+
+        $result = (new StockManager())->updatePhysicalProductQuantity(
+            1,
+            (int) Configuration::get('PS_OS_ERROR'),
+            (int) Configuration::get('PS_OS_CANCELED'),
+            self::PRODUCT_ID
+        );
+
+        $this->assertTrue((bool) $result);
+        $this->assertSame(0, (int) $db->getValue(
+            'SELECT reserved_quantity FROM ' . _DB_PREFIX_ . 'stock_available
+             WHERE id_product = ' . self::PRODUCT_ID . ' AND id_product_attribute = 5 AND id_shop = 1'
+        ));
+    }
+
+    public function testTwoCombinationsOfOneProductInAnOrderAreEachCountedOnce(): void
+    {
+        $db = Db::getInstance();
+        foreach ([1 => 2, 2 => 3] as $combinationId => $quantity) {
+            $db->insert('stock_available', [
+                'id_product' => self::PRODUCT_ID, 'id_product_attribute' => $combinationId, 'id_shop' => 1, 'id_shop_group' => 0,
+                'quantity' => 10, 'physical_quantity' => 10, 'reserved_quantity' => 0,
+            ]);
+            $db->insert('order_detail', [
+                'id_order' => $this->orderId, 'id_shop' => 1, 'product_id' => self::PRODUCT_ID,
+                'product_attribute_id' => $combinationId, 'product_name' => 'Combination ' . $combinationId,
+                'product_quantity' => $quantity, 'product_quantity_refunded' => 0, 'product_weight' => 0, 'tax_name' => '',
+            ]);
+        }
+
+        (new StockManager())->updatePhysicalProductQuantity(
+            1,
+            (int) Configuration::get('PS_OS_ERROR'),
+            (int) Configuration::get('PS_OS_CANCELED'),
+            null,
+            $this->orderId
+        );
+
+        $reserved = array_column($db->executeS(
+            'SELECT id_product_attribute, reserved_quantity FROM ' . _DB_PREFIX_ . 'stock_available
+             WHERE id_product = ' . self::PRODUCT_ID . ' AND id_shop = 1 ORDER BY id_product_attribute'
+        ), 'reserved_quantity', 'id_product_attribute');
+        $this->assertEquals([0 => 0, 1 => 2, 2 => 3], array_map('intval', $reserved));
     }
 
     public function testRepositoryRecomputeReplacesAStaleReservationWithZero(): void
