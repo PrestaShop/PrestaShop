@@ -427,11 +427,6 @@ class CommonController extends PrestaShopAdminController
     }
 
     /**
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    /**
      * Regenerate a grid's SQL query server-side for the "Export to SQL Manager" / "Show SQL
      * query" toolbar actions, so the SQL no longer needs to be embedded in the page HTML.
      *
@@ -485,6 +480,11 @@ class CommonController extends PrestaShopAdminController
         return $this->redirectToRoute('admin_sql_requests_create');
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function updatePositionAction(
         Request $request,
