@@ -7,10 +7,13 @@
 namespace PrestaShop\PrestaShop\Adapter\Cart;
 
 use Cart;
+use CartRule;
+use Context;
 use Currency;
 use Customer;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Validate;
+use PrestaShop\PrestaShop\Core\Cart\AmountImmutable;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
@@ -61,5 +64,32 @@ abstract class AbstractCartHandler
             ->setCountry($cart->getTaxCountry())
             ->setShop(new Shop($cart->id_shop))
         ;
+    }
+
+    /**
+     * Discount charged by each cart rule, from the cart calculator. Free shipping and gift rules are left out,
+     * their lines also carry the shipping or the gift product.
+     *
+     * @return array<int, AmountImmutable> indexed by cart rule id
+     */
+    protected function getCalculatedCartRuleDiscounts(Cart $cart): array
+    {
+        $calculator = $cart->newCalculator(
+            $cart->getProducts(),
+            $cart->getCartRules(CartRule::FILTER_ACTION_ALL, false),
+            null,
+            Context::getContext()->getComputingPrecision()
+        );
+        $calculator->processCalculation();
+
+        $discounts = [];
+        foreach ($calculator->getCartRulesData() as $cartRuleData) {
+            $ruleData = $cartRuleData->getRuleData();
+            if (!$ruleData['free_shipping'] && !$ruleData['gift_product']) {
+                $discounts[(int) $ruleData['id_cart_rule']] = $cartRuleData->getDiscountApplied();
+            }
+        }
+
+        return $discounts;
     }
 }

@@ -203,14 +203,18 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
     private function extractCartRulesFromLegacySummary(Cart $cart, array $legacySummary, Currency $currency, bool $hideDiscounts = false): array
     {
         $cartRules = [];
+        $calculatedDiscounts = $this->getCalculatedCartRuleDiscounts($cart);
 
         foreach ($legacySummary['discounts'] as $discount) {
             $cartRuleId = (int) $discount['id_cart_rule'];
+            $value = isset($calculatedDiscounts[$cartRuleId])
+                ? $calculatedDiscounts[$cartRuleId]->getTaxExcluded()
+                : $discount['value_tax_exc'];
             $cartRules[$cartRuleId] = new CartForOrderCreation\CartRule(
                 (int) $discount['id_cart_rule'],
                 $discount['name'],
                 $discount['description'],
-                (new DecimalNumber((string) $discount['value_tax_exc']))->round($currency->precision)
+                (new DecimalNumber((string) $value))->round($currency->precision)
             );
         }
 
