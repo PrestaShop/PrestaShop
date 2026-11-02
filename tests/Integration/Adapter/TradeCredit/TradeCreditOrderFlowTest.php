@@ -8,63 +8,20 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Adapter\TradeCredit;
 
-use Cache;
 use Cart;
 use Configuration;
-use Context;
 use Currency;
-use Customer;
-use Module;
 use Order;
-use PaymentModule;
-use PrestaShop\PrestaShop\Adapter\TradeCredit\Repository\TradeCreditPaymentModuleRepository;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\TradeCredit\Exception\TradeCreditInsufficientException;
-use PrestaShopBundle\Entity\Repository\CustomerTradeCreditRepository;
 use PrestaShopException;
-use Tests\Resources\DatabaseDump;
-use Tests\TestCase\SymfonyIntegrationTestCase;
 
 /**
- * Real orders validated through PaymentModule::validateOrder() with the bankwire test payment module.
+ * Trade credit debit when validating orders.
  */
-class TradeCreditOrderFlowTest extends SymfonyIntegrationTestCase
+class TradeCreditOrderFlowTest extends AbstractTradeCreditOrderTestCase
 {
-    protected const CUSTOMER_ID = 1;
-    protected const ADDRESS_ID = 1;
-    protected const CARRIER_ID = 2;
-    protected const PRODUCT_ID = 1;
-    protected const OTHER_PRODUCT_ID = 2;
-    protected const PAYMENT_MODULE = 'bankwire';
-
-    protected CustomerTradeCreditRepository $repository;
-
-    protected TradeCreditPaymentModuleRepository $paymentModuleRepository;
-
-    protected PaymentModule $paymentModule;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->repository = self::getContainer()->get(CustomerTradeCreditRepository::class);
-        $this->paymentModuleRepository = self::getContainer()->get(TradeCreditPaymentModuleRepository::class);
-        $this->paymentModule = Module::getInstanceByName(self::PAYMENT_MODULE);
-
-        // Credit kept in the shop default currency unless a test says otherwise
-        $defaultCurrency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
-        Configuration::updateValue('PS_TRADE_CREDIT_CURRENCY', $defaultCurrency->iso_code);
-        Configuration::updateValue('PS_ORDER_OUT_OF_STOCK', 1);
-        $this->paymentModuleRepository->setTradeCreditModules(1, [(int) $this->paymentModule->id]);
-    }
-
-    protected function tearDown(): void
-    {
-        DatabaseDump::restoreAllTables();
-        Cache::clean('*');
-        parent::tearDown();
-    }
-
     public function testOrderWithTradeCreditModuleDebitsTotalWithShipping(): void
     {
         $cart = $this->createCart();
@@ -115,13 +72,17 @@ class TradeCreditOrderFlowTest extends SymfonyIntegrationTestCase
     public function testReserveUsesCartTotalAtValidationTime(): void
     {
         $cart = $this->createCart();
-        $cart->updateQty(1, self::OTHER_PRODUCT_ID);
+        $totalShownInCheckout = (float) $cart->getOrderTotal(true, Cart::BOTH);
+        // The cart changes after the payment step was displayed (e.g. in another tab)
+        $this->addProduct($cart, self::OTHER_PRODUCT_ID);
         $totalAtValidation = (float) $cart->getOrderTotal(true, Cart::BOTH);
+        $this->assertGreaterThan($totalShownInCheckout, $totalAtValidation);
 
-        $this->validateOrder($cart);
+        $order = $this->validateOrder($cart);
 
         $debit = $this->repository->findOperation('debit:cart:' . $cart->id);
         $this->assertSame(number_format(-$totalAtValidation, 6, '.', ''), $debit['amount']);
+        $this->assertSame(number_format($totalAtValidation, 6, '.', ''), $order->total_paid_tax_incl);
     }
 
     public function testOrderCreationFailureReleasesCredit(): void
@@ -164,49 +125,5 @@ class TradeCreditOrderFlowTest extends SymfonyIntegrationTestCase
         }
 
         $this->assertFalse(Order::getIdByCartId((int) $cart->id));
-    }
-
-    protected function createCart(?Currency $currency = null): Cart
-    {
-        $customer = new Customer(self::CUSTOMER_ID);
-        $currency ??= new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
-
-        $cart = new Cart();
-        $cart->id_customer = self::CUSTOMER_ID;
-        $cart->id_address_delivery = self::ADDRESS_ID;
-        $cart->id_address_invoice = self::ADDRESS_ID;
-        $cart->id_currency = (int) $currency->id;
-        $cart->id_lang = (int) Configuration::get('PS_LANG_DEFAULT');
-        $cart->id_carrier = self::CARRIER_ID;
-        $cart->secure_key = $customer->secure_key;
-        $cart->add();
-        $cart->updateQty(1, self::PRODUCT_ID);
-        $cart->setDeliveryOption([self::ADDRESS_ID => self::CARRIER_ID . ',']);
-        $cart->update();
-
-        $context = Context::getContext();
-        $context->cart = $cart;
-        $context->customer = $customer;
-        $context->currency = $currency;
-
-        return $cart;
-    }
-
-    protected function validateOrder(Cart $cart, ?PaymentModule $paymentModule = null, ?float $amountPaid = null): Order
-    {
-        $paymentModule ??= $this->paymentModule;
-        $paymentModule->validateOrder(
-            (int) $cart->id,
-            (int) Configuration::get('PS_OS_BANKWIRE'),
-            $amountPaid ?? (float) $cart->getOrderTotal(true, Cart::BOTH),
-            'Bank wire',
-            null,
-            [],
-            null,
-            false,
-            $cart->secure_key
-        );
-
-        return new Order((int) Order::getIdByCartId((int) $cart->id));
     }
 }

@@ -138,6 +138,7 @@ services:
     arguments:
       - '@prestashop.adapter.legacy.configuration'
       - '@translator'
+      - '@PrestaShop\PrestaShop\Adapter\TradeCredit\TradeCreditOrderService'
 
   prestashop.adapter.order.refund.voucher_generator:
     class: PrestaShop\PrestaShop\Adapter\Order\Refund\VoucherGenerator

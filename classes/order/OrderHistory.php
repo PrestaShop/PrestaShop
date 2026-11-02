@@ -3,8 +3,11 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\MailTemplate\MailPartialTemplateRenderer;
 use PrestaShop\PrestaShop\Adapter\StockManager as StockManagerAdapter;
+use PrestaShop\PrestaShop\Adapter\TradeCredit\TradeCreditOrderService;
+use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
 
 class OrderHistoryCore extends ObjectModel
@@ -321,6 +324,15 @@ class OrderHistoryCore extends ObjectModel
             'oldOrderStatus' => $old_os,
             'id_order' => (int) $order->id,
         ], null, false, true, false, $order->id_shop);
+
+        // Cancelled or refunded orders paid with trade credit give the credit back (once per order)
+        if (in_array((int) $new_os->id, [(int) Configuration::get('PS_OS_CANCELED'), (int) Configuration::get('PS_OS_REFUND')], true)) {
+            try {
+                (new ContainerFinder(Context::getContext()))->getContainer()->get(TradeCreditOrderService::class)->refundOrder($order);
+            } catch (ContainerNotFoundException) {
+                PrestaShopLogger::addLog('OrderHistory::changeIdOrderState - Trade credit could not be refunded, no service container available', 3, null, 'Order', (int) $order->id, true);
+            }
+        }
 
         // sync all stock
         (new StockManagerAdapter())->updatePhysicalProductQuantity(

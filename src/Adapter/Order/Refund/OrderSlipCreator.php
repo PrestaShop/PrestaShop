@@ -16,6 +16,7 @@ use Mail;
 use Order;
 use OrderDetail;
 use OrderSlip;
+use PrestaShop\PrestaShop\Adapter\TradeCredit\TradeCreditOrderService;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -50,10 +51,12 @@ class OrderSlipCreator
     /**
      * @param ConfigurationInterface $configuration
      * @param TranslatorInterface $translator
+     * @param TradeCreditOrderService|null $tradeCreditOrderService
      */
     public function __construct(
         ConfigurationInterface $configuration,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        private readonly ?TradeCreditOrderService $tradeCreditOrderService = null
     ) {
         $this->configuration = $configuration;
         $this->translator = $translator;
@@ -86,6 +89,9 @@ class OrderSlipCreator
             if (!$orderSlipCreated) {
                 throw new OrderException('You cannot generate a partial credit slip.');
             }
+
+            // Orders paid with trade credit get the credit slip amount back
+            $this->tradeCreditOrderService?->refundOrderSlip($this->orderSlipCreated, $order);
 
             $fullQuantityList = array_map(function ($orderDetail) { return $orderDetail['quantity']; }, $orderRefundSummary->getProductRefunds());
 
