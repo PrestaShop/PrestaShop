@@ -309,18 +309,7 @@ class HookCore extends ObjectModel
     {
         $cacheId = 'hook_aliases';
         if (!Cache::isStored($cacheId)) {
-            $hookAliasList = Db::getInstance()->executeS(
-                'SELECT `name`, `alias` FROM `' . _DB_PREFIX_ . 'hook_alias`'
-            );
-            $hookAliases = [];
-            if ($hookAliasList) {
-                foreach ($hookAliasList as $ha) {
-                    $hookAliases[strtolower($ha['name'])][] = $ha['alias'];
-                }
-            }
-            Cache::store($cacheId, $hookAliases);
-
-            return $hookAliases;
+            return self::loadHookNames()[$cacheId];
         }
 
         return Cache::retrieve($cacheId);
@@ -361,19 +350,7 @@ class HookCore extends ObjectModel
         $cacheId = 'hook_canonical_names';
 
         if (!Cache::isStored($cacheId)) {
-            $databaseResults = Db::getInstance()->executeS(
-                'SELECT name, alias FROM `' . _DB_PREFIX_ . 'hook_alias`'
-            );
-            $hooksByAlias = [];
-            if ($databaseResults) {
-                foreach ($databaseResults as $record) {
-                    $hooksByAlias[strtolower($record['alias'])] =
-                        $record['name'];
-                }
-            }
-            Cache::store($cacheId, $hooksByAlias);
-
-            return $hooksByAlias;
+            return self::loadHookNames()[$cacheId];
         }
 
         return Cache::retrieve($cacheId);
@@ -1522,37 +1499,55 @@ class HookCore extends ObjectModel
             return Cache::retrieve($cacheId);
         }
 
+        return self::loadHookNames()[$cacheId];
+    }
+
+    /**
+     * Reads the hook and hook alias tables and stores every name lookup built from them:
+     * hook ids by name with and without aliases, active hook names, aliases by hook name
+     * and hook names by alias.
+     *
+     * @return array<string, array> The stored lookups, indexed by cache key
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    private static function loadHookNames(): array
+    {
         $db = Db::getInstance();
-        // Get all hook IDs by name and alias
         $hookIds = [];
-
-        if ($withAliases) {
-            $sql =
-                'SELECT `id_hook`, `name`
-                FROM `' .
-                _DB_PREFIX_ .
-                'hook`
-                UNION
-                SELECT `id_hook`, ha.`alias` as name
-                FROM `' .
-                _DB_PREFIX_ .
-                'hook_alias` ha
-                INNER JOIN `' .
-                _DB_PREFIX_ .
-                'hook` h ON ha.name = h.name';
-        } else {
-            $sql = 'SELECT `id_hook`, `name` FROM `' . _DB_PREFIX_ . 'hook`';
+        $activeHooks = [];
+        foreach ($db->executeS('SELECT `id_hook`, `name`, `active` FROM `' . _DB_PREFIX_ . 'hook`') ?: [] as $row) {
+            $hookName = strtolower($row['name']);
+            $hookIds[$hookName] = $row['id_hook'];
+            if ((int) $row['active'] === 1) {
+                $activeHooks[$hookName] = true;
+            }
         }
 
-        $result = $db->executeS($sql, false);
-
-        while ($row = $db->nextRow($result)) {
-            $hookIds[strtolower($row['name'])] = $row['id_hook'];
+        $hookIdsWithAliases = $hookIds;
+        $hookAliases = [];
+        $canonicalHookNames = [];
+        foreach ($db->executeS('SELECT `name`, `alias` FROM `' . _DB_PREFIX_ . 'hook_alias`') ?: [] as $row) {
+            $hookName = strtolower($row['name']);
+            $hookAliases[$hookName][] = $row['alias'];
+            $canonicalHookNames[strtolower($row['alias'])] = $row['name'];
+            if (isset($hookIds[$hookName])) {
+                $hookIdsWithAliases[strtolower($row['alias'])] = $hookIds[$hookName];
+            }
         }
 
-        Cache::store($cacheId, $hookIds);
+        $lookups = [
+            'hook_idsbyname' => $hookIds,
+            'hook_idsbyname_withalias' => $hookIdsWithAliases,
+            'active_hooks' => $activeHooks,
+            'hook_aliases' => $hookAliases,
+            'hook_canonical_names' => $canonicalHookNames,
+        ];
+        foreach ($lookups as $cacheId => $lookup) {
+            Cache::store($cacheId, $lookup);
+        }
 
-        return $hookIds;
+        return $lookups;
     }
 
     /**
@@ -1576,23 +1571,8 @@ class HookCore extends ObjectModel
      */
     public static function getHookStatusByName($hook_name): bool
     {
-        $hook_names = [];
-        if (Cache::isStored('active_hooks')) {
-            $hook_names = Cache::retrieve('active_hooks');
-        } else {
-            $sql = new DbQuery();
-            $sql->select('lower(name) as name');
-            $sql->from('hook', 'h');
-            $sql->where('h.active = 1');
-            $active_hooks = Db::getInstance()->executeS($sql);
-            if (is_array($active_hooks) && !empty($active_hooks)) {
-                $hook_names = array_column($active_hooks, 'name');
-                if (is_array($hook_names)) {
-                    Cache::store('active_hooks', $hook_names);
-                }
-            }
-        }
+        $activeHooks = Cache::isStored('active_hooks') ? Cache::retrieve('active_hooks') : self::loadHookNames()['active_hooks'];
 
-        return in_array(strtolower($hook_name), $hook_names);
+        return isset($activeHooks[strtolower($hook_name)]);
     }
 }
