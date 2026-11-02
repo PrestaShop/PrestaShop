@@ -105,7 +105,7 @@ describe('BO - Shop Parameters - Contact : Enable/Disable/Delete with Bulk Actio
       await boStoresPage.filterTable(
         page,
         'input',
-        'sl!name',
+        'name',
         'todelete',
       );
 
@@ -113,7 +113,7 @@ describe('BO - Shop Parameters - Contact : Enable/Disable/Delete with Bulk Actio
       expect(numberOfStoresAfterFilter).to.be.at.most(numberOfStores);
 
       for (let i = 1; i <= numberOfStoresAfterFilter; i++) {
-        const textColumn = await boStoresPage.getTextColumn(page, i, 'sl!name');
+        const textColumn = await boStoresPage.getTextColumn(page, i, 'name');
         expect(textColumn).to.contains('todelete');
       }
     });
