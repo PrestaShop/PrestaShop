@@ -273,6 +273,52 @@ class StockAvailableCore extends ObjectModel
     }
 
     /**
+     * Loads in one query, for the context shop, the quantities getQuantityAvailableByProduct() returns
+     * for the given product and combination pairs, when they are not loaded yet.
+     *
+     * @param array<int, array{0: int|string, 1: int|string|null}> $productAttributePairs [id_product, id_product_attribute]
+     */
+    public static function prefetchQuantityAvailableByProducts(array $productAttributePairs): void
+    {
+        // A module answering one of these hooks replaces the stock read, which would leave the prefetched values unused.
+        if (
+            Hook::getHookModuleExecList('actionOverrideQuantityAvailableByProduct')
+            || Hook::getHookModuleExecList('actionOverrideProductQuantity')
+        ) {
+            return;
+        }
+
+        $pairsToLoad = [];
+        foreach ($productAttributePairs as [$idProduct, $idProductAttribute]) {
+            // Same key as getQuantityAvailableByProduct() without a shop id.
+            $key = 'StockAvailable::getQuantityAvailableByProduct_' . (int) $idProduct . '-' . (int) $idProductAttribute . '-0';
+            if ((int) $idProduct > 0 && !Cache::isStored($key)) {
+                $pairsToLoad[$key] = [(int) $idProduct, (int) $idProductAttribute];
+            }
+        }
+        // A single pair costs getQuantityAvailableByProduct() the same one query.
+        if (count($pairsToLoad) < 2) {
+            return;
+        }
+
+        $query = new DbQuery();
+        $query->select('id_product, id_product_attribute, SUM(quantity) AS quantity');
+        $query->from('stock_available');
+        $query->where('id_product IN (' . implode(',', array_unique(array_column($pairsToLoad, 0))) . ')');
+        $query->where('id_product_attribute IN (' . implode(',', array_unique(array_column($pairsToLoad, 1))) . ')');
+        $query = StockAvailable::addSqlShopRestriction($query, null);
+        $query->groupBy('id_product, id_product_attribute');
+
+        $quantities = [];
+        foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query) ?: [] as $row) {
+            $quantities[(int) $row['id_product'] . '-' . (int) $row['id_product_attribute']] = (int) $row['quantity'];
+        }
+        foreach ($pairsToLoad as $key => [$idProduct, $idProductAttribute]) {
+            Cache::store($key, $quantities[$idProduct . '-' . $idProductAttribute] ?? 0);
+        }
+    }
+
+    /**
      * Upgrades total_quantity_available after having saved.
      *
      * @see ObjectModel::add()
