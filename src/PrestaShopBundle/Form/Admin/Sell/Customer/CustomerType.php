@@ -9,6 +9,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Customer;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
+use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\LastName;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email as DomainEmail;
@@ -91,7 +92,8 @@ class CustomerType extends TranslatorAwareType
         $isB2bFeatureEnabled,
         $isPartnerOffersEnabled,
         ConfigurationInterface $configuration,
-        FormCloner $formCloner
+        FormCloner $formCloner,
+        private readonly ?CurrencyDataProviderInterface $currencyDataProvider = null
     ) {
         parent::__construct($translator, $locales);
         $this->isB2bFeatureEnabled = $isB2bFeatureEnabled;
@@ -373,15 +375,18 @@ class CustomerType extends TranslatorAwareType
         }
 
         $tradeCreditCurrency = (string) $this->configuration->get('PS_TRADE_CREDIT_CURRENCY');
+        // Money fields need an installed currency (price specification); without it the amount is a plain number
+        $isTradeCreditCurrencyInstalled = null !== $this->currencyDataProvider?->getCurrencyByIsoCode($tradeCreditCurrency);
         $builder
-            ->add('trade_credit_amount', MoneyType::class, [
-                'label' => $this->trans('Available trade credit', 'Admin.Orderscustomers.Feature'),
+            ->add('trade_credit_amount', $isTradeCreditCurrencyInstalled ? MoneyType::class : NumberType::class, array_merge([
+                'label' => $isTradeCreditCurrencyInstalled
+                    ? $this->trans('Available trade credit', 'Admin.Orderscustomers.Feature')
+                    : $this->trans('Available trade credit (%currency%)', 'Admin.Orderscustomers.Feature', ['%currency%' => $tradeCreditCurrency]),
                 'help' => $this->trans(
                     'Amount the customer can still spend with trade credit payment methods. Customers who never used trade credit receive %amount% with their first such order.',
                     'Admin.Orderscustomers.Help',
                     ['%amount%' => $this->configuration->get('PS_TRADE_CREDIT_DEFAULT_AMOUNT') . ' ' . $tradeCreditCurrency]
                 ),
-                'currency' => $tradeCreditCurrency,
                 'scale' => 2,
                 'required' => false,
                 'invalid_message' => $this->trans('This field is invalid.', 'Admin.Notifications.Error'),
@@ -394,7 +399,7 @@ class CustomerType extends TranslatorAwareType
                         'message' => $this->trans('This value should be greater than or equal to %value%.', 'Admin.Notifications.Error', ['%value%' => 0]),
                     ]),
                 ],
-            ])
+            ], $isTradeCreditCurrencyInstalled ? ['currency' => $tradeCreditCurrency] : []))
             ->add('trade_credit_expected_amount', HiddenType::class)
         ;
 

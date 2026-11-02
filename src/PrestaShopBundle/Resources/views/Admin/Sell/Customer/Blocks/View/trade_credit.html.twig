@@ -3,8 +3,16 @@
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  #}
 
+{% macro trade_credit_amount(amount, tradeCredit) %}
+  {%- if tradeCredit.currencyInstalled -%}
+    {{ (amount ~ '')|price_format(tradeCredit.currencyIso) }}
+  {%- else -%}
+    {{ (amount ~ '')|number_format(2, '.', ',') }} {{ tradeCredit.currencyIso }}
+  {%- endif -%}
+{% endmacro %}
+
 {% if customerTradeCredit is defined and customerTradeCredit is not null %}
-  {% set tradeCreditCurrency = customerTradeCredit.currencyIso %}
+  {% import _self as tradeCreditHelper %}
   {% set operationLabels = {
     'grant': 'Granted'|trans({}, 'Admin.Orderscustomers.Feature'),
     'debit': 'Order'|trans({}, 'Admin.Global'),
@@ -22,9 +30,9 @@
       <p class="customer-trade-credit-balance">
         {% if customerTradeCredit.granted %}
           {{ 'Available trade credit:'|trans({}, 'Admin.Orderscustomers.Feature') }}
-          <strong>{{ (customerTradeCredit.balance ~ '')|price_format(tradeCreditCurrency) }}</strong>
+          <strong>{{ tradeCreditHelper.trade_credit_amount(customerTradeCredit.balance, customerTradeCredit) }}</strong>
         {% else %}
-          {{ 'Not granted yet. The customer will receive %amount% with the first trade credit order.'|trans({'%amount%': (customerTradeCredit.defaultAmount ~ '')|price_format(tradeCreditCurrency)}, 'Admin.Orderscustomers.Feature') }}
+          {{ 'Not granted yet. The customer will receive %amount% with the first trade credit order.'|trans({'%amount%': tradeCreditHelper.trade_credit_amount(customerTradeCredit.defaultAmount, customerTradeCredit)}, 'Admin.Orderscustomers.Feature') }}
         {% endif %}
       </p>
 
@@ -44,8 +52,8 @@
             <tr class="customer-trade-credit-operation">
               <td>{{ operation.date|date('Y-m-d H:i') }}</td>
               <td>{{ operationLabels[operation.type]|default(operation.type) }}</td>
-              <td class="text-right">{{ (operation.amount ~ '')|price_format(tradeCreditCurrency) }}</td>
-              <td class="text-right">{{ (operation.balanceAfter ~ '')|price_format(tradeCreditCurrency) }}</td>
+              <td class="text-right">{{ tradeCreditHelper.trade_credit_amount(operation.amount, customerTradeCredit) }}</td>
+              <td class="text-right">{{ tradeCreditHelper.trade_credit_amount(operation.balanceAfter, customerTradeCredit) }}</td>
               <td>
                 {% if operation.orderId %}
                   <a href="{{ path('admin_orders_view', {orderId: operation.orderId}) }}">#{{ operation.orderId }}</a>

@@ -10,12 +10,10 @@ namespace Tests\Integration\Adapter\TradeCredit;
 
 use Cart;
 use Configuration;
-use Currency;
 use Order;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\TradeCredit\Exception\TradeCreditInsufficientException;
-use PrestaShopException;
 
 /**
  * Trade credit debit when validating orders.
@@ -50,7 +48,7 @@ class TradeCreditOrderFlowTest extends AbstractTradeCreditOrderTestCase
         $this->validateOrder($cart);
 
         $this->assertNotNull($this->repository->findOperation('grant:customer:' . self::CUSTOMER_ID));
-        $this->assertNotNull($this->repository->findOperation('debit:cart:' . $cart->id));
+        $this->assertNotNull($this->repository->findOperation('debit:cart:' . $cart->id . ':1'));
     }
 
     public function testExceedingCreditRejectsOrder(): void
@@ -80,7 +78,7 @@ class TradeCreditOrderFlowTest extends AbstractTradeCreditOrderTestCase
 
         $order = $this->validateOrder($cart);
 
-        $debit = $this->repository->findOperation('debit:cart:' . $cart->id);
+        $debit = $this->repository->findOperation('debit:cart:' . $cart->id . ':1');
         $this->assertSame(number_format(-$totalAtValidation, 6, '.', ''), $debit['amount']);
         $this->assertSame(number_format($totalAtValidation, 6, '.', ''), $order->total_paid_tax_incl);
     }
@@ -88,22 +86,24 @@ class TradeCreditOrderFlowTest extends AbstractTradeCreditOrderTestCase
     public function testOrderCreationFailureReleasesCredit(): void
     {
         $cart = $this->createCart();
-        $failingModule = new class() extends \bankwire {
-            protected function createOrderFromCart(Cart $cart, Currency $currency, $productList, $addressId, $context, $reference, $secure_key, $payment_method, $name, $dont_touch_amount, $amount_paid, $warehouseId, $cart_total_paid, $debug, $order_status, $id_order_state, $carrierId = null)
-            {
-                throw new PrestaShopException('Simulated order creation failure');
-            }
-        };
 
-        try {
-            $this->validateOrder($cart, $failingModule);
-            $this->fail('The simulated failure must be propagated.');
-        } catch (PrestaShopException $e) {
-            $this->assertSame('Simulated order creation failure', $e->getMessage());
-        }
+        $this->failOrderCreation($cart);
 
         $this->assertSame('50000.000000', $this->repository->findBalance(self::CUSTOMER_ID));
-        $this->assertNotNull($this->repository->findOperation('release:cart:' . $cart->id));
+        $this->assertNotNull($this->repository->findOperation('release:cart:' . $cart->id . ':1'));
+    }
+
+    public function testRetryAfterFailedOrderCreationChargesAgain(): void
+    {
+        $cart = $this->createCart();
+        $this->failOrderCreation($cart);
+
+        // The customer retries with the same cart, the order is created this time
+        $order = $this->validateOrder($cart);
+
+        $expected = number_format(50000 - (float) $order->total_paid_tax_incl, 6, '.', '');
+        $this->assertSame($expected, $this->repository->findBalance(self::CUSTOMER_ID));
+        $this->assertNotNull($this->repository->findOperation('debit:cart:' . $cart->id . ':2'));
     }
 
     public function testBackOfficeOrderWithoutCreditFails(): void

@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Adapter\TradeCredit;
 
+use Configuration;
 use Context;
 use Customer;
 use PrestaShop\PrestaShop\Adapter\TradeCredit\TradeCreditOrderService;
@@ -63,6 +64,18 @@ class TradeCreditPaymentOptionsTest extends AbstractTradeCreditOrderTestCase
         $tradeCredit = $options[self::PAYMENT_MODULE][0]['trade_credit'];
         $this->assertFalse($tradeCredit['sufficient']);
         $this->assertSame('Trade credit is available only to registered customers.', $tradeCredit['message']);
+    }
+
+    public function testMissingCreditCurrencyDisablesOptionWithoutBreakingCheckout(): void
+    {
+        Configuration::updateValue('PS_TRADE_CREDIT_CURRENCY', 'XXX');
+
+        $options = $this->decorate($this->createCart(), new Customer(self::CUSTOMER_ID));
+
+        $option = $options[self::PAYMENT_MODULE][0];
+        $this->assertSame('Pay by bank wire', $option['call_to_action_text']);
+        $this->assertFalse($option['trade_credit']['sufficient']);
+        $this->assertSame('Trade credit is currently unavailable.', $option['trade_credit']['message']);
     }
 
     public function testNonTradeCreditOptionUntouched(): void

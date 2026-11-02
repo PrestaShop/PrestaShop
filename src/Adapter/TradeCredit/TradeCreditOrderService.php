@@ -19,6 +19,7 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\Decimal\Operation\Rounding;
 use PrestaShop\PrestaShop\Adapter\TradeCredit\Repository\TradeCreditPaymentModuleRepository;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\TradeCredit\Exception\TradeCreditException;
 use PrestaShop\PrestaShop\Core\Domain\TradeCredit\Exception\TradeCreditInsufficientException;
 use PrestaShop\PrestaShop\Core\Domain\TradeCredit\TradeCreditAvailability;
 use PrestaShop\PrestaShop\Core\Domain\TradeCredit\TradeCreditAvailabilityChecker;
@@ -75,10 +76,14 @@ class TradeCreditOrderService
 
     public function formatPrice(DecimalNumber $amount): string
     {
-        return Tools::getContextLocale(Context::getContext())->formatPrice(
-            $this->format($amount),
-            (string) $this->configuration->get('PS_TRADE_CREDIT_CURRENCY')
-        );
+        $currencyIso = (string) $this->configuration->get('PS_TRADE_CREDIT_CURRENCY');
+
+        // The locale has no price specification for a currency that is not installed
+        if (null === $this->getCreditCurrency()) {
+            return number_format((float) $this->format($amount), 2, '.', ',') . ' ' . $currencyIso;
+        }
+
+        return Tools::getContextLocale(Context::getContext())->formatPrice($this->format($amount), $currencyIso);
     }
 
     public function isTradeCreditModule(int $moduleId, int $shopId): bool
@@ -105,11 +110,14 @@ class TradeCreditOrderService
             }
 
             $availability ??= $this->getAvailabilityForCart($cart, $customer, $currency);
-            $label = Context::getContext()->getTranslator()->trans(
-                ', available trade credit: %amount%',
-                ['%amount%' => $this->formatPrice($availability->getAvailable())],
-                'Shop.Theme.Checkout'
-            );
+            // Without the credit currency there is no meaningful amount to show, only the restriction message
+            $label = TradeCreditAvailability::REASON_CURRENCY_UNAVAILABLE === $availability->getReason()
+                ? ''
+                : Context::getContext()->getTranslator()->trans(
+                    ', available trade credit: %amount%',
+                    ['%amount%' => $this->formatPrice($availability->getAvailable())],
+                    'Shop.Theme.Checkout'
+                );
 
             foreach ($moduleOptions as $key => $option) {
                 $paymentOptions[$moduleName][$key]['call_to_action_text'] = $option['call_to_action_text'] . $label;
@@ -185,54 +193,69 @@ class TradeCreditOrderService
         }
 
         $customerId = (int) $customer->id;
+        $cartId = (int) $cart->id;
         $required = $this->toCreditCurrency($cartTotal, $currency, $creditCurrency);
         if ($customer->is_guest) {
             throw $this->unavailable($this->availabilityChecker->check(null, true, $this->getDefaultAmount(), $required));
         }
 
-        $this->repository->transactional(function () use ($cart, $customerId, $required): void {
-            if (null !== $this->repository->findOperation($this->debitReference((int) $cart->id))) {
+        // Granted before (not inside) the debit transaction: two concurrent first orders only meet a duplicate key
+        if (null === $this->repository->findBalance($customerId)) {
+            $this->repository->grantIfMissing($customerId, $this->format($this->getDefaultAmount()));
+        }
+
+        $this->repository->transactional(function () use ($cartId, $customerId, $required): void {
+            $balance = $this->lockBalance($customerId);
+
+            // Checked under the lock, so a double submit of the same cart is charged once
+            if ($this->getNetCartDebit($cartId)->isGreaterThanZero()) {
                 return;
             }
 
-            $this->repository->grantIfMissing($customerId, $this->format($this->getDefaultAmount()));
-            $balance = new DecimalNumber((string) $this->repository->lockBalance($customerId));
             $availability = $this->availabilityChecker->check($balance, false, $this->getDefaultAmount(), $required);
-
             if (!$availability->isSufficient()) {
                 throw $this->unavailable($availability);
             }
 
+            // Each attempt has its own reference: a cart released after a failed attempt can be charged again
+            $attempt = $this->repository->countCartOperations($cartId, CustomerTradeCreditOperation::TYPE_DEBIT) + 1;
             $balanceAfter = $this->format($balance->minus($availability->getRequired()));
-            $this->repository->updateBalance($customerId, $balanceAfter);
-            $this->repository->addOperation([
+            $this->addOperationOrFail([
                 'id_customer' => $customerId,
                 'type' => CustomerTradeCreditOperation::TYPE_DEBIT,
                 'amount' => $this->format($availability->getRequired()->toNegative()),
                 'balance_after' => $balanceAfter,
-                'id_cart' => (int) $cart->id,
-                'reference' => $this->debitReference((int) $cart->id),
+                'id_cart' => $cartId,
+                'reference' => sprintf('debit:cart:%d:%d', $cartId, $attempt),
             ]);
+            $this->repository->updateBalance($customerId, $balanceAfter);
         });
     }
 
     /**
-     * Gives back the cart debit when the order could not be created.
+     * Gives back what is charged for the cart when its order could not be created.
      */
     public function releaseForCart(int $cartId): void
     {
-        $debit = $this->repository->findOperation($this->debitReference($cartId));
-        if (null === $debit) {
+        $customerId = $this->repository->findCartDebitCustomerId($cartId);
+        if (null === $customerId) {
             return;
         }
 
-        $this->credit(
-            (int) $debit['id_customer'],
-            (new DecimalNumber((string) $debit['amount']))->toPositive(),
-            CustomerTradeCreditOperation::TYPE_RELEASE,
-            sprintf('release:cart:%d', $cartId),
-            ['id_cart' => $cartId]
-        );
+        $this->repository->transactional(function () use ($cartId, $customerId): void {
+            $balance = $this->lockBalance($customerId);
+            $charged = $this->getNetCartDebit($cartId);
+            $attempt = $this->repository->countCartOperations($cartId, CustomerTradeCreditOperation::TYPE_DEBIT);
+
+            $this->applyCredit(
+                $customerId,
+                $balance,
+                $charged,
+                CustomerTradeCreditOperation::TYPE_RELEASE,
+                sprintf('release:cart:%d:%d', $cartId, $attempt),
+                ['id_cart' => $cartId]
+            );
+        });
     }
 
     /**
@@ -240,12 +263,12 @@ class TradeCreditOrderService
      */
     public function refundOrder(Order $order): void
     {
-        $orderShare = $this->getOrderShare($order);
-        if (null === $orderShare) {
-            return;
-        }
-
-        $this->refund($order, $orderShare, $orderShare, sprintf('refund:order:%d', (int) $order->id), []);
+        $this->refund(
+            $order,
+            static fn (DecimalNumber $orderShare): DecimalNumber => $orderShare,
+            sprintf('refund:order:%d', (int) $order->id),
+            []
+        );
     }
 
     /**
@@ -253,51 +276,66 @@ class TradeCreditOrderService
      */
     public function refundOrderSlip(OrderSlip $orderSlip, Order $order): void
     {
-        $orderShare = $this->getOrderShare($order);
         $orderTotal = new DecimalNumber((string) $order->total_paid_tax_incl);
-        if (null === $orderShare || !$orderTotal->isGreaterThanZero()) {
+        if (!$orderTotal->isGreaterThanZero()) {
             return;
         }
 
         $slipTotal = new DecimalNumber((string) ((float) $orderSlip->total_products_tax_incl + (float) $orderSlip->total_shipping_tax_incl));
-        $requested = $orderShare->times($slipTotal)->dividedBy($orderTotal);
 
-        $this->refund($order, $orderShare, $requested, sprintf('refund:slip:%d', (int) $orderSlip->id), ['id_order_slip' => (int) $orderSlip->id]);
+        $this->refund(
+            $order,
+            static fn (DecimalNumber $orderShare): DecimalNumber => $orderShare->times($slipTotal)->dividedBy($orderTotal),
+            sprintf('refund:slip:%d', (int) $orderSlip->id),
+            ['id_order_slip' => (int) $orderSlip->id]
+        );
     }
 
     /**
-     * Part of the cart debit that belongs to the order (a cart creates several orders with multi-shipping).
+     * Part of what is charged for the cart that belongs to the order (a cart creates several orders with
+     * multi-shipping); null when nothing is charged, e.g. the order was paid with another payment method.
      */
     private function getOrderShare(Order $order): ?DecimalNumber
     {
-        $debit = $this->repository->findOperation($this->debitReference((int) $order->id_cart));
-        if (null === $debit) {
+        $charged = $this->getNetCartDebit((int) $order->id_cart);
+        if (!$charged->isGreaterThanZero()) {
             return null;
         }
 
-        $debitAmount = (new DecimalNumber((string) $debit['amount']))->toPositive();
         $cartOrdersTotal = new DecimalNumber($this->repository->getCartOrdersTotal((int) $order->id_cart));
         if (!$cartOrdersTotal->isGreaterThanZero()) {
-            return $debitAmount;
+            return $charged;
         }
 
-        return $debitAmount->times(new DecimalNumber((string) $order->total_paid_tax_incl))->dividedBy($cartOrdersTotal);
+        return $charged->times(new DecimalNumber((string) $order->total_paid_tax_incl))->dividedBy($cartOrdersTotal);
     }
 
-    private function refund(Order $order, DecimalNumber $orderShare, DecimalNumber $requested, string $reference, array $extra): void
+    /**
+     * @param callable(DecimalNumber): DecimalNumber $requestedForShare amount the refund asks for, given the order share
+     */
+    private function refund(Order $order, callable $requestedForShare, string $reference, array $extra): void
     {
-        $this->repository->transactional(function () use ($order, $orderShare, $requested, $reference, $extra): void {
-            $customerId = (int) $order->id_customer;
-            // Read under the lock, so concurrent refunds of the same order see each other
-            $this->repository->lockBalance($customerId);
+        $customerId = (int) $order->id_customer;
+        if (null === $this->repository->findBalance($customerId)) {
+            return;
+        }
+
+        $this->repository->transactional(function () use ($order, $customerId, $requestedForShare, $reference, $extra): void {
+            // Share and previous refunds are read under the lock, so concurrent refunds of the same order see each other
+            $balance = $this->lockBalance($customerId);
+            $orderShare = $this->getOrderShare($order);
+            if (null === $orderShare) {
+                return;
+            }
+
             $alreadyRefunded = new DecimalNumber($this->repository->sumOperations(
                 $customerId,
                 CustomerTradeCreditOperation::TYPE_REFUND,
                 ['id_order' => (int) $order->id]
             ));
-            $amount = $this->refundCalculator->refundable($orderShare, $alreadyRefunded, $requested);
+            $amount = $this->refundCalculator->refundable($orderShare, $alreadyRefunded, $requestedForShare($orderShare));
 
-            $this->credit($customerId, $amount, CustomerTradeCreditOperation::TYPE_REFUND, $reference, array_merge([
+            $this->applyCredit($customerId, $balance, $amount, CustomerTradeCreditOperation::TYPE_REFUND, $reference, array_merge([
                 'id_cart' => (int) $order->id_cart,
                 'id_order' => (int) $order->id,
             ], $extra));
@@ -305,31 +343,49 @@ class TradeCreditOrderService
     }
 
     /**
-     * Adds the amount to the balance once per reference.
+     * Adds the amount to the locked balance, once per reference. Must run inside a transaction holding the lock.
      */
-    private function credit(int $customerId, DecimalNumber $amount, string $type, string $reference, array $extra): void
+    private function applyCredit(int $customerId, DecimalNumber $balance, DecimalNumber $amount, string $type, string $reference, array $extra): void
     {
         $amount = new DecimalNumber($this->format($amount));
-        if (!$amount->isGreaterThanZero()) {
+        if (!$amount->isGreaterThanZero() || null !== $this->repository->findOperation($reference)) {
             return;
         }
 
-        $this->repository->transactional(function () use ($customerId, $amount, $type, $reference, $extra): void {
-            $balance = $this->repository->lockBalance($customerId);
-            if (null === $balance || null !== $this->repository->findOperation($reference)) {
-                return;
-            }
+        $balanceAfter = $this->format($balance->plus($amount));
+        $this->addOperationOrFail(array_merge([
+            'id_customer' => $customerId,
+            'type' => $type,
+            'amount' => $this->format($amount),
+            'balance_after' => $balanceAfter,
+            'reference' => $reference,
+        ], $extra));
+        $this->repository->updateBalance($customerId, $balanceAfter);
+    }
 
-            $balanceAfter = $this->format((new DecimalNumber($balance))->plus($amount));
-            $this->repository->updateBalance($customerId, $balanceAfter);
-            $this->repository->addOperation(array_merge([
-                'id_customer' => $customerId,
-                'type' => $type,
-                'amount' => $this->format($amount),
-                'balance_after' => $balanceAfter,
-                'reference' => $reference,
-            ], $extra));
-        });
+    /**
+     * The operation is written before the balance: a duplicate reference rolls the whole change back.
+     */
+    private function addOperationOrFail(array $operation): void
+    {
+        if (!$this->repository->addOperation($operation)) {
+            throw new TradeCreditException(sprintf('Trade credit operation "%s" was already applied.', $operation['reference']));
+        }
+    }
+
+    private function lockBalance(int $customerId): DecimalNumber
+    {
+        $balance = $this->repository->lockBalance($customerId);
+        if (null === $balance) {
+            throw new TradeCreditException(sprintf('Trade credit of customer %d is not granted.', $customerId));
+        }
+
+        return new DecimalNumber($balance);
+    }
+
+    private function getNetCartDebit(int $cartId): DecimalNumber
+    {
+        return new DecimalNumber($this->repository->getCartNetDebit($cartId));
     }
 
     private function toCreditCurrency(float $amount, Currency $from, Currency $creditCurrency): DecimalNumber
@@ -363,11 +419,6 @@ class TradeCreditOrderService
         $zero = new DecimalNumber('0');
 
         return new TradeCreditAvailability($zero, $zero, TradeCreditAvailability::REASON_CURRENCY_UNAVAILABLE);
-    }
-
-    private function debitReference(int $cartId): string
-    {
-        return sprintf('debit:cart:%d', $cartId);
     }
 
     private function format(DecimalNumber $amount): string

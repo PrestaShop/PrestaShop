@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Adapter\TradeCredit;
 
+use bankwire;
 use Cache;
 use Cart;
 use Configuration;
@@ -20,6 +21,7 @@ use OrderHistory;
 use PaymentModule;
 use PrestaShop\PrestaShop\Adapter\TradeCredit\Repository\TradeCreditPaymentModuleRepository;
 use PrestaShopBundle\Entity\Repository\CustomerTradeCreditRepository;
+use PrestaShopException;
 use Tests\Resources\DatabaseDump;
 use Tests\TestCase\SymfonyIntegrationTestCase;
 
@@ -47,7 +49,9 @@ abstract class AbstractTradeCreditOrderTestCase extends SymfonyIntegrationTestCa
         parent::setUp();
         $this->repository = self::getContainer()->get(CustomerTradeCreditRepository::class);
         $this->paymentModuleRepository = self::getContainer()->get(TradeCreditPaymentModuleRepository::class);
-        $this->paymentModule = Module::getInstanceByName(self::PAYMENT_MODULE);
+        $paymentModule = Module::getInstanceByName(self::PAYMENT_MODULE);
+        $this->assertInstanceOf(PaymentModule::class, $paymentModule, 'The bankwire test payment module must be installed.');
+        $this->paymentModule = $paymentModule;
 
         $defaultCurrency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
         Configuration::updateValue('PS_TRADE_CREDIT_CURRENCY', $defaultCurrency->iso_code);
@@ -118,6 +122,27 @@ abstract class AbstractTradeCreditOrderTestCase extends SymfonyIntegrationTestCa
         );
 
         return new Order((int) Order::getIdByCartId((int) $cart->id));
+    }
+
+    /**
+     * Validates the cart with a trade credit payment module whose order creation fails.
+     */
+    protected function failOrderCreation(Cart $cart): void
+    {
+        $failingModule = new class() extends bankwire {
+            protected function createOrderFromCart(Cart $cart, Currency $currency, $productList, $addressId, $context, $reference, $secure_key, $payment_method, $name, $dont_touch_amount, $amount_paid, $warehouseId, $cart_total_paid, $debug, $order_status, $id_order_state, $carrierId = null)
+            {
+                throw new PrestaShopException('Simulated order creation failure');
+            }
+        };
+
+        try {
+            $this->validateOrder($cart, $failingModule);
+            $this->fail('The simulated failure must be propagated.');
+        } catch (PrestaShopException $e) {
+            $this->assertSame('Simulated order creation failure', $e->getMessage());
+        }
+        $this->assertFalse(Order::getIdByCartId((int) $cart->id));
     }
 
     protected function changeOrderState(Order $order, string $stateConfigurationKey): Order

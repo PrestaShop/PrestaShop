@@ -22,8 +22,17 @@ class CustomerTradeCreditSummary
         private readonly ?DecimalNumber $balance,
         private readonly DecimalNumber $defaultAmount,
         private readonly string $currencyIso,
-        private readonly array $operations
+        private readonly array $operations,
+        private readonly bool $currencyInstalled = true
     ) {
+    }
+
+    /**
+     * False when the trade credit currency is not installed in the shop (amounts can't be formatted with it).
+     */
+    public function isCurrencyInstalled(): bool
+    {
+        return $this->currencyInstalled;
     }
 
     public function getBalance(): ?DecimalNumber

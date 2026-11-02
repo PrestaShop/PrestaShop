@@ -177,6 +177,36 @@ class CustomerTradeCreditRepository extends EntityRepository
     }
 
     /**
+     * Amount currently charged for a cart: its debits minus what was released (positive number).
+     */
+    public function getCartNetDebit(int $cartId): string
+    {
+        return (string) $this->getConnection()->fetchOne(
+            'SELECT CAST(-COALESCE(SUM(amount), 0) AS DECIMAL(20,6)) FROM ' . $this->operationTable()
+            . ' WHERE id_cart = ? AND type IN (?, ?)',
+            [$cartId, CustomerTradeCreditOperation::TYPE_DEBIT, CustomerTradeCreditOperation::TYPE_RELEASE]
+        );
+    }
+
+    public function countCartOperations(int $cartId, string $type): int
+    {
+        return (int) $this->getConnection()->fetchOne(
+            'SELECT COUNT(*) FROM ' . $this->operationTable() . ' WHERE id_cart = ? AND type = ?',
+            [$cartId, $type]
+        );
+    }
+
+    public function findCartDebitCustomerId(int $cartId): ?int
+    {
+        $customerId = $this->getConnection()->fetchOne(
+            'SELECT id_customer FROM ' . $this->operationTable() . ' WHERE id_cart = ? AND type = ? LIMIT 1',
+            [$cartId, CustomerTradeCreditOperation::TYPE_DEBIT]
+        );
+
+        return false === $customerId ? null : (int) $customerId;
+    }
+
+    /**
      * Sum of the totals (tax incl.) of the orders created from a cart; several with multi-shipping.
      */
     public function getCartOrdersTotal(int $cartId): string

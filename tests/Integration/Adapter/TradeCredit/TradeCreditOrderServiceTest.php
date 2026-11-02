@@ -58,7 +58,7 @@ class TradeCreditOrderServiceTest extends SymfonyIntegrationTestCase
 
         $this->assertSame('48765.440000', $this->repository->findBalance(self::CUSTOMER_ID));
         $this->assertNotNull($this->repository->findOperation('grant:customer:' . self::CUSTOMER_ID));
-        $debit = $this->repository->findOperation('debit:cart:' . $cart->id);
+        $debit = $this->repository->findOperation('debit:cart:' . $cart->id . ':1');
         $this->assertSame(CustomerTradeCreditOperation::TYPE_DEBIT, $debit['type']);
         $this->assertSame('-1234.560000', $debit['amount']);
     }
@@ -76,7 +76,7 @@ class TradeCreditOrderServiceTest extends SymfonyIntegrationTestCase
         }
 
         $this->assertSame('1000.000000', $this->repository->findBalance(self::CUSTOMER_ID));
-        $this->assertNull($this->repository->findOperation('debit:cart:' . $cart->id));
+        $this->assertNull($this->repository->findOperation('debit:cart:' . $cart->id . ':1'));
     }
 
     public function testReserveTwiceIsNoop(): void
@@ -99,7 +99,7 @@ class TradeCreditOrderServiceTest extends SymfonyIntegrationTestCase
         $this->service->releaseForCart((int) $cart->id);
 
         $this->assertSame('50000.000000', $this->repository->findBalance(self::CUSTOMER_ID));
-        $this->assertSame(CustomerTradeCreditOperation::TYPE_RELEASE, $this->repository->findOperation('release:cart:' . $cart->id)['type']);
+        $this->assertSame(CustomerTradeCreditOperation::TYPE_RELEASE, $this->repository->findOperation('release:cart:' . $cart->id . ':1')['type']);
     }
 
     public function testGuestIsRejected(): void
@@ -126,7 +126,7 @@ class TradeCreditOrderServiceTest extends SymfonyIntegrationTestCase
         // 100 in the default currency (rate 1) is 400 PLN (rate 4)
         $this->service->reserveForCart($cart, new Customer(self::CUSTOMER_ID), $defaultCurrency, 100.0);
 
-        $this->assertSame('-400.000000', $this->repository->findOperation('debit:cart:' . $cart->id)['amount']);
+        $this->assertSame('-400.000000', $this->repository->findOperation('debit:cart:' . $cart->id . ':1')['amount']);
     }
 
     public function testCurrencyUnavailable(): void

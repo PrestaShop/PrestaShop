@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Adapter\TradeCredit;
 
+use Configuration;
 use Order;
 use OrderSlip;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
@@ -78,8 +79,21 @@ class TradeCreditRefundFlowTest extends AbstractTradeCreditOrderTestCase
         $cart = $this->createCart();
         // A paid amount different from the cart total switches a logable state to "payment error"
         $order = $this->validateOrder($cart, null, 1.0, 'PS_OS_PAYMENT');
-        $this->assertSame((int) \Configuration::get('PS_OS_ERROR'), (int) $order->current_state);
+        $this->assertSame((int) Configuration::get('PS_OS_ERROR'), (int) $order->current_state);
         $this->assertNotSame('50000.000000', $this->repository->findBalance(self::CUSTOMER_ID));
+
+        $this->changeOrderState($order, 'PS_OS_CANCELED');
+
+        $this->assertSame('50000.000000', $this->repository->findBalance(self::CUSTOMER_ID));
+    }
+
+    public function testFailedTradeCreditAttemptThenOtherModuleCancelDoesNotRefund(): void
+    {
+        $cart = $this->createCart();
+        $this->failOrderCreation($cart);
+        // The customer then pays the same cart with a payment method that is not trade credit
+        $this->paymentModuleRepository->setTradeCreditModules(1, []);
+        $order = $this->validateOrder($cart);
 
         $this->changeOrderState($order, 'PS_OS_CANCELED');
 

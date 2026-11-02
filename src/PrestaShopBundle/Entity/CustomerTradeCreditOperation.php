@@ -20,6 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *     uniqueConstraints={@ORM\UniqueConstraint(name="reference", columns={"reference"})},
  *     indexes={
+ *
  *         @ORM\Index(name="id_customer", columns={"id_customer"}),
  *         @ORM\Index(name="id_cart", columns={"id_cart"}),
  *         @ORM\Index(name="id_order", columns={"id_order"})
@@ -94,6 +95,29 @@ class CustomerTradeCreditOperation
      * @ORM\Column(name="date_add", type="datetime_immutable")
      */
     private DateTimeImmutable $dateAdd;
+
+    public function __construct(
+        int $customerId,
+        string $type,
+        string $amount,
+        string $balanceAfter,
+        string $reference,
+        ?int $cartId = null,
+        ?int $orderId = null,
+        ?int $orderSlipId = null,
+        ?int $employeeId = null
+    ) {
+        $this->customerId = $customerId;
+        $this->type = $type;
+        $this->amount = $amount;
+        $this->balanceAfter = $balanceAfter;
+        $this->reference = $reference;
+        $this->cartId = $cartId;
+        $this->orderId = $orderId;
+        $this->orderSlipId = $orderSlipId;
+        $this->employeeId = $employeeId;
+        $this->dateAdd = new DateTimeImmutable();
+    }
 
     public function getId(): int
     {

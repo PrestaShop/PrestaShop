@@ -131,6 +131,18 @@ class CustomerFormTradeCreditTest extends KernelTestCase
         $this->assertStringContainsString('#5', $html);
     }
 
+    public function testTradeCreditCardRendersWhenCreditCurrencyIsNotInstalled(): void
+    {
+        $summary = new CustomerTradeCreditSummary(new DecimalNumber('39000'), new DecimalNumber('50000'), 'XXX', [], false);
+
+        $html = self::getContainer()->get('twig')->render(
+            '@PrestaShop/Admin/Sell/Customer/Blocks/View/trade_credit.html.twig',
+            ['customerTradeCredit' => $summary]
+        );
+
+        $this->assertStringContainsString('39,000.00 XXX', $html);
+    }
+
     /**
      * Form data as loaded in the edit form; the password field is submitted empty when unchanged.
      */

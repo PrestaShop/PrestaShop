@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\TradeCredit\QueryHandler;
 
+use Currency;
 use DateTimeImmutable;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
@@ -45,11 +46,14 @@ final class GetCustomerTradeCreditHandler implements GetCustomerTradeCreditHandl
             $this->repository->findLastOperations($customerId, self::LAST_OPERATIONS_LIMIT)
         );
 
+        $currencyIso = (string) $this->configuration->get('PS_TRADE_CREDIT_CURRENCY');
+
         return new CustomerTradeCreditSummary(
             null === $balance ? null : new DecimalNumber($balance),
             new DecimalNumber((string) $this->configuration->get('PS_TRADE_CREDIT_DEFAULT_AMOUNT')),
-            (string) $this->configuration->get('PS_TRADE_CREDIT_CURRENCY'),
-            $operations
+            $currencyIso,
+            $operations,
+            (int) Currency::getIdByIsoCode($currencyIso) > 0
         );
     }
 }
