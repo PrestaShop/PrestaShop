@@ -92,11 +92,64 @@ class OrderReturnRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * Lists the product lines of a return (rows of `order_return_detail` for this return only),
+     * customized lines first, each with the order line reference/name and, for customized lines,
+     * the customer-provided data (`customized_data` rows: type + value).
+     *
+     * @return array<int, array{id_order_detail: int, id_customization: int, product_quantity: int, product_reference: string, product_name: string, customized_data: array<int, array{type: int, value: string}>}>
+     *
+     * @throws OrderReturnNotFoundException
+     */
+    public function getProductLines(OrderReturnId $orderReturnId): array
+    {
+        $this->get($orderReturnId);
+
+        $rows = Db::getInstance()->executeS(sprintf(
+            'SELECT ord.`id_order_detail`, ord.`id_customization`, ord.`product_quantity`, od.`product_reference`, od.`product_name`
+            FROM `%1$sorder_return_detail` ord
+            INNER JOIN `%1$sorder_detail` od ON od.`id_order_detail` = ord.`id_order_detail`
+            WHERE ord.`id_order_return` = %2$d
+            ORDER BY ord.`id_customization` = 0, ord.`id_order_detail`, ord.`id_customization`',
+            _DB_PREFIX_,
+            $orderReturnId->getValue()
+        )) ?: [];
+
+        $customizationIds = array_filter(array_map(static fn (array $row): int => (int) $row['id_customization'], $rows));
+        $customizedData = [];
+        if (!empty($customizationIds)) {
+            $dataRows = Db::getInstance()->executeS(sprintf(
+                'SELECT `id_customization`, `type`, `value` FROM `%scustomized_data`
+                WHERE `id_customization` IN (%s)
+                ORDER BY `id_customization`, `type`, `index`',
+                _DB_PREFIX_,
+                implode(',', $customizationIds)
+            )) ?: [];
+            foreach ($dataRows as $dataRow) {
+                $customizedData[(int) $dataRow['id_customization']][] = [
+                    'type' => (int) $dataRow['type'],
+                    'value' => (string) $dataRow['value'],
+                ];
+            }
+        }
+
+        return array_map(static fn (array $row): array => [
+            'id_order_detail' => (int) $row['id_order_detail'],
+            'id_customization' => (int) $row['id_customization'],
+            'product_quantity' => (int) $row['product_quantity'],
+            'product_reference' => (string) $row['product_reference'],
+            'product_name' => (string) $row['product_name'],
+            'customized_data' => $customizedData[(int) $row['id_customization']] ?? [],
+        ], $rows);
+    }
+
+    /**
      * Lists classic (non-customized) products attached to a return.
      *
      * Each row is the legacy associative array returned by Order::getProducts() augmented with
      * 'product_quantity' (sum of returned qty for that order line) and 'customizations'
      * (last id_customization seen — 0 when none). Keys match the indexes used by Order::getProducts().
+     *
+     * @deprecated since 9.2.1, use getProductLines() instead: it merges customized lines into the classic rows
      *
      * @return array<int, array<string, mixed>>
      */
@@ -162,6 +215,8 @@ class OrderReturnRepository extends AbstractObjectModelRepository
      *
      * Returns the legacy associative arrays produced by OrderReturn::getReturnedCustomizedProducts(),
      * each enriched with product_id, product_attribute_id, name, reference, id_address_delivery.
+     *
+     * @deprecated since 9.2.1, use getProductLines() instead: it lists the customized lines of every return of the order
      *
      * @return array<int, array<string, mixed>>
      */
