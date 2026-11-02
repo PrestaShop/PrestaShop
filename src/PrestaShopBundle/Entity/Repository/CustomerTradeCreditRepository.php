@@ -176,6 +176,17 @@ class CustomerTradeCreditRepository extends EntityRepository
         );
     }
 
+    /**
+     * Sum of the totals (tax incl.) of the orders created from a cart; several with multi-shipping.
+     */
+    public function getCartOrdersTotal(int $cartId): string
+    {
+        return (string) $this->getConnection()->fetchOne(
+            'SELECT CAST(COALESCE(SUM(total_paid_tax_incl), 0) AS DECIMAL(20,6)) FROM ' . $this->tablePrefix . 'orders WHERE id_cart = ?',
+            [$cartId]
+        );
+    }
+
     private function getConnection(): Connection
     {
         return $this->getEntityManager()->getConnection();

@@ -33,6 +33,19 @@ services:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
 
+  PrestaShop\PrestaShop\Core\Domain\TradeCredit\TradeCreditAvailabilityChecker: ~
+
+  PrestaShop\PrestaShop\Core\Domain\TradeCredit\TradeCreditRefundCalculator: ~
+
+  PrestaShop\PrestaShop\Adapter\TradeCredit\TradeCreditOrderService:
+    public: true
+    arguments:
+      - '@PrestaShopBundle\Entity\Repository\CustomerTradeCreditRepository'
+      - '@PrestaShop\PrestaShop\Adapter\TradeCredit\Repository\TradeCreditPaymentModuleRepository'
+      - '@PrestaShop\PrestaShop\Core\Domain\TradeCredit\TradeCreditAvailabilityChecker'
+      - '@PrestaShop\PrestaShop\Core\Domain\TradeCredit\TradeCreditRefundCalculator'
+      - '@prestashop.adapter.legacy.configuration'
+
   PrestaShopBundle\Entity\Repository\TabRepository:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
     arguments:
