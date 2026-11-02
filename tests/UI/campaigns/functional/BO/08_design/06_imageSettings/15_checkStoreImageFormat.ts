@@ -180,11 +180,11 @@ describe('BO - Design - Image Settings : Check stores image format', async () =>
         await boStoresPage.filterTable(
           page,
           'input',
-          'sl!name',
+          'name',
           arg.store.name,
         );
 
-        const textColumn = await boStoresPage.getTextColumn(page, 1, 'sl!name');
+        const textColumn = await boStoresPage.getTextColumn(page, 1, 'name');
         expect(textColumn).to.contains(arg.store.name);
 
         idStore = parseInt(await boStoresPage.getTextColumn(page, 1, 'id_store'), 10);
@@ -316,9 +316,9 @@ describe('BO - Design - Image Settings : Check stores image format', async () =>
         await testContext.addContextItem(this, 'testIdentifier', `filterForDelete${arg.extension}`, baseContext);
 
         await boStoresPage.resetFilter(page);
-        await boStoresPage.filterTable(page, 'input', 'sl!name', arg.store.name);
+        await boStoresPage.filterTable(page, 'input', 'name', arg.store.name);
 
-        const storeName = await boStoresPage.getTextColumn(page, 1, 'sl!name');
+        const storeName = await boStoresPage.getTextColumn(page, 1, 'name');
         expect(storeName).to.contains(arg.store.name);
       });
 
