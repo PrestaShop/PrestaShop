@@ -11,7 +11,10 @@ use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialMultipleChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -107,6 +110,15 @@ class PaymentModulePreferencesType extends TranslatorAwareType
                 'choices' => $this->carrierChoices,
                 'multiple_choices' => $this->getCarrierChoicesForPaymentModules(),
                 'headers_fixed' => true,
+            ])
+            ->add('trade_credit_default_amount', NumberType::class, [
+                'label' => $this->trans('Default trade credit', 'Admin.Payment.Feature'),
+                'help' => $this->trans('Credit each registered customer receives with the first trade credit order. Changing it does not modify credits already granted.', 'Admin.Payment.Help'),
+                'scale' => 2,
+                'constraints' => [
+                    new NotBlank(),
+                    new GreaterThanOrEqual(['value' => 0]),
+                ],
             ])
             ->add('trade_credit_modules', MaterialChoiceTableType::class, [
                 'label' => $this->trans('Trade credit', 'Admin.Payment.Feature'),

@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Form;
 
+use Configuration;
 use Module;
 use PrestaShop\PrestaShop\Adapter\TradeCredit\Repository\TradeCreditPaymentModuleRepository;
 use PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder;
@@ -44,7 +45,8 @@ class PaymentPreferencesTradeCreditTest extends KernelTestCase
 
     protected function tearDown(): void
     {
-        DatabaseDump::restoreTables(['module_trade_credit']);
+        DatabaseDump::restoreTables(['module_trade_credit', 'configuration']);
+        Configuration::clearConfigurationCacheForTesting();
         parent::tearDown();
     }
 
@@ -76,5 +78,31 @@ class PaymentPreferencesTradeCreditTest extends KernelTestCase
         $this->assertSame([], $this->formHandler->save($data));
 
         $this->assertFalse($this->repository->isTradeCreditModule($this->bankwireId, 1));
+    }
+
+    public function testFormShowsDefaultTradeCreditAmount(): void
+    {
+        $form = $this->formHandler->getForm();
+
+        $this->assertTrue($form->has('trade_credit_default_amount'));
+        $this->assertEquals(50000, $form->get('trade_credit_default_amount')->getData());
+    }
+
+    public function testSavingFormStoresDefaultTradeCreditAmount(): void
+    {
+        $data = $this->formHandler->getForm()->getData();
+        $data['trade_credit_default_amount'] = 75000;
+
+        $this->assertSame([], $this->formHandler->save($data));
+
+        $this->assertSame('75000.00', Configuration::get('PS_TRADE_CREDIT_DEFAULT_AMOUNT'));
+    }
+
+    public function testNegativeDefaultTradeCreditAmountIsRejected(): void
+    {
+        $form = $this->formHandler->getForm();
+        $form->submit(['trade_credit_default_amount' => '-1'], false);
+
+        $this->assertFalse($form->get('trade_credit_default_amount')->isValid());
     }
 }

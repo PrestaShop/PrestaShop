@@ -6,7 +6,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Payment;
 
+use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\Decimal\Operation\Rounding;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Module\Configuration\PaymentRestrictionsConfiguratorInterface;
 use PrestaShop\PrestaShop\Core\Module\Configuration\TradeCreditPaymentModuleConfiguratorInterface;
 use PrestaShop\PrestaShop\Core\Module\DataProvider\PaymentModuleListProviderInterface;
@@ -41,12 +44,14 @@ final class PaymentModulePreferencesConfiguration implements DataConfigurationIn
      * @param PaymentRestrictionsConfiguratorInterface $paymentRestrictionsConfigurator
      * @param TradeCreditPaymentModuleConfiguratorInterface $tradeCreditConfigurator
      * @param int $shopId
+     * @param ConfigurationInterface $configuration
      */
     public function __construct(
         PaymentModuleListProviderInterface $paymentModuleProvider,
         PaymentRestrictionsConfiguratorInterface $paymentRestrictionsConfigurator,
         TradeCreditPaymentModuleConfiguratorInterface $tradeCreditConfigurator,
-        int $shopId
+        int $shopId,
+        private readonly ConfigurationInterface $configuration
     ) {
         $this->paymentModuleProvider = $paymentModuleProvider;
         $this->paymentRestrictionsConfigurator = $paymentRestrictionsConfigurator;
@@ -59,7 +64,10 @@ final class PaymentModulePreferencesConfiguration implements DataConfigurationIn
      */
     public function getConfiguration()
     {
-        $config = ['trade_credit_modules' => []];
+        $config = [
+            'trade_credit_modules' => [],
+            'trade_credit_default_amount' => $this->configuration->get('PS_TRADE_CREDIT_DEFAULT_AMOUNT'),
+        ];
         $paymentModules = $this->paymentModuleProvider->getPaymentModuleList();
 
         foreach ($paymentModules as $paymentModule) {
@@ -92,6 +100,11 @@ final class PaymentModulePreferencesConfiguration implements DataConfigurationIn
                 $this->shopId,
                 $this->getModuleIds((array) $config['trade_credit_modules'])
             );
+            // Credit given to customers at their first trade credit order (already granted balances are kept)
+            $this->configuration->set(
+                'PS_TRADE_CREDIT_DEFAULT_AMOUNT',
+                (new DecimalNumber((string) $config['trade_credit_default_amount']))->toPrecision(2, Rounding::ROUND_HALF_UP)
+            );
         }
 
         return $errors;
@@ -107,8 +120,9 @@ final class PaymentModulePreferencesConfiguration implements DataConfigurationIn
             $config['country_restrictions'],
             $config['group_restrictions'],
             $config['carrier_restrictions'],
-            $config['trade_credit_modules']
-        );
+            $config['trade_credit_modules'],
+            $config['trade_credit_default_amount']
+        ) && is_numeric($config['trade_credit_default_amount']) && $config['trade_credit_default_amount'] >= 0;
     }
 
     /**

@@ -134,6 +134,18 @@
         {% endif %}
 
         <div class="form-group">
+          {{ form_label(paymentPreferencesForm.trade_credit_default_amount) }}
+          <div class="input-group">
+            {{ form_widget(paymentPreferencesForm.trade_credit_default_amount) }}
+            <div class="input-group-append">
+              <span class="input-group-text">{{ tradeCreditCurrencyIso|default('') }}</span>
+            </div>
+          </div>
+          {{ form_errors(paymentPreferencesForm.trade_credit_default_amount) }}
+          {{ form_help(paymentPreferencesForm.trade_credit_default_amount) }}
+        </div>
+
+        <div class="form-group">
           {{ form_widget(paymentPreferencesForm.trade_credit_modules) }}
         </div>
       </div>
