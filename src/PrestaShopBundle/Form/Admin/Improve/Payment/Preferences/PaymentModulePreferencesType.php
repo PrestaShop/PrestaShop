@@ -8,6 +8,7 @@ namespace PrestaShopBundle\Form\Admin\Improve\Payment\Preferences;
 
 use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider;
+use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialMultipleChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -106,7 +107,29 @@ class PaymentModulePreferencesType extends TranslatorAwareType
                 'choices' => $this->carrierChoices,
                 'multiple_choices' => $this->getCarrierChoicesForPaymentModules(),
                 'headers_fixed' => true,
+            ])
+            ->add('trade_credit_modules', MaterialChoiceTableType::class, [
+                'label' => $this->trans('Trade credit', 'Admin.Payment.Feature'),
+                'choices' => $this->getTradeCreditChoices(),
+                'required' => false,
+                'empty_data' => [],
             ]);
+    }
+
+    /**
+     * Get payment module choices for the trade credit flag (module display name => module name).
+     *
+     * @return array<string, string>
+     */
+    private function getTradeCreditChoices(): array
+    {
+        $choices = [];
+
+        foreach ($this->paymentModules as $paymentModule) {
+            $choices[$paymentModule->get('displayName')] = $paymentModule->get('name');
+        }
+
+        return $choices;
     }
 
     /**

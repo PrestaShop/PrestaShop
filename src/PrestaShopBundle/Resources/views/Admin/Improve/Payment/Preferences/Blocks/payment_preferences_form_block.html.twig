@@ -113,6 +113,40 @@
     </div>
   {% endblock %}
 
+  {% block payment_modules_trade_credit %}
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">account_balance_wallet</i>
+        {{ 'Trade credit'|trans({}, 'Admin.Payment.Feature') }}
+      </h3>
+      <div class="card-body">
+        <p>
+          <small class="form-text">
+            {{ 'Payment methods checked here charge the customer\'s trade credit.'|trans({}, 'Admin.Payment.Help') }}
+          </small>
+        </p>
+        {% if tradeCreditCurrencyMissing|default(false) %}
+          <div class="alert alert-warning" role="alert">
+            <p class="alert-text">
+              {{ 'Currency %currency% used for trade credit is not installed, trade credit payment options are unavailable.'|trans({'%currency%': tradeCreditCurrencyIso}, 'Admin.Payment.Notification') }}
+            </p>
+          </div>
+        {% endif %}
+
+        <div class="form-group">
+          {{ form_widget(paymentPreferencesForm.trade_credit_modules) }}
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary" id="form-trade-credit-save-button">
+            {{ 'Save'|trans({}, 'Admin.Actions') }}
+          </button>
+        </div>
+      </div>
+    </div>
+  {% endblock %}
+
   {% block payment_preferences_block_rest %}
     {{ form_rest(paymentPreferencesForm) }}
   {% endblock %}

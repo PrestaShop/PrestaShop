@@ -118,6 +118,7 @@ services:
       - '@PrestaShop\PrestaShop\Core\Module\ModuleRepository'
       - '@prestashop.bundle.repository.module'
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+      - '@PrestaShop\PrestaShop\Adapter\TradeCredit\Repository\TradeCreditPaymentModuleRepository'
 
   prestashop.adapter.legacy.module:
     class: PrestaShop\PrestaShop\Adapter\Module\Module

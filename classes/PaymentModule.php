@@ -72,7 +72,8 @@ abstract class PaymentModuleCore extends Module
         if (!Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_country` WHERE id_module = ' . (int) $this->id)
             || !Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_currency` WHERE id_module = ' . (int) $this->id)
             || !Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_group` WHERE id_module = ' . (int) $this->id)
-            || !Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_carrier` WHERE id_module = ' . (int) $this->id)) {
+            || !Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_carrier` WHERE id_module = ' . (int) $this->id)
+            || !Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_trade_credit` WHERE id_module = ' . (int) $this->id)) {
             return false;
         }
 

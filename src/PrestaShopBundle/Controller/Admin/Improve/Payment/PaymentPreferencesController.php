@@ -6,6 +6,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Payment;
 
+use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Module\DataProvider\PaymentModuleListProviderInterface;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
@@ -33,7 +34,8 @@ class PaymentPreferencesController extends PrestaShopAdminController
         #[Autowire(service: 'prestashop.admin.payment_preferences.form_handler')]
         FormHandlerInterface $paymentPreferencesFormHandler,
         #[Autowire(service: 'prestashop.adapter.module.payment_module_provider')]
-        PaymentModuleListProviderInterface $paymentModulesListProvider
+        PaymentModuleListProviderInterface $paymentModulesListProvider,
+        CurrencyDataProviderInterface $currencyDataProvider
     ): Response {
         $legacyController = $request->attributes->get('_legacy_controller');
 
@@ -47,7 +49,11 @@ class PaymentPreferencesController extends PrestaShopAdminController
             $paymentPreferencesForm = $paymentPreferencesFormHandler->getForm()->createView();
         }
 
+        $tradeCreditCurrencyIso = (string) $this->getConfiguration()->get('PS_TRADE_CREDIT_CURRENCY');
+
         return $this->render('@PrestaShop/Admin/Improve/Payment/Preferences/payment_preferences.html.twig', [
+            'tradeCreditCurrencyIso' => $tradeCreditCurrencyIso,
+            'tradeCreditCurrencyMissing' => null === $currencyDataProvider->getCurrencyByIsoCode($tradeCreditCurrencyIso),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'paymentPreferencesForm' => $paymentPreferencesForm,

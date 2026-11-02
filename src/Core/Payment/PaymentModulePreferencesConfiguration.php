@@ -8,6 +8,7 @@ namespace PrestaShop\PrestaShop\Core\Payment;
 
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Module\Configuration\PaymentRestrictionsConfiguratorInterface;
+use PrestaShop\PrestaShop\Core\Module\Configuration\TradeCreditPaymentModuleConfiguratorInterface;
 use PrestaShop\PrestaShop\Core\Module\DataProvider\PaymentModuleListProviderInterface;
 
 /**
@@ -26,15 +27,31 @@ final class PaymentModulePreferencesConfiguration implements DataConfigurationIn
     private $paymentRestrictionsConfigurator;
 
     /**
+     * @var TradeCreditPaymentModuleConfiguratorInterface
+     */
+    private $tradeCreditConfigurator;
+
+    /**
+     * @var int
+     */
+    private $shopId;
+
+    /**
      * @param PaymentModuleListProviderInterface $paymentModuleProvider
      * @param PaymentRestrictionsConfiguratorInterface $paymentRestrictionsConfigurator
+     * @param TradeCreditPaymentModuleConfiguratorInterface $tradeCreditConfigurator
+     * @param int $shopId
      */
     public function __construct(
         PaymentModuleListProviderInterface $paymentModuleProvider,
-        PaymentRestrictionsConfiguratorInterface $paymentRestrictionsConfigurator
+        PaymentRestrictionsConfiguratorInterface $paymentRestrictionsConfigurator,
+        TradeCreditPaymentModuleConfiguratorInterface $tradeCreditConfigurator,
+        int $shopId
     ) {
         $this->paymentModuleProvider = $paymentModuleProvider;
         $this->paymentRestrictionsConfigurator = $paymentRestrictionsConfigurator;
+        $this->tradeCreditConfigurator = $tradeCreditConfigurator;
+        $this->shopId = $shopId;
     }
 
     /**
@@ -42,10 +59,14 @@ final class PaymentModulePreferencesConfiguration implements DataConfigurationIn
      */
     public function getConfiguration()
     {
-        $config = [];
+        $config = ['trade_credit_modules' => []];
         $paymentModules = $this->paymentModuleProvider->getPaymentModuleList();
 
         foreach ($paymentModules as $paymentModule) {
+            if ($paymentModule->get('trade_credit')) {
+                $config['trade_credit_modules'][] = $paymentModule->get('name');
+            }
+
             $config['currency_restrictions'][$paymentModule->get('name')] = $paymentModule->get('currencies');
             $config['country_restrictions'][$paymentModule->get('name')] = $paymentModule->get('countries');
             $config['group_restrictions'][$paymentModule->get('name')] = $paymentModule->get('groups');
@@ -67,6 +88,10 @@ final class PaymentModulePreferencesConfiguration implements DataConfigurationIn
             $this->paymentRestrictionsConfigurator->configureCountryRestrictions($config['country_restrictions']);
             $this->paymentRestrictionsConfigurator->configureGroupRestrictions($config['group_restrictions']);
             $this->paymentRestrictionsConfigurator->configureCarrierRestrictions($config['carrier_restrictions']);
+            $this->tradeCreditConfigurator->setTradeCreditModules(
+                $this->shopId,
+                $this->getModuleIds((array) $config['trade_credit_modules'])
+            );
         }
 
         return $errors;
@@ -81,7 +106,29 @@ final class PaymentModulePreferencesConfiguration implements DataConfigurationIn
             $config['currency_restrictions'],
             $config['country_restrictions'],
             $config['group_restrictions'],
-            $config['carrier_restrictions']
+            $config['carrier_restrictions'],
+            $config['trade_credit_modules']
         );
+    }
+
+    /**
+     * Maps payment module names to their ids, ignoring unknown names.
+     *
+     * @param string[] $moduleNames
+     *
+     * @return int[]
+     */
+    private function getModuleIds(array $moduleNames): array
+    {
+        $paymentModules = $this->paymentModuleProvider->getPaymentModuleList();
+        $moduleIds = [];
+
+        foreach ($moduleNames as $moduleName) {
+            if (isset($paymentModules[$moduleName])) {
+                $moduleIds[] = (int) $paymentModules[$moduleName]->database->get('id');
+            }
+        }
+
+        return $moduleIds;
     }
 }

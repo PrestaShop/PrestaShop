@@ -6,6 +6,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
+use PrestaShop\PrestaShop\Adapter\TradeCredit\Repository\TradeCreditPaymentModuleRepository;
 use PrestaShop\PrestaShop\Core\Module\DataProvider\PaymentModuleListProviderInterface;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepositoryInterface;
 use PrestaShopBundle\Entity\Repository\ModuleRepository as ModuleEntityRepository;
@@ -34,11 +35,13 @@ final class PaymentModuleListProvider implements PaymentModuleListProviderInterf
      * @param ModuleRepositoryInterface $moduleRepository
      * @param ModuleEntityRepository $moduleEntityRepository
      * @param int $shopId
+     * @param TradeCreditPaymentModuleRepository $tradeCreditPaymentModuleRepository
      */
     public function __construct(
         ModuleRepositoryInterface $moduleRepository,
         ModuleEntityRepository $moduleEntityRepository,
-        int $shopId
+        int $shopId,
+        private readonly TradeCreditPaymentModuleRepository $tradeCreditPaymentModuleRepository
     ) {
         $this->moduleRepository = $moduleRepository;
         $this->moduleEntityRepository = $moduleEntityRepository;
@@ -52,6 +55,7 @@ final class PaymentModuleListProvider implements PaymentModuleListProviderInterf
     {
         $modules = $this->moduleRepository->getInstalledModules();
         $paymentModules = [];
+        $tradeCreditModuleIds = $this->tradeCreditPaymentModuleRepository->getTradeCreditModuleIds($this->shopId);
 
         /** @var Module $module */
         foreach ($modules as $module) {
@@ -77,6 +81,10 @@ final class PaymentModuleListProvider implements PaymentModuleListProviderInterf
                 $module->attributes->set('currencies', $restrictedCurrencies);
                 $module->attributes->set('groups', $restrictedGroups);
                 $module->attributes->set('carriers', $restrictedCarriers);
+                $module->attributes->set(
+                    'trade_credit',
+                    in_array((int) $module->database->get('id'), $tradeCreditModuleIds, true)
+                );
 
                 $paymentModules[$module->attributes->get('name')] = $module;
             }
