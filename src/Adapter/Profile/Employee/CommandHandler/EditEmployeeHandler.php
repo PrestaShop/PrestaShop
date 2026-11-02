@@ -71,18 +71,23 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
      */
     public function handle(EditEmployeeCommand $command)
     {
-        $canAccessProfile = $this->profileAccessChecker->canEmployeeAccessProfile(
-            $this->contextEmployeeProvider->getId(),
-            (int) $command->getProfileId()
-        );
+        $employee = new Employee($command->getEmployeeId()->getValue());
+        $this->assertEmployeeWasFoundById($command->getEmployeeId(), $employee);
 
-        if (!$canAccessProfile) {
-            throw new InvalidProfileException('You cannot access the provided profile.');
+        if (null !== $command->getProfileId()) {
+            $canAccessProfile = $this->profileAccessChecker->canEmployeeAccessProfile(
+                $this->contextEmployeeProvider->getId(),
+                (int) $command->getProfileId()
+            );
+
+            if (!$canAccessProfile) {
+                throw new InvalidProfileException('You cannot access the provided profile.');
+            }
         }
 
-        $employee = new Employee($command->getEmployeeId()->getValue());
-
-        $this->assertEmailIsNotAlreadyUsed($employee, $command->getEmail()->getValue());
+        if (null !== $command->getEmail()) {
+            $this->assertEmailIsNotAlreadyUsed($employee, $command->getEmail()->getValue());
+        }
         $this->assertHomepageIsAccessible($command->getDefaultPageId() ?: ((int) $employee->default_tab), $command->getProfileId() ?: ((int) $employee->id_profile));
 
         $this->updateEmployeeWithCommandData($employee, $command);
@@ -102,25 +107,42 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
      */
     private function updateEmployeeWithCommandData(Employee $employee, EditEmployeeCommand $command)
     {
-        $employee->firstname = $command->getFirstName()->getValue();
-        $employee->lastname = $command->getLastName()->getValue();
-        $employee->email = $command->getEmail()->getValue();
-        $employee->default_tab = $command->getDefaultPageId();
-        $employee->id_lang = $command->getLanguageId();
+        // Only the fields set on the command are updated, the others keep their value
+        if (null !== $command->getFirstName()) {
+            $employee->firstname = $command->getFirstName()->getValue();
+        }
+        if (null !== $command->getLastName()) {
+            $employee->lastname = $command->getLastName()->getValue();
+        }
+        if (null !== $command->getEmail()) {
+            $employee->email = $command->getEmail()->getValue();
+        }
+        if (null !== $command->getDefaultPageId()) {
+            $employee->default_tab = $command->getDefaultPageId();
+        }
+        if (null !== $command->getLanguageId()) {
+            $employee->id_lang = $command->getLanguageId();
+        }
         $employee->id_last_order = $employee->getLastElementsForNotify('order');
         $employee->id_last_customer_message = $employee->getLastElementsForNotify('customer_message');
         $employee->id_last_customer = $employee->getLastElementsForNotify('customer');
-        $employee->has_enabled_gravatar = $command->hasEnabledGravatar();
+        if (null !== $command->hasEnabledGravatar()) {
+            $employee->has_enabled_gravatar = $command->hasEnabledGravatar();
+        }
 
         // Allow changing profile and active status only when editing not own account.
-        if ($employee->id != $this->contextEmployeeProvider->getId()) {
-            $employee->id_profile = $command->getProfileId();
-            $employee->active = $command->isActive();
+        if ((int) $employee->id !== $this->contextEmployeeProvider->getId()) {
+            if (null !== $command->getProfileId()) {
+                $employee->id_profile = $command->getProfileId();
+            }
+            if (null !== $command->isActive()) {
+                $employee->active = $command->isActive();
+            }
         }
 
         $shopAssociation = $command->getShopAssociation();
 
-        if (!$employee->isSuperAdmin() && empty($shopAssociation)) {
+        if (null !== $shopAssociation && !$employee->isSuperAdmin() && empty($shopAssociation)) {
             throw new MissingShopAssociationException('Employee must be associated to at least one shop.');
         }
 
