@@ -3249,3 +3249,36 @@ CREATE TABLE `PREFIX_b2b_role_authorization_role`
   INDEX                   `b2b_role_authorization_role_auth_role_idx` (`id_authorization_role`)
 ) ENGINE = ENGINE_TYPE
   DEFAULT CHARSET = utf8mb4 COLLATION;
+
+CREATE TABLE `PREFIX_module_trade_credit` (
+  `id_module` int(10) unsigned NOT NULL,
+  `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id_module`, `id_shop`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
+CREATE TABLE `PREFIX_customer_trade_credit` (
+  `id_customer` INT UNSIGNED NOT NULL,
+  `amount` DECIMAL(20, 6) NOT NULL,
+  `date_add` DATETIME NOT NULL,
+  `date_upd` DATETIME NOT NULL,
+  PRIMARY KEY (`id_customer`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
+CREATE TABLE `PREFIX_customer_trade_credit_operation` (
+  `id_customer_trade_credit_operation` INT UNSIGNED AUTO_INCREMENT NOT NULL,
+  `id_customer` INT UNSIGNED NOT NULL,
+  `type` VARCHAR(16) NOT NULL,
+  `amount` DECIMAL(20, 6) NOT NULL,
+  `balance_after` DECIMAL(20, 6) NOT NULL,
+  `id_cart` INT UNSIGNED DEFAULT NULL,
+  `id_order` INT UNSIGNED DEFAULT NULL,
+  `id_order_slip` INT UNSIGNED DEFAULT NULL,
+  `id_employee` INT UNSIGNED DEFAULT NULL,
+  `reference` VARCHAR(64) NOT NULL,
+  `date_add` DATETIME NOT NULL,
+  UNIQUE INDEX `reference` (`reference`),
+  INDEX `id_customer` (`id_customer`),
+  INDEX `id_cart` (`id_cart`),
+  INDEX `id_order` (`id_order`),
+  PRIMARY KEY (`id_customer_trade_credit_operation`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;

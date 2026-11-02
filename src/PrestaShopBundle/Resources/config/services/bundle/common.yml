@@ -18,6 +18,15 @@ services:
     lazy: true
     public: true
 
+  PrestaShopBundle\Entity\Repository\CustomerTradeCreditRepository:
+    public: true
+    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    arguments:
+      - PrestaShopBundle\Entity\CustomerTradeCredit
+    calls:
+      - setTablePrefix: [ '%database_prefix%' ]
+    lazy: true
+
   PrestaShopBundle\Entity\Repository\TabRepository:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
     arguments:

@@ -924,5 +924,11 @@ Country</value>
     <configuration id="PS_MIN_LOGGER_LEVEL_IN_DB" name="PS_MIN_LOGGER_LEVEL_IN_DB">
       <value>1</value>
     </configuration>
+    <configuration id="PS_TRADE_CREDIT_DEFAULT_AMOUNT" name="PS_TRADE_CREDIT_DEFAULT_AMOUNT">
+      <value>50000</value>
+    </configuration>
+    <configuration id="PS_TRADE_CREDIT_CURRENCY" name="PS_TRADE_CREDIT_CURRENCY">
+      <value>PLN</value>
+    </configuration>
   </entities>
 </entity_configuration>
