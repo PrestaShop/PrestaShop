@@ -12,6 +12,7 @@ use Cart;
 use Context;
 use Currency;
 use Customer;
+use Module;
 use Order;
 use OrderSlip;
 use PrestaShop\Decimal\DecimalNumber;
@@ -83,6 +84,70 @@ class TradeCreditOrderService
     public function isTradeCreditModule(int $moduleId, int $shopId): bool
     {
         return $this->paymentModuleRepository->isTradeCreditModule($moduleId, $shopId);
+    }
+
+    /**
+     * Adds the available credit to the label of trade credit payment options and a "trade_credit" entry
+     * (available, required, sufficient, message) used to disable the option in checkout.
+     *
+     * @param array<string, array<int, array<string, mixed>>> $paymentOptions presented options, grouped by module name
+     *
+     * @return array<string, array<int, array<string, mixed>>>
+     */
+    public function decoratePaymentOptions(array $paymentOptions, Cart $cart, Customer $customer, Currency $currency, int $shopId): array
+    {
+        $availability = null;
+
+        foreach ($paymentOptions as $moduleName => $moduleOptions) {
+            $moduleId = (int) Module::getModuleIdByName((string) $moduleName);
+            if (!$moduleId || !$this->isTradeCreditModule($moduleId, $shopId)) {
+                continue;
+            }
+
+            $availability ??= $this->getAvailabilityForCart($cart, $customer, $currency);
+            $label = Context::getContext()->getTranslator()->trans(
+                ', available trade credit: %amount%',
+                ['%amount%' => $this->formatPrice($availability->getAvailable())],
+                'Shop.Theme.Checkout'
+            );
+
+            foreach ($moduleOptions as $key => $option) {
+                $paymentOptions[$moduleName][$key]['call_to_action_text'] = $option['call_to_action_text'] . $label;
+                $paymentOptions[$moduleName][$key]['trade_credit'] = [
+                    'available' => $this->formatPrice($availability->getAvailable()),
+                    'required' => $this->formatPrice($availability->getRequired()),
+                    'sufficient' => $availability->isSufficient(),
+                    'message' => $this->getUnavailabilityMessage($availability),
+                ];
+            }
+        }
+
+        return $paymentOptions;
+    }
+
+    /**
+     * Restrictions exposed to the checkout javascript, by module name.
+     *
+     * @param array<string, array<int, array<string, mixed>>> $decoratedPaymentOptions
+     *
+     * @return array<string, array{sufficient: bool, message: string|null}>
+     */
+    public function getPaymentOptionsRestrictions(array $decoratedPaymentOptions): array
+    {
+        $restrictions = [];
+
+        foreach ($decoratedPaymentOptions as $moduleName => $moduleOptions) {
+            foreach ($moduleOptions as $option) {
+                if (isset($option['trade_credit'])) {
+                    $restrictions[$moduleName] = [
+                        'sufficient' => $option['trade_credit']['sufficient'],
+                        'message' => $option['trade_credit']['message'],
+                    ];
+                }
+            }
+        }
+
+        return $restrictions;
     }
 
     /**

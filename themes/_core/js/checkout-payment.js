@@ -40,6 +40,8 @@ class Payment {
 
     $body.on('change', `${this.conditionsSelector} input[type="checkbox"]`, $.proxy(this.toggleOrderButton, this));
     $body.on('change', 'input[name="payment-option"]', $.proxy(this.toggleOrderButton, this));
+    // Trade credit payment options without enough credit can't be selected
+    this.applyTradeCreditRestrictions();
     // call toggle once on init to handle situation where everything
     // is already ok (like 0 price order, payment already preselected and so on)
     this.toggleOrderButton();
@@ -49,6 +51,43 @@ class Payment {
     if (!this.getSelectedOption()) {
       this.collapseOptions();
     }
+  }
+
+  /**
+   * Disables the trade credit payment options the customer can't use (not enough credit, guest)
+   * and shows why. Restrictions are provided by PaymentOptionsFinder as "tradeCreditPaymentOptions".
+   */
+  applyTradeCreditRestrictions() {
+    const restrictions = window.tradeCreditPaymentOptions || {};
+
+    Object.keys(restrictions).forEach((moduleName) => {
+      const restriction = restrictions[moduleName];
+
+      if (restriction.sufficient) {
+        return;
+      }
+
+      document.querySelectorAll('input[name="payment-option"]').forEach((input) => {
+        if (input.dataset.moduleName !== moduleName) {
+          return;
+        }
+
+        input.checked = false;
+        input.disabled = true;
+
+        const container = document.getElementById(`${input.id}-container`);
+
+        if (container === null || container.querySelector('.js-trade-credit-message') !== null) {
+          return;
+        }
+
+        container.classList.add('disabled');
+        const message = document.createElement('p');
+        message.className = 'alert alert-warning js-trade-credit-message';
+        message.textContent = restriction.message;
+        container.appendChild(message);
+      });
+    });
   }
 
   collapseOptions() {
