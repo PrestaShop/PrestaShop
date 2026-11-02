@@ -7,6 +7,7 @@
 namespace Tests\Unit\Core\Form\IdentifiableObject\DataProvider;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing;
@@ -15,6 +16,8 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Birthday;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\LastName;
+use PrestaShop\PrestaShop\Core\Domain\TradeCredit\Query\GetCustomerTradeCredit;
+use PrestaShop\PrestaShop\Core\Domain\TradeCredit\QueryResult\CustomerTradeCreditSummary;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CustomerFormDataProvider;
 use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroup;
@@ -38,6 +41,10 @@ class CustomerFormDataProviderTest extends TestCase
      */
     private $defaultGroupsProvider;
 
+    private bool $isGuest = false;
+
+    private ?string $tradeCreditBalance = '40000';
+
     /**
      * Set up dependencies for CustomerFormDataProvider
      */
@@ -46,9 +53,18 @@ class CustomerFormDataProviderTest extends TestCase
         $this->queryBus = $this->createMock(CommandBusInterface::class);
         $this->queryBus
             ->method('handle')
-            ->with($this->isInstanceOf(GetCustomerForEditing::class))
-            ->willReturn(
-                new EditableCustomer(
+            ->willReturnCallback(function ($query) {
+                if ($query instanceof GetCustomerTradeCredit) {
+                    return new CustomerTradeCreditSummary(
+                        null === $this->tradeCreditBalance ? null : new DecimalNumber($this->tradeCreditBalance),
+                        new DecimalNumber('50000'),
+                        'PLN',
+                        []
+                    );
+                }
+                $this->assertInstanceOf(GetCustomerForEditing::class, $query);
+
+                return new EditableCustomer(
                     new CustomerId(1),
                     2,
                     new FirstName('Firstname'),
@@ -67,9 +83,9 @@ class CustomerFormDataProviderTest extends TestCase
                     36.99,
                     10,
                     1,
-                    false
-                )
-            )
+                    $this->isGuest
+                );
+            })
         ;
 
         $this->configuration = $this->createMock(ConfigurationInterface::class);
@@ -79,6 +95,9 @@ class CustomerFormDataProviderTest extends TestCase
                 $this->returnValueMap([
                     [
                         'PS_CUSTOMER_GROUP', 3,
+                    ],
+                    [
+                        'PS_TRADE_CREDIT_DEFAULT_AMOUNT', '50000',
                     ],
                 ])
             )
@@ -116,6 +135,8 @@ class CustomerFormDataProviderTest extends TestCase
             'default_group_id' => 3,
             'is_guest' => false,
             'is_newsletter_subscribed' => true,
+            'trade_credit_amount' => '40000.00',
+            'trade_credit_expected_amount' => '40000.00',
         ], $customerFormDataProvider->getData(1));
     }
 
@@ -147,7 +168,41 @@ class CustomerFormDataProviderTest extends TestCase
             'risk_id' => 1,
             'is_guest' => false,
             'is_newsletter_subscribed' => true,
+            'trade_credit_amount' => '40000.00',
+            'trade_credit_expected_amount' => '40000.00',
         ], $customerFormDataProvider->getData(1));
+    }
+
+    public function testGetDataForNotGrantedTradeCreditUsesDefault()
+    {
+        $this->tradeCreditBalance = null;
+        $customerFormDataProvider = new CustomerFormDataProvider(
+            $this->queryBus,
+            $this->configuration,
+            $this->defaultGroupsProvider,
+            false
+        );
+
+        $data = $customerFormDataProvider->getData(1);
+
+        $this->assertSame('50000.00', $data['trade_credit_amount']);
+        $this->assertSame('50000.00', $data['trade_credit_expected_amount']);
+    }
+
+    public function testGetDataForGuestOmitsTradeCredit()
+    {
+        $this->isGuest = true;
+        $customerFormDataProvider = new CustomerFormDataProvider(
+            $this->queryBus,
+            $this->configuration,
+            $this->defaultGroupsProvider,
+            false
+        );
+
+        $data = $customerFormDataProvider->getData(1);
+
+        $this->assertArrayNotHasKey('trade_credit_amount', $data);
+        $this->assertArrayNotHasKey('trade_credit_expected_amount', $data);
     }
 
     public function testItProvidesCorrectDefaultDataWhenB2bFeatureIsOff()
@@ -165,6 +220,8 @@ class CustomerFormDataProviderTest extends TestCase
             'group_ids' => [1, 2, 3],
             'default_group_id' => 3,
             'is_guest' => false,
+            'trade_credit_amount' => '50000.00',
+            'trade_credit_expected_amount' => '50000.00',
         ], $customerFormDataProvider->getDefaultData());
     }
 
@@ -185,6 +242,8 @@ class CustomerFormDataProviderTest extends TestCase
             'allowed_outstanding_amount' => 0,
             'max_payment_days' => 0,
             'is_guest' => false,
+            'trade_credit_amount' => '50000.00',
+            'trade_credit_expected_amount' => '50000.00',
         ], $customerFormDataProvider->getDefaultData());
     }
 }

@@ -61,7 +61,7 @@ final class SetCustomerTradeCreditHandler implements SetCustomerTradeCreditHandl
                     'type' => CustomerTradeCreditOperation::TYPE_ADJUSTMENT,
                     'amount' => $this->format((new DecimalNumber($amount))->minus(new DecimalNumber($current))),
                     'balance_after' => $amount,
-                    'id_employee' => $command->getEmployeeId(),
+                    'id_employee' => $command->getEmployeeId() ?: null,
                     'reference' => 'adjustment:' . bin2hex(random_bytes(8)),
                 ]);
             });

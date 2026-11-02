@@ -39,6 +39,9 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
+use PrestaShop\PrestaShop\Core\Domain\TradeCredit\Exception\TradeCreditBalanceChangedException;
+use PrestaShop\PrestaShop\Core\Domain\TradeCredit\Exception\TradeCreditConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\TradeCredit\Query\GetCustomerTradeCredit;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
@@ -314,6 +317,10 @@ class CustomerController extends PrestaShopAdminController
             'note' => $customerInformation->getGeneralInformation()->getPrivateNote(),
         ]);
 
+        $customerTradeCredit = $customerInformation->getPersonalInformation()->isGuest()
+            ? null
+            : $this->dispatchQuery(new GetCustomerTradeCredit($customerId));
+
         // Discount listing
         $customerDiscountFilters->addFilter(['id_customer' => $customerId]);
         $customerDiscountGrid = $customerDiscountGridFactory->getGrid($customerDiscountFilters);
@@ -355,6 +362,7 @@ class CustomerController extends PrestaShopAdminController
             'isMultistoreEnabled' => $this->getShopContext()->isMultiShopEnabled(),
             'transferGuestAccountForm' => $transferGuestAccountForm,
             'privateNoteForm' => $privateNoteForm->createView(),
+            'customerTradeCredit' => $customerTradeCredit,
             'layoutHeaderToolbarBtn' => $this->getCustomerViewToolbarButtons($customerId),
             'layoutTitle' => $this->trans(
                 'Customer %name%',
@@ -923,6 +931,18 @@ class CustomerController extends PrestaShopAdminController
     private function getErrorMessages(Exception $e): array
     {
         return [
+            TradeCreditBalanceChangedException::class => $this->trans(
+                'The trade credit balance has changed in the meantime and was not saved. Refresh the form and try again.',
+                [],
+                'Admin.Orderscustomers.Notification'
+            ),
+            TradeCreditConstraintException::class => [
+                TradeCreditConstraintException::INVALID_AMOUNT => $this->trans(
+                    'The trade credit amount cannot be negative.',
+                    [],
+                    'Admin.Orderscustomers.Notification'
+                ),
+            ],
             CustomerNotFoundException::class => $this->trans(
                 'This customer does not exist.',
                 [],

@@ -21,7 +21,9 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Form\FormCloner;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -30,6 +32,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Range;
@@ -368,6 +371,41 @@ class CustomerType extends TranslatorAwareType
                 ])
             ;
         }
+
+        $tradeCreditCurrency = (string) $this->configuration->get('PS_TRADE_CREDIT_CURRENCY');
+        $builder
+            ->add('trade_credit_amount', MoneyType::class, [
+                'label' => $this->trans('Available trade credit', 'Admin.Orderscustomers.Feature'),
+                'help' => $this->trans(
+                    'Amount the customer can still spend with trade credit payment methods. Customers who never used trade credit receive %amount% with their first such order.',
+                    'Admin.Orderscustomers.Help',
+                    ['%amount%' => $this->configuration->get('PS_TRADE_CREDIT_DEFAULT_AMOUNT') . ' ' . $tradeCreditCurrency]
+                ),
+                'currency' => $tradeCreditCurrency,
+                'scale' => 2,
+                'required' => false,
+                'invalid_message' => $this->trans('This field is invalid.', 'Admin.Notifications.Error'),
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans('This field cannot be empty.', 'Admin.Notifications.Error'),
+                    ]),
+                    new GreaterThanOrEqual([
+                        'value' => 0,
+                        'message' => $this->trans('This value should be greater than or equal to %value%.', 'Admin.Notifications.Error', ['%value%' => 0]),
+                    ]),
+                ],
+            ])
+            ->add('trade_credit_expected_amount', HiddenType::class)
+        ;
+
+        // Trade credit is available to registered customers only
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $data = $event->getData();
+
+            if (!empty($data['is_guest'])) {
+                $event->getForm()->remove('trade_credit_amount')->remove('trade_credit_expected_amount');
+            }
+        });
 
         // We add a listener that will make password field not required, if we want to create a guest
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {

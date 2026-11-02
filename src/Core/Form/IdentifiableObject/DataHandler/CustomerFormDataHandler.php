@@ -11,6 +11,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Birthday;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
+use PrestaShop\PrestaShop\Core\Domain\TradeCredit\Command\SetCustomerTradeCreditCommand;
 use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroupsProviderInterface;
 use PrestaShop\PrestaShop\Core\Security\OpenSsl\OpenSSL;
 use PrestaShop\PrestaShop\Core\Security\PasswordGenerator;
@@ -45,12 +46,14 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
      * @param int $contextShopId
      * @param bool $isB2bFeatureEnabled
      * @param DefaultGroupsProviderInterface $defaultGroupsProvider
+     * @param int|null $employeeId employee saving the form, logged with trade credit adjustments
      */
     public function __construct(
         CommandBusInterface $bus,
         $contextShopId,
         $isB2bFeatureEnabled,
-        DefaultGroupsProviderInterface $defaultGroupsProvider
+        DefaultGroupsProviderInterface $defaultGroupsProvider,
+        private readonly ?int $employeeId = null
     ) {
         $this->bus = $bus;
         $this->contextShopId = $contextShopId;
@@ -68,6 +71,10 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
         /** @var CustomerId $customerId */
         $customerId = $this->bus->handle($command);
 
+        if (!$data['is_guest']) {
+            $this->setTradeCredit($customerId->getValue(), $data);
+        }
+
         return $customerId->getValue();
     }
 
@@ -79,6 +86,25 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
         $command = $this->buildCustomerEditCommand($customerId, $data);
 
         $this->bus->handle($command);
+
+        $this->setTradeCredit((int) $customerId, $data);
+    }
+
+    /**
+     * Trade credit fields are absent for guests, the command does nothing when the amount is unchanged.
+     */
+    private function setTradeCredit(int $customerId, array $data): void
+    {
+        if (!isset($data['trade_credit_amount'], $data['trade_credit_expected_amount'])) {
+            return;
+        }
+
+        $this->bus->handle(new SetCustomerTradeCreditCommand(
+            $customerId,
+            (string) $data['trade_credit_amount'],
+            (string) $data['trade_credit_expected_amount'],
+            (int) $this->employeeId
+        ));
     }
 
     /**

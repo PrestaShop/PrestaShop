@@ -6,10 +6,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
+use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\Decimal\Operation\Rounding;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\EditableCustomer;
+use PrestaShop\PrestaShop\Core\Domain\TradeCredit\Query\GetCustomerTradeCredit;
+use PrestaShop\PrestaShop\Core\Domain\TradeCredit\QueryResult\CustomerTradeCreditSummary;
+use PrestaShop\PrestaShop\Core\Domain\TradeCredit\TradeCreditAvailabilityChecker;
 use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroupsProviderInterface;
 
 /**
@@ -90,6 +95,12 @@ final class CustomerFormDataProvider implements FormDataProviderInterface
             ]);
         }
 
+        if (!$editableCustomer->isGuest()) {
+            /** @var CustomerTradeCreditSummary $tradeCredit */
+            $tradeCredit = $this->queryBus->handle(new GetCustomerTradeCredit((int) $customerId));
+            $data = array_merge($data, $this->getTradeCreditData($tradeCredit->getAvailableAmount()));
+        }
+
         return $data;
     }
 
@@ -119,6 +130,23 @@ final class CustomerFormDataProvider implements FormDataProviderInterface
             ]);
         }
 
-        return $data;
+        return array_merge($data, $this->getTradeCreditData(
+            new DecimalNumber((string) $this->configuration->get('PS_TRADE_CREDIT_DEFAULT_AMOUNT'))
+        ));
+    }
+
+    /**
+     * The expected amount lets the handler detect a balance changed since the form was loaded.
+     *
+     * @return array<string, string>
+     */
+    private function getTradeCreditData(DecimalNumber $amount): array
+    {
+        $formatted = $amount->toPrecision(TradeCreditAvailabilityChecker::PRECISION, Rounding::ROUND_HALF_UP);
+
+        return [
+            'trade_credit_amount' => $formatted,
+            'trade_credit_expected_amount' => $formatted,
+        ];
     }
 }
