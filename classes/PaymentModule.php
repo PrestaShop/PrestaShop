@@ -9,6 +9,7 @@ use PrestaShop\PrestaShop\Adapter\Shipment\OrderShipmentCreator;
 use PrestaShop\PrestaShop\Adapter\Shipment\OrderShipmentService;
 use PrestaShop\PrestaShop\Adapter\Shipment\ShipmentShippingCostUpdater;
 use PrestaShop\PrestaShop\Adapter\StockManager;
+use PrestaShop\PrestaShop\Adapter\TradeCredit\TradeCreditOrderService;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
@@ -335,65 +336,81 @@ abstract class PaymentModuleCore extends Module
             $id_order_state = Configuration::get('PS_OS_ERROR');
         }
 
-        if (!$this->isFeatureFlagIsEnabledForMultiShipment()) {
-            foreach ($package_list as $id_address => $packageByAddress) {
-                foreach ($packageByAddress as $id_package => $package) {
-                    $orderData = $this->createOrderFromCart(
-                        $this->context->cart,
-                        $this->context->currency,
-                        $package['product_list'],
-                        $id_address,
-                        $this->context,
-                        $reference,
-                        $secure_key,
-                        $payment_method,
-                        $this->name,
-                        $dont_touch_amount,
-                        $amount_paid,
-                        0,
-                        $cart_total_paid,
-                        self::DEBUG_MODE,
-                        $order_status,
-                        $id_order_state,
-                        isset($package['id_carrier']) ? $package['id_carrier'] : null
-                    );
-                    $order = $orderData['order'];
-                    $order_list[] = $order;
-                    $order_detail_list[] = $orderData['orderDetail'];
-                }
-            }
-        } else {
-            $productsByCarriers = [];
-            $idAddress = null;
+        // Trade credit payment methods charge the cart total to the customer trade credit, atomically
+        $tradeCreditService = $this->get(TradeCreditOrderService::class);
+        $isTradeCredit = $tradeCreditService instanceof TradeCreditOrderService
+            && $tradeCreditService->isTradeCreditModule((int) $this->id, (int) $this->context->shop->id);
+        if ($isTradeCredit) {
+            $tradeCreditService->reserveForCart($this->context->cart, $this->context->customer, $this->context->currency, $cart_total_paid);
+        }
 
-            foreach ($package_list as $id_address => $packageByAddress) {
-                $idAddress = $id_address;
-                foreach ($packageByAddress as $id_package => $package) {
-                    $productsByCarriers[$package['id_carrier']]['product_list'] = $package['product_list'];
+        try {
+            if (!$this->isFeatureFlagIsEnabledForMultiShipment()) {
+                foreach ($package_list as $id_address => $packageByAddress) {
+                    foreach ($packageByAddress as $id_package => $package) {
+                        $orderData = $this->createOrderFromCart(
+                            $this->context->cart,
+                            $this->context->currency,
+                            $package['product_list'],
+                            $id_address,
+                            $this->context,
+                            $reference,
+                            $secure_key,
+                            $payment_method,
+                            $this->name,
+                            $dont_touch_amount,
+                            $amount_paid,
+                            0,
+                            $cart_total_paid,
+                            self::DEBUG_MODE,
+                            $order_status,
+                            $id_order_state,
+                            isset($package['id_carrier']) ? $package['id_carrier'] : null
+                        );
+                        $order = $orderData['order'];
+                        $order_list[] = $order;
+                        $order_detail_list[] = $orderData['orderDetail'];
+                    }
                 }
+            } else {
+                $productsByCarriers = [];
+                $idAddress = null;
+
+                foreach ($package_list as $id_address => $packageByAddress) {
+                    $idAddress = $id_address;
+                    foreach ($packageByAddress as $id_package => $package) {
+                        $productsByCarriers[$package['id_carrier']]['product_list'] = $package['product_list'];
+                    }
+                }
+                $orderData = $this->createOrderFromCart(
+                    $this->context->cart,
+                    $this->context->currency,
+                    $productsByCarriers,
+                    $idAddress,
+                    $this->context,
+                    $reference,
+                    $secure_key,
+                    $payment_method,
+                    $this->name,
+                    $dont_touch_amount,
+                    $amount_paid,
+                    0,
+                    $cart_total_paid,
+                    self::DEBUG_MODE,
+                    $order_status,
+                    $id_order_state,
+                    null
+                );
+                $order = $orderData['order'];
+                $order_list[] = $order;
+                $order_detail_list[] = $orderData['orderDetail'];
             }
-            $orderData = $this->createOrderFromCart(
-                $this->context->cart,
-                $this->context->currency,
-                $productsByCarriers,
-                $idAddress,
-                $this->context,
-                $reference,
-                $secure_key,
-                $payment_method,
-                $this->name,
-                $dont_touch_amount,
-                $amount_paid,
-                0,
-                $cart_total_paid,
-                self::DEBUG_MODE,
-                $order_status,
-                $id_order_state,
-                null
-            );
-            $order = $orderData['order'];
-            $order_list[] = $order;
-            $order_detail_list[] = $orderData['orderDetail'];
+        } catch (Throwable $e) {
+            if ($isTradeCredit) {
+                $tradeCreditService->releaseForCart((int) $this->context->cart->id);
+            }
+
+            throw $e;
         }
         // The country can only change if the address used for the calculation is the delivery address, and if multi-shipping is activated
         if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_delivery' && isset($context_country)) {

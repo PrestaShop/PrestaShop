@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\TradeCredit;
 
 use Cart;
+use Context;
 use Currency;
 use Customer;
 use Order;
@@ -42,6 +43,41 @@ class TradeCreditOrderService
         private readonly TradeCreditRefundCalculator $refundCalculator,
         private readonly ConfigurationInterface $configuration
     ) {
+    }
+
+    /**
+     * Message explaining why the trade credit cannot be used, for the customer (checkout, order error page).
+     */
+    public function getUnavailabilityMessage(TradeCreditAvailability $availability): ?string
+    {
+        // The light front container has no translator service, the legacy context translator works everywhere
+        $translator = Context::getContext()->getTranslator();
+
+        return match ($availability->getReason()) {
+            null => null,
+            TradeCreditAvailability::REASON_GUEST => $translator->trans(
+                'Trade credit is available only to registered customers.',
+                [],
+                'Shop.Notifications.Error'
+            ),
+            TradeCreditAvailability::REASON_INSUFFICIENT => $translator->trans(
+                'The order total %required% exceeds your available trade credit %available%.',
+                [
+                    '%required%' => $this->formatPrice($availability->getRequired()),
+                    '%available%' => $this->formatPrice($availability->getAvailable()),
+                ],
+                'Shop.Notifications.Error'
+            ),
+            default => $translator->trans('Trade credit is currently unavailable.', [], 'Shop.Notifications.Error'),
+        };
+    }
+
+    public function formatPrice(DecimalNumber $amount): string
+    {
+        return Tools::getContextLocale(Context::getContext())->formatPrice(
+            $this->format($amount),
+            (string) $this->configuration->get('PS_TRADE_CREDIT_CURRENCY')
+        );
     }
 
     public function isTradeCreditModule(int $moduleId, int $shopId): bool
@@ -80,16 +116,13 @@ class TradeCreditOrderService
     {
         $creditCurrency = $this->getCreditCurrency();
         if (null === $creditCurrency) {
-            throw new TradeCreditInsufficientException($this->currencyUnavailable(), 'Trade credit currency is not installed.');
+            throw $this->unavailable($this->currencyUnavailable());
         }
 
         $customerId = (int) $customer->id;
         $required = $this->toCreditCurrency($cartTotal, $currency, $creditCurrency);
         if ($customer->is_guest) {
-            throw new TradeCreditInsufficientException(
-                $this->availabilityChecker->check(null, true, $this->getDefaultAmount(), $required),
-                'Trade credit is available only to registered customers.'
-            );
+            throw $this->unavailable($this->availabilityChecker->check(null, true, $this->getDefaultAmount(), $required));
         }
 
         $this->repository->transactional(function () use ($cart, $customerId, $required): void {
@@ -102,7 +135,7 @@ class TradeCreditOrderService
             $availability = $this->availabilityChecker->check($balance, false, $this->getDefaultAmount(), $required);
 
             if (!$availability->isSufficient()) {
-                throw new TradeCreditInsufficientException($availability, sprintf('Order total %s exceeds the available trade credit %s.', $availability->getRequired(), $availability->getAvailable()));
+                throw $this->unavailable($availability);
             }
 
             $balanceAfter = $this->format($balance->minus($availability->getRequired()));
@@ -253,6 +286,11 @@ class TradeCreditOrderService
     private function getDefaultAmount(): DecimalNumber
     {
         return new DecimalNumber((string) $this->configuration->get('PS_TRADE_CREDIT_DEFAULT_AMOUNT'));
+    }
+
+    private function unavailable(TradeCreditAvailability $availability): TradeCreditInsufficientException
+    {
+        return new TradeCreditInsufficientException($availability, (string) $this->getUnavailabilityMessage($availability));
     }
 
     private function currencyUnavailable(): TradeCreditAvailability
