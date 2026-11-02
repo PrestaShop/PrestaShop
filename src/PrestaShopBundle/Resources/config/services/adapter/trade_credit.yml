@@ -1,0 +1,15 @@
+services:
+  _defaults:
+    public: false
+
+  PrestaShop\PrestaShop\Adapter\TradeCredit\CommandHandler\SetCustomerTradeCreditHandler:
+    autoconfigure: true
+    arguments:
+      - '@PrestaShopBundle\Entity\Repository\CustomerTradeCreditRepository'
+      - '@prestashop.adapter.legacy.configuration'
+
+  PrestaShop\PrestaShop\Adapter\TradeCredit\QueryHandler\GetCustomerTradeCreditHandler:
+    autoconfigure: true
+    arguments:
+      - '@PrestaShopBundle\Entity\Repository\CustomerTradeCreditRepository'
+      - '@prestashop.adapter.legacy.configuration'

@@ -1,0 +1,29 @@
+<?php
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\TradeCredit\Query;
+
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
+
+/**
+ * Gets the trade credit balance and the latest operations of a customer.
+ */
+class GetCustomerTradeCredit
+{
+    private CustomerId $customerId;
+
+    public function __construct(int $customerId)
+    {
+        $this->customerId = new CustomerId($customerId);
+    }
+
+    public function getCustomerId(): CustomerId
+    {
+        return $this->customerId;
+    }
+}
