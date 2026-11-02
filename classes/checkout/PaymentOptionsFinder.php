@@ -59,8 +59,8 @@ class PaymentOptionsFinderCore extends HookFinder
     }
 
     /**
-     * Shows the available trade credit on trade credit payment options and exposes, to the checkout
-     * javascript, which of them must be disabled (the order is also rejected server side).
+     * Shows the available trade credit on trade credit payment options and marks the ones the checkout
+     * javascript must disable (the order is also rejected server side).
      */
     private function presentTradeCredit(array $paymentOptions): array
     {
@@ -75,13 +75,7 @@ class PaymentOptionsFinderCore extends HookFinder
             return $paymentOptions;
         }
 
-        $paymentOptions = $tradeCreditService->decoratePaymentOptions($paymentOptions, $context->cart, $context->customer, $context->currency, (int) $context->shop->id);
-        $restrictions = $tradeCreditService->getPaymentOptionsRestrictions($paymentOptions);
-        if (!empty($restrictions)) {
-            Media::addJsDef(['tradeCreditPaymentOptions' => $restrictions]);
-        }
-
-        return $paymentOptions;
+        return $tradeCreditService->decoratePaymentOptions($paymentOptions, $context->cart, $context->customer, $context->currency, (int) $context->shop->id);
     }
 
     public function present($free = false) // getPaymentOptionsForTemplate()

@@ -40,8 +40,6 @@ class Payment {
 
     $body.on('change', `${this.conditionsSelector} input[type="checkbox"]`, $.proxy(this.toggleOrderButton, this));
     $body.on('change', 'input[name="payment-option"]', $.proxy(this.toggleOrderButton, this));
-    // Trade credit payment options without enough credit can't be selected
-    this.applyTradeCreditRestrictions();
     // call toggle once on init to handle situation where everything
     // is already ok (like 0 price order, payment already preselected and so on)
     this.toggleOrderButton();
@@ -55,38 +53,36 @@ class Payment {
 
   /**
    * Disables the trade credit payment options the customer can't use (not enough credit, guest)
-   * and shows why. Restrictions are provided by PaymentOptionsFinder as "tradeCreditPaymentOptions".
+   * and shows why. PaymentOptionsFinder adds a hidden ".js-trade-credit-restriction" marker
+   * to the additional information of each trade credit option.
    */
   applyTradeCreditRestrictions() {
-    const restrictions = window.tradeCreditPaymentOptions || {};
+    document.querySelectorAll('.js-trade-credit-restriction[data-sufficient="0"]').forEach((marker) => {
+      const additionalInformation = marker.closest('[id$="-additional-information"]');
 
-    Object.keys(restrictions).forEach((moduleName) => {
-      const restriction = restrictions[moduleName];
-
-      if (restriction.sufficient) {
+      if (additionalInformation === null) {
         return;
       }
 
-      document.querySelectorAll('input[name="payment-option"]').forEach((input) => {
-        if (input.dataset.moduleName !== moduleName) {
-          return;
-        }
+      const optionId = additionalInformation.id.replace(/-additional-information$/, '');
+      const input = document.getElementById(optionId);
+      const container = document.getElementById(`${optionId}-container`);
 
-        input.checked = false;
-        input.disabled = true;
+      if (input === null) {
+        return;
+      }
 
-        const container = document.getElementById(`${input.id}-container`);
+      $(input).prop('checked', false).prop('disabled', true);
 
-        if (container === null || container.querySelector('.js-trade-credit-message') !== null) {
-          return;
-        }
+      if (container === null || container.querySelector('.js-trade-credit-message') !== null) {
+        return;
+      }
 
-        container.classList.add('disabled');
-        const message = document.createElement('p');
-        message.className = 'alert alert-warning js-trade-credit-message';
-        message.textContent = restriction.message;
-        container.appendChild(message);
-      });
+      container.classList.add('disabled');
+      const message = document.createElement('p');
+      message.className = 'alert alert-warning js-trade-credit-message';
+      message.textContent = marker.dataset.message;
+      container.appendChild(message);
     });
   }
 
@@ -111,6 +107,8 @@ class Payment {
   }
 
   toggleOrderButton() {
+    // Also covers a payment step re-rendered through ajax after init
+    this.applyTradeCreditRestrictions();
     let show = true;
     $(`${this.conditionsSelector} input[type="checkbox"]`).each((_, checkbox) => {
       if (!checkbox.checked) {

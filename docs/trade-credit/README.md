@@ -24,7 +24,6 @@ Logika: `src/Core/Domain/TradeCredit` (reguły) i `src/Adapter/TradeCredit` (`Tr
 ## Ograniczenia
 
 - Cofnięcie anulowania nie obciąża kredytu ponownie (admin koryguje saldo ręcznie).
-- Blokada w JS liczy się przy renderze kroku płatności. Przy zmianie koszyka bez przeładowania limit i tak sprawdza serwer.
 - Motywy `classic` / `hummingbird` to osobne paczki, więc zmiany są tylko w core.
 
 ## Aktualizacja bazy

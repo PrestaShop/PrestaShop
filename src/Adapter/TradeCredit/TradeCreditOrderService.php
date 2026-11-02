@@ -119,43 +119,28 @@ class TradeCreditOrderService
                     'Shop.Theme.Checkout'
                 );
 
+            $message = $this->getUnavailabilityMessage($availability);
+            // Read by the core checkout script. It travels with the option markup (checkout steps are rendered
+            // after the page javascript variables are collected, and are also refreshed through ajax)
+            $restrictionMarker = sprintf(
+                '<span class="js-trade-credit-restriction" hidden data-sufficient="%d" data-message="%s"></span>',
+                $availability->isSufficient() ? 1 : 0,
+                htmlspecialchars((string) $message, ENT_QUOTES)
+            );
+
             foreach ($moduleOptions as $key => $option) {
                 $paymentOptions[$moduleName][$key]['call_to_action_text'] = $option['call_to_action_text'] . $label;
+                $paymentOptions[$moduleName][$key]['additionalInformation'] = ($option['additionalInformation'] ?? '') . $restrictionMarker;
                 $paymentOptions[$moduleName][$key]['trade_credit'] = [
                     'available' => $this->formatPrice($availability->getAvailable()),
                     'required' => $this->formatPrice($availability->getRequired()),
                     'sufficient' => $availability->isSufficient(),
-                    'message' => $this->getUnavailabilityMessage($availability),
+                    'message' => $message,
                 ];
             }
         }
 
         return $paymentOptions;
-    }
-
-    /**
-     * Restrictions exposed to the checkout javascript, by module name.
-     *
-     * @param array<string, array<int, array<string, mixed>>> $decoratedPaymentOptions
-     *
-     * @return array<string, array{sufficient: bool, message: string|null}>
-     */
-    public function getPaymentOptionsRestrictions(array $decoratedPaymentOptions): array
-    {
-        $restrictions = [];
-
-        foreach ($decoratedPaymentOptions as $moduleName => $moduleOptions) {
-            foreach ($moduleOptions as $option) {
-                if (isset($option['trade_credit'])) {
-                    $restrictions[$moduleName] = [
-                        'sufficient' => $option['trade_credit']['sufficient'],
-                        'message' => $option['trade_credit']['message'],
-                    ];
-                }
-            }
-        }
-
-        return $restrictions;
     }
 
     /**

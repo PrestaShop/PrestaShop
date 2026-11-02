@@ -35,6 +35,19 @@ class TradeCreditPaymentOptionsTest extends AbstractTradeCreditOrderTestCase
         $this->assertStringContainsString('50,000.00', $option['call_to_action_text']);
         $this->assertTrue($option['trade_credit']['sufficient']);
         $this->assertNull($option['trade_credit']['message']);
+        $this->assertStringContainsString('<span class="js-trade-credit-restriction" hidden data-sufficient="1" data-message=""></span>', $option['additionalInformation']);
+    }
+
+    public function testRestrictionMarkerKeepsModuleInformationAndEscapesMessage(): void
+    {
+        $this->repository->createBalance(self::CUSTOMER_ID, '10.00');
+
+        $options = $this->decorate($this->createCart(), new Customer(self::CUSTOMER_ID), '<p>Module info</p>');
+
+        $additionalInformation = $options[self::PAYMENT_MODULE][0]['additionalInformation'];
+        $this->assertStringStartsWith('<p>Module info</p><span class="js-trade-credit-restriction" hidden data-sufficient="0" data-message="', $additionalInformation);
+        $this->assertStringContainsString('exceeds your available trade credit', $additionalInformation);
+        $this->assertStringNotContainsString('"<', substr($additionalInformation, strlen('<p>Module info</p>') + 1));
     }
 
     public function testInsufficientCreditMarksOptionDisabled(): void
@@ -47,10 +60,7 @@ class TradeCreditPaymentOptionsTest extends AbstractTradeCreditOrderTestCase
         $this->assertFalse($tradeCredit['sufficient']);
         $this->assertStringContainsString('exceeds your available trade credit', $tradeCredit['message']);
         $this->assertStringContainsString('10.00', $tradeCredit['message']);
-        $this->assertSame(
-            [self::PAYMENT_MODULE => ['sufficient' => false, 'message' => $tradeCredit['message']]],
-            $this->service->getPaymentOptionsRestrictions($options)
-        );
+        $this->assertStringContainsString('data-sufficient="0"', $options[self::PAYMENT_MODULE][0]['additionalInformation']);
     }
 
     public function testGuestGetsGuestMessage(): void
@@ -83,16 +93,16 @@ class TradeCreditPaymentOptionsTest extends AbstractTradeCreditOrderTestCase
         $options = $this->decorate($this->createCart(), new Customer(self::CUSTOMER_ID));
 
         $this->assertSame($this->otherOption(), $options['ps_checkpayment'][0]);
-        $this->assertArrayNotHasKey('ps_checkpayment', $this->service->getPaymentOptionsRestrictions($options));
     }
 
-    private function decorate($cart, Customer $customer): array
+    private function decorate($cart, Customer $customer, string $additionalInformation = ''): array
     {
         return $this->service->decoratePaymentOptions(
             [
                 self::PAYMENT_MODULE => [[
                     'module_name' => self::PAYMENT_MODULE,
                     'call_to_action_text' => 'Pay by bank wire',
+                    'additionalInformation' => $additionalInformation,
                     'id' => 'payment-option-1',
                 ]],
                 'ps_checkpayment' => [$this->otherOption()],
