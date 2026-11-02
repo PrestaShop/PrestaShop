@@ -18,14 +18,39 @@ class ModuleRepositoryTest extends TestCase
      */
     private $moduleRepository;
 
+    /**
+     * @var string
+     */
+    private $rootDir;
+
     public function setUp(): void
     {
         parent::setUp();
 
+        // Built at runtime: a committed composer.lock would be scanned by Dependabot
+        $this->rootDir = sys_get_temp_dir() . '/' . uniqid('ps_module_repository_', true);
+        mkdir($this->rootDir);
+        file_put_contents($this->rootDir . '/composer.lock', json_encode([
+            'packages' => [
+                ['name' => 'prestashop/blockwishlist', 'type' => 'prestashop-module'],
+                ['name' => 'prestashop/ps_banner', 'type' => 'prestashop-module'],
+                ['name' => 'prestashop/ps_wirepayment', 'type' => 'prestashop-module'],
+                ['name' => 'symfony/symfony', 'type' => 'library'],
+            ],
+        ]));
+
         $this->moduleRepository = new ModuleRepository(
-            _PS_ROOT_DIR_ . '/tests/Unit/Resources/composerLock/',
+            $this->rootDir,
             _PS_ROOT_DIR_ . '/tests/Resources/modules/'
         );
+    }
+
+    public function tearDown(): void
+    {
+        unlink($this->rootDir . '/composer.lock');
+        rmdir($this->rootDir);
+
+        parent::tearDown();
     }
 
     public function testNativeModulesMandatoryModules(): void
@@ -69,6 +94,7 @@ class ModuleRepositoryTest extends TestCase
         yield ['ps_wirepayment', true];
         // Non native modules
         yield ['ps_checkout', false];
+        yield ['symfony', false];
         yield ['azerty', false];
         yield ['', false];
     }
