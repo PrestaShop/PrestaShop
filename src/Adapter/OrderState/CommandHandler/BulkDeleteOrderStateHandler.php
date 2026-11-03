@@ -33,7 +33,8 @@ class BulkDeleteOrderStateHandler extends AbstractOrderStateHandler implements B
             try {
                 $orderState = $this->getOrderState($orderStateId);
 
-                if (!$this->deleteOrderState($orderState)) {
+                // Same guard as DeleteOrderStateHandler: the native (unremovable) states are kept
+                if (!$orderState->isRemovable() || !$this->deleteOrderState($orderState)) {
                     $errors[] = $orderState->id;
                 }
             } catch (OrderStateException) {

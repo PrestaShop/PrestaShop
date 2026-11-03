@@ -7,6 +7,8 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use Context;
+use Employee;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\AddEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkDeleteEmployeeCommand;
@@ -38,6 +40,8 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
     private const MIN_PASSWORD_LENGTH = 1;
     private const MAX_PASSWORD_LENGTH = 72;
     private const MIN_PASSWORD_SCORE = 1;
+
+    private ?Employee $contextEmployee = null;
 
     /**
      * @Given I Add new employee :employeeReference to shop :shopReference with the following details:
@@ -207,6 +211,35 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['password'])) {
             $this->checkPassword($data['password'], $employeeReference);
         }
+    }
+
+    /**
+     * @Given there is no employee in the legacy context
+     */
+    public function removeContextEmployee(): void
+    {
+        // Like the Admin API and the CLI, restored after the scenario
+        $this->contextEmployee = Context::getContext()->employee;
+        Context::getContext()->employee = null;
+    }
+
+    /**
+     * @AfterScenario
+     */
+    public function restoreContextEmployee(): void
+    {
+        if (null !== $this->contextEmployee) {
+            Context::getContext()->employee = $this->contextEmployee;
+            $this->contextEmployee = null;
+        }
+    }
+
+    /**
+     * @Then I should get an error that the employee does not exist
+     */
+    public function assertLastErrorIsEmployeeNotFound(): void
+    {
+        $this->assertLastErrorIs(EmployeeNotFoundException::class);
     }
 
     /**
