@@ -353,5 +353,13 @@
       <alias>actionSuppliersGridQueryBuilderModifier</alias>
       <name>actionSupplierGridQueryBuilderModifier</name>
     </hook_alias>
+    <hook_alias id="actionRequestSqlGridQueryBuilderModifier">
+      <alias>actionRequestSqlGridQueryBuilderModifier</alias>
+      <name>actionSqlRequestGridQueryBuilderModifier</name>
+    </hook_alias>
+    <hook_alias id="actionSearchEnginesGridQueryBuilderModifier">
+      <alias>actionSearchEnginesGridQueryBuilderModifier</alias>
+      <name>actionSearchEngineGridQueryBuilderModifier</name>
+    </hook_alias>
   </entities>
 </entity_hook_alias>
