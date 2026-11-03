@@ -7013,16 +7013,16 @@
         },
         {
             "name": "prestashop/psgdpr",
-            "version": "v1.4.3",
+            "version": "v1.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/psgdpr.git",
-                "reference": "2b94cd472d00c837275f0aa8677947de2691c6d7"
+                "reference": "4d25dc92b4c65c89d94331951db8118955ad580c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/psgdpr/zipball/2b94cd472d00c837275f0aa8677947de2691c6d7",
-                "reference": "2b94cd472d00c837275f0aa8677947de2691c6d7",
+                "url": "https://api.github.com/repos/PrestaShop/psgdpr/zipball/4d25dc92b4c65c89d94331951db8118955ad580c",
+                "reference": "4d25dc92b4c65c89d94331951db8118955ad580c",
                 "shasum": ""
             },
             "require-dev": {
@@ -7049,9 +7049,10 @@
             "description": "PrestaShop module psgdpr",
             "homepage": "https://github.com/PrestaShopCorp/psgdpr",
             "support": {
-                "source": "https://github.com/PrestaShop/psgdpr/tree/v1.4.3"
+                "issues": "https://github.com/PrestaShop/psgdpr/issues",
+                "source": "https://github.com/PrestaShop/psgdpr/tree/v1.4.4"
             },
-            "time": "2022-12-15T10:02:36+00:00"
+            "time": "2026-11-03T12:42:54+00:00"
         },
         {
             "name": "prestashop/statsbestcategories",
