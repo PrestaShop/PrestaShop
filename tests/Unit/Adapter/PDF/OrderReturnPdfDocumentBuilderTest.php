@@ -12,6 +12,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\PDF\Document\OrderReturnPdfDocumentBuilder;
 use PrestaShop\PrestaShop\Adapter\PDF\PdfDocumentCommonDataBuilder;
 use PrestaShop\PrestaShop\Adapter\PDF\PdfTemplateResolver;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
@@ -27,7 +28,7 @@ class OrderReturnPdfDocumentBuilderTest extends TestCase
         // cannot be doubled: supports()/getBulkFilename() never use them, so real (but
         // otherwise inert) instances are enough here.
         $this->builder = new OrderReturnPdfDocumentBuilder(
-            new PdfTemplateResolver($this->createMock(Environment::class), '/tmp'),
+            new PdfTemplateResolver($this->createMock(Environment::class), '/tmp', $this->createMock(HookDispatcherInterface::class)),
             new PdfDocumentCommonDataBuilder(),
             $this->createMock(TranslatorInterface::class)
         );
@@ -41,7 +42,7 @@ class OrderReturnPdfDocumentBuilderTest extends TestCase
         $this->assertSame($expected, $this->builder->supports($type));
     }
 
-    public function supportsDataProvider(): iterable
+    public static function supportsDataProvider(): iterable
     {
         yield 'the order return template type is supported' => ['OrderReturn', true];
         yield 'the invoice template type is not supported' => ['Invoice', false];

@@ -7,3 +7,4 @@ services:
     arguments:
       - '@twig'
       - '%kernel.project_dir%'
+      - '@prestashop.core.hook.dispatcher'

@@ -12,6 +12,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\PDF\Document\DeliverySlipPdfDocumentBuilder;
 use PrestaShop\PrestaShop\Adapter\PDF\PdfDocumentCommonDataBuilder;
 use PrestaShop\PrestaShop\Adapter\PDF\PdfTemplateResolver;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
@@ -27,7 +28,7 @@ class DeliverySlipPdfDocumentBuilderTest extends TestCase
         // PdfTemplateResolver and PdfDocumentCommonDataBuilder are final and cannot be doubled;
         // supports()/getBulkFilename() never call into them, so plain real instances are enough here.
         $this->builder = new DeliverySlipPdfDocumentBuilder(
-            new PdfTemplateResolver(new Environment(new ArrayLoader()), '/tmp'),
+            new PdfTemplateResolver(new Environment(new ArrayLoader()), '/tmp', $this->createMock(HookDispatcherInterface::class)),
             new PdfDocumentCommonDataBuilder(),
             $this->createMock(TranslatorInterface::class)
         );

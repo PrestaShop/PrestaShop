@@ -12,6 +12,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\PDF\Document\OrderSlipPdfDocumentBuilder;
 use PrestaShop\PrestaShop\Adapter\PDF\PdfDocumentCommonDataBuilder;
 use PrestaShop\PrestaShop\Adapter\PDF\PdfTemplateResolver;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
@@ -25,7 +26,8 @@ class OrderSlipPdfDocumentBuilderTest extends TestCase
 
         $templateResolver = new PdfTemplateResolver(
             $this->createMock(Environment::class),
-            '/tmp'
+            '/tmp',
+            $this->createMock(HookDispatcherInterface::class)
         );
 
         $this->builder = new OrderSlipPdfDocumentBuilder(
