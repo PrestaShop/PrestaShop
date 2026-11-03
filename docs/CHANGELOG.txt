@@ -37,6 +37,7 @@ Changelog for PrestaShop 8
 - Core:
   - Bug fix:
     - Update ps_emailsubscription (by @jolelievre)
+    - #43444: Update psgdpr to 1.4.4 (by @nicosomb)
     - GHSA-g6p7-cx52-hcrj Generate the password reset tokens with a CSPRNG (by @M0rgan01)
     - GHSA-7q68-ch46-pxmc Keep extracted archives and installed themes inside their destination folder (by @nicosomb)
     - GHSA-wrmc-gmx5-9hhc Keep attachment files inside the download directory (by @nicosomb)
