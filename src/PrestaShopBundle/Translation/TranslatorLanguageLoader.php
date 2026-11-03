@@ -66,12 +66,10 @@ class TranslatorLanguageLoader
         if (method_exists($translator, 'addLoader')) {
             $translator->addLoader('xlf', $this->xliffFileLoader);
             if ($withDB) {
-                $translator->addLoader('db', new SqlTranslationLoader());
-                if (null !== $theme) {
-                    $sqlThemeTranslationLoader = new SqlTranslationLoader();
-                    $sqlThemeTranslationLoader->setTheme($theme);
-                    $translator->addLoader('db.theme', $sqlThemeTranslationLoader);
-                }
+                $sqlTranslationLoader = new SqlTranslationLoader();
+                $translator->addLoader('db', $sqlTranslationLoader);
+                // No core resource uses this format anymore, kept for the ones modules may register
+                $translator->addLoader('db.theme', $sqlTranslationLoader);
             }
         }
 
@@ -88,16 +86,6 @@ class TranslatorLanguageLoader
                 [$domain, $locale, $format] = explode('.', $file->getBasename(), 3);
                 if (method_exists($translator, 'addResource')) {
                     $translator->addResource($format, $file, $locale, $domain);
-                    if ($withDB) {
-                        if ($type !== 'theme') {
-                            // Load core user-translated wordings
-                            $translator->addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
-                        }
-                        if (!$this->isAdminContext && $theme !== null) {
-                            // Load theme user-translated wordings for core + theme wordings
-                            $translator->addResource('db.theme', $domain . '.' . $locale . '.db', $locale, $domain);
-                        }
-                    }
                 } elseif ($translator instanceof TranslatorBagInterface) {
                     $catalogue = $translator->getCatalogue($locale);
                     $catalogue->addCatalogue($this->xliffFileLoader->load($file->getRealPath(), $locale, $domain));
@@ -123,9 +111,8 @@ class TranslatorLanguageLoader
 
     /**
      * Adds the extra property registry wordings to the catalogue, normalizing their dot-separated
-     * domains to the catalogue convention (e.g. "Modules.Foo.Admin" -> "ModulesFooAdmin") and
-     * registering a database resource per domain so admin-provided translations of those wordings
-     * are loaded too.
+     * domains to the catalogue convention (e.g. "Modules.Foo.Admin" -> "ModulesFooAdmin"). Their
+     * admin-provided translations come with the database translations the translator merges itself.
      */
     private function loadExtraPropertyTranslations(TranslatorInterface $translator, string $locale): void
     {
@@ -148,12 +135,6 @@ class TranslatorLanguageLoader
                 $messagesByDomain[$normalizedDomain] ?? [],
                 $extraPropertyCatalogue->all($domain)
             );
-        }
-
-        if (method_exists($translator, 'addResource')) {
-            foreach (array_keys($messagesByDomain) as $domain) {
-                $translator->addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
-            }
         }
 
         if ($translator instanceof TranslatorBagInterface) {
@@ -207,9 +188,6 @@ class TranslatorLanguageLoader
             [$domain, $locale, $format] = explode('.', $file->getBasename(), 3);
             if (method_exists($translator, 'addResource')) {
                 $translator->addResource($format, $file, $locale, $domain);
-                if ($withDB) {
-                    $translator->addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
-                }
             } elseif ($translator instanceof TranslatorBagInterface) {
                 $catalogue = $translator->getCatalogue($locale);
                 $catalogue->addCatalogue($this->xliffFileLoader->load($file->getRealPath(), $locale, $domain));
