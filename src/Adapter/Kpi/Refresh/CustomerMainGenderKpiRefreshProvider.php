@@ -10,6 +10,7 @@ namespace PrestaShop\PrestaShop\Adapter\Kpi\Refresh;
 
 use PrestaShop\PrestaShop\Adapter\Stats\Repository\StatsRepository;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Kpi\Refresh\KpiRefreshProviderInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Refresh\KpiRefreshValue;
 use PrestaShop\PrestaShop\Core\Shop\ShopContextInterface;
@@ -24,7 +25,8 @@ final class CustomerMainGenderKpiRefreshProvider implements KpiRefreshProviderIn
         protected readonly StatsRepository $statsRepository,
         protected readonly ShopContextInterface $shopContext,
         protected readonly ConfigurationInterface $configuration,
-        protected readonly TranslatorInterface $translator
+        protected readonly TranslatorInterface $translator,
+        protected readonly LanguageContext $languageContext
     ) {
     }
 
@@ -63,8 +65,10 @@ final class CustomerMainGenderKpiRefreshProvider implements KpiRefreshProviderIn
             }
         }
 
-        $this->configuration->set('CUSTOMER_MAIN_GENDER', $value);
-        $this->configuration->set('CUSTOMER_MAIN_GENDER_EXPIRE', strtotime('+1 day'));
+        // Stored per language, like the legacy page does
+        $langId = $this->languageContext->getId();
+        $this->configuration->set('CUSTOMER_MAIN_GENDER', [$langId => $value]);
+        $this->configuration->set('CUSTOMER_MAIN_GENDER_EXPIRE', [$langId => strtotime('+1 day')]);
 
         return new KpiRefreshValue((string) $value);
     }

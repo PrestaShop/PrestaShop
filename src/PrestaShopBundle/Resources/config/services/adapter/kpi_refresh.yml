@@ -90,6 +90,7 @@ services:
     autowire: true
     arguments:
       $configuration: '@prestashop.adapter.legacy.kpi_configuration'
+      $shopConfiguration: '@prestashop.adapter.legacy.configuration'
     tags:
       - { name: 'prestashop.kpi_refresh_provider', key: 'empty_categories' }
 
@@ -174,6 +175,7 @@ services:
     autowire: true
     arguments:
       $configuration: '@prestashop.adapter.legacy.kpi_configuration'
+      $shopConfiguration: '@prestashop.adapter.legacy.configuration'
     tags:
       - { name: 'prestashop.kpi_refresh_provider', key: 'netprofit_visit' }
 

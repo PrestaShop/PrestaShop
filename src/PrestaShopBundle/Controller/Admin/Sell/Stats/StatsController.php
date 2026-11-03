@@ -13,6 +13,7 @@ use PrestaShop\PrestaShop\Adapter\Stats\StatsModuleGraphRenderer;
 use PrestaShop\PrestaShop\Adapter\Stats\StatsModuleGridRenderer;
 use PrestaShop\PrestaShop\Adapter\Stats\StatsModuleMenuProvider;
 use PrestaShop\PrestaShop\Core\Employee\StatsDateRangeSetterInterface;
+use PrestaShop\PrestaShop\Core\Kpi\Refresh\Exception\KpiValueUnavailableException;
 use PrestaShop\PrestaShop\Core\Kpi\Refresh\Exception\UnknownKpiException;
 use PrestaShop\PrestaShop\Core\Stats\Exception\StatsModuleNotFoundException;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
@@ -57,7 +58,7 @@ class StatsController extends PrestaShopAdminController
         try {
             $provider = $kpiRefreshProviderLocator->getProvider($kpiKey);
             $kpiValue = $provider->getValue($request->query->all());
-        } catch (UnknownKpiException) {
+        } catch (UnknownKpiException|KpiValueUnavailableException) {
             return new JsonResponse(['has_errors' => true]);
         }
 

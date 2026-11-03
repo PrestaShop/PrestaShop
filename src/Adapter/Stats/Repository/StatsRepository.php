@@ -82,7 +82,7 @@ class StatsRepository
                 'ms',
                 'ms.id_module = m.id_module AND ms.id_shop IN (:shopIds)'
             )
-            ->where('ms.id_module IS NULL')
+            ->where('ms.id_module IS NULL OR m.active = 0')
             ->setParameter('shopIds', $shopIds, Connection::PARAM_INT_ARRAY)
         ;
 
@@ -97,13 +97,20 @@ class StatsRepository
         $qb = $this->connection->createQueryBuilder();
         $qb->select('SUM(IF(IFNULL(stock.quantity, 0) > 0, 1, 0)) AS with_stock, COUNT(*) AS total')
             ->from($this->dbPrefix . 'product', 'p')
-            ->innerJoin('p', $this->dbPrefix . 'product_shop', 'ps', 'ps.id_product = p.id_product AND ps.id_shop IN (:shopIds)')
+            ->innerJoin('p', $this->dbPrefix . 'product_shop', 'ps', 'ps.id_product = p.id_product AND ' . $this->getShopAssociationCondition('ps', 'p', $shopIds))
             ->leftJoin('p', $this->dbPrefix . 'product_attribute', 'pa', 'pa.id_product = p.id_product')
+            ->innerJoin('ps', $this->dbPrefix . 'shop', 's', 's.id_shop = ps.id_shop')
+            ->innerJoin('s', $this->dbPrefix . 'shop_group', 'sg', 'sg.id_shop_group = s.id_shop_group')
             ->leftJoin(
                 'p',
                 $this->dbPrefix . 'stock_available',
                 'stock',
-                'stock.id_product = p.id_product AND (stock.id_product_attribute = 0 OR stock.id_product_attribute = pa.id_product_attribute) AND stock.id_shop IN (:shopIds)'
+                'stock.id_product = p.id_product'
+                . ' AND stock.id_product_attribute = IFNULL(pa.id_product_attribute, 0)'
+                // Shared stock is stored at group level, with id_shop = 0
+                . ' AND IF(sg.share_stock = 1,'
+                . ' stock.id_shop = 0 AND stock.id_shop_group = sg.id_shop_group,'
+                . ' stock.id_shop = ps.id_shop AND stock.id_shop_group = 0)'
             )
             ->where('ps.active = 1')
             ->setParameter('shopIds', $shopIds, Connection::PARAM_INT_ARRAY)
@@ -124,7 +131,7 @@ class StatsRepository
             . ' / (IFNULL(pas.price, 0) + ps.price))) AS margin'
         )
             ->from($this->dbPrefix . 'product', 'p')
-            ->innerJoin('p', $this->dbPrefix . 'product_shop', 'ps', 'ps.id_product = p.id_product AND ps.id_shop IN (:shopIds)')
+            ->innerJoin('p', $this->dbPrefix . 'product_shop', 'ps', 'ps.id_product = p.id_product AND ' . $this->getShopAssociationCondition('ps', 'p', $shopIds))
             ->leftJoin('p', $this->dbPrefix . 'product_attribute', 'pa', 'pa.id_product = p.id_product')
             ->leftJoin(
                 'pa',
@@ -139,9 +146,9 @@ class StatsRepository
         return (float) $qb->executeQuery()->fetchOne();
     }
 
-    public function countDisabledCategories(int $rootCategoryId, array $shopIds): int
+    public function countDisabledCategories(array $shopIds): int
     {
-        return $this->countCategories($shopIds, $rootCategoryId, true);
+        return $this->countCategories($shopIds, null, true);
     }
 
     public function countTotalCategories(array $shopIds): int
@@ -154,7 +161,7 @@ class StatsRepository
         $qb = $this->connection->createQueryBuilder();
         $qb->select('COUNT(DISTINCT c.id_category)')
             ->from($this->dbPrefix . 'category', 'c')
-            ->innerJoin('c', $this->dbPrefix . 'category_shop', 'cs', 'cs.id_category = c.id_category AND cs.id_shop IN (:shopIds)')
+            ->innerJoin('c', $this->dbPrefix . 'category_shop', 'cs', 'cs.id_category = c.id_category AND ' . $this->getShopAssociationCondition('cs', 'c', $shopIds))
             ->setParameter('shopIds', $shopIds, Connection::PARAM_INT_ARRAY)
         ;
         if ($disabledOnly) {
@@ -176,7 +183,7 @@ class StatsRepository
         $qb = $this->connection->createQueryBuilder();
         $qb->select('COUNT(DISTINCT cp.id_category)')
             ->from($this->dbPrefix . 'category', 'c')
-            ->innerJoin('c', $this->dbPrefix . 'category_shop', 'cs', 'cs.id_category = c.id_category AND cs.id_shop IN (:shopIds)')
+            ->innerJoin('c', $this->dbPrefix . 'category_shop', 'cs', 'cs.id_category = c.id_category AND ' . $this->getShopAssociationCondition('cs', 'c', $shopIds))
             ->leftJoin('c', $this->dbPrefix . 'category_product', 'cp', 'cp.id_category = c.id_category')
             ->where('c.id_category != :excludeCategoryId')
             ->setParameter('excludeCategoryId', $rootCategoryId)
@@ -195,7 +202,7 @@ class StatsRepository
         $qb = $this->connection->createQueryBuilder();
         $qb->select('SUM(IF(ps.active = 0, 1, 0)) AS disabled, COUNT(*) AS total')
             ->from($this->dbPrefix . 'product', 'p')
-            ->innerJoin('p', $this->dbPrefix . 'product_shop', 'ps', 'ps.id_product = p.id_product AND ps.id_shop IN (:shopIds)')
+            ->innerJoin('p', $this->dbPrefix . 'product_shop', 'ps', 'ps.id_product = p.id_product AND ' . $this->getShopAssociationCondition('ps', 'p', $shopIds))
             ->setParameter('shopIds', $shopIds, Connection::PARAM_INT_ARRAY)
         ;
         $row = $qb->executeQuery()->fetchAssociative();
@@ -422,9 +429,9 @@ class StatsRepository
         $qb = $this->connection->createQueryBuilder();
         $qb->select(
             'SUM(IF(g.id_gender IS NOT NULL, 1, 0)) AS total',
-            'SUM(IF(c.id_gender = :male, 1, 0)) AS male',
-            'SUM(IF(c.id_gender = :female, 1, 0)) AS female',
-            'SUM(IF(c.id_gender = :neutral, 1, 0)) AS neutral'
+            'SUM(IF(g.type = :male, 1, 0)) AS male',
+            'SUM(IF(g.type = :female, 1, 0)) AS female',
+            'SUM(IF(g.type = :neutral, 1, 0)) AS neutral'
         )
             ->from($this->dbPrefix . 'customer', 'c')
             ->leftJoin('c', $this->dbPrefix . 'gender', 'g', 'c.id_gender = g.id_gender')
@@ -558,5 +565,20 @@ class StatsRepository
             'orders' => (int) ($row['orders'] ?? 0),
             'total_paid_tax_excl' => (float) ($row['total_paid_tax_excl'] ?? 0),
         ];
+    }
+
+    /**
+     * Same rule as Shop::addSqlAssociation(): the context shop row, or the default shop
+     * row when several shops are in context, so each entity is counted once.
+     *
+     * @param int[] $shopIds
+     */
+    private function getShopAssociationCondition(string $associationAlias, string $entityAlias, array $shopIds): string
+    {
+        if (count($shopIds) === 1) {
+            return $associationAlias . '.id_shop IN (:shopIds)';
+        }
+
+        return $associationAlias . '.id_shop = ' . $entityAlias . '.id_shop_default';
     }
 }

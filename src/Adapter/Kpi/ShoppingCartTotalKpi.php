@@ -54,7 +54,12 @@ final class ShoppingCartTotalKpi implements KpiInterface
             $cart->getCartTotalPrice(),
             Currency::getIsoCodeById((int) $cart->id_currency)
         );
-        $helper->source = Context::getContext()->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=shopping_cart_total&cartId=' . $cart->id;
+        $helper->source = Context::getContext()->link->getAdminLink('AdminStats', true, [], [
+            'ajax' => 1,
+            'action' => 'getKpi',
+            'kpi' => 'shopping_cart_total',
+            'cartId' => $cart->id,
+        ]);
 
         return $helper->generate();
     }
