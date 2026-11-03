@@ -48,6 +48,8 @@ services:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Sell/Product/*"
   PrestaShopBundle\Form\Admin\Sell\BusinessEntity\:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Sell/BusinessEntity/*"
+  PrestaShopBundle\Form\Admin\Sell\CustomerB2b\:
+    resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Sell/CustomerB2b/*"
   PrestaShopBundle\Form\Admin\Type\:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Type/*"
   PrestaShopBundle\Form\Admin\AdvancedParameters\:
