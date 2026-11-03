@@ -42,18 +42,19 @@ class TopCategoryKpiRefreshProvider implements KpiRefreshProviderInterface
         $dateFrom = date('Y-m-d', strtotime('-1 month'));
         $dateTo = date('Y-m-d');
 
+        $langId = $this->languageContext->getId();
         $row = $this->statsRepository->getBestSellingCategory($dateFrom, $dateTo, $shopIds);
 
         if (null === $row) {
             $value = $this->translator->trans('No category', [], 'Admin.Stats.Feature');
         } else {
-            $langId = $this->languageContext->getId();
             $localizedNames = $this->categoryRepository->getLocalizedNames([new CategoryId($row['id_category'])]);
             $value = $localizedNames[$row['id_category']][$langId] ?? '';
         }
 
-        $this->configuration->set('TOP_CATEGORY', $value);
-        $this->configuration->set('TOP_CATEGORY_EXPIRE', strtotime('+1 day'));
+        // Stored per language: TopCategoryKpi reads the employee language entry
+        $this->configuration->set('TOP_CATEGORY', [$langId => $value]);
+        $this->configuration->set('TOP_CATEGORY_EXPIRE', [$langId => strtotime('+1 day')]);
 
         return new KpiRefreshValue((string) $value);
     }

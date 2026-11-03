@@ -39,25 +39,20 @@ class Sales8020KpiRefreshProvider implements KpiRefreshProviderInterface
 
         $distinctProducts = $this->statsRepository->countDistinctProductsSold($dateFrom, $dateTo, $shopIds);
 
-        $tooltip = null;
-        if ($distinctProducts === 0) {
-            $value = '0%';
-        } else {
-            $totalProducts = $this->statsRepository->getProductActivationCounters($shopIds)['total'];
-            $percent = round(100 * $distinctProducts / $totalProducts) . '%';
+        $totalProducts = $distinctProducts > 0 ? $this->statsRepository->getProductActivationCounters($shopIds)['total'] : 0;
+        $percent = round($totalProducts > 0 ? 100 * $distinctProducts / $totalProducts : 0) . '%';
 
-            $tooltip = $this->translator->trans(
-                'Within your catalog, %value% of your products have had sales in the last 30 days',
-                ['%value%' => $percent],
-                'Admin.Stats.Help'
-            );
+        $tooltip = $this->translator->trans(
+            'Within your catalog, %value% of your products have had sales in the last 30 days',
+            ['%value%' => $percent],
+            'Admin.Stats.Help'
+        );
 
-            $value = $this->translator->trans(
-                '%value%% of your Catalog',
-                ['%value%' => $percent],
-                'Admin.Stats.Feature'
-            );
-        }
+        $value = $this->translator->trans(
+            '%value%% of your Catalog',
+            ['%value%' => $percent],
+            'Admin.Stats.Feature'
+        );
 
         $this->configuration->set('8020_SALES_CATALOG', $value);
         $this->configuration->set('8020_SALES_CATALOG_EXPIRE', strtotime('+12 hour'));

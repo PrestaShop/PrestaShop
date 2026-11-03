@@ -44,12 +44,12 @@ class MainCountryKpiRefreshProvider implements KpiRefreshProviderInterface
         $dateFrom = date('Y-m-d', strtotime('-30 day'));
         $dateTo = date('Y-m-d');
 
-        $row = $this->statsRepository->getMainCountry($dateFrom, $dateTo, $shopIds);
+        $totalOrders = $this->statsRepository->countOrders($dateFrom, $dateTo, $shopIds);
+        $row = $totalOrders > 0 ? $this->statsRepository->getMainCountry($dateFrom, $dateTo, $shopIds) : null;
 
         if (null === $row) {
             $value = $this->translator->trans('No orders', [], 'Admin.Stats.Feature');
         } else {
-            $totalOrders = $this->statsRepository->countOrders($dateFrom, $dateTo, $shopIds);
             $percent = round(100 * $row['orders'] / $totalOrders, 1);
             $country = new Country($row['id_country'], $this->languageContext->getId());
 
@@ -60,8 +60,10 @@ class MainCountryKpiRefreshProvider implements KpiRefreshProviderInterface
             );
         }
 
-        $this->configuration->set('MAIN_COUNTRY', $value);
-        $this->configuration->set('MAIN_COUNTRY_EXPIRE', strtotime('+1 day'));
+        // Stored per language, like the legacy page does
+        $langId = $this->languageContext->getId();
+        $this->configuration->set('MAIN_COUNTRY', [$langId => $value]);
+        $this->configuration->set('MAIN_COUNTRY_EXPIRE', [$langId => strtotime('+1 day')]);
 
         return new KpiRefreshValue((string) $value);
     }

@@ -32,9 +32,8 @@ class DisabledCategoriesKpiRefreshProvider implements KpiRefreshProviderInterfac
     public function getValue(array $requestParameters = []): KpiRefreshValue
     {
         $shopIds = $this->shopContext->getContextShopIds();
-        $rootCategoryId = (int) $this->configuration->get('PS_ROOT_CATEGORY');
 
-        $value = $this->statsRepository->countDisabledCategories($rootCategoryId, $shopIds);
+        $value = $this->statsRepository->countDisabledCategories($shopIds);
 
         $this->configuration->set('DISABLED_CATEGORIES', $value);
         $this->configuration->set('DISABLED_CATEGORIES_EXPIRE', strtotime('+2 hour'));

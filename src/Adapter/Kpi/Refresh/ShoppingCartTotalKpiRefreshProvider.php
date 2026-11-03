@@ -10,6 +10,7 @@ namespace PrestaShop\PrestaShop\Adapter\Kpi\Refresh;
 
 use Cart;
 use Currency;
+use PrestaShop\PrestaShop\Core\Kpi\Refresh\Exception\KpiValueUnavailableException;
 use PrestaShop\PrestaShop\Core\Kpi\Refresh\KpiRefreshProviderInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Refresh\KpiRefreshValue;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
@@ -34,13 +35,9 @@ class ShoppingCartTotalKpiRefreshProvider implements KpiRefreshProviderInterface
     public function getValue(array $requestParameters = []): KpiRefreshValue
     {
         $cartId = (int) ($requestParameters['cartId'] ?? 0);
-        if ($cartId <= 0) {
-            return new KpiRefreshValue('');
-        }
-
-        $cart = new Cart($cartId);
-        if (!Validate::isLoadedObject($cart)) {
-            return new KpiRefreshValue('');
+        $cart = $cartId > 0 ? new Cart($cartId) : null;
+        if (null === $cart || !Validate::isLoadedObject($cart)) {
+            throw new KpiValueUnavailableException(sprintf('Cart %d not found', $cartId));
         }
 
         $value = $this->locale->formatPrice(

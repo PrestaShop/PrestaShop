@@ -22,7 +22,8 @@ class EmptyCategoriesKpiRefreshProvider implements KpiRefreshProviderInterface
     public function __construct(
         protected readonly StatsRepository $statsRepository,
         protected readonly ShopContextInterface $shopContext,
-        protected readonly ConfigurationInterface $configuration
+        protected readonly ConfigurationInterface $configuration,
+        protected readonly ConfigurationInterface $shopConfiguration
     ) {
     }
 
@@ -32,7 +33,7 @@ class EmptyCategoriesKpiRefreshProvider implements KpiRefreshProviderInterface
     public function getValue(array $requestParameters = []): KpiRefreshValue
     {
         $shopIds = $this->shopContext->getContextShopIds();
-        $rootCategoryId = (int) $this->configuration->get('PS_ROOT_CATEGORY');
+        $rootCategoryId = (int) $this->shopConfiguration->get('PS_ROOT_CATEGORY');
 
         $value = $this->statsRepository->countEmptyCategories($rootCategoryId, $shopIds);
 
