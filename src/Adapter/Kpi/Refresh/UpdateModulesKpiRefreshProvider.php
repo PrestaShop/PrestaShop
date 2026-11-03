@@ -17,8 +17,8 @@ use PrestaShop\PrestaShop\Core\Kpi\Refresh\KpiRefreshValue;
 /**
  * Computes the refreshed value for the "Update Modules" KPI.
  *
- * This reads modules' manifest files on disk (not a DB aggregate), so it relies directly
- * on the legacy Module::getModulesOnDisk() static helper.
+ * This reads modules' manifest files on disk (not a DB aggregate), through the legacy
+ * Module::getModulesOnDisk() static helper.
  */
 class UpdateModulesKpiRefreshProvider implements KpiRefreshProviderInterface
 {
@@ -34,7 +34,7 @@ class UpdateModulesKpiRefreshProvider implements KpiRefreshProviderInterface
     public function getValue(array $requestParameters = []): KpiRefreshValue
     {
         $employeeId = (int) $this->legacyContext->getContext()->employee->id;
-        $modules = Module::getModulesOnDisk(true, $employeeId);
+        $modules = $this->getModulesOnDisk($employeeId);
 
         $value = 0;
         foreach ($modules as $module) {
@@ -47,5 +47,13 @@ class UpdateModulesKpiRefreshProvider implements KpiRefreshProviderInterface
         $this->configuration->set('UPDATE_MODULES_EXPIRE', strtotime('+2 min'));
 
         return new KpiRefreshValue((string) $value);
+    }
+
+    /**
+     * @return object[]
+     */
+    protected function getModulesOnDisk(int $employeeId): array
+    {
+        return Module::getModulesOnDisk(true, $employeeId);
     }
 }

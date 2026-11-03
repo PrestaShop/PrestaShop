@@ -8,11 +8,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Kpi\Refresh;
 
-use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
 use PrestaShop\PrestaShop\Adapter\Stats\Repository\StatsRepository;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Kpi\Refresh\KpiRefreshProviderInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Refresh\KpiRefreshValue;
 use PrestaShop\PrestaShop\Core\Shop\ShopContextInterface;
@@ -29,7 +28,7 @@ class TopCategoryKpiRefreshProvider implements KpiRefreshProviderInterface
         protected readonly ConfigurationInterface $configuration,
         protected readonly TranslatorInterface $translator,
         protected readonly LanguageContext $languageContext,
-        protected readonly CategoryRepository $categoryRepository
+        protected readonly ShopContext $currentShop
     ) {
     }
 
@@ -43,13 +42,12 @@ class TopCategoryKpiRefreshProvider implements KpiRefreshProviderInterface
         $dateTo = date('Y-m-d');
 
         $langId = $this->languageContext->getId();
-        $row = $this->statsRepository->getBestSellingCategory($dateFrom, $dateTo, $shopIds);
+        $row = $this->statsRepository->getBestSellingCategory($dateFrom, $dateTo, $langId, $this->currentShop->getId(), $shopIds);
 
         if (null === $row) {
             $value = $this->translator->trans('No category', [], 'Admin.Stats.Feature');
         } else {
-            $localizedNames = $this->categoryRepository->getLocalizedNames([new CategoryId($row['id_category'])]);
-            $value = $localizedNames[$row['id_category']][$langId] ?? '';
+            $value = (string) $row['name'];
         }
 
         // Stored per language: TopCategoryKpi reads the employee language entry

@@ -45,4 +45,25 @@ class MainCountryKpiRefreshProviderTest extends AbstractKpiRefreshProviderTestCa
 
         $this->assertSame('No orders', $provider->getValue()->getValue());
     }
+
+    public function testGetValueReturnsTheShareOfTheMainCountry(): void
+    {
+        $this->statsRepository->method('countOrders')->willReturn(3);
+        $this->statsRepository->expects($this->once())
+            ->method('getMainCountry')
+            ->with($this->anything(), $this->anything(), self::LANGUAGE_ID, self::SHOP_IDS)
+            ->willReturn(['id_country' => 8, 'name' => 'France', 'orders' => 2]);
+
+        $provider = new MainCountryKpiRefreshProvider(
+            $this->statsRepository,
+            $this->shopContext,
+            $this->kpiConfiguration,
+            $this->createTranslator(),
+            $this->createLanguageContext()
+        );
+
+        // '%d%%' is replaced as a whole, as in legacy
+        $this->assertSame('66.7 France', $provider->getValue()->getValue());
+        $this->assertCachedValuePerLanguage('MAIN_COUNTRY', '66.7 France', '+1 day');
+    }
 }

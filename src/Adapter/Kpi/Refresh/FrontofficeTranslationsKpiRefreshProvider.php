@@ -8,10 +8,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Kpi\Refresh;
 
-use Db;
-use Language;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
+use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Refresh\KpiRefreshProviderInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Refresh\KpiRefreshValue;
@@ -19,14 +18,14 @@ use PrestaShop\PrestaShop\Core\Kpi\Refresh\KpiRefreshValue;
 /**
  * Computes the refreshed value for the "Front office Translations" KPI.
  *
- * This is inherently theme/legacy-manifest-driven (it reads per-theme, per-language translation
- * progress counters that are themselves populated by the legacy translation tools), so it relies
- * directly on the legacy ThemeManagerBuilder/Theme repository and Language::getLanguages() helpers.
+ * Sums the per-theme, per-language progress counters that the translation pages store
+ * in the KPI configuration.
  */
 class FrontofficeTranslationsKpiRefreshProvider implements KpiRefreshProviderInterface
 {
     public function __construct(
-        protected readonly LegacyContext $legacyContext,
+        protected readonly ThemeRepository $themeRepository,
+        protected readonly LanguageDataProvider $languageDataProvider,
         protected readonly ConfigurationInterface $configuration
     ) {
     }
@@ -36,14 +35,12 @@ class FrontofficeTranslationsKpiRefreshProvider implements KpiRefreshProviderInt
      */
     public function getValue(array $requestParameters = []): KpiRefreshValue
     {
-        $themes = (new ThemeManagerBuilder($this->legacyContext->getContext(), Db::getInstance()))
-            ->buildRepository()
-            ->getList();
-        $languages = Language::getLanguages();
+        $languages = $this->languageDataProvider->getLanguages();
 
         $total = 0;
         $translated = 0;
-        foreach ($themes as $theme) {
+        /** @var Theme $theme */
+        foreach ($this->themeRepository->getList() as $theme) {
             foreach ($languages as $language) {
                 $kpiKey = substr(strtoupper($theme->getName() . '_' . $language['iso_code']), 0, 16);
                 $total += (int) $this->configuration->get('TRANSLATE_TOTAL_' . $kpiKey);

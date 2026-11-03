@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Kpi\Refresh;
 
-use Country;
 use PrestaShop\PrestaShop\Adapter\Stats\Repository\StatsRepository;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
@@ -19,10 +18,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Computes the refreshed value for the "Main Country" KPI.
- *
- * No clean repository method exposes a country's localized name by id + language id (the
- * CountryRepository read is not language-scoped), so a direct legacy Country ObjectModel read
- * is used here, same allowance as for the Category ObjectModel elsewhere in this namespace.
  */
 class MainCountryKpiRefreshProvider implements KpiRefreshProviderInterface
 {
@@ -45,17 +40,16 @@ class MainCountryKpiRefreshProvider implements KpiRefreshProviderInterface
         $dateTo = date('Y-m-d');
 
         $totalOrders = $this->statsRepository->countOrders($dateFrom, $dateTo, $shopIds);
-        $row = $totalOrders > 0 ? $this->statsRepository->getMainCountry($dateFrom, $dateTo, $shopIds) : null;
+        $row = $totalOrders > 0 ? $this->statsRepository->getMainCountry($dateFrom, $dateTo, $this->languageContext->getId(), $shopIds) : null;
 
         if (null === $row) {
             $value = $this->translator->trans('No orders', [], 'Admin.Stats.Feature');
         } else {
             $percent = round(100 * $row['orders'] / $totalOrders, 1);
-            $country = new Country($row['id_country'], $this->languageContext->getId());
 
             $value = $this->translator->trans(
                 '%d%% %s',
-                ['%d%%' => $percent, '%s' => $country->name],
+                ['%d%%' => $percent, '%s' => (string) $row['name']],
                 'Admin.Stats.Feature'
             );
         }

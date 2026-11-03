@@ -9,11 +9,12 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Kpi\Refresh;
 
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
+use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Adapter\Stats\Repository\StatsRepository;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Refresh\KpiRefreshProviderInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Refresh\KpiRefreshValue;
-use PrestaShop\PrestaShop\Core\Shop\ShopContextInterface;
+use Shop;
 
 /**
  * Computes the refreshed value for the "Newsletter Registrations" KPI.
@@ -22,7 +23,7 @@ class NewsletterRegistrationsKpiRefreshProvider implements KpiRefreshProviderInt
 {
     public function __construct(
         protected readonly StatsRepository $statsRepository,
-        protected readonly ShopContextInterface $shopContext,
+        protected readonly ShopContext $shopContext,
         protected readonly ConfigurationInterface $configuration,
         protected readonly ModuleDataProvider $moduleDataProvider
     ) {
@@ -33,7 +34,8 @@ class NewsletterRegistrationsKpiRefreshProvider implements KpiRefreshProviderInt
      */
     public function getValue(array $requestParameters = []): KpiRefreshValue
     {
-        $shopIds = $this->shopContext->getContextShopIds();
+        // Customers of the shops sharing orders, as the legacy page counts them
+        $shopIds = array_map('intval', $this->shopContext->getContextListShopID(Shop::SHARE_ORDER));
         $value = $this->statsRepository->countActiveNewsletterCustomers($shopIds);
 
         if ($this->moduleDataProvider->isInstalled('ps_emailsubscription')) {
