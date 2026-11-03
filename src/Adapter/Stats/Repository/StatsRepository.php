@@ -58,6 +58,19 @@ class StatsRepository
         return (int) $qb->executeQuery()->fetchOne();
     }
 
+    public function countActiveLanguages(int $shopId): int
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('COUNT(DISTINCT l.id_lang)')
+            ->from($this->dbPrefix . 'lang', 'l')
+            ->innerJoin('l', $this->dbPrefix . 'lang_shop', 'ls', 'ls.id_lang = l.id_lang AND ls.id_shop = :shopId')
+            ->where('l.active = 1')
+            ->setParameter('shopId', $shopId)
+        ;
+
+        return (int) $qb->executeQuery()->fetchOne();
+    }
+
     public function countInstalledModules(array $shopIds): int
     {
         $qb = $this->connection->createQueryBuilder();
@@ -264,14 +277,20 @@ class StatsRepository
     }
 
     /**
-     * @return array{id_category: int, sales: float}|null
+     * @return array{id_category: int, name: ?string, sales: float}|null
      */
-    public function getBestSellingCategory(string $dateFrom, string $dateTo, array $shopIds): ?array
+    public function getBestSellingCategory(string $dateFrom, string $dateTo, int $langId, int $shopId, array $shopIds): ?array
     {
         $qb = $this->connection->createQueryBuilder();
-        $qb->select('ca.id_category, SUM(t.total_price_sold) AS sales')
+        $qb->select('ca.id_category, cl.name, SUM(t.total_price_sold) AS sales')
             ->from($this->dbPrefix . 'category', 'ca')
             ->innerJoin('ca', $this->dbPrefix . 'category_product', 'capr', 'ca.id_category = capr.id_category')
+            ->leftJoin(
+                'ca',
+                $this->dbPrefix . 'category_lang',
+                'cl',
+                'cl.id_category = ca.id_category AND cl.id_lang = :langId AND cl.id_shop = :shopId'
+            )
             ->leftJoin(
                 'capr',
                 '(' . $this->connection->createQueryBuilder()
@@ -286,11 +305,13 @@ class StatsRepository
                 't.product_id = capr.id_product'
             )
             ->where('ca.level_depth > 1')
-            ->groupBy('ca.id_category')
+            ->groupBy('ca.id_category, cl.name')
             ->orderBy('sales', 'DESC')
             ->setMaxResults(1)
             ->setParameter('dateFrom', $dateFrom . ' 00:00:00')
             ->setParameter('dateTo', $dateTo . ' 23:59:59')
+            ->setParameter('langId', $langId)
+            ->setParameter('shopId', $shopId)
             ->setParameter('shopIds', $shopIds, Connection::PARAM_INT_ARRAY)
         ;
         $row = $qb->executeQuery()->fetchAssociative();
@@ -455,15 +476,16 @@ class StatsRepository
         ];
     }
 
-    public function getAverageCustomerAgeInDays(array $shopIds): float
+    public function getAverageCustomerAgeInDays(string $today, array $shopIds): float
     {
         $qb = $this->connection->createQueryBuilder();
-        $qb->select('AVG(DATEDIFF(CURRENT_DATE(), c.birthday))')
+        $qb->select('AVG(DATEDIFF(:today, c.birthday))')
             ->from($this->dbPrefix . 'customer', 'c')
             ->where('c.active = 1')
             ->andWhere('c.birthday IS NOT NULL')
             ->andWhere("c.birthday != '0000-00-00'")
             ->andWhere('c.id_shop IN (:shopIds)')
+            ->setParameter('today', $today . ' 00:00:00')
             ->setParameter('shopIds', $shopIds, Connection::PARAM_INT_ARRAY)
         ;
 
@@ -497,19 +519,21 @@ class StatsRepository
     }
 
     /**
-     * @return array{id_country: int, orders: int}|null
+     * @return array{id_country: int, name: ?string, orders: int}|null
      */
-    public function getMainCountry(string $dateFrom, string $dateTo, array $shopIds): ?array
+    public function getMainCountry(string $dateFrom, string $dateTo, int $langId, array $shopIds): ?array
     {
         $qb = $this->connection->createQueryBuilder();
-        $qb->select('a.id_country', 'COUNT(*) AS orders')
+        $qb->select('a.id_country', 'cl.name', 'COUNT(*) AS orders')
             ->from($this->dbPrefix . 'orders', 'o')
             ->leftJoin('o', $this->dbPrefix . 'address', 'a', 'o.id_address_delivery = a.id_address')
+            ->leftJoin('a', $this->dbPrefix . 'country_lang', 'cl', 'cl.id_country = a.id_country AND cl.id_lang = :langId')
             ->where('o.invoice_date BETWEEN :dateFrom AND :dateTo')
             ->andWhere('o.id_shop IN (:shopIds)')
-            ->groupBy('a.id_country')
+            ->groupBy('a.id_country, cl.name')
             ->orderBy('orders', 'DESC')
             ->setMaxResults(1)
+            ->setParameter('langId', $langId)
             ->setParameter('dateFrom', $dateFrom . ' 00:00:00')
             ->setParameter('dateTo', $dateTo . ' 23:59:59')
             ->setParameter('shopIds', $shopIds, Connection::PARAM_INT_ARRAY)

@@ -36,7 +36,7 @@ final class AvgCustomerAgeKpiRefreshProvider implements KpiRefreshProviderInterf
     public function getValue(array $requestParameters = []): KpiRefreshValue
     {
         $shopIds = $this->shopContext->getContextShopIds();
-        $averageAgeInYears = round($this->statsRepository->getAverageCustomerAgeInDays($shopIds) / 365);
+        $averageAgeInYears = round($this->statsRepository->getAverageCustomerAgeInDays(date('Y-m-d'), $shopIds) / 365);
 
         $value = $this->translator->trans(
             '%value% years',

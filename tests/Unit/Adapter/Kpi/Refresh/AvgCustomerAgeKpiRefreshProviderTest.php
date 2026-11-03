@@ -17,7 +17,10 @@ class AvgCustomerAgeKpiRefreshProviderTest extends AbstractKpiRefreshProviderTes
      */
     public function testGetValueRoundsTheAgeInYearsAndCachesItPerLanguage(float $averageAgeInDays, string $expectedValue): void
     {
-        $this->statsRepository->method('getAverageCustomerAgeInDays')->willReturn($averageAgeInDays);
+        $this->statsRepository->expects($this->once())
+            ->method('getAverageCustomerAgeInDays')
+            ->with(date('Y-m-d'), self::SHOP_IDS)
+            ->willReturn($averageAgeInDays);
 
         $provider = new AvgCustomerAgeKpiRefreshProvider(
             $this->statsRepository,

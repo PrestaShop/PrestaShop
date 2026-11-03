@@ -147,6 +147,7 @@ services:
     autowire: true
     arguments:
       $configuration: '@prestashop.adapter.legacy.kpi_configuration'
+      $themeRepository: '@prestashop.core.addon.theme.repository'
     tags:
       - { name: 'prestashop.kpi_refresh_provider', key: 'frontoffice_translations' }
 

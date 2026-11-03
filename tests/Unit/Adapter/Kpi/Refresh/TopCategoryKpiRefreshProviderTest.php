@@ -8,21 +8,20 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Adapter\Kpi\Refresh;
 
-use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
 use PrestaShop\PrestaShop\Adapter\Kpi\Refresh\TopCategoryKpiRefreshProvider;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 
 class TopCategoryKpiRefreshProviderTest extends AbstractKpiRefreshProviderTestCase
 {
     public function testGetValueReturnsTheCategoryNameAndCachesItPerLanguage(): void
     {
-        $this->statsRepository->method('getBestSellingCategory')->willReturn(['id_category' => 3]);
-        $categoryRepository = $this->createMock(CategoryRepository::class);
-        $categoryRepository->method('getLocalizedNames')
-            ->with([new CategoryId(3)])
-            ->willReturn([3 => [1 => 'Clothes', self::LANGUAGE_ID => 'Vêtements']]);
+        // The name is read for the employee language and the current shop
+        $this->statsRepository->expects($this->once())
+            ->method('getBestSellingCategory')
+            ->with($this->anything(), $this->anything(), self::LANGUAGE_ID, 3, self::SHOP_IDS)
+            ->willReturn(['id_category' => 3, 'name' => 'Vêtements', 'sales' => 120.0]);
 
-        $value = $this->createProvider($categoryRepository)->getValue();
+        $value = $this->createProvider()->getValue();
 
         $this->assertSame('Vêtements', $value->getValue());
         // TopCategoryKpi reads the entry of the employee language
@@ -32,22 +31,23 @@ class TopCategoryKpiRefreshProviderTest extends AbstractKpiRefreshProviderTestCa
     public function testGetValueWithoutSalesReturnsNoCategory(): void
     {
         $this->statsRepository->method('getBestSellingCategory')->willReturn(null);
-        $categoryRepository = $this->createMock(CategoryRepository::class);
-        $categoryRepository->expects($this->never())->method('getLocalizedNames');
 
-        $this->assertSame('No category', $this->createProvider($categoryRepository)->getValue()->getValue());
+        $this->assertSame('No category', $this->createProvider()->getValue()->getValue());
         $this->assertCachedValuePerLanguage('TOP_CATEGORY', 'No category', '+1 day');
     }
 
-    private function createProvider(CategoryRepository $categoryRepository): TopCategoryKpiRefreshProvider
+    private function createProvider(): TopCategoryKpiRefreshProvider
     {
+        $currentShop = $this->createMock(ShopContext::class);
+        $currentShop->method('getId')->willReturn(3);
+
         return new TopCategoryKpiRefreshProvider(
             $this->statsRepository,
             $this->shopContext,
             $this->kpiConfiguration,
             $this->createTranslator(),
             $this->createLanguageContext(),
-            $categoryRepository
+            $currentShop
         );
     }
 }

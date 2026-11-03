@@ -9,7 +9,10 @@ declare(strict_types=1);
 namespace Tests\Integration\Adapter\Stats\Repository;
 
 use AdminStatsController;
+use Category;
 use Configuration;
+use Context;
+use Language;
 use PrestaShop\PrestaShop\Adapter\Stats\Repository\StatsRepository;
 use Shop;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -99,7 +102,7 @@ class StatsRepositoryTest extends KernelTestCase
 
         $this->assertEquals(
             AdminStatsController::getAverageCustomerAge(),
-            round($this->statsRepository->getAverageCustomerAgeInDays($this->shopIds) / 365)
+            round($this->statsRepository->getAverageCustomerAgeInDays(date('Y-m-d'), $this->shopIds) / 365)
         );
     }
 
@@ -127,5 +130,23 @@ class StatsRepositoryTest extends KernelTestCase
     public function testPendingMessagesMatchLegacy(): void
     {
         $this->assertSame((int) AdminStatsController::getPendingMessages(), $this->statsRepository->countPendingMessages($this->shopIds));
+    }
+
+    public function testActiveLanguagesMatchLegacy(): void
+    {
+        $shopId = (int) Context::getContext()->shop->id;
+
+        $this->assertSame((int) Language::countActiveLanguages($shopId), $this->statsRepository->countActiveLanguages($shopId));
+    }
+
+    public function testBestSellingCategoryNameMatchesTheCategoryObject(): void
+    {
+        $langId = (int) Context::getContext()->language->id;
+        $shopId = (int) Context::getContext()->shop->id;
+
+        $row = $this->statsRepository->getBestSellingCategory(self::DATE_FROM, self::DATE_TO, $langId, $shopId, $this->shopIds);
+
+        $this->assertNotNull($row);
+        $this->assertSame((new Category((int) $row['id_category'], $langId, $shopId))->name, $row['name']);
     }
 }
