@@ -168,7 +168,9 @@ class OrderStateFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertMissingTemplatesError(): void
     {
-        $this->assertLastErrorIs(MissingOrderStateRequiredFieldsException::class);
+        /** @var MissingOrderStateRequiredFieldsException $exception */
+        $exception = $this->assertLastErrorIs(MissingOrderStateRequiredFieldsException::class);
+        Assert::assertSame(['template'], $exception->getMissingRequiredFields());
     }
 
     /**
