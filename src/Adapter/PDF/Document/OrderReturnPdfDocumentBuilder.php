@@ -59,8 +59,7 @@ final class OrderReturnPdfDocumentBuilder implements PdfDocumentBuilderInterface
 
         $languageId = (int) Context::getContext()->language->id;
         $prefix = Configuration::get('PS_RETURN_PREFIX', $languageId);
-        $titleFormat = $this->translator->trans('%1$s%2$06d', [], 'Shop.Pdf');
-        $title = sprintf($titleFormat, $prefix, $orderReturn->id);
+        $title = sprintf('%1$s%2$06d', $prefix, $orderReturn->id);
         $date = Tools::displayDate($order->invoice_date);
 
         $header = $this->templateResolver->render(

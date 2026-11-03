@@ -72,7 +72,7 @@ final class DeliverySlipPdfDocumentBuilder implements PdfDocumentBuilderInterfac
         $date = Tools::displayDate($orderInvoice->delivery_date) ?: Tools::displayDate($orderInvoice->date_add);
 
         $prefix = Configuration::get('PS_DELIVERY_PREFIX', $languageId);
-        $title = sprintf($this->translator->trans('%1$s%2$06d', [], 'Shop.Pdf'), $prefix, $orderInvoice->delivery_number);
+        $title = sprintf('%1$s%2$06d', $prefix, $orderInvoice->delivery_number);
 
         $header = $this->templateResolver->render(
             'header',
