@@ -26,6 +26,7 @@ final class BulkUpdateEmployeeStatusHandler extends AbstractEmployeeHandler impl
             $employee = new Employee($employeeId->getValue());
 
             $this->assertEmployeeWasFoundById($employeeId, $employee);
+            $this->assertContextEmployeeCanManage($employee);
             $this->assertLoggedInEmployeeIsNotTheSameAsBeingUpdatedEmployee($employee);
             $this->assertEmployeeIsNotTheOnlyAdminInShop($employee);
 
