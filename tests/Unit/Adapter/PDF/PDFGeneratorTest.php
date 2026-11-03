@@ -9,7 +9,9 @@ declare(strict_types=1);
 namespace Tests\Unit\Adapter\PDF;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider;
 use PrestaShop\PrestaShop\Adapter\PDF\PDFGenerator;
+use PrestaShop\PrestaShop\Adapter\PDF\TwigPdfRendererChecker;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\PDF\PDFRendererInterface;
@@ -34,7 +36,7 @@ class PDFGeneratorTest extends TestCase
         $pdfRenderer->expects($this->once())->method('setType')->with('Invoice')->willReturn($pdfRenderer);
         $pdfRenderer->expects($this->once())->method('render')->with(true)->willReturn('%PDF-content%');
 
-        $generator = new PDFGenerator($templateTypeProvider, $featureFlagStateChecker, $pdfRenderer);
+        $generator = new PDFGenerator($templateTypeProvider, $this->createTwigPdfRendererChecker($featureFlagStateChecker), $pdfRenderer);
         $generator->generatePDF($objects);
     }
 
@@ -52,10 +54,18 @@ class PDFGeneratorTest extends TestCase
         $pdfRenderer->expects($this->once())->method('render')->with(false)->willReturn('%PDF-content%');
         $pdfRenderer->method('getFilename')->willReturn('credit-slip.pdf');
 
-        $generator = new PDFGenerator($templateTypeProvider, $featureFlagStateChecker, $pdfRenderer);
+        $generator = new PDFGenerator($templateTypeProvider, $this->createTwigPdfRendererChecker($featureFlagStateChecker), $pdfRenderer);
         $generatedPdf = $generator->generatePDFForResponse(['object1']);
 
         $this->assertSame('%PDF-content%', $generatedPdf->getContent());
         $this->assertSame('credit-slip.pdf', $generatedPdf->getFileName());
+    }
+
+    private function createTwigPdfRendererChecker(FeatureFlagStateCheckerInterface $featureFlagStateChecker): TwigPdfRendererChecker
+    {
+        $hookInformationProvider = $this->createMock(HookInformationProvider::class);
+        $hookInformationProvider->method('getRegisteredModulesByHookName')->willReturn([]);
+
+        return new TwigPdfRendererChecker($featureFlagStateChecker, $hookInformationProvider);
     }
 }

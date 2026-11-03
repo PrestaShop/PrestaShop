@@ -11,39 +11,46 @@ services:
   PrestaShop\PrestaShop\Core\PDF\PDFRendererInterface:
     alias: prestashop.adapter.pdf.renderer
 
+  prestashop.adapter.pdf.twig_renderer_checker:
+    class: PrestaShop\PrestaShop\Adapter\PDF\TwigPdfRendererChecker
+    public: false
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface'
+      - '@PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider'
+
   prestashop.adapter.pdf.generator.invoice:
     class: PrestaShop\PrestaShop\Adapter\PDF\PDFGenerator
     arguments:
       - '@prestashop.adapter.pdf.type_provider.invoice'
-      - '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface'
+      - '@prestashop.adapter.pdf.twig_renderer_checker'
       - '@prestashop.adapter.pdf.renderer'
 
   prestashop.adapter.pdf.generator.credit_slip:
     class: PrestaShop\PrestaShop\Adapter\PDF\PDFGenerator
     arguments:
       - '@prestashop.adapter.pdf.type_provider.credit_slip'
-      - '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface'
+      - '@prestashop.adapter.pdf.twig_renderer_checker'
       - '@prestashop.adapter.pdf.renderer'
 
   prestashop.adapter.pdf.generator.order_return:
     class: PrestaShop\PrestaShop\Adapter\PDF\PDFGenerator
     arguments:
       - '@prestashop.adapter.pdf.type_provider.order_return'
-      - '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface'
+      - '@prestashop.adapter.pdf.twig_renderer_checker'
       - '@prestashop.adapter.pdf.renderer'
 
   prestashop.adapter.pdf.generator.delivery_slip:
     class: PrestaShop\PrestaShop\Adapter\PDF\PDFGenerator
     arguments:
       - '@prestashop.adapter.pdf.type_provider.delivery_slip'
-      - '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface'
+      - '@prestashop.adapter.pdf.twig_renderer_checker'
       - '@prestashop.adapter.pdf.renderer'
 
   prestashop.adapter.pdf.generator.shipment_delivery_slip:
     class: PrestaShop\PrestaShop\Adapter\PDF\PDFGenerator
     arguments:
       - '@prestashop.adapter.pdf.type_provider.shipment_delivery_slip'
-      - '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface'
+      - '@prestashop.adapter.pdf.twig_renderer_checker'
       - '@prestashop.adapter.pdf.renderer'
 
   prestashop.adapter.pdf.order_invoice_pdf_generator:

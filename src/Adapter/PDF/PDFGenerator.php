@@ -10,8 +10,6 @@ namespace PrestaShop\PrestaShop\Adapter\PDF;
 
 use Context;
 use PDF;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\PDF\GeneratedPdf;
 use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use PrestaShop\PrestaShop\Core\PDF\PDFRendererInterface;
@@ -20,7 +18,7 @@ use PrestaShop\PrestaShop\Core\PDF\PDFTemplateTypeProviderInterface;
 /**
  * Generates a PDF for a collection of objects of a given template type (one
  * instance per type, see services/adapter/pdf/generator.yml). Rendered by the
- * Twig-based pipeline when pdf_twig_renderer is enabled, the legacy
+ * Twig-based pipeline when {@see TwigPdfRendererChecker} allows it, the legacy
  * PDF/HTMLTemplate/TCPDF stack otherwise.
  *
  * This is the single place that switches between the two rendering stacks —
@@ -32,7 +30,7 @@ final class PDFGenerator implements PDFGeneratorInterface
 {
     public function __construct(
         private readonly PDFTemplateTypeProviderInterface $templateTypeProvider,
-        private readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
+        private readonly TwigPdfRendererChecker $twigPdfRendererChecker,
         private readonly PDFRendererInterface $pdfRenderer
     ) {
     }
@@ -60,7 +58,7 @@ final class PDFGenerator implements PDFGeneratorInterface
     {
         $type = $this->templateTypeProvider->getPDFTemplateType();
 
-        if ($this->isTwigRendererEnabled()) {
+        if ($this->twigPdfRendererChecker->isEnabled()) {
             $content = $this->pdfRenderer
                 ->assign('objects', $objectCollection)
                 ->setType($type)
@@ -73,10 +71,5 @@ final class PDFGenerator implements PDFGeneratorInterface
         $pdf = new PDF($objectCollection, $type, Context::getContext()->smarty);
 
         return new GeneratedPdf($pdf->render($display), $pdf->getFilename());
-    }
-
-    private function isTwigRendererEnabled(): bool
-    {
-        return $this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_PDF_TWIG_RENDERER);
     }
 }
