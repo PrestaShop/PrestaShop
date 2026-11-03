@@ -9,9 +9,12 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\OrderReturn\Repository;
 
 use Db;
+use Doctrine\DBAL\ArrayParameterType;
+use Doctrine\DBAL\Connection;
 use Order;
 use OrderReturn;
 use PrestaShop\PrestaShop\Adapter\OrderReturn\Validator\OrderReturnValidator;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\DeleteProductFromOrderReturnException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnNotFoundException;
@@ -28,12 +31,23 @@ class OrderReturnRepository extends AbstractObjectModelRepository
      */
     private $orderReturnValidator;
 
+    private Connection $connection;
+
+    private string $dbPrefix;
+
     /**
      * @param OrderReturnValidator $orderReturnValidator
+     * @param Connection|null $connection optional for backward compatibility, will be required in 10.0
+     * @param string|null $dbPrefix optional for backward compatibility, will be required in 10.0
      */
-    public function __construct(OrderReturnValidator $orderReturnValidator)
-    {
+    public function __construct(
+        OrderReturnValidator $orderReturnValidator,
+        ?Connection $connection = null,
+        ?string $dbPrefix = null
+    ) {
         $this->orderReturnValidator = $orderReturnValidator;
+        $this->connection = $connection ?? SymfonyContainer::getInstance()->get('doctrine.dbal.default_connection');
+        $this->dbPrefix = $dbPrefix ?? _DB_PREFIX_;
     }
 
     /**
@@ -104,26 +118,33 @@ class OrderReturnRepository extends AbstractObjectModelRepository
     {
         $this->get($orderReturnId);
 
-        $rows = Db::getInstance()->executeS(sprintf(
-            'SELECT ord.`id_order_detail`, ord.`id_customization`, ord.`product_quantity`, od.`product_reference`, od.`product_name`
-            FROM `%1$sorder_return_detail` ord
-            INNER JOIN `%1$sorder_detail` od ON od.`id_order_detail` = ord.`id_order_detail`
-            WHERE ord.`id_order_return` = %2$d
-            ORDER BY ord.`id_customization` = 0, ord.`id_order_detail`, ord.`id_customization`',
-            _DB_PREFIX_,
-            $orderReturnId->getValue()
-        )) ?: [];
+        $rows = $this->connection->createQueryBuilder()
+            ->select('ord.id_order_detail, ord.id_customization, ord.product_quantity, od.product_reference, od.product_name')
+            ->from($this->dbPrefix . 'order_return_detail', 'ord')
+            ->innerJoin('ord', $this->dbPrefix . 'order_detail', 'od', 'od.id_order_detail = ord.id_order_detail')
+            ->where('ord.id_order_return = :orderReturnId')
+            ->setParameter('orderReturnId', $orderReturnId->getValue())
+            ->orderBy('ord.id_customization = 0')
+            ->addOrderBy('ord.id_order_detail')
+            ->addOrderBy('ord.id_customization')
+            ->executeQuery()
+            ->fetchAllAssociative()
+        ;
 
-        $customizationIds = array_filter(array_map(static fn (array $row): int => (int) $row['id_customization'], $rows));
+        $customizationIds = array_values(array_filter(array_map(static fn (array $row): int => (int) $row['id_customization'], $rows)));
         $customizedData = [];
         if (!empty($customizationIds)) {
-            $dataRows = Db::getInstance()->executeS(sprintf(
-                'SELECT `id_customization`, `type`, `value` FROM `%scustomized_data`
-                WHERE `id_customization` IN (%s)
-                ORDER BY `id_customization`, `type`, `index`',
-                _DB_PREFIX_,
-                implode(',', $customizationIds)
-            )) ?: [];
+            $dataRows = $this->connection->createQueryBuilder()
+                ->select('cd.id_customization, cd.type, cd.value')
+                ->from($this->dbPrefix . 'customized_data', 'cd')
+                ->where('cd.id_customization IN (:customizationIds)')
+                ->setParameter('customizationIds', $customizationIds, ArrayParameterType::INTEGER)
+                ->orderBy('cd.id_customization')
+                ->addOrderBy('cd.type')
+                ->addOrderBy('cd.`index`')
+                ->executeQuery()
+                ->fetchAllAssociative()
+            ;
             foreach ($dataRows as $dataRow) {
                 $customizedData[(int) $dataRow['id_customization']][] = [
                     'type' => (int) $dataRow['type'],
@@ -149,7 +170,7 @@ class OrderReturnRepository extends AbstractObjectModelRepository
      * 'product_quantity' (sum of returned qty for that order line) and 'customizations'
      * (last id_customization seen — 0 when none). Keys match the indexes used by Order::getProducts().
      *
-     * @deprecated since 9.2.1, use getProductLines() instead: it merges customized lines into the classic rows
+     * @deprecated since 9.2.1, use getProductLines() instead, this method merges customized lines into the classic rows
      *
      * @return array<int, array<string, mixed>>
      */
@@ -216,7 +237,7 @@ class OrderReturnRepository extends AbstractObjectModelRepository
      * Returns the legacy associative arrays produced by OrderReturn::getReturnedCustomizedProducts(),
      * each enriched with product_id, product_attribute_id, name, reference, id_address_delivery.
      *
-     * @deprecated since 9.2.1, use getProductLines() instead: it lists the customized lines of every return of the order
+     * @deprecated since 9.2.1, use getProductLines() instead, this method lists the customized lines of every return of the order
      *
      * @return array<int, array<string, mixed>>
      */
