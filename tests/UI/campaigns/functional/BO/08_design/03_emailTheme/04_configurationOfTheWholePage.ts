@@ -203,7 +203,7 @@ describe('BO - Design - Email Theme : Configuration of the whole page', async ()
     it('should click on HTTPS button for customer_qty', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickHTTPSButtonCustomerQty', baseContext);
 
-      page = await boDesignEmailThemesPreviewPage.viewHTTPLink(page, 35);
+      page = await boDesignEmailThemesPreviewPage.viewHTTPLink(page, 36);
       expect(page.url()).to.contain('classic');
     });
 
@@ -295,7 +295,7 @@ describe('BO - Design - Email Theme : Configuration of the whole page', async ()
     it('should click on HTTPS button for the backoffice_order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickHTTPSButton', baseContext);
 
-      page = await boDesignEmailThemesPreviewPage.viewHTTPLink(page, 2);
+      page = await boDesignEmailThemesPreviewPage.viewHTTPLink(page, 3);
       expect(page.url()).to.contain('modern');
     });
 
@@ -311,7 +311,7 @@ describe('BO - Design - Email Theme : Configuration of the whole page', async ()
     it('should click on send a test email and check the validation', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sendTestEmail3', baseContext);
 
-      const successMessage = await boDesignEmailThemesPreviewPage.sendTestEmail(page, 2);
+      const successMessage = await boDesignEmailThemesPreviewPage.sendTestEmail(page, 3);
       expect(successMessage).to.contains(boDesignEmailThemesPreviewPage.successMessageSendEmail('backoffice_order'));
     });
 

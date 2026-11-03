@@ -341,6 +341,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         // Added natives mails files
         $mFiles = [
             'account.html', 'account.txt',
+            'backoffice_account.html', 'backoffice_account.txt',
             'backoffice_order.html', 'backoffice_order.txt',
             'bankwire.html', 'bankwire.txt',
             'cheque.html', 'cheque.txt',

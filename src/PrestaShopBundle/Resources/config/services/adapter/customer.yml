@@ -91,3 +91,12 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\CustomerDataSource'
 
   PrestaShop\PrestaShop\Adapter\Customer\Repository\CustomerRepository: ~
+
+  PrestaShop\PrestaShop\Adapter\Customer\PasswordSetupLinkMailer:
+    public: false
+    autowire: true
+
+  PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\SendCustomerPasswordSetupLinkHandler:
+    public: false
+    autowire: true
+    autoconfigure: true
