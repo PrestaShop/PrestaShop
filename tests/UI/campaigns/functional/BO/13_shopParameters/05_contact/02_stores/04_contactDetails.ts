@@ -106,7 +106,7 @@ describe('BO - Shop Parameters - Contact : Configure contact details', async () 
     page = await foHummingbirdHomePage.closePage(browserContext, page, 0);
 
     const pageTitle = await boStoresPage.getPageTitle(page);
-    expect(pageTitle).to.contains(boStoresPage.pageTitle);
+    expect(pageTitle).to.contains(`Stores • ${storesContactToCreate.name}`);
   });
 
   it('should back to default contact details information', async function () {
