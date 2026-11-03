@@ -206,7 +206,7 @@ services:
       - '@prestashop.core.grid.query_builder.supplier'
       - '@prestashop.core.hook.dispatcher'
       - '@prestashop.core.grid.query.doctrine_query_parser'
-      - 'suppliers'
+      - 'supplier'
 
   prestashop.core.grid.factory.supplier_decorator:
     class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\SupplierGridDataFactory'

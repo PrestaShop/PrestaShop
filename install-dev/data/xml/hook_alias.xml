@@ -349,5 +349,9 @@
       <alias>displayAdminListAfter</alias>
       <name>displayAdminGridTableAfter</name>
     </hook_alias>
+    <hook_alias id="actionSuppliersGridQueryBuilderModifier">
+      <alias>actionSuppliersGridQueryBuilderModifier</alias>
+      <name>actionSupplierGridQueryBuilderModifier</name>
+    </hook_alias>
   </entities>
 </entity_hook_alias>
