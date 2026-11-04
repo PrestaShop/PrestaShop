@@ -101,7 +101,9 @@ final class PositionUpdateFactory implements PositionUpdateFactoryInterface
             throw new PositionDataException('Missing ' . $this->positionsField . ' in your data.', 'Admin.Notifications.Failure');
         }
 
-        if (null !== $positionDefinition->getParentIdField() && !array_key_exists($this->parentIdField, $data)) {
+        if (null !== $positionDefinition->getParentIdField()
+            && (!isset($data[$this->parentIdField]) || '' === $data[$this->parentIdField])
+        ) {
             throw new PositionDataException('Missing ' . $this->parentIdField . ' in your data.', 'Admin.Notifications.Failure');
         }
     }
