@@ -8,115 +8,157 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Classes;
 
-use Db;
+use Cart;
+use Context;
+use Currency;
 use Order;
+use OrderPayment;
 use PHPUnit\Framework\TestCase;
+use PrestaShopCollection;
+use Tests\Resources\DatabaseDump;
+use Validate;
 
-/**
- * Order::addOrderPayment() falls back to the order's own currency when no
- * Currency object is passed. The conversion rate stored in the payment must
- * therefore come from the order as well.
- *
- * This covers the front-office order creation path, where
- * PaymentModule::validateOrder() calls addOrderPayment() without explicitly
- * passing a Currency object.
- */
-class OrderAddPaymentConversionRateTest extends TestCase
+final class OrderAddPaymentConversionRateTest extends TestCase
 {
-    private const ORDER_ID = 1;
-
     private const ORDER_CONVERSION_RATE = 0.88;
 
-    private const TRANSACTION_ID = 'qa-conversion-rate-probe';
+    private const PAYMENT_AMOUNT = '10.00';
 
-    private float $originalConversionRate;
+    private static ?int $sourceOrderId = null;
 
-    private float $originalTotalPaidReal;
+    private static ?int $testCurrencyId = null;
 
-    protected function setUp(): void
+    public static function setUpBeforeClass(): void
     {
-        parent::setUp();
+        parent::setUpBeforeClass();
 
-        $this->deleteTestPayment();
+        self::restoreTables();
 
-        $order = new Order(self::ORDER_ID);
-
-        $this->assertTrue(
-            (bool) $order->id,
-            sprintf('Fixture order with ID %d was not found', self::ORDER_ID)
-        );
-
-        $this->originalConversionRate = (float) $order->conversion_rate;
-        $this->originalTotalPaidReal = (float) $order->total_paid_real;
-
-        $order->conversion_rate = self::ORDER_CONVERSION_RATE;
-
-        $this->assertTrue(
-            $order->update(),
-            'Unable to update the fixture order conversion rate'
-        );
-    }
-
-    protected function tearDown(): void
-    {
-        $this->deleteTestPayment();
-
-        $order = new Order(self::ORDER_ID);
-
-        if ($order->id) {
-            $order->conversion_rate = $this->originalConversionRate;
-            $order->total_paid_real = $this->originalTotalPaidReal;
-            $order->update();
+        // Use an existing valid order as a template, but never change that order.
+        // Each test creates its own cart and order in a non-default currency.
+        foreach (new PrestaShopCollection('Order') as $order) {
+            if (Validate::isLoadedObject(new Cart((int) $order->id_cart))) {
+                self::$sourceOrderId = (int) $order->id;
+                break;
+            }
         }
 
-        parent::tearDown();
+        $defaultCurrencyId = Currency::getDefaultCurrencyId();
+        foreach (new PrestaShopCollection('Currency') as $currency) {
+            if ((int) $currency->id !== $defaultCurrencyId) {
+                $currency->active = true;
+                self::assertTrue($currency->update(), 'Unable to activate the test currency');
+                self::$testCurrencyId = (int) $currency->id;
+
+                break;
+            }
+        }
+
+        if (self::$testCurrencyId === null) {
+            // A fresh test database may contain only the default currency.
+            $currency = clone new Currency($defaultCurrencyId);
+            $currency->id = null;
+            $currency->iso_code = 'XTS';
+            $currency->numeric_iso_code = '963';
+            $currency->conversion_rate = 1.25;
+            $currency->active = true;
+            $currency->deleted = false;
+
+            self::assertTrue($currency->add(), 'Unable to create a non-default test currency');
+            self::$testCurrencyId = (int) $currency->id;
+        }
     }
 
-    public function testItStoresTheOrderConversionRateWhenNoCurrencyIsGiven(): void
+    public static function tearDownAfterClass(): void
     {
-        $order = new Order(self::ORDER_ID);
+        self::restoreTables();
 
-        $this->assertSame(
-            self::ORDER_CONVERSION_RATE,
-            (float) $order->conversion_rate,
-            'Fixture order should carry a non-default conversion rate'
-        );
-
-        $result = $order->addOrderPayment(
-            '10.00',
-            'qa-test',
-            self::TRANSACTION_ID,
-            null
-        );
-
-        $this->assertTrue(
-            $result,
-            'The order payment could not be created'
-        );
-
-        $storedConversionRate = Db::getInstance()->getValue(
-            'SELECT `conversion_rate`
-            FROM `' . _DB_PREFIX_ . 'order_payment`
-            WHERE `transaction_id` = "' . pSQL(self::TRANSACTION_ID) . '"'
-        );
-
-        $this->assertNotFalse(
-            $storedConversionRate,
-            'The payment row was not created'
-        );
-
-        $this->assertSame(
-            self::ORDER_CONVERSION_RATE,
-            (float) $storedConversionRate,
-            'Payment recorded in the order currency must keep the order conversion rate, not the default 1'
-        );
+        parent::tearDownAfterClass();
     }
 
-    private function deleteTestPayment(): void
+    public function testItUsesTheOrderRateWithoutAnExplicitCurrency(): void
     {
-        Db::getInstance()->execute(
-            'DELETE FROM `' . _DB_PREFIX_ . 'order_payment`
-            WHERE `transaction_id` = "' . pSQL(self::TRANSACTION_ID) . '"'
-        );
+        $order = $this->createOrder();
+
+        $this->assertTrue($order->addOrderPayment(self::PAYMENT_AMOUNT));
+        $this->assertPaymentRate($order, self::ORDER_CONVERSION_RATE);
+    }
+
+    public function testItUsesTheHistoricalOrderRateForAnExplicitMatchingCurrency(): void
+    {
+        $order = $this->createOrder();
+        $currency = new Currency((int) $order->id_currency);
+        $currency->conversion_rate = 1.25;
+
+        $this->assertTrue($order->addOrderPayment(self::PAYMENT_AMOUNT, null, null, $currency));
+        $this->assertPaymentRate($order, self::ORDER_CONVERSION_RATE);
+    }
+
+    public function testItUsesTheExplicitRateForAnotherCurrency(): void
+    {
+        $order = $this->createOrder();
+        $currency = new Currency((int) Currency::getDefaultCurrencyId());
+        $currency->conversion_rate = 1.25;
+
+        // Cross-currency payments use the shop context to determine the rounding precision.
+        $context = Context::getContext();
+        $previousCurrency = $context->currency;
+        $context->currency = new Currency(Currency::getDefaultCurrencyId());
+
+        try {
+            $this->assertTrue($order->addOrderPayment(self::PAYMENT_AMOUNT, null, null, $currency));
+            $this->assertPaymentRate($order, 1.25);
+        } finally {
+            $context->currency = $previousCurrency;
+        }
+    }
+
+    public function testItFallsBackToOneForAZeroOrderRate(): void
+    {
+        $order = $this->createOrder();
+        $order->conversion_rate = 0;
+        $this->assertTrue($order->update());
+
+        $this->assertTrue($order->addOrderPayment(self::PAYMENT_AMOUNT));
+        $this->assertPaymentRate($order, 1.0);
+    }
+
+    private function createOrder(): Order
+    {
+        self::assertNotNull(self::$sourceOrderId, 'An existing order fixture is required');
+        self::assertNotNull(self::$testCurrencyId, 'Unable to initialize a non-default currency fixture');
+
+        $source = new Order(self::$sourceOrderId);
+        $cart = clone new Cart((int) $source->id_cart);
+        $cart->id = null;
+        $cart->id_currency = self::$testCurrencyId;
+        self::assertTrue($cart->add(), 'Unable to create a test cart');
+
+        $order = clone $source;
+        $order->id = null;
+        $order->id_cart = (int) $cart->id;
+        $order->reference = Order::generateReference();
+        $order->id_currency = self::$testCurrencyId;
+        $order->conversion_rate = self::ORDER_CONVERSION_RATE;
+        $order->total_paid_real = 0;
+        self::assertTrue($order->add(), 'Unable to create a test order');
+
+        return $order;
+    }
+
+    private function assertPaymentRate(Order $order, float $expected): void
+    {
+        $payments = $order->getOrderPaymentCollection();
+        self::assertCount(1, $payments);
+
+        foreach ($payments as $payment) {
+            self::assertInstanceOf(OrderPayment::class, $payment);
+            self::assertSame($expected, (float) $payment->conversion_rate);
+        }
+    }
+
+    private static function restoreTables(): void
+    {
+        DatabaseDump::restoreTables(['cart', 'orders', 'order_payment', 'currency', 'currency_lang', 'currency_shop']);
     }
 }
