@@ -60,6 +60,11 @@ final class OrderStateByIdChoiceProvider implements FormChoiceProviderInterface,
     /**
      * Get order state choices.
      *
+     * Supported options:
+     * - include_deleted (bool, default true): when false, deleted order states are always excluded,
+     *   even the one matching current_state
+     * - current_state (int): when set, the only deleted order state kept is this one
+     *
      * @param array $options
      *
      * @return array
