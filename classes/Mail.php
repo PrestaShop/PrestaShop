@@ -375,6 +375,7 @@ class MailCore extends ObjectModel
                     ->setUsername($configuration['PS_MAIL_USER'])
                     ->setPassword($configuration['PS_MAIL_PASSWD'])
                 ;
+                self::setSmtpLocalDomain($transport, $shop->domain);
             } else {
                 $transport = new SendmailTransport();
             }
@@ -800,6 +801,8 @@ class MailCore extends ObjectModel
                     ->setUsername($smtpLogin)
                     ->setPassword($smtpPassword)
                 ;
+                $contextShop = Context::getContext()->shop;
+                self::setSmtpLocalDomain($transport, $contextShop instanceof Shop ? $contextShop->domain : null);
             } else {
                 $transport = new SendmailTransport();
             }
@@ -1085,5 +1088,53 @@ class MailCore extends ObjectModel
         // Either the placeholder, or the content id itself for a template that writes the img tag.
         return false !== strpos($templateHtml, '{shop_logo}')
             || false !== strpos($templateHtml, 'cid:shop_logo');
+    }
+
+    /**
+     * Symfony Mailer greets the server with EHLO [127.0.0.1], which anti-spam filters reject.
+     * SwiftMailer (PrestaShop 8) sent the server name, so do the same, with fallbacks for the CLI.
+     */
+    private static function setSmtpLocalDomain(EsmtpTransport $transport, ?string $shopDomain): void
+    {
+        $localDomain = self::getSmtpLocalDomain([
+            $_SERVER['SERVER_NAME'] ?? null,
+            $shopDomain,
+            gethostname(),
+        ]);
+
+        if (null !== $localDomain) {
+            $transport->setLocalDomain($localDomain);
+        }
+    }
+
+    /**
+     * @param array<mixed> $candidates
+     */
+    private static function getSmtpLocalDomain(array $candidates): ?string
+    {
+        foreach ($candidates as $candidate) {
+            if (!is_string($candidate)) {
+                continue;
+            }
+
+            $candidate = strtolower(trim($candidate, " \t\n\r\0\x0B[]"));
+
+            if (filter_var($candidate, FILTER_VALIDATE_IP)) {
+                if (filter_var($candidate, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE)) {
+                    return $candidate;
+                }
+
+                continue;
+            }
+
+            // The shop domain may carry a port
+            $candidate = preg_replace('/:\d+$/', '', $candidate);
+
+            if ('localhost' !== $candidate && filter_var($candidate, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME)) {
+                return $candidate;
+            }
+        }
+
+        return null;
     }
 }
