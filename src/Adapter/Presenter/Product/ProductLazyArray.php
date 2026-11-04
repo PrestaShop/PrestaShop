@@ -1407,13 +1407,14 @@ class ProductLazyArray extends AbstractLazyArray
         // Case 1 - Product in stock
         if ($availableQuantity >= 0) {
             // If the products are the last items remaining, we show different message and exclamation mark
-            if ($availableQuantity < $settings->lastRemainingItems) {
+            // The label shows the stock, so the threshold is compared with the stock too
+            if ($stockQuantity < $settings->lastRemainingItems) {
                 $this->product['availability'] = 'last_remaining_items';
                 $this->product[
                     'availability_message'
                 ] = $this->translator->trans(
-                    'Last items in stock',
-                    [],
+                    'Only %quantity% left in stock',
+                    ['%quantity%' => $stockQuantity],
                     'Shop.Theme.Catalog'
                 );
             } else {
