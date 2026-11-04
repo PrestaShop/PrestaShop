@@ -40,7 +40,7 @@ Changelog for PrestaShop 9
 - Core:
   - Bug fix:
     - Update dependencies (by @jolelievre)
-    - Update Symfony components to 6.4.49 (by @mattgoud)
+    - Update Symfony components to 6.4.50 (by @mattgoud)
     - #43443: Update psgdpr to 1.4.4 (by @nicosomb)
     - GHSA-wrmc-gmx5-9hhc Keep attachment files inside the download directory (by @nicosomb)
     - GHSA-6c2j-pgwm-95m9 Cut the Admin API access of a disabled or deleted API client (by @M0rgan01)
