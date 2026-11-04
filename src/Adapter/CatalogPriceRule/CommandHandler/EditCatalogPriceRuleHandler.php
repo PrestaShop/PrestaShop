@@ -39,7 +39,12 @@ final class EditCatalogPriceRuleHandler extends AbstractCatalogPriceRuleHandler 
             if (false === $specificPriceRule->update()) {
                 throw new CannotUpdateCatalogPriceRuleException(sprintf('Failed to update specific price rule with id %s', $specificPriceRule->id));
             }
-            $specificPriceRule->deleteConditions();
+            /*
+             * WHY the conditions are not touched: EditCatalogPriceRuleCommand carries no conditions, so
+             * a caller has no way to ask for them to be removed. Deleting them here dropped the scope of
+             * every rule the moment anything else about it was saved, and apply() then rebuilt the
+             * specific prices for the whole catalogue instead of the products the rule was aimed at.
+             */
             $specificPriceRule->apply();
         } catch (PrestaShopException $e) {
             throw new CatalogPriceRuleException(sprintf('An unexpected error occurred when editing specific price rule with id %s', $command->getCatalogPriceRuleId()->getValue()), 0, $e);
