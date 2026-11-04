@@ -72,10 +72,13 @@ class ThemeExporter
      */
     private function copyTheme(string $themeDir, string $cacheDir): void
     {
+        // Dot files (.eslintrc, .env.example...) are part of the theme, but .env may hold secrets
         $fileList = Finder::create()
             ->files()
             ->in($themeDir)
-            ->exclude(['node_modules']);
+            ->ignoreDotFiles(false)
+            ->exclude(['node_modules'])
+            ->notName('.env');
 
         $this->fileSystem->mirror($themeDir, $cacheDir, $fileList);
     }
@@ -138,10 +141,13 @@ class ThemeExporter
         $zip = new ZipArchive();
         $zip->open($destinationFileName, ZipArchive::CREATE);
 
+        // Module dependencies are mirrored without filtering, so .env is excluded here as well
         $files = Finder::create()
             ->files()
             ->in($sourceDir)
-            ->exclude(['node_modules']);
+            ->ignoreDotFiles(false)
+            ->exclude(['node_modules'])
+            ->notName('.env');
 
         foreach ($files as $file) {
             $zip->addFile($file->getRealpath(), $file->getRelativePathName());
@@ -155,6 +161,7 @@ class ThemeExporter
         $dirs = Finder::create()
             ->directories()
             ->in($cacheDir)
+            ->ignoreDotFiles(false)
             ->exclude(['node_modules']);
 
         $fs = new Filesystem();
