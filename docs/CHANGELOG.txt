@@ -63,6 +63,7 @@ Changelog for PrestaShop 9
 - Tests:
   - Bug fix:
     - Create the API client enabled in the authorization endpoint UI test (by @mattgoud)
+    - #43368: Update tests UI dependencies (by @Quetzacoalt91)
 
 ####################################
 #   v9.2.0 - (2026-09-29)
