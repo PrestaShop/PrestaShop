@@ -177,6 +177,8 @@ export default class CombinationsList {
       this.paginatedCombinationsService,
       this.renderer,
       0,
+      {},
+      'product.combinations.listLimit',
     );
     this.editor = new CombinationsListEditor(
       this.productId,
