@@ -114,8 +114,9 @@ class StatsRepository
             ->leftJoin('p', $this->dbPrefix . 'product_attribute', 'pa', 'pa.id_product = p.id_product')
             ->innerJoin('ps', $this->dbPrefix . 'shop', 's', 's.id_shop = ps.id_shop')
             ->innerJoin('s', $this->dbPrefix . 'shop_group', 'sg', 'sg.id_shop_group = s.id_shop_group')
+            // Joined from sg so that DBAL renders it after the shop joins its condition relies on
             ->leftJoin(
-                'p',
+                'sg',
                 $this->dbPrefix . 'stock_available',
                 'stock',
                 'stock.id_product = p.id_product'
@@ -483,7 +484,8 @@ class StatsRepository
             ->from($this->dbPrefix . 'customer', 'c')
             ->where('c.active = 1')
             ->andWhere('c.birthday IS NOT NULL')
-            ->andWhere("c.birthday != '0000-00-00'")
+            // Comparing to the '0000-00-00' literal fails under the NO_ZERO_DATE SQL mode of MySQL 8
+            ->andWhere('YEAR(c.birthday) > 0')
             ->andWhere('c.id_shop IN (:shopIds)')
             ->setParameter('today', $today . ' 00:00:00')
             ->setParameter('shopIds', $shopIds, Connection::PARAM_INT_ARRAY)
