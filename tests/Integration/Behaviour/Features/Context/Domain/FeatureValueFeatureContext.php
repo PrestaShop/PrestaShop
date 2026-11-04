@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use Db;
 use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureValueCommand;
@@ -208,6 +209,25 @@ class FeatureValueFeatureContext extends AbstractDomainFeatureContext
                 $featureValueReference
             ));
         }
+    }
+
+    /**
+     * @Then feature value :featureValueReference should have no translations
+     *
+     * @param string $featureValueReference
+     */
+    public function assertFeatureValueHasNoTranslations(string $featureValueReference): void
+    {
+        $featureValueId = (int) $this->getSharedStorage()->get($featureValueReference);
+        $translationCount = (int) Db::getInstance()->getValue(
+            'SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'feature_value_lang` WHERE `id_feature_value` = ' . $featureValueId
+        );
+
+        Assert::assertSame(
+            0,
+            $translationCount,
+            sprintf('Feature value "%s" (ID %d) still has translations', $featureValueReference, $featureValueId)
+        );
     }
 
     /**
