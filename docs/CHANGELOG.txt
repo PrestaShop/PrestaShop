@@ -41,6 +41,7 @@ Changelog for PrestaShop 9
   - Bug fix:
     - Update dependencies (by @jolelievre)
     - Update Symfony components to 6.4.49 (by @mattgoud)
+    - #43443: Update psgdpr to 1.4.4 (by @nicosomb)
     - GHSA-wrmc-gmx5-9hhc Keep attachment files inside the download directory (by @nicosomb)
     - GHSA-6c2j-pgwm-95m9 Cut the Admin API access of a disabled or deleted API client (by @M0rgan01)
     - GHSA-99cp-c6mm-p7h5 Block corrupted SVG files uploaded through the FileManager and the logo uploader (by @Quetzacoalt91)
@@ -62,6 +63,7 @@ Changelog for PrestaShop 9
 - Tests:
   - Bug fix:
     - Create the API client enabled in the authorization endpoint UI test (by @mattgoud)
+    - #43368: Update tests UI dependencies (by @Quetzacoalt91)
 
 ####################################
 #   v9.2.0 - (2026-09-29)
