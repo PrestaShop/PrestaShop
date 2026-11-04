@@ -40,6 +40,9 @@ final class CustomerB2bType extends AbstractType
             $builder->add('use_existing_customer', SwitchType::class, [
                 'label' => $this->translator->trans('Use an existing customer', [], 'Admin.Orderscustomers.Feature'),
                 'required' => false,
+                'attr' => [
+                    'class' => 'js-use-existing-customer-choice',
+                ],
             ]);
         }
 
