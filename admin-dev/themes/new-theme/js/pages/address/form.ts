@@ -15,9 +15,7 @@ $(() => {
   if ($customerSearch.length) {
     const $searchInput = $customerSearch.find('input.entity-search-input');
     const $selectedCustomers = $customerSearch.find('.entities-list');
-    const $formWrapper = $customerSearch.closest('.form-wrapper');
-    const guestLabel = $formWrapper.attr('data-guest-label') || 'Guest';
-    const customerLabel = $formWrapper.attr('data-customer-label') || 'Customer';
+    const guestLabel = $customerSearch.attr('data-guest-badge-label') || 'Guest';
 
     // The search input should only be required when no customer is selected.
     const updateCustomerRequired = (): void => {
@@ -25,14 +23,29 @@ $(() => {
       $searchInput.prop('required', !hasSelectedCustomer);
     };
 
+    const lastPrefill: Record<string, string> = {};
+
+    const prefillField = (selector: string, value: string | null): void => {
+      const $field = $(selector);
+      const currentValue = String($field.val() ?? '');
+
+      if (currentValue !== '' && currentValue !== lastPrefill[selector]) {
+        return;
+      }
+
+      const newValue = value ?? '';
+      $field.val(newValue);
+      lastPrefill[selector] = newValue;
+    };
+
     new EntitySearchInput($customerSearch, {
       // The existing customer-search endpoint may return the legacy envelope.
       responseTransformer: (response: any) => Object.values(response.customers ?? response),
       suggestionTemplate: (customer: any) => {
         const text = document.createElement('div');
-        const accountType = customer.is_guest ? guestLabel : customerLabel;
+        const guestSuffix = customer.is_guest ? ` (${guestLabel})` : '';
 
-        text.textContent = `#${customer.id_customer} - ${customer.fullname_and_email} (${accountType})`;
+        text.textContent = `#${customer.id_customer} - ${customer.fullname_and_email}${guestSuffix}`;
 
         return text.outerHTML;
       },
@@ -40,21 +53,13 @@ $(() => {
         updateCustomerRequired();
       },
       onSelectedContent: (_item: JQuery, customer: any) => {
-        $(addressFormMap.addressFirstnameInput).val(customer.firstname);
-        $(addressFormMap.addressLastnameInput).val(customer.lastname);
-        $(addressFormMap.addressCompanyInput).val(customer.company || '');
+        prefillField(addressFormMap.addressFirstnameInput, customer.firstname);
+        prefillField(addressFormMap.addressLastnameInput, customer.lastname);
+        prefillField(addressFormMap.addressCompanyInput, customer.company);
         updateCustomerRequired();
       },
     });
 
-    // Observe the actual selection list so the state stays correct regardless of
-    // whether EntitySearchInput calls its callbacks before or after DOM updates.
-    if ($selectedCustomers.length) {
-      new MutationObserver(updateCustomerRequired).observe($selectedCustomers[0], {
-        childList: true,
-        subtree: true,
-      });
-    }
     updateCustomerRequired();
   }
   new window.prestashop.component.CountryStateSelectionToggler(
