@@ -77,6 +77,7 @@ services:
     arguments:
       - '@prestashop.adapter.order.amount.updater'
       - '@prestashop.adapter.context_state_manager'
+      - '@prestashop.adapter.legacy.logger'
 
   prestashop.adapter.order.command_handler.delete_cart_rule_from_order_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\DeleteCartRuleFromOrderHandler

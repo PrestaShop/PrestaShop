@@ -268,6 +268,7 @@ Feature: Order from Back Office (BO)
     When I update order "bo_order1" Tracking number to "TEST1234" and Carrier to "default_carrier"
     Then cart "dummy_cart" should have "default_carrier" as a carrier
     And order "bo_order1" should have "default_carrier" as a carrier
+    And order "bo_order1" should have a logged carrier change from "weight_carrier" to "default_carrier"
     And order "bo_order1" should have following details:
       | total_products           | 53.800 |
       | total_products_wt        | 57.030 |
@@ -287,6 +288,7 @@ Feature: Order from Back Office (BO)
     When I update order "bo_order1" Tracking number to "TEST1234" and Carrier to "price_carrier"
     Then cart "dummy_cart" should have "price_carrier" as a carrier
     And order "bo_order1" should have "price_carrier" as a carrier
+    And order "bo_order1" should have a logged carrier change from "default_carrier" to "price_carrier"
     And order "bo_order1" should have following details:
       | total_products           | 53.800 |
       | total_products_wt        | 57.030 |
@@ -303,6 +305,17 @@ Feature: Order from Back Office (BO)
       | weight                 | 1.860 |
       | shipping_cost_tax_excl | 4.00  |
       | shipping_cost_tax_incl | 4.24  |
+
+  Scenario: Update only the tracking number of an order, the carrier change is not logged
+    Given I add order "bo_order1" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting bank wire payment |
+    And order "bo_order1" should have "weight_carrier" as a carrier
+    When I update order "bo_order1" Tracking number to "TEST1234" and Carrier to "weight_carrier"
+    Then order "bo_order1" should have "weight_carrier" as a carrier
+    And order "bo_order1" should not have a logged carrier change
 
   Scenario: When shipping recalculate is disabled the shipping is not updated
     Given shop configuration for "PS_ORDER_RECALCULATE_SHIPPING" is set to 0
