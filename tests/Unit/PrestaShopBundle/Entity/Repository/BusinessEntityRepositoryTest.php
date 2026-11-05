@@ -17,9 +17,9 @@ use PrestaShopBundle\Entity\B2B\BusinessEntity;
 use PrestaShopBundle\Entity\Repository\BusinessEntityRepository;
 
 /**
- * Pins the multishop guard of the repository at DQL level. Dropping either
- * `if (null !== $shopIds)` block would silently expose entities of another shop through the
- * guessable /business-entities/{id}/view URL, and no other test in the suite would fail.
+ * Pins the multishop guard of the repository at DQL level. Dropping the
+ * `if (null !== $shopIds)` guard of createByShopIdsQueryBuilder() would silently expose entities of another shop
+ * through the guessable /business-entities/{id}/view URL, and no other test in the suite would fail.
  */
 class BusinessEntityRepositoryTest extends TestCase
 {
