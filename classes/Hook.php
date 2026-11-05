@@ -118,11 +118,16 @@ class HookCore extends ObjectModel
 
     public function add($autodate = true, $null_values = false)
     {
+        // parent::add() fires actionObjectAddBefore, whose Hook::exec() rebuilds
+        // every name lookup from the table before this row is inserted; clean
+        // them after the INSERT so the new hook is visible to later lookups.
+        $result = parent::add($autodate, $null_values);
+
         Cache::clean('hook_idsbyname');
         Cache::clean('hook_idsbyname_withalias');
         Cache::clean('active_hooks');
 
-        return parent::add($autodate, $null_values);
+        return $result;
     }
 
     public function clearCache($all = false)

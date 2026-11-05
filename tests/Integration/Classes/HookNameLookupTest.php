@@ -20,6 +20,8 @@ class HookNameLookupTest extends TestCase
 
     private int $disabledHookId = 0;
 
+    private int $createdHookId = 0;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -31,8 +33,29 @@ class HookNameLookupTest extends TestCase
         if ($this->disabledHookId) {
             Db::getInstance()->update('hook', ['active' => 1], '`id_hook` = ' . $this->disabledHookId);
         }
+        if ($this->createdHookId) {
+            Db::getInstance()->delete('hook', '`id_hook` = ' . $this->createdHookId);
+        }
         $this->clearLookups();
         parent::tearDown();
+    }
+
+    public function testAHookAddedDuringTheRequestIsVisibleToLaterLookups(): void
+    {
+        $name = 'displayTestHookAddedMidRequest' . uniqid();
+
+        // parent::add() fires actionObjectAddBefore before the INSERT, and
+        // Hook::exec() reads the active-hook lookup, which rebuilds every name
+        // lookup from the table as it was before the row existed. The lookups
+        // must still resolve the new hook once add() returns.
+        $hook = new Hook();
+        $hook->name = $name;
+        $hook->active = true;
+        self::assertTrue($hook->add());
+        $this->createdHookId = (int) $hook->id;
+
+        self::assertSame($this->createdHookId, Hook::getIdByName($name));
+        self::assertTrue(Hook::getHookStatusByName($name));
     }
 
     public function testLookupsMatchTheHookTables(): void
