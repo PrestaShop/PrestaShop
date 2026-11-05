@@ -112,16 +112,11 @@ abstract class AbstractImageUploader
     /**
      * Generates one thumbnail per image type of the entity and per format.
      *
-     * @param int $id
-     * @param string $imageDir
-     * @param string $belongsTo
      * @param string[] $formats
-     *
-     * @return bool
      *
      * @throws ImageOptimizationException
      */
-    protected function generateDifferentSizeInFormats($id, $imageDir, $belongsTo, array $formats)
+    protected function generateDifferentSizeInFormats(int $id, string $imageDir, string $belongsTo, array $formats): bool
     {
         $resized = true;
 
@@ -130,7 +125,7 @@ abstract class AbstractImageUploader
 
             foreach ($imageTypes as $imageType) {
                 foreach ($formats as $format) {
-                    $resized &= $this->resize($id, $imageDir, $imageType, $format);
+                    $resized = $this->resize($id, $imageDir, $imageType, $format) && $resized;
                 }
             }
         } catch (PrestaShopException) {
@@ -149,11 +144,10 @@ abstract class AbstractImageUploader
      * @param int $id
      * @param string $imageDir
      * @param array $imageType
-     * @param string $format
      *
      * @return bool
      */
-    private function resize($id, $imageDir, array $imageType, $format)
+    private function resize($id, $imageDir, array $imageType, string $format)
     {
         $width = $imageType['width'];
         $height = $imageType['height'];
