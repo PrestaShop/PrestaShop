@@ -106,13 +106,32 @@ abstract class AbstractImageUploader
      */
     protected function generateDifferentSize($id, $imageDir, $belongsTo)
     {
+        return $this->generateDifferentSizeInFormats($id, $imageDir, $belongsTo, ['jpg']);
+    }
+
+    /**
+     * Generates one thumbnail per image type of the entity and per format.
+     *
+     * @param int $id
+     * @param string $imageDir
+     * @param string $belongsTo
+     * @param string[] $formats
+     *
+     * @return bool
+     *
+     * @throws ImageOptimizationException
+     */
+    protected function generateDifferentSizeInFormats($id, $imageDir, $belongsTo, array $formats)
+    {
         $resized = true;
 
         try {
             $imageTypes = ImageType::getImagesTypes($belongsTo);
 
             foreach ($imageTypes as $imageType) {
-                $resized &= $this->resize($id, $imageDir, $imageType);
+                foreach ($formats as $format) {
+                    $resized &= $this->resize($id, $imageDir, $imageType, $format);
+                }
             }
         } catch (PrestaShopException) {
             throw new ImageOptimizationException('Unable to resize one or more of your pictures.');
@@ -130,12 +149,12 @@ abstract class AbstractImageUploader
      * @param int $id
      * @param string $imageDir
      * @param array $imageType
+     * @param string $format
      *
      * @return bool
      */
-    private function resize($id, $imageDir, array $imageType)
+    private function resize($id, $imageDir, array $imageType, $format)
     {
-        $ext = '.jpg';
         $width = $imageType['width'];
         $height = $imageType['height'];
         $error = 0;
@@ -146,10 +165,10 @@ abstract class AbstractImageUploader
 
         if (!ImageManager::resize(
             $imageDir . $id . '.jpg',
-            $imageDir . $id . '-' . stripslashes($imageType['name']) . $ext,
+            $imageDir . $id . '-' . stripslashes($imageType['name']) . '.' . $format,
             (int) $width,
             (int) $height,
-            'jpg',
+            $format,
             false,
             $error,
             $targetWidth,
