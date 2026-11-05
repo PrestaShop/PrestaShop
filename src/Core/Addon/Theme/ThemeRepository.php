@@ -64,8 +64,11 @@ class ThemeRepository implements AddonRepositoryInterface
         } else {
             $data = $this->getConfigFromFile($dir . '/config/theme.yml');
 
-            // Write parsed yml data into json conf (faster parsing next time)
-            $this->filesystem->dumpFile($jsonConf, json_encode($data));
+            // Write parsed yml data into json conf (faster parsing next time).
+            // A theme without a name is not listed, so leave it uncached until its yml is fixed.
+            if (!empty($data['name'])) {
+                $this->filesystem->dumpFile($jsonConf, json_encode($data));
+            }
         }
 
         $data['directory'] = $dir;
@@ -127,7 +130,12 @@ class ThemeRepository implements AddonRepositoryInterface
         $themes = [];
         foreach ($themeDirectories as $directory) {
             $name = basename(substr($directory, 0, -strlen($suffix)));
-            $themes[$name] = $this->getInstanceByName($name);
+            $theme = $this->getInstanceByName($name);
+            // Without a name, a theme can be neither enabled nor deleted from the back office
+            if (empty($theme->getName())) {
+                continue;
+            }
+            $themes[$name] = $theme;
         }
 
         return $themes;
