@@ -195,16 +195,20 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
     it('should have the current category preselected as parent category', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPreselectedParentCategory', baseContext);
 
-      const selectedParentCategoryId = await page
-        .locator('input[name$="[parent_category]"]:checked')
-        .inputValue();
+      const selectedParentCategoryId = await boCMSPageCategoriesCreatePage.getSelectedParentCategoryId(page);
+      expect(selectedParentCategoryId).to.equal(categoryID);
+    });
 
-      expect(parseInt(selectedParentCategoryId, 10)).to.equal(categoryID);
+    it('should cancel and go back to the parent category', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'cancelSubCategoryCreation', baseContext);
 
-      await page.goBack();
+      await boCMSPageCategoriesCreatePage.cancelPageCategory(page);
 
       const pageTitle = await boCMSPagesPage.getPageTitle(page);
       expect(pageTitle).to.contains(boCMSPagesPage.pageTitle);
+
+      const currentUrl = await boCMSPagesPage.getCurrentURL(page);
+      expect(currentUrl).to.contains(`id_cms_category=${categoryID}`);
     });
 
     it('should get the pages number', async function () {
