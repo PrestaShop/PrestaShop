@@ -63,6 +63,10 @@ const BUILD_LEFTOVERS = '#(^|/)buildLock$|\.orig$|\.rej$#';
 const PRODUCTION_PHP = '#^(src|classes|controllers)/.*\.php$#';
 const TEST_FILES = '#^tests/|\.spec\.(js|ts)$|\.feature$#';
 const NEW_CODE = '#^(src|tests)/#';
+// Test modules and fixtures written like third-party code: no strict_types expected there.
+const STRICT_TYPES_EXEMPT = '#^tests/Resources/#';
+// Doctrine entities stay non-final: their proxies extend them.
+const FINAL_EXEMPT = '#^src/PrestaShopBundle/Entity/#';
 
 /**
  * Runs git in the repository and returns its output, or null when it fails.
@@ -118,6 +122,9 @@ function parseDiff(string $diff): array
     $current = null;
     $newLine = 0;
     $lastSide = null;
+    // File headers (mode, ---, +++) only come between "diff --git" and the first "@@":
+    // inside a hunk, an added "++$i;" or a removed "-- comment" is content.
+    $inHeader = false;
     foreach (explode("\n", $diff) as $raw) {
         if (str_starts_with($raw, 'diff --git ')) {
             if ($current !== null) {
@@ -126,20 +133,22 @@ function parseDiff(string $diff): array
             $path = preg_match('#^diff --git a/(.+) b/(.+)$#', $raw, $match) ? $match[2] : $raw;
             $current = ['path' => $path, 'status' => 'modified', 'added' => [], 'missingEofNewline' => false];
             $lastSide = null;
+            $inHeader = true;
             continue;
         }
         if ($current === null) {
             continue;
         }
-        if (str_starts_with($raw, 'new file mode')) {
-            $current['status'] = 'added';
-        } elseif (str_starts_with($raw, 'deleted file mode')) {
-            $current['status'] = 'deleted';
-        } elseif (str_starts_with($raw, '@@')) {
+        if (str_starts_with($raw, '@@')) {
             $newLine = preg_match('#^@@ -\d+(?:,\d+)? \+(\d+)#', $raw, $match) ? (int) $match[1] : 0;
             $lastSide = null;
-        } elseif (str_starts_with($raw, '+++') || str_starts_with($raw, '---')) {
-            continue;
+            $inHeader = false;
+        } elseif ($inHeader) {
+            if (str_starts_with($raw, 'new file mode')) {
+                $current['status'] = 'added';
+            } elseif (str_starts_with($raw, 'deleted file mode')) {
+                $current['status'] = 'deleted';
+            }
         } elseif (str_starts_with($raw, '\\')) {
             if ($lastSide === '+') {
                 $current['missingEofNewline'] = true;
@@ -265,7 +274,9 @@ function buildIndex(array $docs): array
         $context = $match[1];
         $isDomain = str_starts_with($context, 'Domain/');
         $name = explode('/', $context)[1];
-        $body = preg_match('#^\#\# Layers\s*\n(.*?)(?=^\#\# )#sm', $text, $layers) ? $layers[1] : $text;
+        // Only the Layers table maps paths: a context without one is reached through EXTRA_RULES,
+        // the rules of .ai/rules/ or the "possibly related" names, never through its whole text.
+        $body = preg_match('#^\#\# Layers\s*\n(.*?)(?=^\#\# )#sm', $text, $layers) ? $layers[1] : '';
         $patterns = [];
         preg_match_all('#`([^`]+)`#', $body, $tokens);
         foreach ($tokens[1] as $token) {
@@ -548,8 +559,10 @@ function unsortedUses(string $content): ?array
             $uses[] = trim($match[1]);
         }
     }
+    // Same order as php-cs-fixer's ordered_imports (in @Symfony): case-insensitive, with the
+    // namespace separator compared as a space. This CHECK only reports it before the CI does.
     for ($i = 1; $i < count($uses); ++$i) {
-        if (strcasecmp($uses[$i - 1], $uses[$i]) > 0) {
+        if (strcasecmp(str_replace('\\', ' ', $uses[$i - 1]), str_replace('\\', ' ', $uses[$i])) > 0) {
             return [$uses[$i - 1], $uses[$i]];
         }
     }
@@ -588,10 +601,11 @@ function checkCodingStandards(array $files, array $docs, string $head): array
         }
         $content = (string) git(['show', $head . ':' . $path]);
         $isNew = $file['status'] === 'added';
-        if ($isNew && preg_match(NEW_CODE, $path) && !str_contains($content, 'declare(strict_types=1);')) {
+        if ($isNew && preg_match(NEW_CODE, $path) && !preg_match(STRICT_TYPES_EXEMPT, $path)
+            && !str_contains($content, 'declare(strict_types=1);')) {
             $out[] = sprintf('FAIL  %s: new PHP file without declare(strict_types=1)', $path);
         }
-        if ($isNew && str_starts_with($path, 'src/')
+        if ($isNew && str_starts_with($path, 'src/') && !preg_match(FINAL_EXEMPT, $path)
             && preg_match('#^((?:final |abstract |readonly )*)class \w+#m', $content, $declaration)
             && !preg_match('#final|abstract#', $declaration[1])) {
             $out[] = sprintf('CHECK %s: new class neither final nor abstract (classes are final by default)', $path);
@@ -697,7 +711,10 @@ function main(array $argv): int
         }
     }
 
-    $files = parseDiff((string) git(['diff', '--no-color', '--find-renames', $base . '...' . $head]));
+    // The user's diff config must not change the format parseDiff reads: noprefix, mnemonicPrefix
+    // and an external diff all drop the a/ b/ prefixes; quotepath escapes non-ASCII paths.
+    $files = parseDiff((string) git(['-c', 'core.quotepath=false', 'diff', '--no-color', '--no-ext-diff',
+        '--src-prefix=a/', '--dst-prefix=b/', '--find-renames', $base . '...' . $head]));
     $docs = readAiFolder($base);
     $allAiFiles = preg_split('/\s+/', trim((string) git(['ls-tree', '-r', '--name-only', $base, '.ai'])));
     $contexts = contextsToRead($files, $docs, $allAiFiles);
