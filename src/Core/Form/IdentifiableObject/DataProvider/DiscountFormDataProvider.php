@@ -9,6 +9,8 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 use DateTime;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Customer\Repository\CustomerRepository;
+use PrestaShop\PrestaShop\Adapter\Discount\LegacyDiscountTypeResolver;
+use PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountTypeRepository;
 use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureValueRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
@@ -43,6 +45,7 @@ use PrestaShopBundle\Form\Admin\Sell\Discount\DiscountUsabilityModeType;
 use PrestaShopBundle\Form\Admin\Sell\Discount\ProductConditionsType;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DiscountFormDataProvider implements FormDataProviderInterface
 {
@@ -58,6 +61,8 @@ class DiscountFormDataProvider implements FormDataProviderInterface
         private readonly ShopContext $shopContext,
         private readonly RequestStack $requestStack,
         private readonly CustomerRepository $customerRepository,
+        private readonly DiscountTypeRepository $discountTypeRepository,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -124,6 +129,10 @@ class DiscountFormDataProvider implements FormDataProviderInterface
     {
         /** @var DiscountForEditing $discountForEditing */
         $discountForEditing = $this->queryBus->handle(new GetDiscountForEditing($id));
+        // Not on submit, or the warnings would still be displayed after the redirection, once the type has been saved
+        if ($discountForEditing->isTypeDeduced() && !$this->requestStack->getCurrentRequest()?->isMethod('POST')) {
+            $this->displayLegacyTypeWarnings($discountForEditing);
+        }
         $isAmountDiscount = $discountForEditing->getReductionAmount() !== null;
         $specificProducts = $this->getSpecificProducts($discountForEditing);
         $productSegment = $this->getProductSegmentDetails($discountForEditing);
@@ -354,6 +363,55 @@ class DiscountFormDataProvider implements FormDataProviderInterface
                 'image' => $imageUrl,
             ],
         ];
+    }
+
+    /**
+     * Cart rules created before the discount types were introduced have no type, it was deduced from their settings
+     * so we warn the user about it and about the legacy settings this form can't display.
+     */
+    private function displayLegacyTypeWarnings(DiscountForEditing $discountForEditing): void
+    {
+        $discountType = $discountForEditing->getType()->getValue();
+        $discountTypeData = $this->discountTypeRepository->getByDiscountType($discountType, $this->languageContext->getId());
+        $this->displayWarning($this->translator->trans(
+            'This discount was created before discount types were introduced. Its type "%type%" has been deduced from its settings and will be saved when you submit this form.',
+            ['%type%' => !empty($discountTypeData['name']) ? $discountTypeData['name'] : $discountType],
+            'Admin.Catalog.Notification'
+        ));
+
+        foreach ($discountForEditing->getUnsupportedLegacySettings() as $unsupportedSetting) {
+            $message = match ($unsupportedSetting) {
+                LegacyDiscountTypeResolver::UNSUPPORTED_FREE_SHIPPING => $this->translator->trans(
+                    'This discount also offers free shipping. This setting is not displayed in this form, it is kept as is.',
+                    [],
+                    'Admin.Catalog.Notification'
+                ),
+                LegacyDiscountTypeResolver::UNSUPPORTED_FREE_GIFT => $this->translator->trans(
+                    'This discount also offers a free gift. This setting is not displayed in this form, it is kept as is.',
+                    [],
+                    'Admin.Catalog.Notification'
+                ),
+                LegacyDiscountTypeResolver::UNSUPPORTED_CHEAPEST_PRODUCT => $this->translator->trans(
+                    'This discount applies to the cheapest product, which this form does not offer. Choose a single product or a product segment before submitting this form.',
+                    [],
+                    'Admin.Catalog.Notification'
+                ),
+                LegacyDiscountTypeResolver::UNSUPPORTED_PRODUCT_SEGMENT => $this->translator->trans(
+                    'This discount applies to a product selection. Once saved, its value will be computed with the product discount rules and may change.',
+                    [],
+                    'Admin.Catalog.Notification'
+                ),
+                LegacyDiscountTypeResolver::UNSUPPORTED_CART_RULE_RESTRICTION => $this->translator->trans(
+                    'This discount uses compatibility rules with specific cart rules. They still apply but are not displayed in this form.',
+                    [],
+                    'Admin.Catalog.Notification'
+                ),
+                default => null,
+            };
+            if (null !== $message) {
+                $this->displayWarning($message);
+            }
+        }
     }
 
     private function displayWarning(string $message): void
