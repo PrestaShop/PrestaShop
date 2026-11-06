@@ -202,21 +202,34 @@ export default class ModuleCard {
       return false;
     });
 
+    // The confirmation modals are rendered inside the module card, which the request updates
+    // once it is done. Sending it only after the modal is hidden lets Bootstrap remove the
+    // backdrop first, otherwise the page can stay greyed out.
+    const requestWhenModalIsHidden = (
+      link: HTMLElement,
+      action: string,
+      menuLinkSelector: string,
+      forceDeletion?: string,
+    ): false => {
+      $(link)
+        .parents('.modal')
+        .one('hidden.bs.modal', () => self.requestToController(
+          action,
+          $(
+            menuLinkSelector,
+            $(ModuleCardMap.moduleItemList(<string>$(link).attr('data-tech-name'))),
+          ),
+          forceDeletion,
+        ));
+
+      return false;
+    };
+
     $(document).on(
       'click',
       this.moduleActionModalDisableLinkSelector,
       function () {
-        return self.requestToController(
-          'disable',
-          $(
-            self.moduleActionMenuDisableLinkSelector,
-            $(
-              ModuleCardMap.moduleItemList(
-                <string>$(this).attr('data-tech-name'),
-              ),
-            ),
-          ),
-        );
+        return requestWhenModalIsHidden(this, 'disable', self.moduleActionMenuDisableLinkSelector);
       },
     );
 
@@ -224,39 +237,20 @@ export default class ModuleCard {
       'click',
       this.moduleActionModalResetLinkSelector,
       function () {
-        return self.requestToController(
-          'reset',
-          $(
-            self.moduleActionMenuResetLinkSelector,
-            $(
-              ModuleCardMap.moduleItemList(
-                <string>$(this).attr('data-tech-name'),
-              ),
-            ),
-          ),
-        );
+        return requestWhenModalIsHidden(this, 'reset', self.moduleActionMenuResetLinkSelector);
       },
     );
 
     $(document).on(
       'click',
       this.moduleActionModalUninstallLinkSelector,
-      (e) => {
-        $(e.target)
-          .parents('.modal')
-          .on('hidden.bs.modal', () => self.requestToController(
-            'uninstall',
-            $(
-              self.moduleActionMenuUninstallLinkSelector,
-              $(
-                ModuleCardMap.moduleItemList(
-                    <string>$(e.target).attr('data-tech-name'),
-                ),
-              ),
-            ),
-            $(e.target).attr('data-deletion'),
-          ),
-          );
+      function () {
+        return requestWhenModalIsHidden(
+          this,
+          'uninstall',
+          self.moduleActionMenuUninstallLinkSelector,
+          $(this).attr('data-deletion'),
+        );
       },
     );
   }
