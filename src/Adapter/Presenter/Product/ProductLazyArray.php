@@ -39,6 +39,7 @@ use Validate;
 
 /**
  * @property string $availability_message
+ * @property string|null $availability_submessage
  */
 class ProductLazyArray extends AbstractLazyArray
 {
@@ -1494,7 +1495,7 @@ class ProductLazyArray extends AbstractLazyArray
                 $this->product[
                     'availability_submessage'
                 ] = $this->translator->trans(
-                    'Product available with different options',
+                    'Other product variations available',
                     [],
                     'Shop.Theme.Catalog'
                 );
