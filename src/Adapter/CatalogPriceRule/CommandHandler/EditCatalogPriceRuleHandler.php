@@ -106,29 +106,20 @@ final class EditCatalogPriceRuleHandler extends AbstractCatalogPriceRuleHandler 
         $commandDateFrom = $command->getDateTimeFrom();
         $commandDateTo = $command->getDateTimeTo();
 
-        $modelDateFrom = $specificPriceRule->from;
-        $modelDateTo = $specificPriceRule->to;
-
-        // if `date from` value is being updated
-        if (null !== $commandDateFrom) {
-            // and if `date to` is set in database
-            if (!UtilsDateTime::isNull($modelDateTo)) {
-                // asserts that range between these values is not inverse
-                $this->assertDateRangeIsNotInverse($commandDateFrom, new DateTime($modelDateTo));
-            }
-
-            $specificPriceRule->from = $commandDateFrom->format('Y-m-d H:i:s');
+        // range is left untouched, the stored values are not checked
+        if (null === $commandDateFrom && null === $commandDateTo) {
+            return;
         }
 
-        // if `date to` value is being updated
-        if (null !== $commandDateTo) {
-            // and if `date from` is set in database
-            if (UtilsDateTime::isNull($modelDateFrom)) {
-                // asserts that range between these values is not inverse
-                $this->assertDateRangeIsNotInverse(new DateTime($modelDateFrom), $commandDateTo);
-            }
+        // resulting range: updated value when provided by the command, stored value otherwise
+        $dateFrom = null !== $commandDateFrom ? $commandDateFrom->format('Y-m-d H:i:s') : $specificPriceRule->from;
+        $dateTo = null !== $commandDateTo ? $commandDateTo->format('Y-m-d H:i:s') : $specificPriceRule->to;
 
-            $specificPriceRule->to = $commandDateTo->format('Y-m-d H:i:s');
+        if (!UtilsDateTime::isNull($dateFrom) && !UtilsDateTime::isNull($dateTo)) {
+            $this->assertDateRangeIsNotInverse(new DateTime($dateFrom), new DateTime($dateTo));
         }
+
+        $specificPriceRule->from = $dateFrom;
+        $specificPriceRule->to = $dateTo;
     }
 }

@@ -12,6 +12,7 @@ use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\BulkDeleteCatalog
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\DeleteCatalogPriceRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CannotDeleteCatalogPriceRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CannotUpdateCatalogPriceRuleException;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleListForProduct;
@@ -281,6 +282,13 @@ class CatalogPriceRuleController extends PrestaShopAdminController
                 [],
                 'Admin.Notifications.Error'
             ),
+            CatalogPriceRuleConstraintException::class => [
+                CatalogPriceRuleConstraintException::INVALID_DATE_RANGE => $this->trans(
+                    'The selected date range is not valid.',
+                    [],
+                    'Admin.Notifications.Error'
+                ),
+            ],
             CatalogPriceRuleNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found).',
                 [],
