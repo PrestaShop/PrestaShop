@@ -1038,8 +1038,13 @@ class BusinessEntityControllerTest extends GridControllerTestCase
             trim($crawler->filter('p.mb-3 strong')->text()),
             'AC2: the entity name must stand out in the context line'
         );
-        // AC2 asks for a text area: matching the id alone would survive a switch to TextType.
-        $this->assertCount(1, $crawler->filter('textarea#edit_business_entity_status_comment'));
+        // AC2 lists the status as the only input of the modal. Counting the visible controls keeps
+        // a field re-added to the type from slipping back into the modal unnoticed.
+        $this->assertCount(
+            0,
+            $crawler->filter('#edit_business_entity_status_form input:not([type="hidden"]), #edit_business_entity_status_form textarea'),
+            'AC2: the modal must offer the status dropdown and nothing else'
+        );
     }
 
     public function testTheStatusFormFragmentOfAnUnknownEntityIsNotFound(): void
@@ -1103,14 +1108,13 @@ class BusinessEntityControllerTest extends GridControllerTestCase
             BusinessEntityStatus::PENDING
         );
 
-        $this->submitStatusChange($entityId, BusinessEntityStatus::REJECTED, 'Expired registration document');
+        $this->submitStatusChange($entityId, BusinessEntityStatus::REJECTED);
 
         $entries = $this->statusLogEntriesFor($entityId);
 
         $this->assertCount(1, $entries, 'AC6: the status change must reach the administration log');
         $this->assertStringContainsString('"old":"pending"', $entries[0]['message']);
         $this->assertStringContainsString('"new":"rejected"', $entries[0]['message']);
-        $this->assertStringContainsString('"comment":"Expired registration document"', $entries[0]['message']);
         $this->assertSame(
             self::LOGGED_EMPLOYEE_ID,
             (int) $entries[0]['id_employee'],
@@ -1192,10 +1196,19 @@ class BusinessEntityControllerTest extends GridControllerTestCase
             BusinessEntityStatus::PENDING
         );
 
-        $this->submitStatusChange(
-            $entityId,
-            BusinessEntityStatus::REJECTED,
-            str_repeat('a', EditBusinessEntityStatusType::MAX_COMMENT_LENGTH + 1)
+        $crawler = $this->client->request('GET', $this->router->generate(
+            'admin_business_entities_get_status_form',
+            ['businessEntityId' => $entityId]
+        ));
+        $this->assertResponseIsSuccessful();
+
+        $this->client->request(
+            'POST',
+            $this->router->generate('admin_business_entities_update_status', ['businessEntityId' => $entityId]),
+            ['edit_business_entity_status' => [
+                EditBusinessEntityStatusType::FIELD_STATUS => 'not-a-status',
+                '_token' => $crawler->filter('#edit_business_entity_status__token')->attr('value'),
+            ]]
         );
 
         $this->assertResponseStatusCodeSame(400);
@@ -1203,11 +1216,11 @@ class BusinessEntityControllerTest extends GridControllerTestCase
         $payload = json_decode((string) $this->client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey(
-            EditBusinessEntityStatusType::FIELD_COMMENT,
+            EditBusinessEntityStatusType::FIELD_STATUS,
             $payload['form_errors'],
             'the error must name the field at fault so the modal can show it in place'
         );
-        $this->assertNotEmpty($payload['form_errors'][EditBusinessEntityStatusType::FIELD_COMMENT][0]);
+        $this->assertNotEmpty($payload['form_errors'][EditBusinessEntityStatusType::FIELD_STATUS][0]);
 
         $this->assertSame(
             BusinessEntityStatus::PENDING->value,
@@ -1224,7 +1237,7 @@ class BusinessEntityControllerTest extends GridControllerTestCase
         );
     }
 
-    private function submitStatusChange(int $entityId, BusinessEntityStatus $status, ?string $comment = null): Crawler
+    private function submitStatusChange(int $entityId, BusinessEntityStatus $status): Crawler
     {
         $crawler = $this->client->request('GET', $this->router->generate(
             'admin_business_entities_get_status_form',
@@ -1234,10 +1247,6 @@ class BusinessEntityControllerTest extends GridControllerTestCase
 
         $form = $crawler->filter('#edit_business_entity_status_form')->form();
         $form['edit_business_entity_status[status]'] = $status->value;
-
-        if (null !== $comment) {
-            $form['edit_business_entity_status[comment]'] = $comment;
-        }
 
         return $this->client->submit($form);
     }
@@ -1252,7 +1261,7 @@ class BusinessEntityControllerTest extends GridControllerTestCase
                 'SELECT message, id_employee FROM %slog WHERE object_type = ? AND object_id = ? AND message LIKE ? ORDER BY id_log ASC',
                 _DB_PREFIX_
             ),
-            ['BusinessEntity', $entityId, 'Business entity status changed successfully%']
+            ['BusinessEntity', $entityId, 'Business entity updated successfully%']
         );
     }
 

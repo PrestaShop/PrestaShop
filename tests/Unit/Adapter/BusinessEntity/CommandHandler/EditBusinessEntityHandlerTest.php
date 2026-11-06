@@ -333,6 +333,27 @@ class EditBusinessEntityHandlerTest extends TestCase
         $handler->handle((new EditBusinessEntityCommand(7))->setName('New name'));
     }
 
+    public function testAFailingAuditTrailWriteIsTranslatedIntoADomainExceptionToo(): void
+    {
+        $failure = new DBALException('Connection lost while writing the log');
+
+        $repository = $this->createMock(BusinessEntityRepository::class);
+        $repository->method('findById')->willReturn($this->buildBusinessEntity());
+        $repository->expects($this->once())->method('save');
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->method('info')->willThrowException($failure);
+
+        $handler = new EditBusinessEntityHandler($repository, $this->getMockShopContext(), $logger);
+
+        try {
+            $handler->handle((new EditBusinessEntityCommand(7))->setStatus(BusinessEntityStatus::ACTIVE));
+            $this->fail(sprintf('A %s should have been thrown.', CannotUpdateBusinessEntityException::class));
+        } catch (CannotUpdateBusinessEntityException $e) {
+            $this->assertSame($failure, $e->getPrevious());
+        }
+    }
+
     public function testAnUnencodableStoredValueDegradesTheAuditEntryInsteadOfFailingTheEdit(): void
     {
         $businessEntity = $this->buildBusinessEntity();

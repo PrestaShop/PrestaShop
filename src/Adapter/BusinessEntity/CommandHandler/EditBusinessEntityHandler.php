@@ -74,21 +74,20 @@ final class EditBusinessEntityHandler implements EditBusinessEntityHandlerInterf
 
         try {
             $this->businessEntityRepository->save($businessEntity);
+            $this->logger->info(
+                $this->formatLogMessage($modifiedFields),
+                [
+                    'object_type' => 'BusinessEntity',
+                    'object_id' => $businessEntityId,
+                    // Without this the legacy logger drops an entry identical to a previous one
+                    // (PrestaShopLogger::addLog() only inserts if $allowDuplicate || !isPresent()),
+                    // which would silently lose repeated edits from the audit trail.
+                    'allow_duplicate' => true,
+                ]
+            );
         } catch (Throwable $e) {
             throw new CannotUpdateBusinessEntityException('Could not update business entity', 0, $e);
         }
-
-        $this->logger->info(
-            $this->formatLogMessage($modifiedFields),
-            [
-                'object_type' => 'BusinessEntity',
-                'object_id' => $businessEntityId,
-                // Without this the legacy logger drops an entry identical to a previous one
-                // (PrestaShopLogger::addLog() only inserts if $allowDuplicate || !isPresent()),
-                // which would silently lose repeated edits from the audit trail.
-                'allow_duplicate' => true,
-            ]
-        );
     }
 
     /**

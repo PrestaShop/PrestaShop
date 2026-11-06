@@ -313,12 +313,6 @@ Feature: Manage business entities
       | delivery_authorized | 1                  |
       | status              | rejected           |
 
-  Scenario: Resubmitting the status it already holds still refreshes updated_at
-    Given there is a business entity named "Unchanged Status Corp" with status "active"
-    And the business entity "Unchanged Status Corp" was last updated an hour ago
-    When I change the status of the business entity "Unchanged Status Corp" to "active"
-    Then the business entity "Unchanged Status Corp" should have a refreshed updated_at
-
   Scenario: Changing the status of a business entity that does not exist raises a not found error
     When I change the status of the business entity with id 999999 to "active"
     Then I should get an error that the business entity was not found

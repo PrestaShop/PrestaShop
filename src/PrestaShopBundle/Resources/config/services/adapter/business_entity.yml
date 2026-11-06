@@ -10,8 +10,6 @@ services:
 
   PrestaShop\PrestaShop\Adapter\BusinessEntity\CommandHandler\EditBusinessEntityHandler: ~
 
-  PrestaShop\PrestaShop\Adapter\BusinessEntity\CommandHandler\UpdateBusinessEntityStatusHandler: ~
-
   PrestaShop\PrestaShop\Adapter\BusinessEntity\Address\BusinessEntityAddressFormatter: ~
 
   PrestaShop\PrestaShop\Adapter\BusinessEntity\QueryHandler\GetBusinessEntityForViewingHandler:

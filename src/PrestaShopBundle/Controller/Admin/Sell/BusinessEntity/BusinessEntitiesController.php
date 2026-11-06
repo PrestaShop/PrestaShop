@@ -11,7 +11,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\BusinessEntity;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\BulkDeleteBusinessEntityCommand;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\DeleteBusinessEntityCommand;
-use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\UpdateBusinessEntityStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\EditBusinessEntityCommand;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BulkDeleteBusinessEntityException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityBillingAddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityConstraintException;
@@ -290,11 +290,10 @@ class BusinessEntitiesController extends PrestaShopAdminController
         $data = $form->getData();
 
         try {
-            $this->dispatchCommand(new UpdateBusinessEntityStatusCommand(
-                $businessEntityId,
-                $data[EditBusinessEntityStatusType::FIELD_STATUS],
-                $data[EditBusinessEntityStatusType::FIELD_COMMENT]
-            ));
+            $command = new EditBusinessEntityCommand($businessEntityId);
+            $command->setStatus($data[EditBusinessEntityStatusType::FIELD_STATUS]);
+
+            $this->dispatchCommand($command);
         } catch (Exception $e) {
             return new JsonResponse(
                 ['error' => $this->getErrorMessageForException($e, $this->getErrorMessages())],

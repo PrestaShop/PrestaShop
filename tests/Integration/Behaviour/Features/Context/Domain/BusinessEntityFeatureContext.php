@@ -18,7 +18,6 @@ use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\AddBusinessEntityCo
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\BulkDeleteBusinessEntityCommand;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\DeleteBusinessEntityCommand;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\EditBusinessEntityCommand;
-use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\UpdateBusinessEntityStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BulkDeleteBusinessEntityException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityNotFoundException;
@@ -797,11 +796,10 @@ class BusinessEntityFeatureContext extends AbstractDomainFeatureContext
     private function changeBusinessEntityStatus(int $businessEntityId, string $status): void
     {
         try {
-            $this->getCommandBus()->handle(new UpdateBusinessEntityStatusCommand(
-                $businessEntityId,
-                BusinessEntityStatus::from($status),
-                null
-            ));
+            $command = new EditBusinessEntityCommand($businessEntityId);
+            $command->setStatus(BusinessEntityStatus::from($status));
+
+            $this->getCommandBus()->handle($command);
         } catch (BusinessEntityException $e) {
             $this->setLastException($e);
         }
