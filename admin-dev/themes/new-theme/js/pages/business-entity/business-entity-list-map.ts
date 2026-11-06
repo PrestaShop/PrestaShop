@@ -8,7 +8,7 @@ export default {
   editStatusFormContainer: '#editBusinessEntityStatusFormContainer',
   editStatusForm: '#edit_business_entity_status_form',
   editStatusFieldPrefix: 'edit_business_entity_status_',
-  editStatusSubmissionError: '.js-business-entity-status-error',
+  editStatusSubmissionErrorClass: 'js-business-entity-status-error',
   editStatusLoadingError: '#editBusinessEntityStatusError',
   editStatusSavingError: '#editBusinessEntityStatusSavingError',
   editStatusSubmitButton: '#submitEditBusinessEntityStatus',

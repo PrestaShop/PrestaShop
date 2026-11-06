@@ -246,7 +246,7 @@ class BusinessEntitiesController extends PrestaShopAdminController
         );
     }
 
-    #[AdminSecurity("is_granted('update', 'AdminBusinessEntities')")]
+    #[AdminSecurity("is_granted('update', 'AdminBusinessEntities')", message: 'You do not have permission to edit this.', jsonResponse: true)]
     public function getStatusFormAction(int $businessEntityId): Response
     {
         try {

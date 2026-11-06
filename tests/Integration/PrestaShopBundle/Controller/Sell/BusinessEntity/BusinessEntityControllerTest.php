@@ -8,12 +8,16 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Controller\Sell\BusinessEntity;
 
 use DateTime;
+use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\AddBusinessEntityCommand;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\CannotDeleteBusinessEntityException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\CannotUpdateBusinessEntityException;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Query\GetBusinessEntityForEditing;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\QueryResult\EditableBusinessEntity;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityBillingAddress;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShopBundle\Controller\Admin\Sell\BusinessEntity\BusinessEntitiesController;
 use PrestaShopBundle\Entity\B2B\B2bRole;
 use PrestaShopBundle\Entity\B2B\BusinessEntity;
 use PrestaShopBundle\Entity\B2B\BusinessEntityCustomerB2b;
@@ -21,12 +25,16 @@ use PrestaShopBundle\Entity\B2B\CustomerB2b;
 use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
 use PrestaShopBundle\Entity\Enum\CustomerB2bStatus;
 use PrestaShopBundle\Form\Admin\Sell\BusinessEntity\EditBusinessEntityStatusType;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
+use ReflectionMethod;
 use RuntimeException;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Tests\Integration\PrestaShopBundle\Controller\GridControllerTestCase;
 use Tests\Integration\PrestaShopBundle\Controller\TestEntityDTO;
 use Tests\Resources\Resetter\BusinessEntityResetter;
+use Throwable;
 
 class BusinessEntityControllerTest extends GridControllerTestCase
 {
@@ -909,6 +917,13 @@ class BusinessEntityControllerTest extends GridControllerTestCase
 
         $this->assertCount(1, $editStatus, 'AC1: Edit status must sit inside the kebab menu');
 
+        // aria-label rather than text(): the link also carries the material icon ligature.
+        $this->assertSame(
+            'Edit status',
+            $editStatus->attr('aria-label'),
+            'AC1: the kebab action must read "Edit status"'
+        );
+
         // The JavaScript hooks on this attribute and never on the class, which is built from a
         // translated label: once "Edit status" is translated the class changes and the modal
         // would stop opening in that language, with nothing else failing.
@@ -1038,6 +1053,18 @@ class BusinessEntityControllerTest extends GridControllerTestCase
             trim($crawler->filter('p.mb-3 strong')->text()),
             'AC2: the entity name must stand out in the context line'
         );
+        $this->assertSame(
+            '* Status',
+            trim($crawler->filter('label[for="edit_business_entity_status_status"]')->text()),
+            'AC2: the dropdown must carry the label the other screens use, marked required'
+        );
+        $this->assertSame(
+            ['Pending', 'Active', 'Inactive', 'Rejected'],
+            $crawler->filter('#edit_business_entity_status_status option')->each(
+                static fn (Crawler $option): string => trim($option->text())
+            ),
+            'AC2: the four statuses must be offered, translated, in the order the story lists'
+        );
         // AC2 lists the status as the only input of the modal. Counting the visible controls keeps
         // a field re-added to the type from slipping back into the modal unnoticed.
         $this->assertCount(
@@ -1150,6 +1177,29 @@ class BusinessEntityControllerTest extends GridControllerTestCase
         );
     }
 
+    public function testResubmittingTheStatusItAlreadyHoldsWritesNoAuditEntry(): void
+    {
+        $this->client->disableReboot();
+
+        $entityId = self::createBusinessEntity(
+            $this->client->getContainer()->get('prestashop.core.command_bus'),
+            'Status unchanged company',
+            'Status unchanged legal name',
+            BusinessEntityStatus::PENDING
+        );
+
+        // The modal preselects the current status, so this is what one click on "Update status"
+        // sends. AC6 traces status changes: an entry naming none would be noise.
+        $this->submitStatusChange($entityId, BusinessEntityStatus::PENDING);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertSame(
+            [],
+            $this->statusLogEntriesFor($entityId),
+            'AC6: a submission that changes nothing must leave the administration log alone'
+        );
+    }
+
     public function testAStatusSubmissionWithoutItsTokenIsRejected(): void
     {
         $this->client->disableReboot();
@@ -1229,6 +1279,123 @@ class BusinessEntityControllerTest extends GridControllerTestCase
         );
     }
 
+    /**
+     * The PageVoter of the test environment grants every permission, so a denial never reaches the
+     * listener here and the attribute itself is all there is to check: both actions are only ever
+     * reached by fetch(), which can only read a denial answered as JSON.
+     */
+    public function testBothStatusActionsAreGuardedAndAnswerADenialAsJson(): void
+    {
+        foreach (['getStatusFormAction', 'updateStatusAction'] as $action) {
+            $attributes = (new ReflectionMethod(BusinessEntitiesController::class, $action))
+                ->getAttributes(AdminSecurity::class);
+
+            $this->assertCount(1, $attributes, sprintf('%s must stay guarded', $action));
+            $this->assertStringContainsString(
+                "is_granted('update', 'AdminBusinessEntities')",
+                (string) $attributes[0]->getArguments()[0],
+                sprintf('%s must keep asking for the update permission', $action)
+            );
+            $this->assertTrue(
+                $attributes[0]->newInstance()->hasJSONResponse(),
+                sprintf('%s is only ever reached by fetch(): a denial must come back as JSON', $action)
+            );
+        }
+
+        $this->assertCount(
+            1,
+            (new ReflectionMethod(BusinessEntitiesController::class, 'updateStatusAction'))
+                ->getAttributes(DemoRestricted::class),
+            'the writing action of the pair must stay closed to the demo mode'
+        );
+    }
+
+    public function testAFailedStatusUpdateAnswersWithTheMappedDomainMessage(): void
+    {
+        $this->client->disableReboot();
+        $this->substituteBusFailingWith(
+            new CannotUpdateBusinessEntityException('Could not update business entity')
+        );
+
+        $this->submitStatusChange(self::$activeBusinessEntityId, BusinessEntityStatus::REJECTED);
+
+        $this->assertResponseStatusCodeSame(400);
+
+        $payload = json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertSame(
+            'An error occurred while updating the business entity.',
+            $payload['error'] ?? '',
+            'the modal must read the mapped domain message, not a generic one'
+        );
+
+        /** @var Session $session */
+        $session = $this->client->getRequest()->getSession();
+        $this->assertArrayNotHasKey(
+            'success',
+            $session->getFlashBag()->all(),
+            'a rejected update must not leave a success message behind for the next page'
+        );
+    }
+
+    public function testAnInfrastructureFailureDuringAStatusUpdateStaysAJsonError(): void
+    {
+        $this->client->disableReboot();
+        $this->substituteBusFailingWith(new RuntimeException('Connection lost'));
+
+        $this->submitStatusChange(self::$activeBusinessEntityId, BusinessEntityStatus::REJECTED);
+
+        $this->assertResponseStatusCodeSame(400);
+
+        $payload = json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertIsArray($payload, 'a failure outside the domain must stay a JSON answer, not a 500 page');
+        $this->assertArrayHasKey('error', $payload);
+    }
+
+    /**
+     * The handler takes its logger from the container, and anything it could report the failure to
+     * ends up in the same table through the legacy Monolog handler. Only the real wiring shows that
+     * an unwritable administration log leaves the status change alone.
+     */
+    public function testAnUnwritableAdministrationLogStillPersistsTheStatus(): void
+    {
+        $this->client->disableReboot();
+
+        // Narrowed to the update entry so the fixture below can still be created and logged: the
+        // substitution has to be in place before any request, the service being shared.
+        $refusedWrites = 0;
+        $logger = $this->createMock(LegacyLogger::class);
+        $logger->method('info')->willReturnCallback(static function (string $message) use (&$refusedWrites): void {
+            if (str_starts_with($message, 'Business entity updated successfully')) {
+                ++$refusedWrites;
+
+                throw new RuntimeException('ps_log is unwritable');
+            }
+        });
+
+        self::$kernel->getContainer()->set('prestashop.adapter.legacy.logger', $logger);
+
+        $entityId = self::createBusinessEntity(
+            $this->client->getContainer()->get('prestashop.core.command_bus'),
+            'Unwritable log company',
+            'Unwritable log legal name',
+            BusinessEntityStatus::PENDING
+        );
+
+        $this->submitStatusChange($entityId, BusinessEntityStatus::REJECTED);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertSame(
+            1,
+            $refusedWrites,
+            'the update entry must have reached the failing logger, or this test proves nothing'
+        );
+        $this->assertSame(
+            BusinessEntityStatus::REJECTED->value,
+            $this->persistedStatusOf($entityId),
+            'the status must stay saved even though its log entry could not be written'
+        );
+    }
+
     private function persistedStatusOf(int $entityId): string
     {
         return (string) $this->client->getContainer()->get('doctrine.dbal.default_connection')->fetchOne(
@@ -1249,6 +1416,35 @@ class BusinessEntityControllerTest extends GridControllerTestCase
         $form['edit_business_entity_status[status]'] = $status->value;
 
         return $this->client->submit($form);
+    }
+
+    /**
+     * The modal reads the entity through the same bus it writes through, so the substitute has to
+     * keep answering the query for the fragment to be rendered at all.
+     */
+    private function substituteBusFailingWith(Throwable $failure): void
+    {
+        $commandBus = $this->createMock(CommandBusInterface::class);
+        $commandBus->method('handle')->willReturnCallback(
+            static function (object $message) use ($failure): EditableBusinessEntity {
+                if ($message instanceof GetBusinessEntityForEditing) {
+                    return new EditableBusinessEntity(
+                        1,
+                        'Failing Corp',
+                        null,
+                        null,
+                        true,
+                        BusinessEntityStatus::ACTIVE,
+                        1,
+                        self::DEFAULT_SHOP_ID
+                    );
+                }
+
+                throw $failure;
+            }
+        );
+
+        self::$kernel->getContainer()->set('prestashop.core.command_bus', $commandBus);
     }
 
     /**

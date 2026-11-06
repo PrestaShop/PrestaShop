@@ -22,7 +22,7 @@ class EditBusinessEntityStatusType extends TranslatorAwareType
     {
         $builder
             ->add(self::FIELD_STATUS, EnumType::class, [
-                'label' => $this->trans('New status', 'Admin.Orderscustomers.Feature'),
+                'label' => $this->trans('Status', 'Admin.Global'),
                 'class' => BusinessEntityStatus::class,
                 'constraints' => [new NotBlank()],
             ]);

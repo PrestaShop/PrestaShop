@@ -65,6 +65,10 @@ export default class EditStatusManager {
 
       window.prestaShopUiKit.init();
     } catch (error) {
+      if (this.requestedFormUrl !== url) {
+        return;
+      }
+
       console.error('Error while loading the business entity status form:', error);
       this.toggleLoadingError(true);
     } finally {
@@ -174,7 +178,7 @@ export default class EditStatusManager {
 
   private buildError(messages: string[]): HTMLElement {
     const alert = document.createElement('div');
-    alert.className = 'alert alert-danger js-business-entity-status-error';
+    alert.className = `alert alert-danger ${BusinessEntityListMap.editStatusSubmissionErrorClass}`;
     alert.setAttribute('role', 'alert');
 
     const text = document.createElement('p');
@@ -186,7 +190,9 @@ export default class EditStatusManager {
   }
 
   private clearSubmissionErrors(): void {
-    document.querySelectorAll(BusinessEntityListMap.editStatusSubmissionError).forEach((alert) => alert.remove());
+    document
+      .querySelectorAll(`.${BusinessEntityListMap.editStatusSubmissionErrorClass}`)
+      .forEach((alert) => alert.remove());
     this.toggleSavingError(false);
   }
 

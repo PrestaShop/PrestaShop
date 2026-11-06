@@ -34,7 +34,7 @@ class EditBusinessEntityHandlerTest extends TestCase
         $repository->expects($this->once())->method('findById')->with(7, [self::SHOP_ID])->willReturn($businessEntity);
         $repository->expects($this->once())->method('save')->with($businessEntity);
 
-        $handler = new EditBusinessEntityHandler($repository, $this->getMockShopContext(), $this->createMock(LoggerInterface::class));
+        $handler = $this->buildHandler($repository);
         $handler->handle((new EditBusinessEntityCommand(7))
             ->setName('New name')
             ->setLegalName('New legal')
@@ -72,7 +72,7 @@ class EditBusinessEntityHandlerTest extends TestCase
                 ['object_type' => 'BusinessEntity', 'object_id' => 7, 'allow_duplicate' => true],
             );
 
-        $handler = new EditBusinessEntityHandler($repository, $this->getMockShopContext(), $logger);
+        $handler = $this->buildHandler($repository, $logger);
         $handler->handle((new EditBusinessEntityCommand(7))
             ->setName('New name')
             ->setLegalName('Old legal')
@@ -82,22 +82,22 @@ class EditBusinessEntityHandlerTest extends TestCase
             ->setCustomerGroupId(3));
     }
 
-    public function testItLogsBaseMessageWhenNothingChanged(): void
+    /**
+     * An entry naming no change cannot be told apart from a real one in ps_log, and the modal
+     * preselects the status the entity already holds: submitting it unchanged is one click away.
+     */
+    public function testItWritesNoAuditEntryWhenNothingChanged(): void
     {
         $businessEntity = $this->buildBusinessEntity();
 
         $repository = $this->createMock(BusinessEntityRepository::class);
         $repository->method('findById')->willReturn($businessEntity);
+        $repository->expects($this->once())->method('save');
 
         $logger = $this->createMock(LoggerInterface::class);
-        $logger->expects($this->once())
-            ->method('info')
-            ->with(
-                'Business entity updated successfully',
-                ['object_type' => 'BusinessEntity', 'object_id' => 7, 'allow_duplicate' => true],
-            );
+        $logger->expects($this->never())->method('info');
 
-        $handler = new EditBusinessEntityHandler($repository, $this->getMockShopContext(), $logger);
+        $handler = $this->buildHandler($repository, $logger);
         $handler->handle((new EditBusinessEntityCommand(7))
             ->setName('Old name')
             ->setLegalName('Old legal')
@@ -118,7 +118,7 @@ class EditBusinessEntityHandlerTest extends TestCase
         $repository = $this->createMock(BusinessEntityRepository::class);
         $repository->expects($this->once())->method('findById')->with(7, null)->willReturn($businessEntity);
 
-        $handler = new EditBusinessEntityHandler($repository, $shopContext, $this->createMock(LoggerInterface::class));
+        $handler = $this->buildHandler($repository, null, $shopContext);
         $handler->handle((new EditBusinessEntityCommand(7))
             ->setName('New name')
             ->setLegalName('Old legal')
@@ -151,7 +151,7 @@ class EditBusinessEntityHandlerTest extends TestCase
                 ['object_type' => 'BusinessEntity', 'object_id' => 7, 'allow_duplicate' => true],
             );
 
-        $handler = new EditBusinessEntityHandler($repository, $this->getMockShopContext(), $logger);
+        $handler = $this->buildHandler($repository, $logger);
         $handler->handle((new EditBusinessEntityCommand(7))
             ->setName('New name')
             ->setLegalName('New legal')
@@ -167,7 +167,7 @@ class EditBusinessEntityHandlerTest extends TestCase
         $repository->method('findById')->willReturn(null);
         $repository->expects($this->never())->method('save');
 
-        $handler = new EditBusinessEntityHandler($repository, $this->getMockShopContext(), $this->createMock(LoggerInterface::class));
+        $handler = $this->buildHandler($repository);
 
         $this->expectException(BusinessEntityNotFoundException::class);
 
@@ -197,7 +197,7 @@ class EditBusinessEntityHandlerTest extends TestCase
         $repository->method('findById')->willReturn($businessEntity);
         $repository->expects($this->once())->method('save')->with($businessEntity);
 
-        $handler = new EditBusinessEntityHandler($repository, $this->getMockShopContext(), $this->createMock(LoggerInterface::class));
+        $handler = $this->buildHandler($repository);
         $handler->handle((new EditBusinessEntityCommand(7))->setStatus(BusinessEntityStatus::ACTIVE));
 
         $this->assertSame(BusinessEntityStatus::ACTIVE, $businessEntity->getStatus());
@@ -225,7 +225,7 @@ class EditBusinessEntityHandlerTest extends TestCase
             $this->anything()
         );
 
-        $handler = new EditBusinessEntityHandler($repository, $this->getMockShopContext(), $logger);
+        $handler = $this->buildHandler($repository, $logger);
         $handler->handle((new EditBusinessEntityCommand(7))->setStatus(BusinessEntityStatus::ACTIVE));
     }
 
@@ -236,7 +236,7 @@ class EditBusinessEntityHandlerTest extends TestCase
         $repository = $this->createMock(BusinessEntityRepository::class);
         $repository->method('findById')->willReturn($businessEntity);
 
-        $handler = new EditBusinessEntityHandler($repository, $this->getMockShopContext(), $this->createMock(LoggerInterface::class));
+        $handler = $this->buildHandler($repository);
         $handler->handle((new EditBusinessEntityCommand(7))->setExternalRef(null));
 
         $this->assertNull($businessEntity->getExternalRef());
@@ -255,7 +255,7 @@ class EditBusinessEntityHandlerTest extends TestCase
             $this->anything()
         );
 
-        $handler = new EditBusinessEntityHandler($repository, $this->getMockShopContext(), $logger);
+        $handler = $this->buildHandler($repository, $logger);
         $handler->handle((new EditBusinessEntityCommand(7))->setName('Sécurité Générale'));
     }
 
@@ -277,7 +277,7 @@ class EditBusinessEntityHandlerTest extends TestCase
             $this->anything()
         );
 
-        $handler = new EditBusinessEntityHandler($repository, $this->getMockShopContext(), $logger);
+        $handler = $this->buildHandler($repository, $logger);
         $handler->handle((new EditBusinessEntityCommand(7))->setDeliveryAuthorized(false));
 
         $this->assertFalse($businessEntity->isDeliveryAuthorized());
@@ -298,7 +298,7 @@ class EditBusinessEntityHandlerTest extends TestCase
         $repository->method('findById')->willReturn($businessEntity);
         $repository->method('save')->willThrowException($failure);
 
-        $handler = new EditBusinessEntityHandler($repository, $this->getMockShopContext(), $this->createMock(LoggerInterface::class));
+        $handler = $this->buildHandler($repository);
 
         try {
             $handler->handle((new EditBusinessEntityCommand(7))->setName('New name'));
@@ -326,32 +326,36 @@ class EditBusinessEntityHandlerTest extends TestCase
         $logger = $this->createMock(LoggerInterface::class);
         $logger->expects($this->never())->method('info');
 
-        $handler = new EditBusinessEntityHandler($repository, $this->getMockShopContext(), $logger);
+        $handler = $this->buildHandler($repository, $logger);
 
         $this->expectException(CannotUpdateBusinessEntityException::class);
 
         $handler->handle((new EditBusinessEntityCommand(7))->setName('New name'));
     }
 
-    public function testAFailingAuditTrailWriteIsTranslatedIntoADomainExceptionToo(): void
+    /**
+     * The entity is saved by then, so failing the edit would tell the employee nothing changed and
+     * invite a retry whose change set is empty: the old and new status would be lost for good.
+     * There is nowhere to report the failure either, the application logger writing to the same
+     * table through the legacy Monolog handler.
+     */
+    public function testAFailingAuditTrailWriteLeavesTheEditSuccessful(): void
     {
-        $failure = new DBALException('Connection lost while writing the log');
+        $businessEntity = $this->buildBusinessEntity();
 
         $repository = $this->createMock(BusinessEntityRepository::class);
-        $repository->method('findById')->willReturn($this->buildBusinessEntity());
+        $repository->method('findById')->willReturn($businessEntity);
         $repository->expects($this->once())->method('save');
 
         $logger = $this->createMock(LoggerInterface::class);
-        $logger->method('info')->willThrowException($failure);
+        $logger->expects($this->once())
+            ->method('info')
+            ->willThrowException(new DBALException('Connection lost while writing the log'));
 
-        $handler = new EditBusinessEntityHandler($repository, $this->getMockShopContext(), $logger);
+        $handler = $this->buildHandler($repository, $logger);
+        $handler->handle((new EditBusinessEntityCommand(7))->setStatus(BusinessEntityStatus::ACTIVE));
 
-        try {
-            $handler->handle((new EditBusinessEntityCommand(7))->setStatus(BusinessEntityStatus::ACTIVE));
-            $this->fail(sprintf('A %s should have been thrown.', CannotUpdateBusinessEntityException::class));
-        } catch (CannotUpdateBusinessEntityException $e) {
-            $this->assertSame($failure, $e->getPrevious());
-        }
+        $this->assertSame(BusinessEntityStatus::ACTIVE, $businessEntity->getStatus());
     }
 
     public function testAnUnencodableStoredValueDegradesTheAuditEntryInsteadOfFailingTheEdit(): void
@@ -375,10 +379,22 @@ class EditBusinessEntityHandlerTest extends TestCase
                 $this->anything()
             );
 
-        $handler = new EditBusinessEntityHandler($repository, $this->getMockShopContext(), $logger);
+        $handler = $this->buildHandler($repository, $logger);
         $handler->handle((new EditBusinessEntityCommand(7))->setName('New name'));
 
         $this->assertSame('New name', $businessEntity->getName());
+    }
+
+    private function buildHandler(
+        BusinessEntityRepository $repository,
+        ?LoggerInterface $logger = null,
+        ?ShopContext $shopContext = null,
+    ): EditBusinessEntityHandler {
+        return new EditBusinessEntityHandler(
+            $repository,
+            $shopContext ?? $this->getMockShopContext(),
+            $logger ?? $this->createMock(LoggerInterface::class),
+        );
     }
 
     private function buildBusinessEntity(): BusinessEntity

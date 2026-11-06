@@ -74,6 +74,21 @@ final class EditBusinessEntityHandler implements EditBusinessEntityHandlerInterf
 
         try {
             $this->businessEntityRepository->save($businessEntity);
+        } catch (Throwable $e) {
+            throw new CannotUpdateBusinessEntityException('Could not update business entity', 0, $e);
+        }
+
+        if ([] !== $modifiedFields) {
+            $this->writeAuditTrail($businessEntityId, $modifiedFields);
+        }
+    }
+
+    /**
+     * @param array<string, array{old: mixed, new: mixed}> $modifiedFields
+     */
+    private function writeAuditTrail(int $businessEntityId, array $modifiedFields): void
+    {
+        try {
             $this->logger->info(
                 $this->formatLogMessage($modifiedFields),
                 [
@@ -85,8 +100,8 @@ final class EditBusinessEntityHandler implements EditBusinessEntityHandlerInterf
                     'allow_duplicate' => true,
                 ]
             );
-        } catch (Throwable $e) {
-            throw new CannotUpdateBusinessEntityException('Could not update business entity', 0, $e);
+        } catch (Throwable) {
+            // The entity is saved: logging must never turn a successful edit into a failed one.
         }
     }
 
@@ -96,11 +111,6 @@ final class EditBusinessEntityHandler implements EditBusinessEntityHandlerInterf
     private function formatLogMessage(array $modifiedFields): string
     {
         $baseMessage = 'Business entity updated successfully';
-
-        if ([] === $modifiedFields) {
-            return $baseMessage;
-        }
-
         $encodedFields = json_encode($modifiedFields, JSON_INVALID_UTF8_SUBSTITUTE | JSON_UNESCAPED_UNICODE);
 
         return false === $encodedFields ? $baseMessage : $baseMessage . ' ' . $encodedFields;

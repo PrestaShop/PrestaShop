@@ -40,7 +40,10 @@ class BusinessEntityStatusTest extends TestCase
     public function testItTranslatesEveryStatusToItsLabel(BusinessEntityStatus $status, string $expected): void
     {
         $translator = $this->createMock(TranslatorInterface::class);
-        $translator->method('trans')->willReturnArgument(0);
+        $translator->expects($this->once())
+            ->method('trans')
+            ->with($expected, [], 'Admin.Global', null)
+            ->willReturnArgument(0);
 
         $this->assertSame($expected, $status->trans($translator));
     }
