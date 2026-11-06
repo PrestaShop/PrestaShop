@@ -191,6 +191,7 @@ class HTMLTemplateShipmentDeliverySlipCore extends HTMLTemplate
      *     unit_price_tax_incl: float,
      *     unit_price_tax_excl: float,
      *     image: Image|null,
+     *     location: string|false,
      * }[]
      */
     protected function getShipmentProducts()
@@ -215,6 +216,11 @@ class HTMLTemplateShipmentDeliverySlipCore extends HTMLTemplate
                 $product['product_price'] = $orderDetail->product_price;
                 $product['unit_price_tax_incl'] = $orderDetail->unit_price_tax_incl;
                 $product['unit_price_tax_excl'] = $orderDetail->unit_price_tax_excl;
+                $product['location'] = StockAvailable::getLocation(
+                    (int) $orderDetail->product_id,
+                    (int) $orderDetail->product_attribute_id,
+                    (int) $this->order->id_shop
+                );
 
                 // Get product image
                 $product['image'] = null;
