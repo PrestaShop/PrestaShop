@@ -67,6 +67,8 @@ const NEW_CODE = '#^(src|tests)/#';
 const STRICT_TYPES_EXEMPT = '#^tests/Resources/#';
 // Doctrine entities stay non-final: their proxies extend them.
 const FINAL_EXEMPT = '#^src/PrestaShopBundle/Entity/#';
+// Doctrine entities, their repositories aside: a mapping change there is a schema change.
+const ENTITY_FILES = '#^src/PrestaShopBundle/Entity/(?!Repository/).+\.php$#';
 
 /**
  * Runs git in the repository and returns its output, or null when it fails.
@@ -474,10 +476,15 @@ function contextsToRead(array $files, array $docs, array $allAiFiles): array
     if (isset($docs['.ai/GOTCHAS.md']) && array_filter(array_keys($hits), fn (string $c): bool => str_starts_with($c, 'Domain/'))) {
         $crossCutting['.ai/GOTCHAS.md'] = 'a domain is touched';
     }
+    $upgradeSkill = in_array('.ai/Component/Migration/skills/write-upgrade-sql-script/SKILL.md', $allAiFiles, true)
+        ? ' (skill write-upgrade-sql-script)' : '';
     if (in_array('install-dev/data/db_structure.sql', $paths, true)) {
-        $skill = '.ai/Component/Migration/skills/write-upgrade-sql-script/SKILL.md';
-        $crossCutting['schema change'] = 'db_structure.sql changed: shops upgrading need an upgrade SQL script'
-            . (in_array($skill, $allAiFiles, true) ? ' (skill write-upgrade-sql-script)' : '');
+        $crossCutting['schema change'] = 'db_structure.sql changed: shops upgrading need an upgrade SQL script' . $upgradeSkill;
+    } elseif ($entities = array_filter($paths, fn (string $p): bool => (bool) preg_match(ENTITY_FILES, $p))) {
+        // The installer loads db_structure.sql only, and the upgrade replays upgrade SQL scripts only:
+        // a mapping changed in an entity alone reaches neither a new shop nor an upgraded one.
+        $crossCutting['entity change'] = sprintf('%s changed without db_structure.sql: if the Doctrine mapping changed,'
+            . ' mirror it in db_structure.sql and in an upgrade SQL script%s', basename(reset($entities)), $upgradeSkill);
     }
     if (array_filter($paths, fn (string $p): bool => str_starts_with($p, '.ai/'))) {
         $crossCutting['.ai/STRUCTURE.md'] = 'the diff edits .ai/ itself';
