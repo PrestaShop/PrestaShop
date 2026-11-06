@@ -202,4 +202,29 @@ describe('BO - Design - Image Settings : Check suppliers image format', async ()
       });
     });
   });
+
+  describe('POST-CONDITION : Disable WebP for image generation', async () => {
+    it('should go to \'Design > Image Settings\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToImageSettingsPageForReset', baseContext);
+
+      await boDashboardPage.goToSubMenu(
+        page,
+        boDashboardPage.designParentLink,
+        boDashboardPage.imageSettingsLink,
+      );
+
+      const pageTitle = await boImageSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boImageSettingsPage.pageTitle);
+    });
+
+    it('should disable WebP image format', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'disableWebP', baseContext);
+
+      const result = await boImageSettingsPage.setImageFormatToGenerateChecked(page, 'webp', false);
+      expect(result).to.be.eq(boImageSettingsPage.messageSettingsUpdated);
+
+      const webpChecked = await boImageSettingsPage.isImageFormatToGenerateChecked(page, 'webp');
+      expect(webpChecked).to.eq(false);
+    });
+  });
 });
