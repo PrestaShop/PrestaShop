@@ -78,5 +78,6 @@ $(() => {
     CatalogPriceRuleFormMap.includeTax,
     CatalogPriceRuleFormMap.currencyId,
     CatalogPriceRuleFormMap.reductionTypeAmountSymbol,
+    CatalogPriceRuleFormMap.reductionValueInput,
   );
 });

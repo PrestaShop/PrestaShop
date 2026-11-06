@@ -33,6 +33,7 @@ export default {
     + '.js-fixed-price-row .input-group.money-type .input-group-prepend .input-group-text',
   leaveInitialPriceCheckbox: '#specific_price_leave_initial_price',
   reductionTypeSelect: '#specific_price_impact_reduction_type',
+  reductionValueInput: '#specific_price_impact_reduction_value',
   reductionTypeAmountSymbol: '.price-reduction-value .input-group .input-group-append .input-group-text, '
     + '.price-reduction-value .input-group .input-group-prepend .input-group-text',
   includeTaxInputContainer: '.js-include-tax-row',

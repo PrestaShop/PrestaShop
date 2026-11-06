@@ -32,6 +32,7 @@ export default {
   price: '#catalog_price_rule_price',
   currencyId: '#catalog_price_rule_id_currency',
   reductionTypeSelect: '#catalog_price_rule_reduction_type',
+  reductionValueInput: '#catalog_price_rule_reduction_value',
   reductionTypeAmountSymbol: '.price-reduction-value .input-group .input-group-append .input-group-text, '
     + '.price-reduction-value .input-group .input-group-prepend .input-group-text',
 

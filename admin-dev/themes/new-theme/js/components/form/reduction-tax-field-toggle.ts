@@ -37,16 +37,20 @@ export default class ReductionTaxFieldToggle {
 
   reductionAmountSymbolSelector: string;
 
+  $reductionValueInputs: JQuery;
+
   constructor(
     reductionTypeSelector: string,
     taxInclusionInputs: string,
     currencySymbolSelect: string,
     reductionAmountSymbolSelector:string,
+    reductionValueSelector = '',
   ) {
     this.$reductionTypeSelector = $(reductionTypeSelector);
     this.$taxInclusionInputs = $(taxInclusionInputs);
     this.currencySymbolSelect = currencySymbolSelect;
     this.reductionAmountSymbolSelector = reductionAmountSymbolSelector;
+    this.$reductionValueInputs = reductionValueSelector !== '' ? $(reductionValueSelector) : $();
     this.handle();
     this.$reductionTypeSelector.on('change', () => this.handle());
   }
@@ -56,6 +60,10 @@ export default class ReductionTaxFieldToggle {
    */
   private handle(): void {
     const isPercentage = this.$reductionTypeSelector.val() === 'percentage';
+
+    // A percentage is parsed by a localized PercentType, which expects the decimal separator
+    // of the current locale, so it must not be normalized to a dot like an amount is.
+    this.$reductionValueInputs.toggleClass('js-comma-transformer', !isPercentage);
 
     if (isPercentage) {
       this.$taxInclusionInputs.fadeOut();
