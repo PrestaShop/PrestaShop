@@ -19,6 +19,7 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Range;
 use Symfony\Component\Validator\Constraints\Url;
@@ -27,6 +28,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class GeneralSettings extends TranslatorAwareType
 {
     private const MAX_IMAGE_SIZE_IN_BYTES = 8 * 1000000;
+
+    // Mirrors the size of the `name` column of the Carrier ObjectModel.
+    private const MAX_NAME_LENGTH = 64;
 
     public function __construct(
         TranslatorInterface $translator,
@@ -51,6 +55,16 @@ class GeneralSettings extends TranslatorAwareType
                 'constraints' => [
                     new CleanHtml([
                         'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                    ]),
+                    // Without this the name reaches the ObjectModel, whose column is 64 characters,
+                    // and comes back as a CarrierConstraintException the form cannot attach anywhere.
+                    new Length([
+                        'max' => self::MAX_NAME_LENGTH,
+                        'maxMessage' => $this->trans(
+                            'This field cannot be longer than %limit% characters.',
+                            'Admin.Notifications.Error',
+                            ['%limit%' => self::MAX_NAME_LENGTH]
+                        ),
                     ]),
                 ],
             ])
