@@ -116,6 +116,19 @@ php ./bin/console prestashop:api-client create {clientId} --all-scopes --name='T
 Before running tests, you should install your shop manually or run the install script *
 *`campaigns/sanity/01_installShop/*`** with the [`test:specific` command](README.md#specific-test).
 
+### Warning: target environment
+
+The UI tests **mutate the target shop without restraint**: they create
+orders and customers, change order statuses (including "Refunded"), edit
+products, categories and BO configuration. Never run them against a shop
+that holds real data or live payment credentials.
+
+A clone of a production database is **not** safe by default: it still
+contains real payment-transaction IDs, so a status test that sets an order
+to "Refunded" can make a payment module issue a real refund against the
+original transaction. If you need to test against prod-like data, strip
+payment-module credentials and sanitize stored transaction IDs first.
+
 ## Sanity tests
 
 This campaign includes a non-exhaustive set of tests and will ensure that the most important functions work.
