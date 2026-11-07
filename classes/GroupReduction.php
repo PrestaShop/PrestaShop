@@ -24,6 +24,11 @@ class GroupReductionCore extends ObjectModel
 
     protected static $reduction_cache = [];
 
+    /**
+     * @var array<int, bool> Whether product_group_reduction_cache holds any row for a group
+     */
+    protected static $groupHasProductReductions = [];
+
     public function add($autodate = true, $null_values = false)
     {
         return parent::add($autodate, $null_values) && $this->_setCache();
@@ -59,6 +64,8 @@ class GroupReductionCore extends ObjectModel
 
     protected function _setCache()
     {
+        unset(static::$groupHasProductReductions[(int) $this->id_group]);
+
         $products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             '
 			SELECT cp.`id_product`
@@ -120,6 +127,15 @@ class GroupReductionCore extends ObjectModel
     {
         if (!Group::isFeatureActive()) {
             return 0;
+        }
+
+        if (!isset(static::$groupHasProductReductions[(int) $id_group])) {
+            static::$groupHasProductReductions[(int) $id_group] = (bool) Db::getInstance()->getValue(
+                'SELECT 1 FROM `' . _DB_PREFIX_ . 'product_group_reduction_cache` WHERE `id_group` = ' . (int) $id_group
+            );
+        }
+        if (!static::$groupHasProductReductions[(int) $id_group]) {
+            return false;
         }
 
         if (!isset(self::$reduction_cache[$id_product . '-' . $id_group])) {
@@ -225,5 +241,6 @@ class GroupReductionCore extends ObjectModel
     public static function resetStaticCache()
     {
         static::$reduction_cache = [];
+        static::$groupHasProductReductions = [];
     }
 }
