@@ -64,6 +64,20 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     protected $templateVarProductCache = null;
 
+    /**
+     * Results of lookups that several steps of the same request need for the same product and combination.
+     */
+    private ?bool $productHasCombinations = null;
+
+    private bool $isIdProductAttributeResolved = false;
+
+    private ?int $resolvedIdProductAttribute = null;
+
+    /**
+     * @var array<int, array<string, mixed>|null>
+     */
+    private array $combinationsById = [];
+
     public function canonicalRedirection(string $canonical_url = ''): void
     {
         /*
@@ -78,7 +92,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
 
         // We check if the combination is valid, if not, we reset it redirect to pure product URL without combination.
-        if (!$this->product->hasCombinations() || !$this->isValidCombination($this->id_product_attribute, $this->product->id)) {
+        if (!$this->productHasCombinations() || !$this->isValidCombination($this->id_product_attribute, $this->product->id)) {
             unset($_GET['id_product_attribute']);
             $this->id_product_attribute = null;
         }
@@ -1084,8 +1098,18 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     private function getIdProductAttributeByGroupOrRequestOrDefault(): ?int
     {
+        if (!$this->isIdProductAttributeResolved) {
+            $this->resolvedIdProductAttribute = $this->resolveIdProductAttributeByGroupOrRequestOrDefault();
+            $this->isIdProductAttributeResolved = true;
+        }
+
+        return $this->resolvedIdProductAttribute;
+    }
+
+    private function resolveIdProductAttributeByGroupOrRequestOrDefault(): ?int
+    {
         // If the product has no combinations, we return early
-        if (!$this->product->hasCombinations()) {
+        if (!$this->productHasCombinations()) {
             return null;
         }
 
@@ -1364,13 +1388,21 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     public function findProductCombinationById(int $combinationId)
     {
-        $combinations = $this->product->getAttributesGroups($this->context->language->id, $combinationId);
-
-        if (!is_array($combinations) || empty($combinations)) {
-            return null;
+        if (!array_key_exists($combinationId, $this->combinationsById)) {
+            $combinations = $this->product->getAttributesGroups($this->context->language->id, $combinationId);
+            $this->combinationsById[$combinationId] = is_array($combinations) && !empty($combinations) ? reset($combinations) : null;
         }
 
-        return reset($combinations);
+        return $this->combinationsById[$combinationId];
+    }
+
+    private function productHasCombinations(): bool
+    {
+        if (null === $this->productHasCombinations) {
+            $this->productHasCombinations = $this->product->hasCombinations();
+        }
+
+        return $this->productHasCombinations;
     }
 
     /**

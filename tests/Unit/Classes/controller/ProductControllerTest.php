@@ -8,8 +8,12 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Classes\Controller;
 
+use Context;
+use Language;
 use PHPUnit\Framework\TestCase;
+use Product;
 use ProductControllerCore;
+use ReflectionMethod;
 
 class ProductControllerTest extends TestCase
 {
@@ -63,6 +67,33 @@ class ProductControllerTest extends TestCase
                 'value' => 'Granite',
             ],
         ], $structuredProductData['additionalProperty']);
+    }
+
+    public function testItLooksUpEachCombinationOnce(): void
+    {
+        $product = new CountingProduct([4 => [['id_product_attribute' => 4, 'minimal_quantity' => 3]]]);
+        $controller = new TestProductController();
+        $controller->setProductAndLanguage($product);
+
+        $this->assertSame(['id_product_attribute' => 4, 'minimal_quantity' => 3], $controller->findProductCombinationById(4));
+        $this->assertSame(['id_product_attribute' => 4, 'minimal_quantity' => 3], $controller->findProductCombinationById(4));
+        $this->assertNull($controller->findProductCombinationById(5));
+        $this->assertNull($controller->findProductCombinationById(5));
+
+        $this->assertSame([4, 5], $product->attributesGroupsLookups);
+    }
+
+    public function testItResolvesTheCombinationOfAProductWithoutCombinationsOnce(): void
+    {
+        $product = new CountingProduct([]);
+        $controller = new TestProductController();
+        $controller->setProductAndLanguage($product);
+        $resolve = new ReflectionMethod(ProductControllerCore::class, 'getIdProductAttributeByGroupOrRequestOrDefault');
+
+        $this->assertNull($resolve->invoke($controller));
+        $this->assertNull($resolve->invoke($controller));
+
+        $this->assertSame(1, $product->hasCombinationsLookups);
     }
 
     public static function productFeaturesProvider(): iterable
@@ -189,6 +220,19 @@ class TestProductController extends ProductControllerCore
     {
     }
 
+    public function setProductAndLanguage(Product $product): void
+    {
+        $language = new class() extends Language {
+            public function __construct()
+            {
+            }
+        };
+        $language->id = 1;
+        $this->context = new Context();
+        $this->context->language = $language;
+        $this->product = $product;
+    }
+
     /**
      * Adds product features to structured data for testing.
      *
@@ -198,5 +242,35 @@ class TestProductController extends ProductControllerCore
     public function addProductFeaturesToStructuredData(array &$structuredProductData, array $features): void
     {
         parent::addProductFeaturesToStructuredData($structuredProductData, $features);
+    }
+}
+
+class CountingProduct extends Product
+{
+    /** @var int[] */
+    public array $attributesGroupsLookups = [];
+
+    public int $hasCombinationsLookups = 0;
+
+    /**
+     * @param array<int, array<int, array<string, mixed>>> $combinations Rows returned per combination id
+     */
+    public function __construct(private array $combinations)
+    {
+        $this->id = 1;
+    }
+
+    public function getAttributesGroups($id_lang, $id_product_attribute = null)
+    {
+        $this->attributesGroupsLookups[] = (int) $id_product_attribute;
+
+        return $this->combinations[(int) $id_product_attribute] ?? [];
+    }
+
+    public function hasCombinations()
+    {
+        ++$this->hasCombinationsLookups;
+
+        return !empty($this->combinations);
     }
 }
