@@ -58,12 +58,34 @@ if (is_file(_PS_CUSTOM_CONFIG_FILE_)) {
 
 if (_PS_DEBUG_PROFILING_) {
     include_once _PS_TOOL_DIR_ . 'profiling/Profiler.php';
-    include_once _PS_TOOL_DIR_ . 'profiling/Controller.php';
-    include_once _PS_TOOL_DIR_ . 'profiling/ObjectModel.php';
-    include_once _PS_TOOL_DIR_ . 'profiling/Db.php';
-    include_once _PS_TOOL_DIR_ . 'profiling/Hook.php';
-    include_once _PS_TOOL_DIR_ . 'profiling/Module.php';
-    include_once _PS_TOOL_DIR_ . 'profiling/Tools.php';
+
+    // WHY: each of these files declares the final class name, which is the same name a shop's own
+    // override declares. Including one claims the single `X extends XCore` inheritance slot outright,
+    // so the autoloader is never asked for the class and override/classes/X.php never loads - every
+    // call to an override-only method then dies with `Call to undefined method`, in code that has
+    // nothing to do with profiling. The two cannot share that slot, so the override keeps it and the
+    // class goes unprofiled, said out loud rather than silently.
+    $unprofiledOverriddenClasses = [];
+    foreach (['Controller', 'ObjectModel', 'Db', 'Hook', 'Module', 'Tools'] as $profiledClass) {
+        if (file_exists(_PS_OVERRIDE_DIR_ . 'classes/' . $profiledClass . '.php')) {
+            $unprofiledOverriddenClasses[] = $profiledClass;
+
+            continue;
+        }
+
+        include_once _PS_TOOL_DIR_ . 'profiling/' . $profiledClass . '.php';
+    }
+
+    if ($unprofiledOverriddenClasses !== []) {
+        trigger_error(
+            'Profiling is not applied to ' . implode(', ', $unprofiledOverriddenClasses)
+            . ': these classes are overridden, and a class override takes precedence over its profiling'
+            . ' variant. Remove the override to profile them.',
+            E_USER_NOTICE
+        );
+    }
+
+    unset($profiledClass, $unprofiledOverriddenClasses);
 }
 
 if (Tools::convertBytes(ini_get('upload_max_filesize')) < Tools::convertBytes('100M')) {
