@@ -7,12 +7,20 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation;
 
+use Symfony\Component\Translation\TranslatorBagInterface;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Symfony\Contracts\Translation\TranslatorInterface as SymfonyTranslatorInterface;
 
 /**
- * Interface for PrestaShop translators
+ * Interface for PrestaShop translators.
+ *
+ * The core fetches its translator from the container by this interface and the debug environment
+ * decorates it, so the concrete class differs between environments. Everything the core actually
+ * calls on a translator therefore has to be declared here: setting the locale and reading the
+ * catalogue are part of that, and both come from Symfony's own contracts, which every translator
+ * built on the framework already satisfies.
  */
-interface TranslatorInterface extends SymfonyTranslatorInterface
+interface TranslatorInterface extends SymfonyTranslatorInterface, LocaleAwareInterface, TranslatorBagInterface
 {
     /**
      * Performs a reverse search in the catalogue and returns the translation key if found.
