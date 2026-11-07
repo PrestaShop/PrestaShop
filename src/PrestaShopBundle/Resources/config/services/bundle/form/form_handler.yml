@@ -411,7 +411,7 @@ services:
     arguments:
       - '@form.factory'
       - '@prestashop.core.hook.dispatcher'
-      - '@prestashop.admin.webservice.form_data_provider'
+      - '@PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice\WebserviceFormDataProvider'
       - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice\WebserviceConfigurationType'
       - 'WebservicePage'
 

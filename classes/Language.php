@@ -1434,7 +1434,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         $currencies = Currency::getCurrencies(true, false, false);
         $container = SymfonyContainer::getInstance();
         /** @var LocaleRepository $localeRepoCLDR */
-        $localeRepoCLDR = $container->get('prestashop.core.localization.cldr.locale_repository');
+        $localeRepoCLDR = $container->get(LocaleRepository::class);
         $localeCLDR = $localeRepoCLDR->getLocale($language->locale);
 
         foreach ($currencies as $currency) {

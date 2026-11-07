@@ -17,7 +17,7 @@ services:
 
   PrestaShop\PrestaShop\Core\Localization\Locale\Repository:
     arguments:
-      - '@prestashop.core.localization.cldr.locale_repository'
+      - '@PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository'
       - '@prestashop.core.localization.currency.repository'
 
   prestashop.core.localization.locale.repository:
@@ -94,7 +94,7 @@ services:
   prestashop.core.localization.currency.middleware.reference:
     class: PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyReference
     arguments:
-      - '@prestashop.core.localization.cldr.locale_repository'
+      - '@PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository'
 
   prestashop.core.localization.currency.middleware.installed:
     class: PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyInstalled
