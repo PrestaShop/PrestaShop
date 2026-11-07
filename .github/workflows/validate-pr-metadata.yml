@@ -22,19 +22,25 @@ jobs:
             const baseBranch = pr.base.ref;
             const action = context.payload.action;
 
-            // Only attempt to set a milestone on opened, or on edited when the
-            // base branch changed. Other activity types (reopened, milestoned,
-            // demilestoned) must not retrigger milestone selection.
-            if (action !== 'opened' && action !== 'edited') {
-              console.log(`Skipping set-milestone for event action: ${action}`);
+            // Decided from the pull request state, not from the activity type
+            const changes = context.payload.changes;
+            const baseChanged = action === 'edited' && !!(changes && changes.base);
+
+            // A milestone removed by hand is not restored by this event
+            if (action === 'demilestoned') {
+              console.log('Milestone was removed deliberately, not restoring it.');
               return;
             }
-            if (action === 'edited') {
-              const changes = context.payload.changes;
-              if (!changes || !changes.base) {
-                console.log('Edit event but base branch did not change, skipping.');
-                return;
-              }
+            // Read live: the event payload is stale when an older run is re-run
+            const { data: livePr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number,
+            });
+            // An existing milestone is kept unless the base branch changed
+            if (livePr.milestone && !baseChanged) {
+              console.log(`Pull request already carries milestone "${livePr.milestone.title}", nothing to do.`);
+              return;
             }
 
             // Fetch all open milestones
