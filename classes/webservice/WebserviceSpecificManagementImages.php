@@ -4,6 +4,8 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 use PrestaShop\PrestaShop\Core\Domain\ImageSettings\ValueObject\ImageFitment;
+use PrestaShop\PrestaShop\Core\Image\Deleter\NoPictureThumbnailDeleter;
+use PrestaShop\PrestaShop\Core\Image\Exception\ImageException;
 
 class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManagementInterface
 {
@@ -861,6 +863,9 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         return false;
                     }
                 }
+                if ($this->defaultImage) {
+                    $this->deleteNoPictureThumbnails($parent_path);
+                }
             }
 
             return true;
@@ -1002,6 +1007,9 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
         // Write image thumbnails if present
         if ($image_types) {
+            if ($this->defaultImage) {
+                $this->deleteNoPictureThumbnails($parent_path);
+            }
             foreach ($image_types as $image_type) {
                 if ($this->defaultImage) {
                     $thumbnail_path = $parent_path . $this->wsObject->urlSegment[3] . '-default-' . $image_type['name'] . '.jpg';
@@ -1021,6 +1029,23 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
         Hook::exec('actionWatermark', ['id_image' => $this->wsObject->urlSegment[3], 'id_product' => $this->wsObject->urlSegment[2]]);
 
         return $new_path;
+    }
+
+    /**
+     * @throws WebserviceException
+     */
+    private function deleteNoPictureThumbnails(string $directory): void
+    {
+        $isoCode = $this->wsObject->urlSegment[3];
+        if (!Validate::isLanguageIsoCode($isoCode)) {
+            return;
+        }
+
+        try {
+            (new NoPictureThumbnailDeleter())->delete($isoCode, $directory);
+        } catch (ImageException $e) {
+            throw new WebserviceException($e->getMessage(), [78, 500]);
+        }
     }
 
     /**
