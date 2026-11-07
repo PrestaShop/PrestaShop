@@ -7,6 +7,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Requirement;
 
 use ConfigurationTest;
+use PrestaShop\PrestaShop\Core\Requirement\PhpVersionRequirement;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -71,7 +72,15 @@ class CheckRequirements
     private function getErrorMessages()
     {
         return [
-            'phpversion' => $this->translator->trans('Update your PHP version.', [], 'Admin.Advparameters.Notification'),
+            'phpversion' => $this->translator->trans(
+                'Your server runs PHP %current%. PrestaShop runs on PHP %minimum% to PHP %maximum%.',
+                [
+                    '%current%' => PHP_VERSION,
+                    '%minimum%' => PhpVersionRequirement::MINIMUM_VERSION,
+                    '%maximum%' => PhpVersionRequirement::MAXIMUM_VERSION,
+                ],
+                'Admin.Advparameters.Notification'
+            ),
             'upload' => $this->translator->trans('Configure your server to allow file uploads.', [], 'Admin.Advparameters.Notification'),
             'system' => $this->translator->trans('Configure your server to allow the creation of directories and files with write permissions.', [], 'Admin.Advparameters.Notification'),
             'curl' => $this->translator->trans('Enable the CURL extension on your server.', [], 'Admin.Advparameters.Notification'),
@@ -104,7 +113,6 @@ class CheckRequirements
             'fopen' => $this->translator->trans('Allow the PHP fopen() function on your server.', [], 'Admin.Advparameters.Notification'),
             'gz' => $this->translator->trans('Enable GZIP compression on your server.', [], 'Admin.Advparameters.Notification'),
             'files' => $this->translator->trans('Some PrestaShop files are missing from your server.', [], 'Admin.Advparameters.Notification'),
-            'new_phpversion' => $this->translator->trans('You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.6. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.6 now!', ['%s' => PHP_VERSION], 'Admin.Advparameters.Notification'),
             'apache_mod_rewrite' => $this->translator->trans('Enable the Apache mod_rewrite module', [], 'Admin.Advparameters.Notification'),
         ];
     }
