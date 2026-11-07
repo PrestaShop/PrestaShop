@@ -152,7 +152,7 @@ class StoreGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'route' => 'admin_import',
                     'route_params' => [
-                        'import_type' => 'stores',
+                        'import_type' => 'contacts',
                     ],
                 ])
             )

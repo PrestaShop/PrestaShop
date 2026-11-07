@@ -136,7 +136,7 @@ final class AttributeGroupGridDefinitionFactory extends AbstractFilterableGridDe
                 ->setOptions([
                     'route' => 'admin_import',
                     'route_params' => [
-                        'import_type' => 'attribute_groups',
+                        'import_type' => 'combinations',
                     ],
                 ])
             )
