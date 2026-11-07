@@ -68,6 +68,14 @@ runs:
       run: COMPOSER_PROCESS_TIMEOUT=600 composer install --ansi --prefer-dist --no-interaction --no-progress
       shell: bash
 
+    # The container only builds the assets that are missing
+    - name: Cache built assets
+      if: inputs.DISABLE_MAKE != 'true'
+      uses: ./.github/actions/cache-built-assets
+      with:
+        NODE_VERSION: ${{ inputs.NODE_VERSION }}
+        PRESTASHOP_DIR: ${{ inputs.PRESTASHOP_DIR }}
+
     # Docker to create the shop
     - name: Build and Run shop with docker (wait for ${{ env.URL_PING }})
       shell: bash
