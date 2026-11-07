@@ -8,6 +8,7 @@ namespace PrestaShopBundle\DependencyInjection\Compiler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
+use PrestaShop\PrestaShop\Core\Domain\AbstractBulkCommandHandler;
 use ReflectionAttribute;
 use ReflectionClass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -25,6 +26,26 @@ class CommandAndQueryCollectorPass implements CompilerPassInterface
     {
         $commandsAndQueries = $this->findCommandsAndQueries($container);
         $container->setParameter('prestashop.commands_and_queries', $commandsAndQueries);
+        $container->setParameter('prestashop.bulk_commands', $this->findBulkCommands($container));
+    }
+
+    /**
+     * Gets the commands handled by a bulk handler, they can partially fail (one error per failed item).
+     *
+     * @return string[]
+     */
+    private function findBulkCommands(ContainerBuilder $container): array
+    {
+        $bulkCommands = [];
+        foreach ($container->findTaggedServiceIds('messenger.message_handler') as $serviceId => $tags) {
+            $handledCommand = current($tags)['handles'] ?? null;
+            $className = $container->getDefinition($serviceId)->getClass();
+            if (null !== $handledCommand && null !== $className && is_subclass_of($className, AbstractBulkCommandHandler::class)) {
+                $bulkCommands[] = $handledCommand;
+            }
+        }
+
+        return $bulkCommands;
     }
 
     /**

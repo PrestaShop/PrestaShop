@@ -73,7 +73,7 @@
         "prestashop/hummingbird": "^2.1",
         "prestashop/pagesnotfound": "^4",
         "prestashop/productcomments": "^9.0",
-        "prestashop/ps_apiresources": "dev-ai-context",
+        "prestashop/ps_apiresources": "dev-api-generic-follow-ups",
         "prestashop/ps_banner": "^3",
         "prestashop/ps_bestsellers": "^2.0",
         "prestashop/ps_brandlist": "^1.0",
