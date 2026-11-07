@@ -59,4 +59,71 @@ class JavascriptManagerTest extends TestCase
         yield ['corejs-ok-4', true, 'js/core.js'];
         yield ['corejs-fail-4', false, false];
     }
+
+    public function testAutoCacheBustingForLocalAssets(): void
+    {
+        $testsPath = '/tests/Resources/assets_manager/';
+        $configuration = new Configuration();
+
+        $javascriptManager = new JavascriptManager(
+            [$testsPath],
+            $configuration
+        );
+
+        $javascriptManager->register('cache-bust-test', '/core.js', 'bottom', 10, false);
+
+        $list = $javascriptManager->getList();
+        $asset = $list['bottom']['external']['cache-bust-test'];
+
+        // URI should contain a query string with the file modification timestamp
+        $this->assertStringContainsString('?', $asset['uri']);
+
+        // Extract the version from URI
+        $uriParts = explode('?', $asset['uri']);
+        $version = $uriParts[1] ?? '';
+
+        // Version should be a valid timestamp (numeric)
+        $this->assertMatchesRegularExpression('/^\d+$/', $version);
+
+        // Version should match the file's modification time
+        $physicalPath = $configuration->get('_PS_ROOT_DIR_') . $testsPath . 'core.js';
+        $expectedVersion = (string) filemtime($physicalPath);
+        $this->assertSame($expectedVersion, $version);
+    }
+
+    public function testManualVersionOverridesAutoCacheBusting(): void
+    {
+        $testsPath = '/tests/Resources/assets_manager/';
+
+        $javascriptManager = new JavascriptManager(
+            [$testsPath],
+            new Configuration()
+        );
+
+        $manualVersion = 'v1.2.3';
+        $javascriptManager->register('manual-version-test', '/core.js', 'bottom', 10, false, null, 'local', $manualVersion);
+
+        $list = $javascriptManager->getList();
+        $asset = $list['bottom']['external']['manual-version-test'];
+
+        // URI should contain the manual version, not auto-generated timestamp
+        $this->assertStringContainsString('?' . $manualVersion, $asset['uri']);
+    }
+
+    public function testRemoteAssetsDoNotGetAutoCacheBusting(): void
+    {
+        $javascriptManager = new JavascriptManager(
+            [],
+            new Configuration()
+        );
+
+        $remoteUrl = 'https://cdn.example.com/script.js';
+        $javascriptManager->register('remote-test', $remoteUrl, 'bottom', 10, false, null, 'remote');
+
+        $list = $javascriptManager->getList();
+        $asset = $list['bottom']['external']['remote-test'];
+
+        // Remote URI should not have a query string added
+        $this->assertSame($remoteUrl, $asset['uri']);
+    }
 }
