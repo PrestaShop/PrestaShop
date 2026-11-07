@@ -170,6 +170,9 @@ class OrderDetailCore extends ObjectModel
     /** @var float */
     public $total_refunded_tax_incl;
 
+    /** @var Order * */
+    protected $order;
+
     /**
      * @see ObjectModel::$definition
      */
@@ -296,6 +299,15 @@ class OrderDetailCore extends ObjectModel
         if ($this->context->shop->id != $id_shop) {
             $this->context->shop = new Shop((int) $id_shop);
         }
+    }
+
+    public function getOrder()
+    {
+        if (!$this->order) {
+            $this->order = new Order($this->id_order);
+        }
+
+        return $this->order;
     }
 
     public static function getDownloadFromHash($hash)
