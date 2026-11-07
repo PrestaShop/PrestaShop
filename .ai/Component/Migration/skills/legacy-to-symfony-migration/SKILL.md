@@ -40,6 +40,16 @@ When the parent agent supports sub-agents (Claude Code does; other tools current
 | 8 | [step-08-general-availability.md](step-08-general-availability.md) | General Availability | Promote flag to stable; optional upgrade SQL handoff |
 | 9 | [step-09-removal.md](step-09-removal.md) | Removal | Track legacy controller removal in next major |
 
+## Before opening a pull request
+
+Each step points to Component contexts it does not repeat, and rules written there are the ones most often missed. Before opening the PR (and before each slice's PR), re-read the context of every layer the diff touches and check the diff against it, file by file. The rules that most often come back in review:
+
+- [CQRS](../../../CQRS/CONTEXT.md): `DecimalNumber`, never `float`; cross-field rules in a `{Domain}Validator` service, not in the repository, the controller or the form type; derived logic in the handler
+- [Forms / CRUD](../../../Forms/CRUD.md#datahandler-rules): emptied fields, file uploads through the command, `ImagePreviewType`
+- [Controller](../../../Controller/CONTEXT.md): `getErrorMessages()` maps the exceptions the handlers throw, image upload exceptions included
+- [Behat](../../../Behat/CONTEXT.md): shared storage keeps IDs only, `referenceToId()` / `referencesToIds()`, multilingual values through `localizeByRows()`, contexts in `Context/Domain/` rather than a legacy context, properties tables that fail on an unknown key
+- [Migration](../../CONTEXT.md#behaviour-parity): every **change** line of the parity checklist in the PR description, deprecated aliases for removed service ids
+
 ## Slice ordering (steps 5 and 6)
 
 Listing-first is the conventional default — it unblocks bulk operations earlier and is usually simpler than the form. Form-first is valid when listing is already migrated or out of scope. Whichever runs first creates the controller class and routing file; the other extends them.

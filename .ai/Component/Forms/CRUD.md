@@ -36,6 +36,12 @@ Service-ID convention: `prestashop.core.form.identifiable_object.{builder|handle
 - `actionAfterUpdate{FormName}FormHandler`
 - plus the `FormBuilderModifier` extension point for in-flight builder mutation by modules
 
+## DataHandler rules
+
+- **An emptied field maps to `''`, never to `null`.** A cleared `TextType` submits `null` (unless the field sets `'empty_data' => ''`), and `Edit{Domain}Command` treats `null` as "leave untouched" (see [CQRS/CONTEXT.md](../CQRS/CONTEXT.md)). So `$data['phone'] ?: null`, or an `isset($data['phone'])` guard, makes clearing the field silently keep the old value while the flash says the update succeeded. For every field the merchant can clear, write `$data['phone'] ?? ''` in `update()` too, as `TaxRuleFormDataHandler` does
+- **File uploads go through the command.** The DataHandler passes the uploaded file's path (`$file->getPathname()`) to the command, and the command handler performs the upload, so the Admin API and every other caller upload the same way. See `ProductImageFormDataHandler` and `AttributeFormDataHandler`
+- **Image preview on the edit form.** Pair the `FileType` with an `ImagePreviewType` fed by the DataProvider instead of a custom Twig block, so the template stays a plain `form_widget()`. See `Improve/Shipping/Carrier/GeneralSettings.php`
+
 ## Anti-pattern
 
 **"Custom FormBuilder or FormHandler class"** — symptom: a hand-rolled class extending the IdentifiableObject base. There is no legitimate use case; the factory-built services support every pattern needed (file uploads, multilingual, tabs, sub-resource commands). If a hand-rolled class appears in a PR, it is a sign the AI invented one — delete it and use the factory services.
