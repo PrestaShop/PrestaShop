@@ -48,7 +48,8 @@ final class GetAttachmentForEditingHandler implements GetAttachmentForEditingHan
         $editableAttachment = new EditableAttachment(
             $attachment->file_name,
             $attachment->name,
-            $attachment->description
+            $attachment->description,
+            $attachmentIdValue
         );
 
         if (null !== $file) {
