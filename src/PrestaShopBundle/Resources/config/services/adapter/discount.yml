@@ -40,6 +40,8 @@ services:
   PrestaShop\PrestaShop\Adapter\Discount\QueryHandler\GetDiscountForEditingHandler:
     autoconfigure: true
 
+  PrestaShop\PrestaShop\Adapter\Discount\LegacyDiscountTypeResolver: ~
+
   PrestaShop\PrestaShop\Adapter\Discount\QueryHandler\GetDiscountTypesHandler:
     autoconfigure: true
 

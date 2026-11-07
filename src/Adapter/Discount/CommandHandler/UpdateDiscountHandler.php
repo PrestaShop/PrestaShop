@@ -6,6 +6,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Discount\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Discount\LegacyDiscountTypeResolver;
 use PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountRepository;
 use PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountTypeRepository;
 use PrestaShop\PrestaShop\Adapter\Discount\Update\DiscountConditionsUpdater;
@@ -30,13 +31,22 @@ class UpdateDiscountHandler implements UpdateDiscountCommandHandlerInterface
         private readonly DiscountValidator $discountValidator,
         private readonly DiscountConditionsUpdater $discountConditionsUpdater,
         private readonly DiscountTypeRepository $discountTypeRepository,
+        private readonly LegacyDiscountTypeResolver $legacyDiscountTypeResolver,
     ) {
     }
 
     public function handle(UpdateDiscountCommand $command): void
     {
         $cartRule = $this->discountRepository->get($command->getDiscountId());
-        $updatableProperties = $this->discountFiller->fillUpdatableProperties($cartRule, $command);
+        $updatableProperties = [];
+        if (null === $cartRule->getType()) {
+            // Legacy cart rule without type: we save the type deduced from its current settings (the one displayed in the form)
+            $cartRule->id_cart_rule_type = $this->discountTypeRepository->getTypeIdByString(
+                $this->legacyDiscountTypeResolver->resolveType($cartRule)
+            );
+            $updatableProperties[] = 'id_cart_rule_type';
+        }
+        $updatableProperties = array_merge($updatableProperties, $this->discountFiller->fillUpdatableProperties($cartRule, $command));
         // This should be tested by the validator but since both getters impact the same entity field and the validator is based on it
         // this is the only place where we can check this constraint
         if ($cartRule->getType() === DiscountType::PRODUCT_LEVEL && $command->getCheapestProduct() && null !== $command->getReductionProductId()) {
