@@ -8,8 +8,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Classes\Controller;
 
+use Context;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\Combination as CombinationAdapter;
 use ProductControllerCore;
+use Shop;
 
 class ProductControllerTest extends TestCase
 {
@@ -63,6 +66,38 @@ class ProductControllerTest extends TestCase
                 'value' => 'Granite',
             ],
         ], $structuredProductData['additionalProperty']);
+    }
+
+    public function testCombinationValidationDelegatesToAdapterUsingCurrentShop(): void
+    {
+        $combinationAdapter = $this->createMock(CombinationAdapter::class);
+        $combinationAdapter
+            ->expects(self::once())
+            ->method('isCombinationAndAttributesAssociatedToShop')
+            ->with(42, 21, 7)
+            ->willReturn(true)
+        ;
+
+        $controller = new TestProductController();
+        $controller->setCombinationAdapter($combinationAdapter);
+        $controller->setShopId(7);
+
+        self::assertTrue($controller->isValidCombination(42, 21));
+    }
+
+    public function testCombinationValidationRejectsInvalidIdentifiersWithoutCallingAdapter(): void
+    {
+        $combinationAdapter = $this->createMock(CombinationAdapter::class);
+        $combinationAdapter
+            ->expects(self::never())
+            ->method('isCombinationAndAttributesAssociatedToShop')
+        ;
+
+        $controller = new TestProductController();
+        $controller->setCombinationAdapter($combinationAdapter);
+
+        self::assertFalse($controller->isValidCombination(0, 21));
+        self::assertFalse($controller->isValidCombination(42, 0));
     }
 
     public static function productFeaturesProvider(): iterable
@@ -185,8 +220,36 @@ class ProductControllerTest extends TestCase
 
 class TestProductController extends ProductControllerCore
 {
+    private ?CombinationAdapter $combinationAdapter = null;
+
     public function __construct()
     {
+    }
+
+    public function get($serviceId)
+    {
+        if (CombinationAdapter::class === $serviceId && null !== $this->combinationAdapter) {
+            return $this->combinationAdapter;
+        }
+
+        return parent::get($serviceId);
+    }
+
+    public function isValidCombination(int $productAttributeId, int $productId): bool
+    {
+        return parent::isValidCombination($productAttributeId, $productId);
+    }
+
+    public function setCombinationAdapter(CombinationAdapter $combinationAdapter): void
+    {
+        $this->combinationAdapter = $combinationAdapter;
+    }
+
+    public function setShopId(int $shopId): void
+    {
+        $this->context = new Context();
+        $this->context->shop = new Shop();
+        $this->context->shop->id = $shopId;
     }
 
     /**
