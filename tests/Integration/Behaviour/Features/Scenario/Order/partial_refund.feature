@@ -258,13 +258,13 @@ Feature: Refund Order from Back Office (BO)
       | shipping_refund             |                          | 5.5    |
     Then "bo_order_refund" has 1 credit slips
     # Weird behavior, we are in tax EXCLUDED display, so total_products_tax_excl contains the initial refund
-    # amount, and total_products_tax_incl the real one (minus voucher) If we had been in tax INCLUDED display
-    # it would have been the opposite
+    # amount, and total_products_tax_incl the real one (minus the refunded share of the voucher) If we had
+    # been in tax INCLUDED display it would have been the opposite
     Then "bo_order_refund" last credit slip is:
       | amount                  | 8.0  |
       | shipping_cost_amount    | 5.83 |
       | total_products_tax_excl | 8.0  |
-      | total_products_tax_incl | 3.18 |
+      | total_products_tax_incl | 7.29 |
     And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
       | product_quantity            | 2 |
       | product_quantity_refunded   | 0 |
@@ -617,7 +617,7 @@ Feature: Refund Order from Back Office (BO)
 
   @order-refund
   @order-partial-refund
-  Scenario: Partial refund of products paid partially with a big voucher, too high refund
+  Scenario: Partial refund of products paid partially with a big voucher
     Given I use a voucher "PROMO20" for a discount of 20.0 on the cart "dummy_cart"
     And I add order "bo_order_refund" with the following details:
       | cart                | dummy_cart                 |
@@ -634,8 +634,57 @@ Feature: Refund Order from Back Office (BO)
       | product_name                | quantity                 | amount |
       | Mug Today is a good day     | 1                        | 8      |
       | shipping_refund             |                          | 5.5    |
-    Then I should get error that refund amount is invalid
-    Then "bo_order_refund" has 0 credit slips
+    Then "bo_order_refund" has 1 credit slips
+    Then "bo_order_refund" last credit slip is:
+      | amount                  | 8.0 |
+      | total_products_tax_excl | 8.0 |
+      | total_products_tax_incl | 3.73 |
+
+  @order-refund
+  @order-partial-refund
+  Scenario: A discount on one product is deducted in full from the refund of that product
+    Given there is a cart rule "mug_ten_percent" with following properties:
+      | name[en-US]         | Ten percent on one mug  |
+      | discount_percentage | 10                      |
+      | discount_product    | Mug Today is a good day |
+      | code                | MUG10                   |
+    And I use a voucher "MUG10" on the cart "dummy_cart"
+    And I add order "bo_order_refund" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Processing in progress     |
+    When I issue a partial refund on "bo_order_refund" without restock with credit slip without voucher on following products:
+      | product_name                | quantity                 | amount |
+      | Mug Today is a good day     | 1                        | 11.9   |
+    Then "bo_order_refund" has 1 credit slips
+    Then "bo_order_refund" last credit slip is:
+      | amount                  | 11.9  |
+      | total_products_tax_incl | 11.35 |
+
+  @order-refund
+  @order-partial-refund
+  Scenario: Successive partial refunds of every product deduct the whole voucher in total
+    Given I use a voucher "PROMO20" for a discount of 20.0 on the cart "dummy_cart"
+    And I add order "bo_order_refund" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Processing in progress     |
+    When I issue a partial refund on "bo_order_refund" without restock with credit slip without voucher on following products:
+      | product_name                | quantity                 | amount |
+      | Mug Today is a good day     | 1                        | 11.9   |
+    Then "bo_order_refund" last credit slip is:
+      | amount                  | 11.9 |
+      | total_products_tax_incl | 5.55 |
+    When I issue a partial refund on "bo_order_refund" without restock with credit slip without voucher on following products:
+      | product_name                | quantity                 | amount |
+      | Mug The best is yet to come | 2                        | 23.8   |
+    Then "bo_order_refund" has 2 credit slips
+    # 12.61 - 5.55 + 25.23 - 11.09 = 21.2, the whole voucher tax included
+    Then "bo_order_refund" last credit slip is:
+      | amount                  | 23.8  |
+      | total_products_tax_incl | 11.09 |
 
   @order-refund
   @order-partial-refund
