@@ -237,6 +237,68 @@ class CategoryRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * Loads the category tree once and rebuilds the breadcrumbs of the given categories in memory.
+     *
+     * @param CategoryId[] $categoryIds
+     *
+     * @return array<int, string[]> ancestor names (level_depth >= 1) then the category name, by category id
+     */
+    public function getBreadcrumbPartsForCategories(array $categoryIds, ShopId $shopId, LanguageId $languageId): array
+    {
+        if (empty($categoryIds)) {
+            return [];
+        }
+
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('c.id_category, c.nleft, c.nright, c.level_depth, cl.name')
+            ->from($this->dbPrefix . 'category', 'c')
+            ->innerJoin('c', $this->dbPrefix . 'category_lang', 'cl', 'c.id_category = cl.id_category')
+            ->andWhere('cl.id_lang = :languageId')
+            ->andWhere('cl.id_shop = :shopId')
+            ->addOrderBy('c.nleft', 'ASC')
+            ->setParameter('languageId', $languageId->getValue())
+            ->setParameter('shopId', $shopId->getValue())
+        ;
+
+        $categories = $qb->executeQuery()->fetchAllAssociative();
+
+        $wantedIds = array_flip(array_map(static fn (CategoryId $categoryId): int => $categoryId->getValue(), $categoryIds));
+        $breadcrumbs = [];
+        // Stack of currently open ancestors, ordered from the top of the tree to the deepest.
+        $ancestors = [];
+
+        foreach ($categories as $category) {
+            $nleft = (int) $category['nleft'];
+
+            // Drop ancestors whose subtree ends before this node starts: they no longer enclose it.
+            while (!empty($ancestors) && $ancestors[count($ancestors) - 1]['nright'] < $nleft) {
+                array_pop($ancestors);
+            }
+
+            if (isset($wantedIds[(int) $category['id_category']])) {
+                $parts = [];
+                foreach ($ancestors as $ancestor) {
+                    // level_depth >= 1 mirrors getBreadcrumbParts(): the root category is not shown.
+                    if ($ancestor['level_depth'] >= 1) {
+                        $parts[] = $ancestor['name'];
+                    }
+                }
+                $parts[] = $category['name'];
+                $breadcrumbs[(int) $category['id_category']] = $parts;
+            }
+
+            $ancestors[] = [
+                'nright' => (int) $category['nright'],
+                'level_depth' => (int) $category['level_depth'],
+                'name' => $category['name'],
+            ];
+        }
+
+        return $breadcrumbs;
+    }
+
+    /**
      * @param ProductId $productId
      * @param ShopConstraint $shopConstraint
      *
