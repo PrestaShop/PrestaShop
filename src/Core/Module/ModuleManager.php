@@ -97,14 +97,60 @@ class ModuleManager implements ModuleManagerInterface
         $module = $this->moduleRepository->getModule($name);
         $this->dispatchPreAction($module);
 
-        $installed = $module->onInstall();
+        try {
+            $installed = $module->onInstall();
+        } catch (Throwable $throwable) {
+            // WHY: a module's install() reports failure by returning false, but it can also simply
+            // throw - registerHook() does exactly that for a hook the module never implements, which
+            // is one of the shapes reported. The registration has to be undone either way, and the
+            // error itself still belongs to the caller, so it is rethrown untouched.
+            $this->rollBackFailedInstallation($module);
+
+            throw $throwable;
+        }
+
         if ($installed) {
             // Only trigger install event if install has succeeded otherwise it could automatically add tabs linked to a
             // module not installed (@see ModuleTabManagementSubscriber) or other unwanted automatic actions.
             $this->dispatch(ModuleManagementEvent::INSTALL, $module);
+        } else {
+            $this->rollBackFailedInstallation($module);
         }
 
         return $installed;
+    }
+
+    /**
+     * Undoes the registration the core performed for a module whose installation then failed.
+     *
+     * WHY: install() registers the module - the module row, its shop association, its permissions and
+     * its customer group restrictions - before handing over to the module's own install(), and nothing
+     * removed that again when the module's part failed. The module was left registered and active, so
+     * the next attempt matched the isInstalled() branch at the top of install() and was answered by
+     * upgrade() instead: the module's install() never ran a second time, yet the merchant was told the
+     * installation had succeeded, on a shop where the module is half installed.
+     *
+     * This can only ever run on a fresh installation. install() returns through upgrade() before
+     * reaching onInstall() whenever the module is already installed, so reaching this point means
+     * isInstalled() was false and every registration being removed here was made by the attempt that
+     * has just failed.
+     *
+     * Only what the core registered is undone. A module that failed part way through its own install()
+     * is in a state only it can describe, so its uninstall() is deliberately not called and anything it
+     * created for itself is left alone - an orphaned module table is a far smaller problem than a
+     * module the shop believes is installed and enabled.
+     */
+    private function rollBackFailedInstallation(ModuleInterface $module): void
+    {
+        $instance = $module->getInstance();
+        if ($instance === null) {
+            return;
+        }
+
+        // Safe to call unconditionally: it returns early when the module ships no override directory,
+        // and only ever removes overrides this module is the author of.
+        $instance->uninstallOverrides();
+        $instance->uninstallCoreRegistration();
     }
 
     public function postInstall(string $name): bool
