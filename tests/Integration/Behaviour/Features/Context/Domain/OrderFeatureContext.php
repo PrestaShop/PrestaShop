@@ -70,6 +70,7 @@ use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Tests\Resources\TestCase\ExtendedTestCaseMethodsTrait;
+use Tools;
 
 class OrderFeatureContext extends AbstractDomainFeatureContext
 {
@@ -2253,5 +2254,146 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 )
             );
         }
+    }
+
+    /**
+     * @Then cart :cartReference should have produced :expectedCount orders
+     *
+     * @param string $cartReference
+     * @param int $expectedCount
+     */
+    public function assertOrderCountProducedByCart(string $cartReference, int $expectedCount): void
+    {
+        Assert::assertCount(
+            $expectedCount,
+            $this->getOrdersProducedByCart($cartReference),
+            sprintf('Unexpected number of orders produced by cart %s', $cartReference)
+        );
+    }
+
+    /**
+     * @Then the orders produced by cart :cartReference should have the following total discount:
+     *
+     * @param string $cartReference
+     * @param TableNode $table
+     */
+    public function assertTotalDiscountAcrossOrdersProducedByCart(string $cartReference, TableNode $table): void
+    {
+        $expected = $table->getRowsHash();
+
+        $taxExcluded = 0.0;
+        $taxIncluded = 0.0;
+        $perOrder = [];
+        foreach ($this->getOrdersProducedByCart($cartReference) as $order) {
+            $taxExcluded += (float) $order->total_discounts_tax_excl;
+            $taxIncluded += (float) $order->total_discounts_tax_incl;
+            $perOrder[] = sprintf('#%d: %s', $order->id, $order->total_discounts_tax_incl);
+        }
+
+        $context = sprintf('orders produced by cart %s (%s)', $cartReference, implode(', ', $perOrder));
+
+        if (isset($expected['tax_excluded'])) {
+            Assert::assertEquals((float) $expected['tax_excluded'], round($taxExcluded, 2), 'Discount excluding tax over the ' . $context);
+        }
+        if (isset($expected['tax_included'])) {
+            Assert::assertEquals((float) $expected['tax_included'], round($taxIncluded, 2), 'Discount including tax over the ' . $context);
+        }
+    }
+
+    /**
+     * Compares with the cart total the way validateOrder() reads it
+     *
+     * @Then the orders produced by cart :cartReference should add up to the cart total
+     *
+     * @param string $cartReference
+     */
+    public function assertOrdersProducedByCartAddUpToCartTotal(string $cartReference): void
+    {
+        $cartId = (int) SharedStorage::getStorage()->get($cartReference);
+        $cart = new Cart($cartId);
+        $cartTotal = Tools::ps_round(
+            (float) $cart->getOrderTotal(true, Cart::BOTH),
+            Context::getContext()->getComputingPrecision()
+        );
+
+        $summed = 0.0;
+        $perOrder = [];
+        foreach ($this->getOrdersProducedByCart($cartReference) as $order) {
+            $summed += (float) $order->total_paid;
+            $perOrder[] = sprintf('#%d: %s', $order->id, $order->total_paid);
+        }
+
+        Assert::assertEquals(
+            $cartTotal,
+            round($summed, 2),
+            sprintf('Orders produced by cart %s (%s) against the cart total', $cartReference, implode(', ', $perOrder))
+        );
+    }
+
+    /**
+     * One row per order, in creation order; the cart rule columns sum the order's order_cart_rule rows
+     *
+     * @Then the orders produced by cart :cartReference should have the following amounts:
+     *
+     * @param string $cartReference
+     * @param TableNode $table
+     */
+    public function assertAmountsOfOrdersProducedByCart(string $cartReference, TableNode $table): void
+    {
+        $orders = $this->getOrdersProducedByCart($cartReference);
+        $expectedRows = $table->getColumnsHash();
+        Assert::assertCount(count($expectedRows), $orders, sprintf('Unexpected number of orders produced by cart %s', $cartReference));
+
+        foreach ($expectedRows as $index => $expected) {
+            $order = $orders[$index];
+            $cartRulesTaxIncl = 0.0;
+            $cartRulesTaxExcl = 0.0;
+            foreach ($order->getCartRules() as $orderCartRule) {
+                $cartRulesTaxIncl += (float) $orderCartRule['value'];
+                $cartRulesTaxExcl += (float) $orderCartRule['value_tax_excl'];
+            }
+            $actual = [
+                'total_paid_tax_incl' => (float) $order->total_paid_tax_incl,
+                'total_paid_tax_excl' => (float) $order->total_paid_tax_excl,
+                'total_discounts_tax_incl' => (float) $order->total_discounts_tax_incl,
+                'total_discounts_tax_excl' => (float) $order->total_discounts_tax_excl,
+                'cart_rules_tax_incl' => $cartRulesTaxIncl,
+                'cart_rules_tax_excl' => $cartRulesTaxExcl,
+            ];
+
+            foreach ($expected as $field => $value) {
+                Assert::assertArrayHasKey($field, $actual, sprintf('Unknown column %s', $field));
+                Assert::assertEquals(
+                    (float) $value,
+                    round($actual[$field], 2),
+                    sprintf('%s of order #%d, order %d of cart %s', $field, $order->id, $index + 1, $cartReference)
+                );
+            }
+        }
+    }
+
+    /**
+     * @param string $cartReference
+     *
+     * @return Order[]
+     */
+    private function getOrdersProducedByCart(string $cartReference): array
+    {
+        $cartId = (int) SharedStorage::getStorage()->get($cartReference);
+
+        // Order::getByCartId() returns only the first order of a split cart, so the siblings have
+        // to be collected explicitly.
+        $collection = new PrestaShopCollection('Order');
+        $collection->where('id_cart', '=', $cartId);
+        $collection->orderBy('id_order');
+
+        $orders = [];
+        foreach ($collection->getResults() as $order) {
+            if ($order instanceof Order) {
+                $orders[] = $order;
+            }
+        }
+
+        return $orders;
     }
 }

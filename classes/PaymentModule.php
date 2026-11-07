@@ -26,6 +26,21 @@ abstract class PaymentModuleCore extends Module
     /** @var MailPartialTemplateRenderer|null */
     protected $partialRenderer;
 
+    /**
+     * Cart rule values of the order about to be created from a split cart, by cart rule id,
+     * see shareCartRulesAcrossPackages().
+     *
+     * @var array<int, array{tax_incl: float, tax_excl: float, cap_tax_incl: float, cap_tax_excl: float}>
+     */
+    private $nextOrderCartRuleShares = [];
+
+    /**
+     * The same values once the orders are created, by order id then cart rule id.
+     *
+     * @var array<int, array<int, array{tax_incl: float, tax_excl: float, cap_tax_incl: float, cap_tax_excl: float}>>
+     */
+    private $cartRuleSharesByOrder = [];
+
     public function install()
     {
         if (!parent::install()) {
@@ -335,8 +350,12 @@ abstract class PaymentModuleCore extends Module
         }
 
         if (!$this->isFeatureFlagIsEnabledForMultiShipment()) {
+            $cartRuleShares = $this->shareCartRulesAcrossPackages($this->context->cart, $package_list);
+            $this->cartRuleSharesByOrder = [];
+            $packageIndex = 0;
             foreach ($package_list as $id_address => $packageByAddress) {
                 foreach ($packageByAddress as $id_package => $package) {
+                    $this->nextOrderCartRuleShares = $cartRuleShares[$packageIndex++] ?? [];
                     $orderData = $this->createOrderFromCart(
                         $this->context->cart,
                         $this->context->currency,
@@ -361,6 +380,7 @@ abstract class PaymentModuleCore extends Module
                     $order_detail_list[] = $orderData['orderDetail'];
                 }
             }
+            $this->nextOrderCartRuleShares = [];
         } else {
             $productsByCarriers = [];
             $idAddress = null;
@@ -1165,6 +1185,21 @@ abstract class PaymentModuleCore extends Module
             $computingPrecision
         );
         $order->total_paid = $order->total_paid_tax_incl;
+
+        // When the cart is split, the totals above give this order the whole of each amount discount; keep only its share
+        $orderCartRuleShares = $this->nextOrderCartRuleShares;
+        $this->nextOrderCartRuleShares = [];
+        foreach ($orderCartRuleShares as $share) {
+            $excessTaxExcl = $share['cap_tax_excl'] - $share['tax_excl'];
+            $excessTaxIncl = $share['cap_tax_incl'] - $share['tax_incl'];
+            $order->total_discounts_tax_excl = Tools::ps_round($order->total_discounts_tax_excl - $excessTaxExcl, $computingPrecision);
+            $order->total_discounts_tax_incl = Tools::ps_round($order->total_discounts_tax_incl - $excessTaxIncl, $computingPrecision);
+            $order->total_paid_tax_excl = Tools::ps_round($order->total_paid_tax_excl + $excessTaxExcl, $computingPrecision);
+            $order->total_paid_tax_incl = Tools::ps_round($order->total_paid_tax_incl + $excessTaxIncl, $computingPrecision);
+        }
+        $order->total_discounts = $order->total_discounts_tax_incl;
+        $order->total_paid = $order->total_paid_tax_incl;
+
         $order->round_mode = (int) Configuration::get('PS_PRICE_ROUND_MODE');
         $order->round_type = (int) Configuration::get('PS_ROUND_TYPE');
 
@@ -1181,6 +1216,9 @@ abstract class PaymentModuleCore extends Module
         if (!$result) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Order cannot be created', 3, null, 'Cart', (int) $cart->id, true);
             throw new PrestaShopException('Can\'t save Order');
+        }
+        if (!empty($orderCartRuleShares)) {
+            $this->cartRuleSharesByOrder[(int) $order->id] = $orderCartRuleShares;
         }
 
         // Amount paid by customer is not the right one -> Status = payment error
@@ -1257,6 +1295,10 @@ abstract class PaymentModuleCore extends Module
                 'tax_incl' => $cartRuleData->getDiscountApplied()->getTaxIncluded(),
                 'tax_excl' => $cartRuleData->getDiscountApplied()->getTaxExcluded(),
             ];
+            if (isset($this->cartRuleSharesByOrder[(int) $order->id][(int) $cartRule->id])) {
+                $share = $this->cartRuleSharesByOrder[(int) $order->id][(int) $cartRule->id];
+                $values = ['tax_incl' => $share['tax_incl'], 'tax_excl' => $share['tax_excl']];
+            }
 
             // If the reduction is not applicable to this order, then continue with the next one
             if (!$values['tax_excl'] && empty($cartRule->gift_product)) {
@@ -1380,6 +1422,104 @@ abstract class PaymentModuleCore extends Module
         }
 
         return $cart_rules_list;
+    }
+
+    /**
+     * Shares each amount discount across the packages of a split cart: a package only takes what the previous ones left.
+     *
+     * @return array<int, array<int, array{tax_incl: float, tax_excl: float, cap_tax_incl: float, cap_tax_excl: float}>>
+     */
+    private function shareCartRulesAcrossPackages(Cart $cart, array $packageList): array
+    {
+        $packages = [];
+        foreach ($packageList as $packagesByAddress) {
+            foreach ($packagesByAddress as $package) {
+                $packages[] = $package;
+            }
+        }
+        if (count($packages) < 2 || !CartRule::isFeatureActive()) {
+            return [];
+        }
+
+        $cartRules = $cart->getCartRules();
+        $cartCurrency = new Currency((int) $cart->id_currency);
+        $amountRules = [];
+        $remaining = [];
+        foreach ($cartRules as $cartRuleRow) {
+            $cartRule = $cartRuleRow['obj'];
+            // A product-level amount on a selection or on the cheapest product applies per unit, it is not a pool
+            if ((float) $cartRule->reduction_amount > 0 && (int) $cartRule->reduction_product >= 0) {
+                $amountRules[(int) $cartRule->id] = $cartRule;
+                $remaining[(int) $cartRule->id] = (int) $cartRule->reduction_currency === (int) $cart->id_currency
+                    ? (float) $cartRule->reduction_amount
+                    : (float) Tools::convertPriceFull($cartRule->reduction_amount, new Currency((int) $cartRule->reduction_currency), $cartCurrency);
+            }
+        }
+        if (empty($amountRules)) {
+            return [];
+        }
+
+        $computingPrecision = Context::getContext()->getComputingPrecision();
+        $shares = [];
+        foreach ($packages as $index => $package) {
+            // same carrier as createOrderFromCart() and createOrderCartRules() use for this package
+            $carrierId = !$cart->isVirtualCart() && isset($package['id_carrier']) ? (int) $package['id_carrier'] : 0;
+            $perPackage = $this->getCartRuleValues($cart, $package['product_list'], $cartRules, $carrierId, null);
+            $granted = $this->getCartRuleValues($cart, $package['product_list'], $cartRules, $carrierId, $remaining);
+            $withoutAmounts = $this->getCartRuleValues($cart, $package['product_list'], $cartRules, $carrierId, array_fill_keys(array_keys($remaining), 0.0));
+
+            foreach ($amountRules as $id => $cartRule) {
+                // only the amount part of the rule uses up the amount, not its free shipping or gift
+                $base = $cartRule->reduction_tax ? 'tax_incl' : 'tax_excl';
+                $used = ($granted[$id][$base] ?? 0.0) - ($withoutAmounts[$id][$base] ?? 0.0);
+                $remaining[$id] = max(0.0, Tools::ps_round($remaining[$id] - $used, $computingPrecision));
+            }
+
+            foreach ($perPackage as $id => $value) {
+                $share = $granted[$id] ?? ['tax_incl' => 0.0, 'tax_excl' => 0.0];
+                if ($share['tax_incl'] != $value['tax_incl'] || $share['tax_excl'] != $value['tax_excl']) {
+                    $shares[$index][$id] = $share + ['cap_tax_incl' => $value['tax_incl'], 'cap_tax_excl' => $value['tax_excl']];
+                }
+            }
+        }
+
+        return $shares;
+    }
+
+    /**
+     * @param Cart $cart
+     * @param array $products
+     * @param array $cartRules rows from Cart::getCartRules()
+     * @param int $carrierId
+     * @param array<int, float>|null $amounts amount to use for some cart rules by id, in the cart currency
+     *
+     * @return array<int, array{tax_incl: float, tax_excl: float}> value of each cart rule by id
+     */
+    private function getCartRuleValues(Cart $cart, array $products, array $cartRules, int $carrierId, ?array $amounts): array
+    {
+        foreach ($cartRules as $key => $cartRuleRow) {
+            $id = (int) $cartRuleRow['obj']->id;
+            if (isset($amounts[$id])) {
+                // the rows are cached by Cart::getCartRules(), so the rule is changed on a copy
+                $cartRules[$key]['obj'] = clone $cartRuleRow['obj'];
+                $cartRules[$key]['obj']->reduction_amount = $amounts[$id];
+                $cartRules[$key]['obj']->reduction_currency = (int) $cart->id_currency;
+            }
+        }
+
+        $computingPrecision = Context::getContext()->getComputingPrecision();
+        $calculator = $cart->newCalculator($products, $cartRules, $carrierId, $computingPrecision);
+        $calculator->processCalculation();
+
+        $values = [];
+        foreach ($calculator->getCartRulesData() as $cartRuleData) {
+            $values[(int) $cartRuleData->getCartRule()->id] = [
+                'tax_incl' => Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxIncluded(), $computingPrecision),
+                'tax_excl' => Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxExcluded(), $computingPrecision),
+            ];
+        }
+
+        return $values;
     }
 
     private function addShipmentToOrder(Order $order, array $productsByCarrier)
