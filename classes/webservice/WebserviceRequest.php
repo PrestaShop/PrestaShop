@@ -1290,6 +1290,10 @@ class WebserviceRequestCore
     {
         $objects = [];
         $filters = $this->manageFilters();
+        if ($filters === false) {
+            // manageFilters() has already set the 400 error
+            return false;
+        }
 
         /* If we only need to display the synopsis, analyzing the first row is sufficient */
         if (isset($this->urlFragments['schema']) && in_array($this->urlFragments['schema'], ['blank', 'synopsis'])) {
