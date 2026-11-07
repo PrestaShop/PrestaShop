@@ -71,6 +71,9 @@ class DiscountFormDataProvider implements FormDataProviderInterface
             'information' => [
                 'highlight_in_cart' => false,
             ],
+            'value' => [
+                'allow_partial_use' => true,
+            ],
             'period' => [
                 'valid_date_range' => [
                     'from' => $startDate->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
@@ -181,6 +184,7 @@ class DiscountFormDataProvider implements FormDataProviderInterface
                     'type' => $isAmountDiscount ? DiscountSettings::AMOUNT : DiscountSettings::PERCENT,
                     'include_tax' => $discountForEditing->getReductionAmount()?->isTaxIncluded(),
                 ],
+                'allow_partial_use' => $discountForEditing->isAllowPartialUse(),
             ],
             'free_gift' => [
                 'product' => $this->getGiftDetails($discountForEditing),
