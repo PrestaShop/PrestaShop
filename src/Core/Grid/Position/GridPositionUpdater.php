@@ -54,12 +54,14 @@ final class GridPositionUpdater implements GridPositionUpdaterInterface
         $firstPosition = $positionUpdate->getPositionDefinition()->getFirstPosition();
         $positionIndex = $firstPosition;
         $allRowIds = array_keys($currentPositions);
-        foreach ($allRowIds as $rowId) {
+        $indexByStoredPosition = [];
+        foreach ($currentPositions as $rowId => $storedPosition) {
             $rowPositions[$rowId] = [
                 'rowId' => $rowId,
                 'currentPosition' => $positionIndex,
                 'newPosition' => null,
             ];
+            $indexByStoredPosition[(int) $storedPosition] ??= $positionIndex;
             ++$positionIndex;
         }
 
@@ -74,7 +76,8 @@ final class GridPositionUpdater implements GridPositionUpdaterInterface
                 throw new PositionUpdateException('You cannot set the same new position for two elements', 'Admin.Catalog.Notification');
             }
 
-            $newPosition = $rowModification->getNewPosition();
+            // New positions are stored values, which can have gaps, so they are read as indexes in the current sequence
+            $newPosition = $indexByStoredPosition[$rowModification->getNewPosition()] ?? $rowModification->getNewPosition();
             if ($newPosition < $firstPosition) {
                 $newPosition = $firstPosition;
             } elseif ($newPosition > count($allRowIds) - 1 + $firstPosition) {

@@ -10,6 +10,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ConnectionException;
 use Exception;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
+use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinitionInterface;
 
 /**
@@ -55,6 +56,12 @@ final class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterf
             $qb
                 ->andWhere('t.`' . $positionDefinition->getParentIdField() . '` = :parentId')
                 ->setParameter('parentId', $parentId);
+        }
+
+        foreach ($this->getFilters($positionDefinition) as $column => $value) {
+            $qb
+                ->andWhere('t.`' . $column . '` = :filter_' . $column)
+                ->setParameter('filter_' . $column, $value);
         }
 
         $positions = $qb->executeQuery()->fetchAllAssociative();
@@ -103,5 +110,14 @@ final class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterf
 
             throw new PositionUpdateException('Could not update.', 'Admin.Catalog.Notification');
         }
+    }
+
+    /**
+     * @return array<string, scalar>
+     */
+    private function getFilters(PositionDefinitionInterface $positionDefinition): array
+    {
+        // Not on PositionDefinitionInterface, for BC
+        return $positionDefinition instanceof PositionDefinition ? $positionDefinition->getFilters() : [];
     }
 }
