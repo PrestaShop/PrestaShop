@@ -382,9 +382,30 @@ class CookieCore
                 'domain' => (string) $this->_domain,
                 'secure' => $this->_secure,
                 'httponly' => true,
-                'samesite' => in_array((string) $this->_sameSite, CookieOptions::SAMESITE_AVAILABLE_VALUES) ? (string) $this->_sameSite : CookieOptions::SAMESITE_NONE,
+                'samesite' => $this->getSameSiteAttribute(),
             ]
         );
+    }
+
+    /**
+     * The SameSite attribute to send, which is never None on a cookie that is not secure.
+     *
+     * A browser discards a SameSite=None cookie that is not also Secure, and discarding the employee
+     * cookie logs the session out - which surfaces as "security compromised" on the next request, because
+     * the token no longer matches. GeneralConfiguration::validateSameSite() refuses to *save* that
+     * combination for exactly this reason, so it must not be reachable by falling back to it either.
+     */
+    protected function getSameSiteAttribute(): string
+    {
+        $sameSite = in_array((string) $this->_sameSite, CookieOptions::SAMESITE_AVAILABLE_VALUES, true)
+            ? (string) $this->_sameSite
+            : CookieOptions::SAMESITE_LAX;
+
+        if ($sameSite === CookieOptions::SAMESITE_NONE && !$this->_secure) {
+            $sameSite = CookieOptions::SAMESITE_LAX;
+        }
+
+        return $sameSite;
     }
 
     /**
