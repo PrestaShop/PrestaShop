@@ -1,5 +1,7 @@
-# This workflow allows you to check potential changes to the structure of the database,
-# and to apply the “Needs autoupgrade PR” label if this is the case
+# This workflow applies the “Needs autoupgrade PR” label according to the database diff
+# created by the "Create diff for 'Needs autoupgrade PR' label" workflow, and notifies the author.
+# It runs from the base repository so it can write on fork PRs: the artifact comes from
+# a workflow the PR can modify, so everything but the diff itself is fetched from the API.
 name: Verify diff for 'Needs autoupgrade PR' label
 
 on:
@@ -8,44 +10,115 @@ on:
     types:
       - completed
 
+permissions:
+  actions: read
+  issues: write
+  pull-requests: write
+
 jobs:
   update_label:
     name: Update Needs autoupgrade PR label
     runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
     steps:
       - name: Download artifact
+        id: download_artifact
         uses: actions/github-script@v8
         with:
           script: |
-            let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
-               owner: context.repo.owner,
-               repo: context.repo.repo,
-               run_id: context.payload.workflow_run.id,
+            const allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.payload.workflow_run.id,
             });
-            let matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
-              return artifact.name == "sql_diff"
-            })[0];
-            let download = await github.rest.actions.downloadArtifact({
-               owner: context.repo.owner,
-               repo: context.repo.repo,
-               artifact_id: matchArtifact.id,
-               archive_format: 'zip',
+            const matchArtifact = allArtifacts.data.artifacts.find((artifact) => artifact.name == "sql_diff");
+            // No artifact when the diff was not needed (less than 2 approvals, merge PR)
+            if (!matchArtifact) {
+              core.setOutput('found', 'false');
+              return;
+            }
+            const download = await github.rest.actions.downloadArtifact({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              artifact_id: matchArtifact.id,
+              archive_format: 'zip',
             });
-            let fs = require('fs');
+            const fs = require('fs');
             fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/sql_diff.zip`, Buffer.from(download.data));
+            core.setOutput('found', 'true');
 
       - name: Unzip artifact
-        run: unzip sql_diff.zip
+        if: steps.download_artifact.outputs.found == 'true'
+        run: unzip sql_diff.zip -d sql_diff
+
+      - name: Check PR
+        id: check_pr
+        if: steps.download_artifact.outputs.found == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          PR_NUMBER=$(head -c 20 ./sql_diff/pr_number | tr -cd '0-9')
+          if [ -z "$PR_NUMBER" ]; then
+            echo "Invalid PR number"
+            exit 1
+          fi
+
+          # Make sure the artifact was produced for the current head of this PR
+          PR=$(gh api "repos/$GH_REPO/pulls/$PR_NUMBER")
+          if [ "$(jq -r '.state' <<< "$PR")" != "open" ] || [ "$(jq -r '.head.sha' <<< "$PR")" != "$HEAD_SHA" ]; then
+            echo "PR #$PR_NUMBER is closed or its head is not $HEAD_SHA, skipping"
+            exit 0
+          fi
+
+          APPROVALS=$(gh api --paginate --slurp "repos/$GH_REPO/pulls/$PR_NUMBER/reviews" \
+            | jq '[add[] | select(.state != "COMMENTED")] | group_by(.user.login) | map(last | select(.state == "APPROVED")) | length')
+          echo "Approvals: $APPROVALS"
+
+          {
+            echo "pr_number=$PR_NUMBER"
+            echo "author=$(jq -r '.user.login' <<< "$PR")"
+            echo "approvals=$APPROVALS"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Check diff for label
-        run: |
-          NUMBER=$(cat ./pr_number)
-          if [ -s sql-diff.txt ]; then
-            gh pr edit "$NUMBER" --add-label "$LABELS"
-          else
-            gh pr edit "$NUMBER" --remove-label "$LABELS"
-          fi
+        id: check_diff
+        if: steps.check_pr.outputs.pr_number && steps.check_pr.outputs.approvals >= 2
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
           LABELS: Needs autoupgrade PR
+          PR_NUMBER: ${{ steps.check_pr.outputs.pr_number }}
+        run: |
+          if [ -s ./sql_diff/sql-diff.txt ]; then
+            gh pr edit "$PR_NUMBER" --add-label "$LABELS"
+            echo "has_diff=true" >> "$GITHUB_OUTPUT"
+          else
+            gh pr edit "$PR_NUMBER" --remove-label "$LABELS"
+          fi
+
+      - name: Add comment
+        if: steps.check_diff.outputs.has_diff == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          PR_CREATOR: ${{ steps.check_pr.outputs.author }}
+          PR_NUMBER: ${{ steps.check_pr.outputs.pr_number }}
+        run: |
+          if gh api --paginate "repos/$GH_REPO/issues/$PR_NUMBER/comments" --jq '.[].body' \
+            | grep -q "This means that the changes made in your PR must also be reported in the Autoupgrade module"; then
+            echo "Comment already posted"
+            exit 0
+          fi
+
+          COMMENT="Hello @$PR_CREATOR,<br/>
+            Please note that the “Needs autoupgrade PR” label has been automatically added to your Pull Request. This means that the changes made in your PR must also be reported in the Autoupgrade module, responsible for running the update process of PrestaShop stores.<br/>
+            When there's a modification to the \`db-structure.sql\` file or if a Doctrine entity has been modified, added, or deleted, it impacts the database structure. Modifying the list of hooks and feature flags has consequences on the update process as well. These changes can affect how the application interacts with the database and how update procedures are handled. It's important to consider these aspects when contributing to ensure a smooth update experience for users.<br/>
+            That's why this contribution should be backported, with another corresponding PR, on the Autoupgrade module's GitHub repository which is available here: [Autoupgrade Repository](https://github.com/PrestaShop/autoupgrade)
+            Contribution to the Autoupgrade module documentation: [Documentation Link](https://devdocs.prestashop-project.org/9/contribute/contribution-guidelines/upgrade-module/)<br/>
+            Don't forget to add a comment in this current thread with the link to this PR once it has been created.<br/>
+            If you are sure that your Pull Request doesn’t require additional actions, ping [committers](https://www.prestashop-project.org/project-organization/people-and-roles/#committers) and it will be checked.<br/>
+            Thank you."
+
+          gh api "repos/$GH_REPO/issues/$PR_NUMBER/comments" -f body="$COMMENT"
