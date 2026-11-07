@@ -554,6 +554,73 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then order :reference should be split into :count orders with following summed details:
+     */
+    public function checkSplitOrdersSummedDetails(string $orderReference, int $count, TableNode $table): void
+    {
+        $splitOrders = $this->getSplitOrders($orderReference);
+        Assert::assertCount($count, $splitOrders);
+
+        foreach ($table->getRowsHash() as $orderField => $expectedSum) {
+            $sum = 0.0;
+            foreach ($splitOrders as $splitOrder) {
+                $sum += (float) $splitOrder->{$orderField};
+            }
+            Assert::assertEquals(
+                (float) $expectedSum,
+                round($sum, 2),
+                sprintf('Invalid sum of order field %s across split orders', $orderField)
+            );
+        }
+    }
+
+    /**
+     * @Given I reference the orders split with order :orderReference as :splitOrderReferences
+     */
+    public function referenceSplitOrders(string $orderReference, string $splitOrderReferences): void
+    {
+        $splitOrders = $this->getSplitOrders($orderReference);
+        $references = PrimitiveUtils::castStringArrayIntoArray($splitOrderReferences);
+        Assert::assertCount(count($references), $splitOrders);
+
+        foreach ($splitOrders as $index => $splitOrder) {
+            SharedStorage::getStorage()->set($references[$index], (int) $splitOrder->id);
+        }
+    }
+
+    /**
+     * @Then the totals of order :orderReference should add up to its total paid
+     */
+    public function checkOrderTotalsAddUpToTotalPaid(string $orderReference): void
+    {
+        $order = new Order(SharedStorage::getStorage()->get($orderReference));
+
+        foreach (['tax_excl' => (float) $order->total_products, 'tax_incl' => (float) $order->total_products_wt] as $suffix => $totalProducts) {
+            Assert::assertEquals(
+                (float) $order->{'total_paid_' . $suffix},
+                round(
+                    $totalProducts
+                    - (float) $order->{'total_discounts_' . $suffix}
+                    + (float) $order->{'total_shipping_' . $suffix}
+                    + (float) $order->{'total_wrapping_' . $suffix},
+                    2
+                ),
+                sprintf('Products - discounts + shipping + wrapping (%s) of order %s do not add up to its total paid', $suffix, $orderReference)
+            );
+        }
+    }
+
+    /**
+     * @return Order[] sorted by id
+     */
+    private function getSplitOrders(string $orderReference): array
+    {
+        $order = new Order(SharedStorage::getStorage()->get($orderReference));
+
+        return array_values(Order::getByReference($order->reference)->orderBy('id_order')->getResults());
+    }
+
+    /**
      * @Then order :orderReference should have :expectedCount invoice(s)
      */
     public function checkOrderInvoicesCount(string $orderReference, int $expectedCount)

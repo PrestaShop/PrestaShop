@@ -1133,13 +1133,14 @@ abstract class PaymentModuleCore extends Module
         }
 
         if (!$this->isFeatureFlagIsEnabledForMultiShipment()) {
+            // Without a carrier, the shipping of the whole cart is returned instead of the one of this package
             $order->total_shipping_tax_incl = Tools::ps_round(
-                (float) abs($cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $order->product_list, null)),
+                (float) abs($cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $order->product_list, $carrierId)),
                 $computingPrecision
             );
 
             $order->total_shipping_tax_excl = Tools::ps_round(
-                (float) abs($cart->getOrderTotal(false, Cart::ONLY_SHIPPING, $order->product_list, null)),
+                (float) abs($cart->getOrderTotal(false, Cart::ONLY_SHIPPING, $order->product_list, $carrierId)),
                 $computingPrecision
             );
 
