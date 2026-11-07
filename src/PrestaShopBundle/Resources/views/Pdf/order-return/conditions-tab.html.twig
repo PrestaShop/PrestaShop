@@ -1,0 +1,22 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+<table class="product" width="100%" cellpadding="4" cellspacing="0">
+    <tr>
+        <th class="header small left" valign="middle">{{ 'If the following conditions are not met, we reserve the right to refuse your package and/or refund:'|trans({}, 'Shop.Pdf') }}</th>
+    </tr>
+    <tr>
+        <td class="center small white">
+            <ul class="left">
+                <li>{{ 'Please include this return reference on your return package:'|trans({}, 'Shop.Pdf') }} {{ order_return.id }}</li>
+                <li>{{ 'All products must be returned in their original package and condition, unused and without damage.'|trans({}, 'Shop.Pdf') }}</li>
+                <li>{{ 'Please print out this document and slip it into your package.'|trans({}, 'Shop.Pdf') }}</li>
+                <li>{{ 'The package should be sent to the following address:'|trans({}, 'Shop.Pdf') }}</li>
+            </ul>
+            <span style="margin-left: 20px;">{{ shop_address|raw }}</span>
+        </td>
+    </tr>
+</table>
+<br/>
+{{ 'Upon receiving your package, we will notify you by e-mail. We will then begin processing the refund, if applicable. Let us know if you have any questions'|trans({}, 'Shop.Pdf') }}

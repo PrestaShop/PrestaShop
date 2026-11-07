@@ -5478,6 +5478,16 @@
       <title>Get PDF template object</title>
       <description>This hook allows to recieve a PDF template object from modules</description>
     </hook>
+    <hook id="actionPdfTemplatePathModifier">
+      <name>actionPdfTemplatePathModifier</name>
+      <title>Modify a PDF template path</title>
+      <description>This hook allows to replace a Twig template file used to render PDF files</description>
+    </hook>
+    <hook id="actionPdfTemplateVariablesModifier">
+      <name>actionPdfTemplateVariablesModifier</name>
+      <title>Modify PDF template variables</title>
+      <description>This hook allows to modify the variables passed to a Twig template used to render PDF files</description>
+    </hook>
     <hook id="displayAdminStoreInformation">
       <name>displayAdminStoreInformation</name>
       <title>Display extra store information</title>

@@ -4,13 +4,13 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\PDF;
 
-use Context;
 use Doctrine\DBAL\Connection;
 use ObjectModel;
 use OrderSlip;
-use PDF;
 use PrestaShop\PrestaShop\Core\Domain\CreditSlip\ValueObject\CreditSlipId;
 use PrestaShop\PrestaShop\Core\PDF\Exception\MissingDataException;
 use PrestaShop\PrestaShop\Core\PDF\Exception\PdfException;
@@ -24,25 +24,13 @@ use PrestaShopException;
 final class CreditSlipPdfGenerator implements PDFGeneratorInterface
 {
     /**
-     * @var string
-     */
-    private $dbPrefix;
-
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
      * @param string $dbPrefix
-     * @param Connection $connection
      */
     public function __construct(
-        $dbPrefix,
-        Connection $connection
+        private readonly string $dbPrefix,
+        private readonly Connection $connection,
+        private readonly PDFGenerator $pdfGenerator
     ) {
-        $this->dbPrefix = $dbPrefix;
-        $this->connection = $connection;
     }
 
     /**
@@ -52,10 +40,10 @@ final class CreditSlipPdfGenerator implements PDFGeneratorInterface
      *
      * @throws PdfException
      */
-    public function generatePDF(array $creditSlipIds): string
+    public function generatePDF(array $creditSlipIds): void
     {
         try {
-            return $this->createPdf($creditSlipIds)->render(true);
+            $this->pdfGenerator->generatePDF($this->getCreditSlips($creditSlipIds));
         } catch (PrestaShopException $e) {
             throw new PdfException('Something went wrong when trying to generate pdf', 0, $e);
         }
@@ -64,18 +52,18 @@ final class CreditSlipPdfGenerator implements PDFGeneratorInterface
     public function generatePDFForResponse(array $creditSlipIds): GeneratedPdf
     {
         try {
-            $pdf = $this->createPdf($creditSlipIds);
-
-            return new GeneratedPdf(
-                $pdf->render(false),
-                $pdf->getFilename()
-            );
+            return $this->pdfGenerator->generatePDFForResponse($this->getCreditSlips($creditSlipIds));
         } catch (PrestaShopException $e) {
             throw new PdfException('Something went wrong when trying to generate pdf', 0, $e);
         }
     }
 
-    private function createPdf(array $creditSlipIds): PDF
+    /**
+     * @param CreditSlipId[] $creditSlipIds
+     *
+     * @return OrderSlip[]
+     */
+    private function getCreditSlips(array $creditSlipIds): array
     {
         $ids = [];
         foreach ($creditSlipIds as $creditSlipId) {
@@ -83,9 +71,8 @@ final class CreditSlipPdfGenerator implements PDFGeneratorInterface
         }
 
         $slipsList = $this->getCreditSlipsList($ids);
-        $slipsCollection = ObjectModel::hydrateCollection('OrderSlip', $slipsList);
 
-        return new PDF($slipsCollection, PDF::TEMPLATE_ORDER_SLIP, Context::getContext()->smarty);
+        return ObjectModel::hydrateCollection('OrderSlip', $slipsList);
     }
 
     /**

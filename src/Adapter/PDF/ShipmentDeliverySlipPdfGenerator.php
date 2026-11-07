@@ -1,15 +1,14 @@
 <?php
-
 /**
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\PDF;
 
-use Context;
 use Order;
-use PDF;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use PrestaShopBundle\Entity\Repository\ShipmentRepository;
@@ -24,22 +23,11 @@ use Validate;
  */
 final class ShipmentDeliverySlipPdfGenerator implements PDFGeneratorInterface
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var ShipmentRepository
-     */
-    private $shipmentRepository;
-
     public function __construct(
-        TranslatorInterface $translator,
-        ShipmentRepository $shipmentRepository
+        private readonly TranslatorInterface $translator,
+        private readonly ShipmentRepository $shipmentRepository,
+        private readonly PDFGenerator $pdfGenerator
     ) {
-        $this->translator = $translator;
-        $this->shipmentRepository = $shipmentRepository;
     }
 
     /**
@@ -95,9 +83,8 @@ final class ShipmentDeliverySlipPdfGenerator implements PDFGeneratorInterface
             ];
         }
 
-        // The PDF class will iterate through the collection and call HTMLTemplateShipmentDeliverySlip for each
-        $pdf = new PDF($shipmentData, PDF::TEMPLATE_SHIPMENT_DELIVERY_SLIP, Context::getContext()->smarty);
-
-        return $pdf->render(true);
+        // Rendered in string mode: the legacy engine's 'D' (download) mode sends its own headers
+        // and returns an empty string, which is useless to the BinaryFileResponse the caller builds.
+        return $this->pdfGenerator->generatePDFForResponse($shipmentData)->getContent();
     }
 }

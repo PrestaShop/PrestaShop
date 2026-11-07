@@ -1,0 +1,75 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{# TAX DETAILS #}
+{% if is_tax_enabled %}
+    {% if tax_exempt %}
+        {{ 'Exempt of VAT according to section 259B of the General Tax Code.'|trans({}, 'Shop.Pdf') }}
+    {% elseif tax_breakdowns %}
+        <table id="tax-tab" width="100%">
+            <thead>
+                <tr>
+                    <th class="header small">{{ 'Tax Detail'|trans({}, 'Shop.Pdf') }}</th>
+                    <th class="header small">{{ 'Tax Rate'|trans({}, 'Shop.Pdf') }}</th>
+                    {% if display_tax_bases_in_breakdowns %}
+                        <th class="header small">{{ 'Base price'|trans({}, 'Shop.Pdf') }}</th>
+                    {% endif %}
+                    <th class="header-right small">{{ 'Total Tax'|trans({}, 'Shop.Pdf') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set has_line = false %}
+                {% for label, breakdown in tax_breakdowns %}
+                    {% set label_printed = false %}
+                    {% for line in breakdown %}
+                        {% if not (line.rate == 0 and label != 'ecotax_tax') %}
+                            {% set has_line = true %}
+                            <tr>
+                                <td class="white">
+                                    {% if not label_printed %}
+                                        {% if label == 'product_tax' %}
+                                            {{ 'Products'|trans({}, 'Shop.Pdf') }}
+                                        {% elseif label == 'shipping_tax' %}
+                                            {{ 'Shipping'|trans({}, 'Shop.Pdf') }}
+                                        {% elseif label == 'ecotax_tax' %}
+                                            {{ 'Ecotax'|trans({}, 'Shop.Pdf') }}
+                                        {% elseif label == 'wrapping_tax' %}
+                                            {{ 'Wrapping'|trans({}, 'Shop.Pdf') }}
+                                        {% endif %}
+                                        {% set label_printed = true %}
+                                    {% endif %}
+                                </td>
+
+                                <td class="center white">
+                                    {{ line.rate }} %
+                                </td>
+
+                                {% if display_tax_bases_in_breakdowns %}
+                                    <td class="right white">
+                                        {% if is_order_slip is defined and is_order_slip %}- {% endif %}
+                                        {{ line.total_tax_excl|price_format(currency_iso_code) }}
+                                    </td>
+                                {% endif %}
+
+                                <td class="right white">
+                                    {% if is_order_slip is defined and is_order_slip %}- {% endif %}
+                                    {{ line.total_amount|price_format(currency_iso_code) }}
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+
+                {% if not has_line %}
+                    <tr>
+                        <td class="white center" colspan="{{ display_tax_bases_in_breakdowns ? 4 : 3 }}">
+                            {{ 'No taxes'|trans({}, 'Shop.Pdf') }}
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endif %}
+{# / TAX DETAILS #}

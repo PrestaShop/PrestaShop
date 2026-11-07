@@ -1,0 +1,62 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{# Shared container for DeliverySlip and ShipmentDeliverySlip (see legacy pdf/delivery-slip.tpl). #}
+{{ style_tab|raw }}
+
+<table width="100%" id="body" border="0" cellpadding="0" cellspacing="0" style="margin:0;">
+    {# Addresses #}
+    <tr>
+        <td colspan="12">
+            {{ addresses_tab|raw }}
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan="12" height="30">&nbsp;</td>
+    </tr>
+
+    <tr>
+        <td colspan="12">
+            {{ summary_tab|raw }}
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan="12" height="20">&nbsp;</td>
+    </tr>
+
+    {# Products #}
+    <tr>
+        <td colspan="12">
+            {{ product_tab|raw }}
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan="12" height="20">&nbsp;</td>
+    </tr>
+
+    {% if payment_tab is defined and payment_tab %}
+        <tr>
+            <td colspan="7" class="left">
+                {{ payment_tab|raw }}
+            </td>
+            <td colspan="5">&nbsp;</td>
+        </tr>
+    {% endif %}
+
+    {# Hook #}
+    {% if hook_display_pdf %}
+        <tr>
+            <td colspan="12" height="30">&nbsp;</td>
+        </tr>
+
+        <tr>
+            <td colspan="12">
+                {{ hook_display_pdf|raw }}
+            </td>
+        </tr>
+    {% endif %}
+</table>

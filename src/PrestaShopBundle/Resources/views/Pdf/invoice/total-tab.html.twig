@@ -1,0 +1,83 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+<table id="total-tab" width="100%">
+
+    <tr>
+        <td class="grey" width="50%">
+            {{ 'Total Products'|trans({}, 'Shop.Pdf') }}
+        </td>
+        <td class="white" width="50%">
+            {{ footer.products_before_discounts_tax_excl|price_format(currency_iso_code) }}
+        </td>
+    </tr>
+
+    {% if footer.product_discounts_tax_excl > 0 %}
+        <tr>
+            <td class="grey" width="50%">
+                {{ 'Total Discounts'|trans({}, 'Shop.Pdf') }}
+            </td>
+            <td class="white" width="50%">
+                - {{ footer.product_discounts_tax_excl|price_format(currency_iso_code) }}
+            </td>
+        </tr>
+    {% endif %}
+
+    {% if not is_virtual_order %}
+        <tr>
+            <td class="grey" width="50%">
+                {{ 'Shipping Costs'|trans({}, 'Shop.Pdf') }}
+            </td>
+            <td class="white" width="50%">
+                {% if footer.shipping_tax_excl > 0 %}
+                    {{ footer.shipping_tax_excl|price_format(currency_iso_code) }}
+                {% else %}
+                    {{ 'Free Shipping'|trans({}, 'Shop.Pdf') }}
+                {% endif %}
+            </td>
+        </tr>
+    {% endif %}
+
+    {% if footer.wrapping_tax_excl > 0 %}
+        <tr>
+            <td class="grey">
+                {{ 'Wrapping Costs'|trans({}, 'Shop.Pdf') }}
+            </td>
+            <td class="white">{{ footer.wrapping_tax_excl|price_format(currency_iso_code) }}</td>
+        </tr>
+    {% endif %}
+
+    <tr class="bold">
+        <td class="grey">
+            {% if is_tax_enabled %}
+                {{ 'Total (Tax excl.)'|trans({}, 'Shop.Pdf') }}
+            {% else %}
+                {{ 'Total'|trans({}, 'Shop.Pdf') }}
+            {% endif %}
+        </td>
+        <td class="white">
+            {{ footer.total_paid_tax_excl|price_format(currency_iso_code) }}
+        </td>
+    </tr>
+    {% if is_tax_enabled %}
+        {% if footer.total_taxes > 0 %}
+            <tr class="bold">
+                <td class="grey">
+                    {{ 'Total Tax'|trans({}, 'Shop.Pdf') }}
+                </td>
+                <td class="white">
+                    {{ footer.total_taxes|price_format(currency_iso_code) }}
+                </td>
+            </tr>
+        {% endif %}
+        <tr class="bold big">
+            <td class="grey">
+                {{ 'Total'|trans({}, 'Shop.Pdf') }}
+            </td>
+            <td class="white">
+                {{ footer.total_paid_tax_incl|price_format(currency_iso_code) }}
+            </td>
+        </tr>
+    {% endif %}
+</table>

@@ -1,0 +1,12 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.pdf.document_builder.order_return:
+    class: PrestaShop\PrestaShop\Adapter\PDF\Document\OrderReturnPdfDocumentBuilder
+    arguments:
+      - '@prestashop.adapter.pdf.template_resolver'
+      - '@prestashop.adapter.pdf.common_data_builder'
+      - '@translator'
+    tags:
+      - { name: 'prestashop.pdf.document_builder' }
