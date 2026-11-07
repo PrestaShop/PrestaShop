@@ -191,6 +191,13 @@ class ImageManagerCore
 
         // Read dimensions after the planned EXIF rotation and keep the angle to apply to the image pixels
         $sourceInfo = self::getImageSizeWithOrientation($sourceFile);
+        // WHY: getimagesize() answers false for a file that is not an image, and reading offsets of false raises a
+        // warning before the width check further down refuses the file anyway. Same answer, without the warning.
+        if (false === $sourceInfo) {
+            $error = self::ERROR_FILE_WIDTH;
+
+            return false;
+        }
         $sourceWidth = $sourceInfo[0];
         $sourceHeight = $sourceInfo[1];
         $sourceFileType = $sourceInfo[2];
@@ -860,7 +867,14 @@ class ImageManagerCore
             $tgt_width = $tgt_height = 0;
             $src_width = $src_height = 0;
             $error = 0;
-            ImageManager::resize($tmpfile, $path . '.jpg', null, null, 'jpg', false, $error, $tgt_width, $tgt_height, 5, $src_width, $src_height);
+            // A download can succeed and still not be an image: an HTTP error page, a redirect to a login
+            // form, or a rewrite rule that answers with HTML. Nothing is written in that case, so report
+            // the failure instead of letting the caller record an image that has no file behind it.
+            if (!ImageManager::resize($tmpfile, $path . '.jpg', null, null, 'jpg', false, $error, $tgt_width, $tgt_height, 5, $src_width, $src_height)) {
+                @unlink($orig_tmpfile);
+
+                return false;
+            }
             $images_types = ImageType::getImagesTypes($entity, true);
 
             if ($regenerate) {
