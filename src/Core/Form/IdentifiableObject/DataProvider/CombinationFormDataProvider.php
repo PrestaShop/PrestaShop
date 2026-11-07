@@ -118,6 +118,10 @@ class CombinationFormDataProvider implements FormDataProviderInterface
             $data['features'] = $this->extractFeatureValues($combinationId, $shopConstraint);
         }
 
+        if ($this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_COMBINATION_STATUS)) {
+            $data['header']['active'] = $combinationForEditing->isActive();
+        }
+
         return $data;
     }
 

@@ -181,6 +181,7 @@ export default class CombinationsListRenderer {
         // Init first default, and handle radio behaviour amongst lines
         $(CombinationsMap.list.isDefault, $row).prop('checked', true);
       }
+      $(CombinationsMap.list.isActive, $row).prop('checked', combination.active);
       this.updateByPriceImpactTaxExcluded($(CombinationsMap.list.priceImpactTaxExcluded, $row));
 
       // JS event to allow external module to change the row, add listeners, ... before it is added

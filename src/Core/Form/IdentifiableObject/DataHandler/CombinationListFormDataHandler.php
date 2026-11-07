@@ -10,6 +10,8 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter\CombinationListFormDataFormatter;
 
@@ -54,7 +56,8 @@ class CombinationListFormDataHandler implements FormDataHandlerInterface
         CombinationListFormDataFormatter $combinationListFormDataFormatter,
         CombinationCommandsBuilderInterface $commandsBuilder,
         int $contextShopId,
-        int $defaultShopId
+        int $defaultShopId,
+        private ?FeatureFlagStateCheckerInterface $featureFlagStateChecker = null
     ) {
         $this->commandBus = $commandBus;
         $this->combinationListFormDataFormatter = $combinationListFormDataFormatter;
@@ -80,7 +83,12 @@ class CombinationListFormDataHandler implements FormDataHandlerInterface
         $singleShopConstraint = $this->contextShopId ? ShopConstraint::shop($this->contextShopId) : ShopConstraint::shop($this->defaultShopId);
 
         // @todo: a hook system should be integrated in this handler for extendability
+        $isCombinationStatusEnabled = (bool) $this->featureFlagStateChecker?->isEnabled(FeatureFlagSettings::FEATURE_FLAG_COMBINATION_STATUS);
         foreach ($data as $combinationItemData) {
+            if ($isCombinationStatusEnabled) {
+                // An unchecked checkbox is not submitted
+                $combinationItemData['active'] ??= false;
+            }
             $combinationData = $this->combinationListFormDataFormatter->format($combinationItemData);
             $commands = $this->commandsBuilder->buildCommands(new CombinationId((int) $combinationItemData['combination_id']), $combinationData, $singleShopConstraint);
 

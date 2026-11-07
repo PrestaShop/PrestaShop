@@ -470,6 +470,8 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
     }
 
     /**
+     * Active combinations come first, so a product keeps an active default combination whenever it has one.
+     *
      * @param ProductId $productId
      * @param ShopConstraint $shopConstraint
      *
@@ -494,7 +496,8 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
             ->from($this->dbPrefix . 'product_attribute_shop', 'pas')
             ->where('pas.id_shop = :shopId')
             ->andWhere('pas.id_product = :productId')
-            ->orderBy('id_product_attribute', 'ASC')
+            ->orderBy('pas.active', 'DESC')
+            ->addOrderBy('id_product_attribute', 'ASC')
             ->setParameter('shopId', $shopId->getValue())
             ->setParameter('productId', $productId->getValue())
         ;
