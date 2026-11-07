@@ -9,6 +9,8 @@ declare(strict_types=1);
 namespace Tests\Integration\Classes;
 
 use Configuration;
+use Context;
+use Db;
 use PHPUnit\Framework\TestCase;
 use Search;
 
@@ -135,6 +137,54 @@ class SearchTest extends TestCase
             $actual,
             'Search::getSearchParamFromWord() failed for data input : ' . $word . '; Expected : ' . $expectedKeyWord . '; Returns : ' . $actual
         );
+    }
+
+    /**
+     * @dataProvider providerFindRelevance
+     */
+    public function testFindRelevanceIsTheSumOfMatchingWordWeights(string $expression, array $likePatterns): void
+    {
+        Configuration::set('PS_SEARCH_START', true);
+        Configuration::set('PS_SEARCH_END', false);
+        $context = Context::getContext();
+
+        $found = Search::find(1, $expression, 1, 1000, 'position', 'desc', false, false, $context);
+        $this->assertNotEmpty($found['result']);
+
+        $expectedPositions = $this->getExpectedPositions($likePatterns, (int) $context->shop->id);
+        $previous = PHP_INT_MAX;
+        foreach ($found['result'] as $product) {
+            $this->assertSame($expectedPositions[(int) $product['id_product']], (int) $product['position']);
+            $this->assertLessThanOrEqual($previous, (int) $product['position']);
+            $previous = (int) $product['position'];
+        }
+
+        $ajaxResult = Search::find(1, $expression, 1, 10, 'position', 'desc', true, false, $context);
+        $this->assertSame(
+            array_slice(array_map('intval', array_column($found['result'], 'position')), 0, 10),
+            array_map('intval', array_column($ajaxResult, 'position'))
+        );
+    }
+
+    public function providerFindRelevance(): iterable
+    {
+        yield 'one word' => ['mug', ['%mug%']];
+        yield 'two words' => ['mug ceramic', ['%mug%', '%ceramic%']];
+        yield 'two words matching the same indexed word' => ['dishwasher proof', ['%dishwasher%', '%proof%']];
+        yield 'two expressions' => ['mug;poster', ['%mug%', '%poster%']];
+    }
+
+    private function getExpectedPositions(array $likePatterns, int $shopId): array
+    {
+        $conditions = array_map(fn (string $pattern) => "sw.word LIKE '" . pSQL($pattern) . "'", $likePatterns);
+        $rows = Db::getInstance()->executeS(
+            'SELECT si.id_product, SUM(si.weight) position FROM ' . _DB_PREFIX_ . 'search_word sw '
+            . 'INNER JOIN ' . _DB_PREFIX_ . 'search_index si ON si.id_word = sw.id_word '
+            . 'WHERE sw.id_lang = 1 AND sw.id_shop = ' . $shopId . ' AND (' . implode(' OR ', $conditions) . ') '
+            . 'GROUP BY si.id_product'
+        );
+
+        return array_combine(array_map('intval', array_column($rows, 'id_product')), array_map('intval', array_column($rows, 'position')));
     }
 
     public function providerGetSearchParamFromWord(): iterable
