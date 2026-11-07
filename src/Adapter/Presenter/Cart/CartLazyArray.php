@@ -441,6 +441,10 @@ class CartLazyArray extends AbstractLazyArray
                     : $discountApplied->getTaxExcluded();
             }
 
+            if ($this->cartVoucherReducesNothing($cartVoucher, $freeShippingOnly, $totalCartVoucherReduction)) {
+                continue;
+            }
+
             $vouchers[$cartVoucher['id_cart_rule']]['id_cart_rule'] = $cartVoucher['id_cart_rule'];
             $vouchers[$cartVoucher['id_cart_rule']]['name'] = $cartVoucher['name'];
             $vouchers[$cartVoucher['id_cart_rule']]['code'] = $cartVoucher['code'];
@@ -485,6 +489,28 @@ class CartLazyArray extends AbstractLazyArray
     private function cartVoucherHasGiftProductReduction(array $cartVoucher): bool
     {
         return !empty($cartVoucher['gift_product']);
+    }
+
+    /**
+     * Whether the rule gives the customer nothing, in which case listing it prints "-0.00".
+     *
+     * A gift rule whose product has been deleted is the reported case: it stays attached to the cart
+     * and reduces nothing. `Cart::getSummaryDetails()` already drops a rule with no value and no free
+     * shipping; this keeps the cart page in step with it.
+     *
+     * @param array $cartVoucher
+     * @param bool $freeShippingOnly
+     * @param float|int|string $reduction
+     *
+     * @return bool
+     */
+    private function cartVoucherReducesNothing(array $cartVoucher, bool $freeShippingOnly, $reduction): bool
+    {
+        if ($freeShippingOnly || !empty($cartVoucher['free_shipping'])) {
+            return false;
+        }
+
+        return (float) $reduction === 0.0;
     }
 
     private function cartVoucherHasFreeShippingOnly(array $cartVoucher): bool
