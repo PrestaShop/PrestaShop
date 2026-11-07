@@ -62,6 +62,8 @@ class Theme implements AddonInterface
 
             $yamlParser = new YamlParser($configurationCacheDirectory);
             $parentAttributes = $yamlParser->parse($themesDirectory . '/' . $attributes['parent'] . '/config/theme.yml');
+            // The name identifies a theme on its own, a child must not take the one of its parent
+            unset($parentAttributes['name']);
             $parentAttributes['preview'] = 'themes/' . $attributes['parent'] . '/preview.png';
             $parentAttributes['parent_directory'] = rtrim($attributes['directory'], '/') . '/';
             $attributes = array_merge($parentAttributes, $attributes);
@@ -69,7 +71,7 @@ class Theme implements AddonInterface
 
         $attributes['directory'] = rtrim($attributes['directory'], '/') . '/';
 
-        if (file_exists($themesDirectory . $attributes['name'] . '/preview.png')) {
+        if (isset($attributes['name']) && file_exists($themesDirectory . $attributes['name'] . '/preview.png')) {
             $attributes['preview'] = 'themes/' . $attributes['name'] . '/preview.png';
         }
 
