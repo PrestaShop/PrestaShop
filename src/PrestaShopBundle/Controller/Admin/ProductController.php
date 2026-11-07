@@ -458,10 +458,8 @@ class ProductController extends FrameworkBundleAdminController
 
         gc_disable();
 
-        foreach ([PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE] as $permission) {
-            if (!$this->isGranted($permission, self::PRODUCT_OBJECT)) {
-                return $this->redirect('admin_dashboard');
-            }
+        if (!$this->isGranted([PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE], self::PRODUCT_OBJECT)) {
+            return $this->redirect('admin_dashboard');
         }
 
         $productAdapter = $this->get('prestashop.adapter.data_provider.product');
