@@ -773,6 +773,38 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * A product that carries no tax must not show up in the base of a rate it does not belong to.
+     *
+     * @see https://github.com/PrestaShop/PrestaShop/issues/28487
+     *
+     * @Then the product tax breakdown of order :orderReference should be:
+     */
+    public function productTaxBreakdownShouldBe(string $orderReference, TableNode $table)
+    {
+        $order = new Order(SharedStorage::getStorage()->get($orderReference));
+
+        $actual = [];
+        foreach ($order->getInvoicesCollection() as $invoiceRow) {
+            $invoice = new OrderInvoice((int) $invoiceRow->id);
+            foreach ($invoice->getProductTaxesBreakdown($order) as $rate => $row) {
+                $actual[] = sprintf(
+                    '%s|%s|%s',
+                    (float) $rate,
+                    round((float) $row['total_price_tax_excl'], 2),
+                    round((float) $row['total_amount'], 2)
+                );
+            }
+        }
+
+        $expected = [];
+        foreach ($table->getColumnsHash() as $row) {
+            $expected[] = sprintf('%s|%s|%s', (float) $row['rate'], (float) $row['base'], (float) $row['amount']);
+        }
+
+        Assert::assertSame($expected, $actual);
+    }
+
+    /**
      * @Then order :orderReference has status :status
      *
      * @param string $orderReference
