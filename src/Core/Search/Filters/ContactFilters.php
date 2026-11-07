@@ -27,7 +27,7 @@ final class ContactFilters extends Filters
         return [
             'limit' => 10,
             'offset' => 0,
-            'orderBy' => 'id_contact',
+            'orderBy' => 'position',
             'sortOrder' => 'asc',
             'filters' => [],
         ];

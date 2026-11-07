@@ -44,6 +44,14 @@ admin_contacts_delete:
   requirements:
     contactId: \d+
 
+admin_contacts_update_position:
+  path: /update-position
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\ContactsController::updatePositionAction'
+    _legacy_controller: AdminContacts
+    _legacy_link: AdminContacts:updatePositions
+
 admin_contacts_delete_bulk:
   path: /delete/bulk
   methods: [ POST ]
