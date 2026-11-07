@@ -181,7 +181,6 @@ class ProductFeatureValueUpdater
             $orphanIds[] = $orphanCustomFeatureValue['id_feature_value'];
         }
 
-        // Delete translations first to avoid leaving orphaned records in feature_value_lang.
         $qb = $this->connection->createQueryBuilder();
         $qb->delete($this->dbPrefix . 'feature_value_lang')
             ->where($qb->expr()->in('id_feature_value', $orphanIds))
