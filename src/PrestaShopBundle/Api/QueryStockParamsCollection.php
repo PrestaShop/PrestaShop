@@ -54,6 +54,7 @@ class QueryStockParamsCollection extends QueryParamsCollection
             'supplier',
             'available_quantity',
             'physical_quantity',
+            'reserved_quantity',
             'active',
             'low_stock',
         ];

@@ -61,7 +61,13 @@
           </PSSort>
         </th>
         <th class="text-center">
-          {{ trans('title_reserved') }}
+          <PSSort
+            order="reserved_quantity"
+            @sort="sort"
+            :current-sort="currentSort"
+          >
+            {{ trans('title_reserved') }}
+          </PSSort>
         </th>
         <th class="text-center">
           <PSSort
