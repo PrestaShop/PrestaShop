@@ -230,6 +230,12 @@
   }
 }
 
+#editBusinessEntityStatusModal:not([data-state="loading"]) {
+  .skeleton-business-entity-status-modal {
+    display: none;
+  }
+}
+
 .business-entity-pending-banner {
   &__content {
     display: flex;

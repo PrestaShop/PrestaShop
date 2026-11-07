@@ -3,6 +3,8 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+import EditStatusManager from './edit-status-manager';
+
 $(() => {
   const grid = new window.prestashop.component.Grid('business_entity');
 
@@ -16,4 +18,6 @@ $(() => {
   grid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
   grid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
   grid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
+
+  new EditStatusManager();
 });
