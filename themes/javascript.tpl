@@ -10,8 +10,14 @@ var {$k} = {$def|json_encode nofilter};
 </script>
 {/if}
 {if isset($js_files) && $js_files|@count}
-{foreach from=$js_files key=k item=js_uri}
-<script type="text/javascript" src="{$js_uri}"></script>
+{foreach from=$js_files key=k item=js_file}
+  {assign var="js_uri" value=$js_file}
+  {assign var="js_params" value=[]}
+  {if is_array($js_file)}
+    {assign var="js_uri" value=$js_file.uri}
+    {assign var="js_params" value=$js_file.params}
+  {/if}
+  <script type="{if isset($js_params.type)}{$js_params.type}{else}text/javascript{/if}" src="{$js_uri|escape:'html':'UTF-8'}"{if isset($js_params.defer) && $js_params.defer} defer{/if}{if isset($js_params.async) && $js_params.async} async{/if}{if isset($js_params.attributes) && $js_params.attributes} {$js_params.attributes}{/if}></script>
 {/foreach}
 {/if}
 {if isset($js_inline) && $js_inline|@count}
