@@ -296,7 +296,11 @@ class CustomerAddressType extends TranslatorAwareType
                 ],
             ])
             ->add('postcode', TextType::class, [
-                'required' => true,
+                // Whether a zip code is mandatory depends on the country, and the AddressZipCode
+                // constraint below already decides that from its need_zip_code flag. Declaring the
+                // field required here forced it in the browser for every country, including those
+                // that do not use zip codes at all.
+                'required' => false,
                 'label' => $this->trans('Zip/Postal code', 'Admin.Global'),
                 'empty_data' => '',
                 'constraints' => [
