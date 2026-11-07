@@ -249,12 +249,16 @@ class CartRuleCalculator
                 }
             }
 
-            // currency conversion
-            $totalDiscountConverted = $discountConverted = $this->convertAmountBetweenCurrencies(
-                $cartRule->reduction_amount,
-                new Currency($cartRule->reduction_currency),
-                new Currency($cart->id_currency)
-            );
+            // currency conversion (skip loading + conversion when the voucher is already in the cart currency)
+            if ($cartRule->reduction_currency === $cart->id_currency) {
+                $totalDiscountConverted = $discountConverted = (float) $cartRule->reduction_amount;
+            } else {
+                $totalDiscountConverted = $discountConverted = $this->convertAmountBetweenCurrencies(
+                    $cartRule->reduction_amount,
+                    Currency::getCurrencyInstance($cartRule->reduction_currency),
+                    Currency::getCurrencyInstance($cart->id_currency)
+                );
+            }
 
             // Get total sum of concerned rows
             $totalTaxIncl = $totalTaxExcl = 0;
