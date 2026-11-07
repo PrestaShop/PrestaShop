@@ -37,7 +37,7 @@ This will:
 * Export project with git archive to a temp location
 * Define constants (`_PS_MODE_DEV_` to false etc...)
 * Concatenate all licence files into one unique in {project_root}/LICENCES
-* Create somes folders (var/cache, var/logs...)
+* Create some folders (var/cache, var/logs...)
 * Clean project files and directories
 * Zip release if no --no-zip arg
 * Add the installer if no --no-installer arg
