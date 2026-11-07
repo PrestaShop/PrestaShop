@@ -272,6 +272,14 @@ ul {
   }
 }
 
+.ps-checkboxes-dropdown {
+  .dropdown-item {
+    .md-checkbox-container {
+      padding-right: var(--cdk-size-28);
+    }
+  }
+}
+
 .mobile {
   .content-div {
     overflow: hidden;
