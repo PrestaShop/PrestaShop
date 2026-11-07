@@ -146,3 +146,25 @@ Feature: Add payment to Order from Back Office (BO)
 #      | amount         | ¥6               |
 #    And order "bo_order2" should have the following details:
 #      | total_paid_real           | 0.050000 |
+
+  Scenario: A paid status issuing only a delivery slip does not record the payment again
+    Given I pay order "bo_order1" with the following details:
+      | date           | 2019-11-26 13:56:23 |
+      | payment_method | Payments by check   |
+      | transaction_id | test123             |
+      | currency       | USD                 |
+      | amount         | 32.65               |
+    And I add a new order state "paid_delivery_slip" with the following details:
+      | name[en-US]    | Paid, delivery slip only |
+      | color          | #32CD32                  |
+      | isLoggable     | 1                        |
+      | isInvoice      | 0                        |
+      | isHidden       | 0                        |
+      | hasSendMail    | 0                        |
+      | hasPdfInvoice  | 0                        |
+      | hasPdfDelivery | 0                        |
+      | isShipped      | 0                        |
+      | isPaid         | 1                        |
+      | isDelivery     | 1                        |
+    When I update order "bo_order1" status to "paid_delivery_slip"
+    Then order "bo_order1" has 1 payments
