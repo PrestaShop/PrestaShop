@@ -50,6 +50,7 @@ class ResetPasswordType extends AbstractType
                         'Admin.Advparameters.Help'
                     ),
                     'attr' => [
+                        'autocomplete' => 'new-password',
                         'data-minscore' => $minScore,
                         'data-minlength' => $minLength,
                         'data-maxlength' => $maxLength,
@@ -59,6 +60,7 @@ class ResetPasswordType extends AbstractType
                     'label' => $this->translator->trans('Confirm password', [], 'Admin.Advparameters.Feature'),
                     'help' => '',
                     'attr' => [
+                        'autocomplete' => 'new-password',
                         'data-invalid-password' => $this->translator->trans(
                             'The confirmation password doesn\'t match.',
                             [],
