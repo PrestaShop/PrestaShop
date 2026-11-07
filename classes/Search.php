@@ -360,8 +360,8 @@ class SearchCore
         $fuzzyMaxLoop = (int) Configuration::get('PS_SEARCH_FUZZY_MAX_LOOP');
         $psFuzzySearch = (int) Configuration::get('PS_SEARCH_FUZZY');
 
-        // Score array to keep track of words we will get weights for (for relevance)
-        $scoreArray = [];
+        // Ids of the matching words, to compute the relevance
+        $matchingWordIds = [];
 
         // Word count to track how many words we got for given expression
         $wordCnt = 0;
@@ -388,18 +388,6 @@ class SearchCore
                     continue;
                 }
 
-                // We prepare a basic part of SQL query that we will be searching
-                $sql = 'SELECT DISTINCT si.id_product ' .
-                    'FROM ' . _DB_PREFIX_ . 'search_word sw ' .
-                    'LEFT JOIN ' . _DB_PREFIX_ . 'search_index si ON sw.id_word = si.id_word ' .
-                    'LEFT JOIN ' . _DB_PREFIX_ . 'product_shop product_shop ON (product_shop.`id_product` = si.`id_product`) ' .
-                    'WHERE sw.id_lang = ' . (int) $id_lang . ' ' .
-                    'AND sw.id_shop = ' . $context->shop->id . ' ' .
-                    'AND product_shop.`active` = 1 ' .
-                    'AND product_shop.`visibility` IN ("both", "search") ' .
-                    'AND product_shop.indexed = 1 ' .
-                    'AND sw.word LIKE ';
-
                 /*
                  * Now, find all products from the index, that have this keyword.
                  * We start with the word itself wrapped in %%, coming from getSearchParamFromWord.
@@ -409,9 +397,34 @@ class SearchCore
                  *
                  * We will keep searching with different expressions, until we find something
                  * or we exceed our fuzzy search limit.
+                 *
+                 * Matching words and their products are fetched in two queries: joined in one, the optimizer
+                 * may scan every product_shop row instead of starting from the few matching words.
                  */
                 $sql_param_search = self::getSearchParamFromWord($word);
-                while (!($result = $db->executeS($sql . "'" . $sql_param_search . "';", true, false))) {
+                while (true) {
+                    $wordIds = array_map('intval', array_column((array) $db->executeS(
+                        'SELECT sw.id_word FROM ' . _DB_PREFIX_ . 'search_word sw '
+                        . 'WHERE sw.id_lang = ' . (int) $id_lang . ' '
+                        . 'AND sw.id_shop = ' . (int) $context->shop->id . ' '
+                        . "AND sw.word LIKE '" . $sql_param_search . "'",
+                        true,
+                        false
+                    ), 'id_word'));
+                    $result = empty($wordIds) ? [] : $db->executeS(
+                        'SELECT DISTINCT si.id_product FROM ' . _DB_PREFIX_ . 'search_index si '
+                        . 'INNER JOIN ' . _DB_PREFIX_ . 'product_shop product_shop ON (product_shop.`id_product` = si.`id_product`) '
+                        . 'WHERE si.id_word IN (' . implode(',', $wordIds) . ') '
+                        . 'AND product_shop.`active` = 1 '
+                        . 'AND product_shop.`visibility` IN ("both", "search") '
+                        . 'AND product_shop.indexed = 1',
+                        true,
+                        false
+                    );
+                    if ($result) {
+                        break;
+                    }
+
                     if (!$psFuzzySearch || $fuzzyLoop++ > $fuzzyMaxLoop) {
                         break;
                     }
@@ -445,8 +458,10 @@ class SearchCore
                     $productIdsFoundForCurrentExpression = array_intersect($productIdsFoundForCurrentExpression, $productIdsFoundForCurrentWord);
                 }
 
-                // Add the expresion to our score array, so we can later calculate the relevance
-                $scoreArray[] = 'sw.word LIKE \'' . $sql_param_search . '\'';
+                // Keep the matching words, so we can later calculate the relevance
+                foreach ($wordIds as $wordId) {
+                    $matchingWordIds[$wordId] = $wordId;
+                }
             }
             $wordCnt += count($words);
             if ($productIdsFoundForCurrentExpression) {
@@ -467,23 +482,6 @@ class SearchCore
          * Now, we have a list of randomly ordered product IDs for our search,
          * but we don't know if they are active, should be displayed, nothing.
          */
-
-        /*
-         * This is a subquery that selects weight for each keyword.
-         * This is used as "relevance" sort order.
-         */
-        $sqlScore = '';
-        if (!empty($scoreArray) && is_array($scoreArray)) {
-            $sqlScore = ',( ' .
-                'SELECT SUM(weight) ' .
-                'FROM ' . _DB_PREFIX_ . 'search_word sw ' .
-                'LEFT JOIN ' . _DB_PREFIX_ . 'search_index si ON sw.id_word = si.id_word ' .
-                'WHERE sw.id_lang = ' . (int) $id_lang . ' ' .
-                'AND sw.id_shop = ' . $context->shop->id . ' ' .
-                'AND si.id_product = p.id_product ' .
-                'AND (' . implode(' OR ', $scoreArray) . ') ' .
-                ') position';
-        }
 
         $sqlGroups = '';
         if (Group::isFeatureActive()) {
@@ -526,9 +524,21 @@ class SearchCore
          */
         $product_pool = ' IN (' . implode(',', $eligibleProducts) . ') ';
 
+        /*
+         * Relevance ("position") is the sum of the weights of the product's matching words.
+         * Aggregated once for all products: a per-product subquery repeats the "word LIKE" scan for each of them.
+         */
+        $relevanceJoin = 'LEFT JOIN ('
+            . 'SELECT si.id_product, SUM(si.weight) position '
+            . 'FROM ' . _DB_PREFIX_ . 'search_index si '
+            . 'WHERE si.id_word IN (' . implode(',', $matchingWordIds) . ') '
+            . 'AND si.id_product' . $product_pool
+            . 'GROUP BY si.id_product'
+            . ') relevance ON relevance.id_product = p.id_product';
+
         if ($ajax) {
             $sql = 'SELECT DISTINCT p.id_product, pl.name pname, cl.name cname,
-						cl.link_rewrite crewrite, pl.link_rewrite prewrite ' . $sqlScore . '
+						cl.link_rewrite crewrite, pl.link_rewrite prewrite, relevance.position
 					FROM ' . _DB_PREFIX_ . 'product p
 					INNER JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (
 						p.`id_product` = pl.`id_product`
@@ -539,6 +549,7 @@ class SearchCore
 						product_shop.`id_category_default` = cl.`id_category`
 						AND cl.`id_lang` = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('cl') . '
 					)
+					' . $relevanceJoin . '
 					WHERE p.`id_product` ' . $product_pool . '
 					ORDER BY position DESC LIMIT 10';
 
@@ -557,7 +568,7 @@ class SearchCore
         }
         $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
 				pl.`description_short`, pl.`available_now`, pl.`available_later`, pl.`link_rewrite`, pl.`name`,
-			 image_shop.`id_image` id_image, il.`legend`, m.`name` manufacturer_name ' . $sqlScore . ',
+			 image_shop.`id_image` id_image, il.`legend`, m.`name` manufacturer_name, relevance.position,
 				DATEDIFF(
 					p.`date_add`,
 					DATE_SUB(
@@ -579,6 +590,7 @@ class SearchCore
 				LEFT JOIN `' . _DB_PREFIX_ . 'image_shop` image_shop FORCE INDEX (id_product)
 					ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $context->shop->id . ')
 				LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = ' . (int) $id_lang . ')
+				' . $relevanceJoin . '
 				WHERE p.`id_product` ' . $product_pool . '
 				GROUP BY product_shop.id_product';
 
