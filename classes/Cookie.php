@@ -370,7 +370,13 @@ class CookieCore
          * count in case of multi-byte characters.
          */
         if (strlen($this->_name . $content) > 4096) {
-            throw new PrestaShopException('Error during setting a cookie. Combined size of name and value cannot exceed 4096 characters. Larger cookie is not compliant with RFC 2965 and will not be accepted by the browser.');
+            throw new PrestaShopException(sprintf(
+                'Error during setting a cookie. Combined size of name and value cannot exceed 4096 characters. Larger cookie is not compliant with RFC 2965 and will not be accepted by the browser. Cookie "%s" is %d bytes long after encryption, %d bytes before. Largest stored fields, in bytes: %s.',
+                $this->_name,
+                strlen((string) $content),
+                strlen((string) $cookie),
+                $this->getLargestFieldsSummary()
+            ));
         }
 
         return setcookie(
@@ -385,6 +391,39 @@ class CookieCore
                 'samesite' => in_array((string) $this->_sameSite, CookieOptions::SAMESITE_AVAILABLE_VALUES) ? (string) $this->_sameSite : CookieOptions::SAMESITE_NONE,
             ]
         );
+    }
+
+    /**
+     * Returns a summary of the largest fields currently stored in the cookie, sorted from
+     * the largest one. It is meant to identify which module or which part of the code is
+     * overflowing the cookie, because the exception alone gives no hint about it.
+     *
+     * Only field names and their sizes in bytes are returned. Values are never disclosed,
+     * because they can contain personal data.
+     *
+     * @param int $limit Maximum number of fields to describe
+     *
+     * @return string
+     */
+    protected function getLargestFieldsSummary($limit = 10)
+    {
+        $sizes = [];
+        foreach ($this->_content as $key => $value) {
+            // Same serialization as in write(), so the sizes add up to the cookie content
+            $sizes[$key] = strlen($key . '|' . $value . '¤');
+        }
+        arsort($sizes);
+
+        $summary = [];
+        foreach (array_slice($sizes, 0, $limit, true) as $key => $size) {
+            $summary[] = $key . ' = ' . $size;
+        }
+
+        if (count($sizes) > $limit) {
+            $summary[] = sprintf('and %d more field(s)', count($sizes) - $limit);
+        }
+
+        return implode(', ', $summary);
     }
 
     /**
