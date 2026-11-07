@@ -73,7 +73,7 @@ final class AttachmentFormDataHandler implements FormDataHandlerInterface
         /** @var UploadedFile|null $fileObject */
         $fileObject = $data['file'];
 
-        $command = new EditAttachmentCommand($attachmentId);
+        $command = new EditAttachmentCommand($attachmentId->getValue());
         $command->setLocalizedNames($data['name']);
         $command->setLocalizedDescriptions($data['file_description']);
 
