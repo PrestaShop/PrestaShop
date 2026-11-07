@@ -228,7 +228,8 @@ class QueryListProvider implements ProviderInterface
             [NormalizationMapper::NORMALIZATION_MAPPING => $filtersMapping]
         );
 
-        $orderBy = $this->mapOrderByFieldForGrid($queryParameters['orderBy'] ?? null, $filtersMapping);
+        $orderBy = $this->getSortableOrderBy($queryParameters['orderBy'] ?? null, (string) $operation->getClass(), $filtersMapping);
+        $orderBy = $this->mapOrderByFieldForGrid($orderBy, $filtersMapping);
         $paginationParameters = [
             'filters' => $paginationFilters,
             'orderBy' => $orderBy,
@@ -260,6 +261,25 @@ class QueryListProvider implements ProviderInterface
         $filters->add($paginationParameters);
 
         return $filters;
+    }
+
+    /**
+     * The grid query builders sort on the field as is: a field that is neither a property of the resource nor
+     * an entry of the filters mapping would reach the SQL query (an unknown column, or a column the resource
+     * never exposes such as a password hash), so it is dropped and the default order applies.
+     */
+    protected function getSortableOrderBy(?string $orderBy, string $resourceClass, array $filtersMapping): ?string
+    {
+        if (empty($orderBy)) {
+            return $orderBy;
+        }
+
+        $mappedFields = array_merge(array_keys($filtersMapping), array_values($filtersMapping));
+        if (in_array('[' . $orderBy . ']', $mappedFields, true) || property_exists($resourceClass, $orderBy)) {
+            return $orderBy;
+        }
+
+        return null;
     }
 
     protected function mapOrderByFieldForGrid(?string $apiOrderBy, array $filtersMapping): ?string

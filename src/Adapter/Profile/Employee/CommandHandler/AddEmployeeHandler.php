@@ -61,6 +61,10 @@ final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmp
      */
     public function handle(AddEmployeeCommand $command)
     {
+        $this->assertProfileExists((int) $command->getProfileId());
+        $this->assertLanguageExists((int) $command->getLanguageId());
+        $this->assertShopsExist($command->getShopAssociation());
+
         $canAccessProfile = $this->profileAccessChecker->canEmployeeAccessProfile(
             $this->contextEmployeeProvider->getId(),
             (int) $command->getProfileId()

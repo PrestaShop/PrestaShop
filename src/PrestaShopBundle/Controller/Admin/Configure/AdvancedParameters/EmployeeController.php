@@ -417,6 +417,11 @@ class EmployeeController extends PrestaShopAdminController
                     [],
                     'Admin.Advparameters.Notification'
                 ),
+                AdminEmployeeException::CANNOT_MANAGE_SUPER_ADMIN => $this->trans(
+                    'You cannot edit the SuperAdmin profile.',
+                    [],
+                    'Admin.Advparameters.Notification'
+                ),
             ],
             EmployeeCannotChangeItselfException::class => [
                 EmployeeCannotChangeItselfException::CANNOT_CHANGE_STATUS => $this->trans(
