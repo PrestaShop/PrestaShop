@@ -200,7 +200,7 @@ class StateCore extends ObjectModel
         $sql->from('state', 's');
         $sql->where('s.id_country = ' . (int) $idCountry . ($active ? ' AND s.active = 1' : ''));
 
-        if (array_key_exists($orderBy, static::$definition['fields'])) {
+        if ($orderBy && array_key_exists($orderBy, static::$definition['fields'])) {
             $sort = trim($sort);
             if (in_array($sort, $available_sort)) {
                 $orderBy = $orderBy . ' ' . $sort;
