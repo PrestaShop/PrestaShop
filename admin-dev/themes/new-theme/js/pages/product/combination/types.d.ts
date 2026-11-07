@@ -9,6 +9,7 @@ export interface AttributesSelectorStates {
   dataSetConfig: AutoCompleteSearchConfig | Record<string, any>;
   searchSource: Record<string, any>;
   scrollbar: PerfectScrollbar | null;
+  resizeObserver: ResizeObserver | null;
   hasGeneratedCombinations: boolean;
   checkboxList: Array<Record<string, any>>;
 }
