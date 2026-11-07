@@ -1644,3 +1644,47 @@ Feature: Order from Back Office (BO)
       | unit_price_tax_excl    | 13.00 |
       | total_price_tax_incl   | 13.78 |
       | total_price_tax_excl   | 13.00 |
+
+  @restore-cart-rules-after-scenario
+  Scenario: A gift that is already in the order with a customization gets its own line
+    Given there is a product in the catalog named "Test Product With Auto Gift" with a price of 12.0 and 100 items in stock
+    When I add product "product12345" with following information:
+      | name[en-US] | Customizable Postcard |
+      | type        | standard              |
+    And I update product product12345 with following customization fields:
+      | reference   | type | name[en-US] | is required |
+      | customField | text | back image  | false       |
+    And I update product "product12345" stock with following information:
+      | out_of_stock_type | available |
+    And I update product "product12345" with following values:
+      | reference | product12345 |
+    And there is a cart rule "GiftPostcard" with following properties:
+      | name[en-US]       | GiftPostcard                |
+      | priority          | 1                           |
+      | total_quantity    | 100                         |
+      | quantity_per_user | 100                         |
+      | gift_product      | product12345                |
+      | discount_product  | Test Product With Auto Gift |
+    And I add 1 customized products with reference "product12345" with all its customizations to the cart "dummy_cart"
+    And I add order "bo_order1" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting bank wire payment |
+    Then order "bo_order1" should have the following lines of product "Customizable Postcard":
+      | line       | product_quantity |
+      | customized | 1                |
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name   | Test Product With Auto Gift |
+      | amount | 1                           |
+      | price  | 12.00                       |
+    Then order "bo_order1" should have 1 cart rule
+    And order "bo_order1" should have the following lines of product "Customizable Postcard":
+      | line           | product_quantity |
+      | customized     | 1                |
+      | non-customized | 1                |
+    When I remove product "Test Product With Auto Gift" from order "bo_order1"
+    Then order "bo_order1" should have 0 cart rule
+    And order "bo_order1" should have the following lines of product "Customizable Postcard":
+      | line       | product_quantity |
+      | customized | 1                |

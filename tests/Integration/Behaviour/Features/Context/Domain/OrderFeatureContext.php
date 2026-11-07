@@ -589,6 +589,32 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then order :orderReference should have the following lines of product :productName:
+     */
+    public function assertOrderLinesOfProduct(string $orderReference, string $productName, TableNode $table): void
+    {
+        $productId = $this->getProductByName($productName)->getProductId();
+        $order = new Order(SharedStorage::getStorage()->get($orderReference));
+        $actualLines = [];
+        foreach ($order->getProducts() as $orderDetail) {
+            if ((int) $orderDetail['product_id'] === $productId) {
+                $actualLines[] = [
+                    'line' => (int) $orderDetail['id_customization'] > 0 ? 'customized' : 'non-customized',
+                    'product_quantity' => (int) $orderDetail['product_quantity'],
+                ];
+            }
+        }
+        $expectedLines = array_map(static fn (array $row): array => [
+            'line' => $row['line'],
+            'product_quantity' => (int) $row['product_quantity'],
+        ], $table->getColumnsHash());
+        sort($actualLines);
+        sort($expectedLines);
+
+        Assert::assertSame($expectedLines, $actualLines);
+    }
+
+    /**
      * @When I edit product :productName in :invoicePosition invoice from order :orderReference with following products details:
      *
      * @param string $productName

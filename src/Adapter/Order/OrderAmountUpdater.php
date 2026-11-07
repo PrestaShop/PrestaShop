@@ -197,9 +197,13 @@ class OrderAmountUpdater
         $combinationId = null === $productUpdate->getCombinationId()
             ? 0
             : $productUpdate->getCombinationId()->getValue();
+        $customizationId = null === $productUpdate->getCustomizationId()
+            ? 0
+            : $productUpdate->getCustomizationId()->getValue();
         foreach ($cart->getProducts() as $product) {
             if ((int) $product['id_product'] === $productUpdate->getProductId()->getValue()
-                && (int) $product['id_product_attribute'] === $combinationId) {
+                && (int) $product['id_product_attribute'] === $combinationId
+                && (int) $product['id_customization'] === $customizationId) {
                 return $product;
             }
         }
@@ -218,9 +222,13 @@ class OrderAmountUpdater
         $combinationId = null === $productUpdate->getCombinationId()
             ? 0
             : $productUpdate->getCombinationId()->getValue();
+        $customizationId = null === $productUpdate->getCustomizationId()
+            ? 0
+            : $productUpdate->getCustomizationId()->getValue();
         foreach ($order->getProducts() as $product) {
             if ((int) $product['product_id'] === $productUpdate->getProductId()->getValue()
-                && (int) $product['product_attribute_id'] === $combinationId) {
+                && (int) $product['product_attribute_id'] === $combinationId
+                && (int) $product['id_customization'] === $customizationId) {
                 return $product;
             }
         }
