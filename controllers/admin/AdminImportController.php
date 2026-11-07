@@ -2577,8 +2577,16 @@ class AdminImportControllerCore extends AdminController
             $productSuppliers = ProductSupplier::getSupplierCollection($product->id);
             /** @var ProductSupplier $productSupplier */
             foreach ($productSuppliers as $productSupplier) {
-                // skip if related combination supplier already exists
-                if ((int) $productSupplier->id_product_attribute === (int) $id_product_attribute) {
+                // getSupplierCollection() groups by supplier, so the row handed back can be the product
+                // level one even when this combination already has its own association. Trusting that
+                // row's own combination id let the same association be inserted twice, which the unique
+                // key on (id_product, id_product_attribute, id_supplier) then rejected, aborting the
+                // whole import. Ask for the combination instead.
+                if (ProductSupplier::getIdByProductAndSupplier(
+                    (int) $product->id,
+                    (int) $id_product_attribute,
+                    (int) $productSupplier->id_supplier
+                )) {
                     continue;
                 }
 
