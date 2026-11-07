@@ -119,6 +119,23 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
         $this->expectsTotal($expectedTotal, false, !empty($precisely));
     }
 
+    /**
+     * @Then /^my cart total without shipping should be (precisely )?(\d+\.\d+) tax (excluded|included)$/
+     */
+    public function totalCartWithoutShippingShouldBe($precisely, $expectedTotal, $taxes)
+    {
+        $cart = $this->getCurrentCart();
+        $total = $cart->getOrderTotal($taxes === 'included', Cart::BOTH_WITHOUT_SHIPPING);
+        if (empty($precisely)) {
+            // here we round values to avoid round issues : rounding modes are tested by specific tests
+            $expectedTotal = round($expectedTotal, 1);
+            $total = round($total, 1);
+        }
+        if ($expectedTotal != $total) {
+            throw new RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $total));
+        }
+    }
+
     protected function expectsTotal($expectedTotal, $withTax = true, $precisely = false)
     {
         $cart = $this->getCurrentCart();
