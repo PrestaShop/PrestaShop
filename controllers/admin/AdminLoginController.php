@@ -177,7 +177,7 @@ class AdminLoginControllerCore extends AdminController
         parent::initContent();
         $this->initFooter();
 
-        //force to disable modals
+        // force to disable modals
         $this->context->smarty->assign('modals', null);
     }
 
@@ -322,7 +322,7 @@ class AdminLoginControllerCore extends AdminController
             $this->errors[] = $this->trans('Invalid email address.', [], 'Admin.Notifications.Error');
         } else {
             $employee = new Employee();
-            if (!$employee->getByEmail($email)) {
+            if ($employee->getByEmail($email)->id === null) {
                 die(json_encode([
                     'hasErrors' => false,
                     'confirm' => $this->trans(
