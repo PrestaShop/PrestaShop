@@ -107,6 +107,7 @@ class ProductImageUpdater
         }
 
         $productId = new ProductId((int) $newCover->id_product);
+        $coverUpdated = false;
         foreach ($shopIds as $shopId) {
             $currentCover = $this->productImageRepository->findCoverImageId($productId, $shopId);
 
@@ -120,6 +121,13 @@ class ProductImageUpdater
             }
 
             $this->updateCover($newCover, true, $shopId);
+            $coverUpdated = true;
+        }
+
+        if ($coverUpdated) {
+            // Cover changes do not go through Image::deleteCover(); clear temporary
+            // order/cart thumbnails so the new cover is reflected immediately.
+            $this->productImageUploader->clearCachedImages((int) $newCover->id_product);
         }
     }
 
