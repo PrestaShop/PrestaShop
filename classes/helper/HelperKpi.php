@@ -29,6 +29,10 @@ class HelperKpiCore extends Helper
 
     public function generate()
     {
+        if (!$this->canReadSource()) {
+            return '';
+        }
+
         $this->tpl = $this->createTemplate($this->base_tpl);
 
         $this->tpl->assign([
@@ -47,5 +51,15 @@ class HelperKpiCore extends Helper
         ]);
 
         return $this->tpl->fetch();
+    }
+
+    protected function canReadSource(): bool
+    {
+        parse_str((string) parse_url((string) $this->source, PHP_URL_QUERY), $params);
+        $controller = $params['controller'] ?? '';
+
+        return !is_string($controller)
+            || !Tab::getIdFromClassName($controller)
+            || $this->context->employee->can('view', $controller);
     }
 }
