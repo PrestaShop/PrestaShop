@@ -9,9 +9,12 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\OrderReturn\Repository;
 
 use Db;
+use Doctrine\DBAL\ArrayParameterType;
+use Doctrine\DBAL\Connection;
 use Order;
 use OrderReturn;
 use PrestaShop\PrestaShop\Adapter\OrderReturn\Validator\OrderReturnValidator;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\DeleteProductFromOrderReturnException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnNotFoundException;
@@ -28,12 +31,23 @@ class OrderReturnRepository extends AbstractObjectModelRepository
      */
     private $orderReturnValidator;
 
+    private Connection $connection;
+
+    private string $dbPrefix;
+
     /**
      * @param OrderReturnValidator $orderReturnValidator
+     * @param Connection|null $connection optional for backward compatibility, will be required in 10.0
+     * @param string|null $dbPrefix optional for backward compatibility, will be required in 10.0
      */
-    public function __construct(OrderReturnValidator $orderReturnValidator)
-    {
+    public function __construct(
+        OrderReturnValidator $orderReturnValidator,
+        ?Connection $connection = null,
+        ?string $dbPrefix = null
+    ) {
         $this->orderReturnValidator = $orderReturnValidator;
+        $this->connection = $connection ?? SymfonyContainer::getInstance()->get('doctrine.dbal.default_connection');
+        $this->dbPrefix = $dbPrefix ?? _DB_PREFIX_;
     }
 
     /**
@@ -92,11 +106,71 @@ class OrderReturnRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * Lists the product lines of a return (rows of `order_return_detail` for this return only),
+     * customized lines first, each with the order line reference/name and, for customized lines,
+     * the customer-provided data (`customized_data` rows: type + value).
+     *
+     * @return array<int, array{id_order_detail: int, id_customization: int, product_quantity: int, product_reference: string, product_name: string, customized_data: array<int, array{type: int, value: string}>}>
+     *
+     * @throws OrderReturnNotFoundException
+     */
+    public function getProductLines(OrderReturnId $orderReturnId): array
+    {
+        $this->get($orderReturnId);
+
+        $rows = $this->connection->createQueryBuilder()
+            ->select('ord.id_order_detail, ord.id_customization, ord.product_quantity, od.product_reference, od.product_name')
+            ->from($this->dbPrefix . 'order_return_detail', 'ord')
+            ->innerJoin('ord', $this->dbPrefix . 'order_detail', 'od', 'od.id_order_detail = ord.id_order_detail')
+            ->where('ord.id_order_return = :orderReturnId')
+            ->setParameter('orderReturnId', $orderReturnId->getValue())
+            ->orderBy('ord.id_customization = 0')
+            ->addOrderBy('ord.id_order_detail')
+            ->addOrderBy('ord.id_customization')
+            ->executeQuery()
+            ->fetchAllAssociative()
+        ;
+
+        $customizationIds = array_values(array_filter(array_map(static fn (array $row): int => (int) $row['id_customization'], $rows)));
+        $customizedData = [];
+        if (!empty($customizationIds)) {
+            $dataRows = $this->connection->createQueryBuilder()
+                ->select('cd.id_customization, cd.type, cd.value')
+                ->from($this->dbPrefix . 'customized_data', 'cd')
+                ->where('cd.id_customization IN (:customizationIds)')
+                ->setParameter('customizationIds', $customizationIds, ArrayParameterType::INTEGER)
+                ->orderBy('cd.id_customization')
+                ->addOrderBy('cd.type')
+                ->addOrderBy('cd.`index`')
+                ->executeQuery()
+                ->fetchAllAssociative()
+            ;
+            foreach ($dataRows as $dataRow) {
+                $customizedData[(int) $dataRow['id_customization']][] = [
+                    'type' => (int) $dataRow['type'],
+                    'value' => (string) $dataRow['value'],
+                ];
+            }
+        }
+
+        return array_map(static fn (array $row): array => [
+            'id_order_detail' => (int) $row['id_order_detail'],
+            'id_customization' => (int) $row['id_customization'],
+            'product_quantity' => (int) $row['product_quantity'],
+            'product_reference' => (string) $row['product_reference'],
+            'product_name' => (string) $row['product_name'],
+            'customized_data' => $customizedData[(int) $row['id_customization']] ?? [],
+        ], $rows);
+    }
+
+    /**
      * Lists classic (non-customized) products attached to a return.
      *
      * Each row is the legacy associative array returned by Order::getProducts() augmented with
      * 'product_quantity' (sum of returned qty for that order line) and 'customizations'
      * (last id_customization seen — 0 when none). Keys match the indexes used by Order::getProducts().
+     *
+     * @deprecated since 9.2.1, use getProductLines() instead, this method merges customized lines into the classic rows
      *
      * @return array<int, array<string, mixed>>
      */
@@ -162,6 +236,8 @@ class OrderReturnRepository extends AbstractObjectModelRepository
      *
      * Returns the legacy associative arrays produced by OrderReturn::getReturnedCustomizedProducts(),
      * each enriched with product_id, product_attribute_id, name, reference, id_address_delivery.
+     *
+     * @deprecated since 9.2.1, use getProductLines() instead, this method lists the customized lines of every return of the order
      *
      * @return array<int, array<string, mixed>>
      */

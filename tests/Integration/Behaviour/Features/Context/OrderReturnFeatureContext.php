@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use Behat\Gherkin\Node\TableNode;
 use Configuration;
 use Order;
 use OrderReturn;
@@ -56,6 +57,29 @@ class OrderReturnFeatureContext extends AbstractPrestaShopFeatureContext
         foreach ($order->getProducts() as $product) {
             $orderDetailIds[] = $product['id_order_detail'];
             $quantities[] = $product['product_quantity'];
+        }
+        $orderReturn->addReturnDetail($orderDetailIds, $quantities);
+        SharedStorage::getStorage()->set($orderReturnReference, $orderReturn->id);
+    }
+
+    /**
+     * @When I add order return :orderReturnReference from order :orderReference with the following products:
+     */
+    public function createOrderReturnWithProducts(string $orderReturnReference, string $orderReference, TableNode $table): void
+    {
+        $order = new Order((int) SharedStorage::getStorage()->get($orderReference));
+        $orderDetailIdsByReference = array_column($order->getProducts(), 'id_order_detail', 'product_reference');
+
+        $orderReturn = new OrderReturn();
+        $orderReturn->id_customer = (int) $order->id_customer;
+        $orderReturn->id_order = $order->id;
+        $orderReturn->question = 'Why?';
+        $orderReturn->state = 1;
+        $orderReturn->add();
+        $orderDetailIds = $quantities = [];
+        foreach ($table->getColumnsHash() as $row) {
+            $orderDetailIds[] = (int) $orderDetailIdsByReference[$row['reference']];
+            $quantities[] = (int) $row['quantity'];
         }
         $orderReturn->addReturnDetail($orderDetailIds, $quantities);
         SharedStorage::getStorage()->set($orderReturnReference, $orderReturn->id);

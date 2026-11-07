@@ -37,6 +37,30 @@ Feature: Order return Management
     And the queried products of order return "testOrderReturn" should contain a product with reference "demo_11" and quantity 2
     And the queried products of order return "testOrderReturn" should contain a product with reference "demo_12" and quantity 1
 
+  Scenario: Each order return of the same order only lists its own lines, customized lines once with their data
+    Given I create an empty cart "dummy_cart2" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart2"
+    And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart2"
+    And I add 1 customized products with reference "demo_14" with all its customizations to the cart "dummy_cart2"
+    And I add order "bo_order2" with the following details:
+      | cart                | dummy_cart2                |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting bank wire payment |
+    And I add order return "classicReturn" from order "bo_order2" with the following products:
+      | reference | quantity |
+      | demo_11   | 2        |
+    And I add order return "customizedReturn" from order "bo_order2" with the following products:
+      | reference | quantity |
+      | demo_14   | 1        |
+    When I query the products of order return "classicReturn"
+    Then the queried products of order return "classicReturn" should contain 1 row
+    And the queried products of order return "classicReturn" should contain a product with reference "demo_11" and quantity 2
+    When I query the products of order return "customizedReturn"
+    Then the queried products of order return "customizedReturn" should contain 1 row
+    And the queried products of order return "customizedReturn" should contain a product with reference "demo_14" and quantity 1
+    And the queried product with reference "demo_14" of order return "customizedReturn" should be customized with text "Toto"
+
   Scenario: Delete one product from an order return
     When I delete from order return "testOrderReturn" the product with reference "demo_12"
     And I query the products of order return "testOrderReturn"
