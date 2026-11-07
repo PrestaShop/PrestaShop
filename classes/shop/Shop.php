@@ -165,6 +165,7 @@ class ShopCore extends ObjectModel
             'module_group' => ['type' => 'fk_shop'],
             'product' => ['type' => 'shop'],
             'product_attribute' => ['type' => 'shop'],
+            'product_attribute_content' => ['type' => 'fk_shop'],
             'product_lang' => ['type' => 'fk_shop'],
             'customization_field_lang' => ['type' => 'fk_shop'],
             'store' => ['type' => 'shop'],
@@ -1238,6 +1239,7 @@ class ShopCore extends ObjectModel
         $tables_import['category_lang'] = true;
         if (isset($tables_import['product'])) {
             $tables_import['product_lang'] = true;
+            $tables_import['product_attribute_content'] = true;
             $tables_import['customization_field_lang'] = true;
         }
 
