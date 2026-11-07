@@ -14,6 +14,7 @@ if (file_exists($parametersFilepath)) {
             'locale' => 'en',
             'database_host' => '',
             'database_port' => null,
+            'database_unix_socket' => null,
             'database_name' => '',
             'database_user' => '',
             'database_password' => '',
@@ -44,6 +45,14 @@ if (!defined('_PS_IN_TEST_') && isset($_SERVER['argv'])) {
 if (isset($container) && $container instanceof Symfony\Component\DependencyInjection\Container) {
     foreach ($parameters['parameters'] as $key => $value) {
         $container->setParameter($key, $value);
+    }
+
+    // The socket is optional and shops installed before it existed have no such key at all,
+    // while the installer writes an unset value as '' (see Install::generateSettingsFile).
+    // Doctrine tests this parameter with isset(), so '' would put "unix_socket=;" in the DSN
+    // and break every TCP connection - only null is skipped. Normalise both cases to null.
+    if (empty($parameters['parameters']['database_unix_socket'])) {
+        $container->setParameter('database_unix_socket', null);
     }
 
     $driver = 'array';
