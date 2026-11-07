@@ -6,6 +6,7 @@ doctrine:
     connections:
       default:
         driver: pdo_mysql
+        driver_class: PrestaShop\PrestaShop\Adapter\Doctrine\LegacyConnectionDriver
         wrapper_class: PrestaShopBundle\Doctrine\DatabaseConnection
         host: "%database_host%"
         port: "%database_port%"
