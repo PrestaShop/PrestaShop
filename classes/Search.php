@@ -472,17 +472,35 @@ class SearchCore
          * This is a subquery that selects weight for each keyword.
          * This is used as "relevance" sort order.
          */
-        $sqlScore = '';
-        if (!empty($scoreArray) && is_array($scoreArray)) {
-            $sqlScore = ',( ' .
-                'SELECT SUM(weight) ' .
-                'FROM ' . _DB_PREFIX_ . 'search_word sw ' .
-                'LEFT JOIN ' . _DB_PREFIX_ . 'search_index si ON sw.id_word = si.id_word ' .
-                'WHERE sw.id_lang = ' . (int) $id_lang . ' ' .
-                'AND sw.id_shop = ' . $context->shop->id . ' ' .
-                'AND si.id_product = p.id_product ' .
-                'AND (' . implode(' OR ', $scoreArray) . ') ' .
-                ') position';
+        /*
+         * Relevance ("position") is the sum of the weights of the product's matching words.
+         * It used to be computed as a correlated subquery evaluated once per candidate product,
+         * which re-ran the "word LIKE" scan of search_word for every row and dominated the search
+         * time on large catalogs (issue #43373). Resolve the matching words once, then join the
+         * per-product weight sum as a single aggregation keyed on the indexed id_word.
+         */
+        $relevanceSelect = '';
+        $relevanceJoin = '';
+        if (!empty($scoreArray)) {
+            $matchingWordIds = array_map('intval', array_column((array) $db->executeS(
+                'SELECT sw.id_word '
+                . 'FROM ' . _DB_PREFIX_ . 'search_word sw '
+                . 'WHERE sw.id_lang = ' . (int) $id_lang . ' '
+                . 'AND sw.id_shop = ' . (int) $context->shop->id . ' '
+                . 'AND (' . implode(' OR ', $scoreArray) . ')',
+                true,
+                false
+            ), 'id_word'));
+
+            if (!empty($matchingWordIds)) {
+                $relevanceSelect = ', relevance.position';
+                $relevanceJoin = 'LEFT JOIN ('
+                    . 'SELECT si.id_product, SUM(si.weight) position '
+                    . 'FROM ' . _DB_PREFIX_ . 'search_index si '
+                    . 'WHERE si.id_word IN (' . implode(',', $matchingWordIds) . ') '
+                    . 'GROUP BY si.id_product'
+                    . ') relevance ON relevance.id_product = p.id_product ';
+            }
         }
 
         $sqlGroups = '';
@@ -528,7 +546,7 @@ class SearchCore
 
         if ($ajax) {
             $sql = 'SELECT DISTINCT p.id_product, pl.name pname, cl.name cname,
-						cl.link_rewrite crewrite, pl.link_rewrite prewrite ' . $sqlScore . '
+						cl.link_rewrite crewrite, pl.link_rewrite prewrite' . $relevanceSelect . '
 					FROM ' . _DB_PREFIX_ . 'product p
 					INNER JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (
 						p.`id_product` = pl.`id_product`
@@ -539,7 +557,7 @@ class SearchCore
 						product_shop.`id_category_default` = cl.`id_category`
 						AND cl.`id_lang` = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('cl') . '
 					)
-					WHERE p.`id_product` ' . $product_pool . '
+					' . $relevanceJoin . 'WHERE p.`id_product` ' . $product_pool . '
 					ORDER BY position DESC LIMIT 10';
 
             return $db->executeS($sql, true, false);
@@ -557,7 +575,7 @@ class SearchCore
         }
         $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
 				pl.`description_short`, pl.`available_now`, pl.`available_later`, pl.`link_rewrite`, pl.`name`,
-			 image_shop.`id_image` id_image, il.`legend`, m.`name` manufacturer_name ' . $sqlScore . ',
+			 image_shop.`id_image` id_image, il.`legend`, m.`name` manufacturer_name' . $relevanceSelect . ',
 				DATEDIFF(
 					p.`date_add`,
 					DATE_SUB(
@@ -579,7 +597,7 @@ class SearchCore
 				LEFT JOIN `' . _DB_PREFIX_ . 'image_shop` image_shop FORCE INDEX (id_product)
 					ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $context->shop->id . ')
 				LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = ' . (int) $id_lang . ')
-				WHERE p.`id_product` ' . $product_pool . '
+				' . $relevanceJoin . 'WHERE p.`id_product` ' . $product_pool . '
 				GROUP BY product_shop.id_product';
 
         if ($order_by !== 'price') {
