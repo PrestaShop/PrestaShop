@@ -150,3 +150,13 @@ services:
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\AttributeGroupChoiceProvider:
     autowire: true
+
+  PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ShipmentStatusChoiceProvider:
+    arguments:
+      - '@translator'
+
+  PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ShipmentCarrierChoiceProvider:
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+      - '@PrestaShop\PrestaShop\Core\Context\ShopContext'

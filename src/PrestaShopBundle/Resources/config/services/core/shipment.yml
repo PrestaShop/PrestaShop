@@ -12,3 +12,5 @@ services:
   PrestaShop\PrestaShop\Adapter\Shipment\ShipmentProductQuantityUpdater:
 
   PrestaShop\PrestaShop\Adapter\Shipment\ShipmentProductAssigner:
+
+  PrestaShopBundle\Service\Form\ImprovedShipmentTabsToggler: ~
