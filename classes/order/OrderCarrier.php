@@ -91,19 +91,24 @@ class OrderCarrierCore extends ObjectModel
         $metadata = '';
         foreach ($products as $product) {
             $prod_obj = new Product((int) $product['product_id']);
+            $img_url = '';
+            $prod_url = '';
 
-            // try to get the first image for the purchased combination
-            $img = $prod_obj->getCombinationImages($orderLanguageId);
-            $link_rewrite = $prod_obj->link_rewrite[$orderLanguageId];
-            $combination_img = $img[$product['product_attribute_id']][0]['id_image'] ?? null;
-            if ($combination_img != null) {
-                $img_url = $link->getImageLink($link_rewrite, $combination_img, 'large_default');
-            } else {
-                // if there is no combination image, then get the product cover instead
-                $img = $prod_obj->getCover($prod_obj->id);
-                $img_url = !empty($img['id_image']) ? $link->getImageLink($link_rewrite, $img['id_image']) : '';
+            // A product deleted from the catalogue has neither image nor page
+            if (Validate::isLoadedObject($prod_obj)) {
+                // try to get the first image for the purchased combination
+                $img = $prod_obj->getCombinationImages($orderLanguageId);
+                $link_rewrite = $prod_obj->link_rewrite[$orderLanguageId];
+                $combination_img = $img[$product['product_attribute_id']][0]['id_image'] ?? null;
+                if ($combination_img != null) {
+                    $img_url = $link->getImageLink($link_rewrite, $combination_img, 'large_default');
+                } else {
+                    // if there is no combination image, then get the product cover instead
+                    $img = $prod_obj->getCover($prod_obj->id);
+                    $img_url = !empty($img['id_image']) ? $link->getImageLink($link_rewrite, $img['id_image']) : '';
+                }
+                $prod_url = $prod_obj->getLink();
             }
-            $prod_url = $prod_obj->getLink();
 
             $metadata .= "\n" . '<div itemprop="itemShipped" itemscope itemtype="https://schema.org/Product">';
             $metadata .= "\n" . '   <meta itemprop="name" content="' . htmlspecialchars($product['product_name']) . '"/>';

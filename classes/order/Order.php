@@ -367,6 +367,8 @@ class OrderCore extends ObjectModel
         $cart_base_product_quantity = [];
         $products = $this->getProducts();
         foreach ($products as &$product) {
+            // id_product comes from a LEFT JOIN on product, null once the product is deleted
+            $product['id_product'] = $product['product_id'];
             $product['id_product_attribute'] = $product['product_attribute_id'];
             $product['cart_quantity'] = $product['product_quantity'];
             $product_id_list[] = $this->id_address_delivery . '_'
