@@ -17,6 +17,8 @@ use PrestaShop\PrestaShop\Core\Domain\Language\Exception\CannotDisableDefaultLan
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\TagIETF;
+use Validate;
 
 /**
  * Handles command which edits language using legacy object model
@@ -77,15 +79,23 @@ final class EditLanguageHandler extends AbstractLanguageHandler implements EditL
             $language->name = $command->getName();
         }
 
-        if (null !== $command->getIsoCode()) {
-            $language->iso_code = $command->getIsoCode()->getValue();
-            if (false !== ($languageDetails = Language::getLangDetails($command->getIsoCode()->getValue()))) {
-                $language->locale = $languageDetails['locale'];
-            }
-        }
-
         if (null !== $command->getTagIETF()) {
             $language->language_code = $command->getTagIETF()->getValue();
+        }
+
+        if (null !== $command->getIsoCode()) {
+            $language->iso_code = $command->getIsoCode()->getValue();
+            $languageDetails = Language::getLangDetails($command->getIsoCode()->getValue());
+            $derivedLocale = null;
+            if (false !== $languageDetails) {
+                $derivedLocale = $languageDetails['locale'];
+            } elseif (Validate::isLanguageCode($language->language_code)) {
+                // The tag is read from the language: it is optional in the command
+                $derivedLocale = (new TagIETF($language->language_code))->toLocale();
+            }
+            if (null !== $derivedLocale) {
+                $language->locale = $derivedLocale;
+            }
         }
 
         if (null !== $command->getShortDateFormat()) {
