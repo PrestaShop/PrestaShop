@@ -14,6 +14,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -61,6 +62,41 @@ class PrestaShopExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('prestashop.admin_cookie_lifetime', $this->getAdminCookieLifetime());
         $this->preprendApiConfig($container);
         $this->preprendSessionConfig($container);
+    }
+
+    /**
+     * ApiPlatform requires every PHP file under a mapping path, and a module index.php ends with `exit`.
+     * Symlinks keep each class resolving to its module file, the one Doctrine and the autoloader load.
+     *
+     * @return string|null the directory to map, null when the entities cannot be mapped safely
+     */
+    private function getModuleEntitiesMappingPath(ContainerBuilder $container, string $moduleName, string $entitiesPath): ?string
+    {
+        if (!Finder::create()->files()->in($entitiesPath)->name('index.php')->hasResults()) {
+            return $entitiesPath;
+        }
+
+        $mirrorPath = sprintf('%s/api_platform/module_entities/%s', $container->getParameter('kernel.cache_dir'), $moduleName);
+        $filesystem = new Filesystem();
+
+        try {
+            $filesystem->remove($mirrorPath);
+            $filesystem->mkdir($mirrorPath);
+
+            $entityFiles = Finder::create()
+                ->files()
+                ->in($entitiesPath)
+                ->name('*.php')
+                ->notName('index.php');
+
+            foreach ($entityFiles as $entityFile) {
+                $filesystem->symlink($entityFile->getRealPath(), $mirrorPath . DIRECTORY_SEPARATOR . $entityFile->getRelativePathname());
+            }
+        } catch (IOException) {
+            return null;
+        }
+
+        return $mirrorPath;
     }
 
     protected function preprendSessionConfig(ContainerBuilder $container)
@@ -126,16 +162,10 @@ class PrestaShopExtension extends Extension implements PrependExtensionInterface
             // Load Doctrine entities that could be used as ApiPlatform DTO resources as well in the src/Entity folder
             $entitiesRessourcesPath = sprintf('%s/src/Entity', $modulePath);
             if (file_exists($entitiesRessourcesPath)) {
-                // APIPlatform is looping on included resources and doing a require_once on those resources in ReflectionClassRecursiveIterator::getReflectionClassesFromDirectories.
-                // This means that everything in those files is interpreted including the exit statement in some of those files ( especially in some index.php files used as an old way to make the directory read only ).
-                // Since we cannot override or decorate the reflection class itself we have no other choice but to delete those files.
-                (new Filesystem())->remove(
-                    Finder::create()
-                        ->files()
-                        ->in($entitiesRessourcesPath)
-                        ->name('index.php')
-                );
-                $paths[] = $entitiesRessourcesPath;
+                $entitiesMappingPath = $this->getModuleEntitiesMappingPath($container, $moduleName, $entitiesRessourcesPath);
+                if (null !== $entitiesMappingPath) {
+                    $paths[] = $entitiesMappingPath;
+                }
             }
 
             // Load ApiPlatform DTOs from the src/ApiPlatform/Resources folder
