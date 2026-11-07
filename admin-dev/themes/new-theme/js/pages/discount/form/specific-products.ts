@@ -41,7 +41,7 @@ export default class SpecificProducts {
 
   init(): void {
     if (this.$specificProductsSearchInput.length) {
-      const autocompleteUrl = (document.querySelector(DiscountMap.specificProductsSearchContainer) as HTMLElement)
+      const autocompleteUrl = (document.querySelector<HTMLElement>(DiscountMap.specificProductsSearchContainer))
         ?.dataset.remoteUrl;
 
       this.entitySearchInput = new EntitySearchInput(

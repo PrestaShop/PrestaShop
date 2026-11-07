@@ -22,9 +22,9 @@ $(() => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-  const attributeGroupSelect = document.querySelector(AttributeFormMap.attributeGroupSelect) as HTMLSelectElement | null;
-  const attributeColorRow = document.querySelector(AttributeFormMap.attributeColorFormRow) as HTMLElement | null;
-  const attributeTextureRow = document.querySelector(AttributeFormMap.attributeTextureFormRow) as HTMLElement | null;
+  const attributeGroupSelect = document.querySelector<HTMLSelectElement>(AttributeFormMap.attributeGroupSelect);
+  const attributeColorRow = document.querySelector<HTMLElement>(AttributeFormMap.attributeColorFormRow);
+  const attributeTextureRow = document.querySelector<HTMLElement>(AttributeFormMap.attributeTextureFormRow);
 
   if (!attributeGroupSelect || !attributeColorRow || !attributeTextureRow) return;
 
