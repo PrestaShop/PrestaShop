@@ -99,13 +99,17 @@
 					}, 500);
 				}
 
-				zipcode = 0;
-				if (data.zipcode_from != 0)
+				// Zipcodes are strings: compare them strictly so leading zeros ("00000") are not read as 0,
+				// which is the value stored when the rule has no zipcode.
+				const zipcodeFrom = String(data.zipcode_from);
+				const zipcodeTo = String(data.zipcode_to);
+				let zipcode = '';
+				if (zipcodeFrom !== '0')
 				{
-					zipcode = data.zipcode_from;
+					zipcode = zipcodeFrom;
 
-					if (data.zipcode_to != 0)
-						zipcode = zipcode +"-"+data.zipcode_to
+					if (zipcodeTo !== '0' && zipcodeTo !== zipcodeFrom)
+						zipcode = zipcode + '-' + zipcodeTo;
 				}
 
 				$('#zipcode').val(zipcode);
