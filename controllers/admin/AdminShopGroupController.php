@@ -5,6 +5,8 @@
  */
 
 /**
+ * @deprecated since 9.3 and will be removed in 10.0 - This controller was migrated in 9.3
+ *
  * @property ShopGroup $object
  */
 class AdminShopGroupControllerCore extends AdminController

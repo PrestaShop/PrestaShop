@@ -1,0 +1,57 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% trans_default_domain 'Admin.Advparameters.Feature' %}
+
+{% set layoutHeaderToolbarBtn = {
+  add_shop_group: {
+    href: path('admin_shop_groups_create'),
+    desc: 'Add a new group of stores'|trans,
+    icon: 'add_circle_outline',
+  },
+  add_shop: {
+    href: getAdminLink('AdminShop', true, {addshop: 1}),
+    desc: 'Add a new store'|trans,
+    icon: 'add_circle_outline',
+  },
+} %}
+
+{% form_theme multistoreOptionsForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-lg-4">
+      {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/Multistore/Blocks/shop_tree.html.twig') }}
+    </div>
+    <div class="col-lg-8">
+      {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: shopGroupGrid}) }}
+
+      {{ form_start(multistoreOptionsForm, {action: path('admin_shop_groups_save_options')}) }}
+      <div class="card mt-2">
+        <h3 class="card-header">
+          <i class="material-icons">settings</i>
+          {{ 'Multistore options'|trans }}
+        </h3>
+        <div class="card-body">
+          <div class="form-wrapper">
+            {{ form_widget(multistoreOptionsForm) }}
+          </div>
+        </div>
+        <div class="card-footer clearfix">
+          <button class="btn btn-primary float-right" id="save-multistore-options-button">
+            {{ 'Save'|trans({}, 'Admin.Actions') }}
+          </button>
+        </div>
+      </div>
+      {{ form_end(multistoreOptionsForm) }}
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/shop_group.bundle.js') }}"></script>
+{% endblock %}
