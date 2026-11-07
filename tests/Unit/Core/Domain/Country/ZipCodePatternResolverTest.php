@@ -21,6 +21,23 @@ class ZipCodePatternResolverTest extends TestCase
         $this->resolver = new ZipCodePatternResolver();
     }
 
+    public function testChileanPostcodesMatchInstallationFormat(): void
+    {
+        $installationData = simplexml_load_file(dirname(__DIR__, 5) . '/install-dev/data/xml/country.xml');
+        $countries = $installationData->xpath('/entity_country/entities/country[@iso_code="CL"]');
+        self::assertCount(1, $countries);
+
+        $pattern = $this->resolver->getRegexPattern((string) $countries[0]['zip_code_format'], 'CL');
+
+        foreach (['8340648', '8329001', '8720019'] as $postcode) {
+            self::assertMatchesRegularExpression($pattern, $postcode);
+        }
+
+        foreach (['834064', '83406480', '834A648'] as $postcode) {
+            self::assertDoesNotMatchRegularExpression($pattern, $postcode);
+        }
+    }
+
     /**
      * @dataProvider regexpPatternDataProvider
      *
