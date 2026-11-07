@@ -692,7 +692,18 @@ class AdminModuleController {
   displayOnUploadError(message) {
     const self = this;
     self.animateEndUpload(() => {
-      $(self.moduleImportFailureMsgDetailsSelector).html(message);
+      // A request that never reached the JSON contract - a 500, a timeout - hands us the raw response
+      // body. Injecting an HTML error page as markup renders nothing readable, which is how this modal
+      // came to say "Oops... Upload failed." with an empty "What happened?".
+      const details = typeof message === 'string' ? message.trim() : '';
+      const looksLikeMarkup = /^\s*(<!doctype|<html|<\?xml)/i.test(details);
+
+      if (details === '' || looksLikeMarkup) {
+        $(self.moduleImportFailureMsgDetailsSelector).text(window.moduleTranslations.uploadUnexpectedError);
+      } else {
+        $(self.moduleImportFailureMsgDetailsSelector).text(details);
+      }
+
       $(self.moduleImportFailureSelector).fadeIn();
     });
   }
