@@ -58,6 +58,19 @@ Feature: Tag management
     And tag "tag1" language should be "english"
     And tag "tag1" products should be "product2,product3"
 
+  Scenario: Creating a tag made of special characters only should not be allowed
+    Given I add a tag "tagInvalid" with specified properties:
+      | name             | ++++                |
+      | language         | french              |
+      | products         | product1,product2   |
+    Then I should get error that tag name is invalid
+
+  Scenario: Editing a tag to a name made of special characters only should not be allowed
+    When I edit tag "tag1" with specified properties:
+      | name             | ++++                |
+    Then I should get error that tag name is invalid
+    And tag "tag1" name should be "Tag 2"
+
   Scenario: Deleting tag
     When I delete the tag "tag1"
     Then the tag "tag1" should be deleted
