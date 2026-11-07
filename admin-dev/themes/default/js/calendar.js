@@ -167,7 +167,7 @@ function updatePickerFromInput() {
 
   $('#date-start').trigger('change');
 
-  if ($('#datepicker-compare').attr('checked')) {
+  if ($('#datepicker-compare').prop('checked')) {
     if ($('#compare-options').val() == 1) setPreviousPeriod();
 
     if ($('#compare-options').val() == 2) setPreviousYear();
@@ -396,7 +396,7 @@ $(() => {
     if (this.value === '3') $('#date-start-compare').focus();
   });
 
-  if ($('#datepicker-compare').attr('checked')) {
+  if ($('#datepicker-compare').prop('checked')) {
     if ($('#date-start-compare').val().replace(/^\s+|\s+$/g, '').length === 0) $('#compare-options').trigger('change');
 
     datepickerStart.setStartCompare($('#date-start-compare').val());

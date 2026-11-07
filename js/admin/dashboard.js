@@ -198,7 +198,10 @@ function saveDashConfig(widget_name) {
 	configs = '';
 
 	$('#'+widget_name+' form input, #'+widget_name+' form textarea , #'+widget_name+' form select').each( function () {
-		if ($(this).attr('type') === 'radio' && !$(this).attr('checked')) {
+		// WHY: since jQuery 1.6 attr('checked') returns the attribute, i.e. the state the markup was
+		// rendered with, so a radio the merchant just selected still reads as unchecked and its value is
+		// never submitted. prop('checked') reads the live DOM state.
+		if ($(this).attr('type') === 'radio' && !$(this).prop('checked')) {
 			return;
 		}
 		configs += '&configs['+$(this).attr('name')+']='+$(this).val();
