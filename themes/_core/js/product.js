@@ -187,6 +187,12 @@ function updateProduct(event, eventType, updateUrl) {
         }
       },
       success(data) {
+        // A previous update may have failed, typically on a dropped connection, and left its message on
+        // the page. Nothing removed it, so it stayed for the life of the page while every later update
+        // succeeded, and the guard in error() kept it from being refreshed. Clear it now that one has
+        // gone through.
+        $('section#main > .ajax-error').remove();
+
         // Avoid image to blink each time we modify the product quantity
         // Can not compare directly cause of HTML comments in data.
         const $newImagesContainer = $('<div>').append(
