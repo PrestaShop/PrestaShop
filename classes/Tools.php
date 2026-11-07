@@ -3027,11 +3027,21 @@ FileETag none
         ];
 
         // Friendly URLs blocked from crawling
+        // WHY: three public pages a visitor reaches without an account - authentication,
+        // registration and guest-tracking - are deliberately absent here. The first two are linked
+        // with a "back" parameter that gives them one URL per page of the shop, so blocking them
+        // from crawling left search engines indexing the URLs found in those links without ever
+        // reading the canonical or the noindex on the page. They send "noindex" instead, which only
+        // works while they stay crawlable. "password" is not among them on purpose: its controller
+        // acts on GET parameters - "?email=" stamps a reset token and sends mail - so it is not a
+        // page to invite a crawler onto, and a single parameterless link makes it no duplicate.
+        // Everything below is either behind a login or not a page at all.
         $disallow_controllers = [
-            'addresses', 'address', 'authentication', 'cart', 'discount', 'footer',
+            'addresses', 'address', 'cart', 'discount', 'footer',
             'get-file', 'header', 'history', 'identity', 'images.inc', 'init', 'my-account', 'order',
-            'order-slip', 'order-detail', 'order-follow', 'order-return', 'order-confirmation', 'pagination', 'password',
-            'pdf-invoice', 'pdf-order-return', 'pdf-order-slip', 'product-sort', 'registration', 'search', 'statistics', 'attachment', 'guest-tracking',
+            'order-slip', 'order-detail', 'order-follow', 'order-return', 'order-confirmation', 'pagination',
+            'password', 'pdf-invoice', 'pdf-order-return', 'pdf-order-slip', 'product-sort', 'search',
+            'statistics', 'attachment',
         ];
         $tab['Files'] = [];
         if (Configuration::get('PS_REWRITING_SETTINGS')) {
@@ -3052,9 +3062,11 @@ FileETag none
         // Non-friendly URLs and parameters blocked from crawling
         // For example, "q" is a filter query, "order" is sorting etc
         // Don't think about meaning of "GB"
+        // "back" is not listed: it is the parameter the sign-in and registration links carry, and
+        // blocking it would keep the noindex of those pages from ever being read.
         $tab['GB'] = [
-            '?order=', '?tag=', '?id_currency=', '?search_query=', '?back=', '?n=', '?q=',
-            '&order=', '&tag=', '&id_currency=', '&search_query=', '&back=', '&n=', '&q=',
+            '?order=', '?tag=', '?id_currency=', '?search_query=', '?n=', '?q=',
+            '&order=', '&tag=', '&id_currency=', '&search_query=', '&n=', '&q=',
         ];
 
         // List of list of non-friendly URLs to block from crawling.
