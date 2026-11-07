@@ -50,7 +50,7 @@ class DbPDOCore extends Db
          * have one solution that fits all supported PHP versions.
          */
         if (PHP_VERSION_ID >= 80500) {
-            $options = array_merge($options, [
+            $options = array_replace($options, [
                 /* @phpstan-ignore-next-line */
                 Pdo\Mysql::ATTR_USE_BUFFERED_QUERY => true,
                 /* @phpstan-ignore-next-line */
@@ -59,7 +59,7 @@ class DbPDOCore extends Db
                 Pdo\Mysql::ATTR_MULTI_STATEMENTS => _PS_ALLOW_MULTI_STATEMENTS_QUERIES_,
             ]);
         } else {
-            $options = array_merge($options, [
+            $options = array_replace($options, [
                 PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
                 PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8mb4',
                 PDO::MYSQL_ATTR_MULTI_STATEMENTS => _PS_ALLOW_MULTI_STATEMENTS_QUERIES_,
