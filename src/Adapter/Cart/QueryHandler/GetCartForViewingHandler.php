@@ -7,6 +7,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Cart\QueryHandler;
 
 use Cart;
+use CartRule;
 use Context;
 use Currency;
 use Customer;
@@ -269,7 +270,9 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
      */
     private function getCartRulesForView(Cart $cart)
     {
-        $cartRules = $cart->getCartRules();
+        // Viewing a cart must not change it: the default of getCartRules() auto adds every automatic
+        // rule that is valid today, which rewrites what an already ordered cart appears to have cost.
+        $cartRules = $cart->getCartRules(CartRule::FILTER_ACTION_ALL, false);
         $cartRulesView = [];
 
         $cartCurrency = new Currency($cart->id_currency);
