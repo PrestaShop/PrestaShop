@@ -16,6 +16,7 @@ use Cart;
 use Configuration;
 use Context;
 use Currency;
+use Db;
 use FrontController;
 use Order;
 use OrderInvoice;
@@ -1655,6 +1656,24 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      *
      * @return int
      */
+    /**
+     * @Then the reserved stock for product :productName should be :expectedQuantity
+     */
+    public function assertReservedStockForProduct(string $productName, int $expectedQuantity): void
+    {
+        $reservedQuantity = (int) Db::getInstance()->getValue(
+            'SELECT reserved_quantity FROM ' . _DB_PREFIX_ . 'stock_available
+            WHERE id_product = ' . $this->getProductIdByName($productName) . '
+            AND id_product_attribute = 0'
+        );
+
+        Assert::assertSame(
+            $expectedQuantity,
+            $reservedQuantity,
+            sprintf('Expected %d reserved for "%s", got %d', $expectedQuantity, $productName, $reservedQuantity)
+        );
+    }
+
     private function getProductIdByName(string $productName)
     {
         $product = $this->getProductByName($productName);
