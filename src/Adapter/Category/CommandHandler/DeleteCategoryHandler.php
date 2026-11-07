@@ -44,6 +44,8 @@ final class DeleteCategoryHandler extends AbstractDeleteCategoryHandler implemen
             throw new FailedToDeleteCategoryException(sprintf('Failed to delete category with id %s', var_export($categoryIdValue, true)));
         }
 
+        $this->categoryDisplayNameCacheInvalidator->invalidate();
+
         $this->updateProductCategories([
             (int) $category->id_parent => [$categoryIdValue],
         ], $command->getDeleteMode());
