@@ -72,9 +72,10 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
         // LIMIT — seconds on shops with tens of thousands of orders. Resolve the paginated
         // page of order ids first (only the joins/filters/sort needed to select and order
         // them), then hydrate the display columns for just those rows.
+        // Unfiltered, the optimizer can drive from country_lang through address.id_country and sort every order
         $paginatedIdsQb = $this
             ->getBaseQueryBuilder($searchCriteria->getFilters())
-            ->select('o.id_order')
+            ->select($this->canReadOrdersInSortOrder($searchCriteria) ? 'STRAIGHT_JOIN o.id_order' : 'o.id_order')
         ;
         $paginatedIdsQb = $this->applyNewCustomerFilter($paginatedIdsQb, $searchCriteria->getFilters());
         // WHY: no `customer` SELECT alias exists in the id-only query, so sort by its expression.
@@ -239,6 +240,15 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
         }
 
         return $qb;
+    }
+
+    /**
+     * True when nothing filters the grid and it is sorted on an orders column, so the page can be read from orders
+     */
+    private function canReadOrdersInSortOrder(SearchCriteriaInterface $searchCriteria): bool
+    {
+        return empty($searchCriteria->getFilters())
+            && in_array($searchCriteria->getOrderBy(), [null, 'id_order', 'reference', 'total_paid_tax_incl', 'payment', 'date_add'], true);
     }
 
     /**
