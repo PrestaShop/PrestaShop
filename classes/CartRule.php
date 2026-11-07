@@ -2037,11 +2037,6 @@ class CartRuleCore extends ObjectModel
         $sql = '
 		SELECT SQL_NO_CACHE cr.*
 		FROM ' . _DB_PREFIX_ . 'cart_rule cr
-		LEFT JOIN ' . _DB_PREFIX_ . 'cart_rule_shop crs ON cr.id_cart_rule = crs.id_cart_rule
-		' . (!Validate::isLoadedObject($context->customer) && Group::isFeatureActive() ? ' LEFT JOIN ' . _DB_PREFIX_ . 'cart_rule_group crg ON cr.id_cart_rule = crg.id_cart_rule' : '') . '
-		LEFT JOIN ' . _DB_PREFIX_ . 'cart_rule_carrier crca ON cr.id_cart_rule = crca.id_cart_rule
-		' . ($context->cart->id_carrier ? 'LEFT JOIN ' . _DB_PREFIX_ . 'carrier c ON (c.id_reference = crca.id_carrier AND c.deleted = 0)' : '') . '
-		LEFT JOIN ' . _DB_PREFIX_ . 'cart_rule_country crco ON cr.id_cart_rule = crco.id_cart_rule
 		WHERE cr.active = 1
 		AND cr.code = ""
 		AND (cr.quantity > 0 OR cr.quantity is null)
@@ -2052,11 +2047,22 @@ class CartRuleCore extends ObjectModel
 		)
 		AND (
 			cr.`carrier_restriction` = 0
-			' . ($context->cart->id_carrier ? 'OR c.id_carrier = ' . (int) $context->cart->id_carrier : '') . '
+			' . ($context->cart->id_carrier ? 'OR EXISTS (
+				SELECT 1
+				FROM `' . _DB_PREFIX_ . 'cart_rule_carrier` crca
+				INNER JOIN `' . _DB_PREFIX_ . 'carrier` c ON c.`id_reference` = crca.`id_carrier` AND c.`deleted` = 0
+				WHERE crca.`id_cart_rule` = cr.`id_cart_rule`
+				AND c.`id_carrier` = ' . (int) $context->cart->id_carrier . '
+			)' : '') . '
 		)
 		AND (
 			cr.`shop_restriction` = 0
-			' . ((Shop::isFeatureActive() && $context->shop->id) ? 'OR crs.id_shop = ' . (int) $context->shop->id : '') . '
+			' . ((Shop::isFeatureActive() && $context->shop->id) ? 'OR EXISTS (
+				SELECT 1
+				FROM `' . _DB_PREFIX_ . 'cart_rule_shop` crs
+				WHERE crs.`id_cart_rule` = cr.`id_cart_rule`
+				AND crs.`id_shop` = ' . (int) $context->shop->id . '
+			)' : '') . '
 		)
 		AND (
 			cr.`group_restriction` = 0
@@ -2067,7 +2073,12 @@ class CartRuleCore extends ObjectModel
 				WHERE cr.`id_cart_rule` = crg.`id_cart_rule`
 				AND cg.`id_customer` = ' . (int) $context->customer->id . '
 				LIMIT 1
-			)' : (Group::isFeatureActive() ? 'OR crg.`id_group` = ' . (int) Configuration::get('PS_UNIDENTIFIED_GROUP') : '')) . '
+			)' : (Group::isFeatureActive() ? 'OR EXISTS (
+				SELECT 1
+				FROM `' . _DB_PREFIX_ . 'cart_rule_group` crg
+				WHERE crg.`id_cart_rule` = cr.`id_cart_rule`
+				AND crg.`id_group` = ' . (int) Configuration::get('PS_UNIDENTIFIED_GROUP') . '
+			)' : '')) . '
 		)
 		AND (
 			cr.`reduction_product` <= 0
