@@ -1,0 +1,11 @@
+/*!
+ * jQuery UI CSS Framework 1.13.3
+ * https://jqueryui.com
+ *
+ * Copyright OpenJS Foundation and other contributors
+ * Released under the MIT license.
+ * https://jquery.org/license
+ *
+ * https://api.jqueryui.com/category/theming/
+ */
+@import url(jquery.ui.core.min.css);@import url(jquery.ui.accordion.min.css);@import url(jquery.ui.autocomplete.min.css);@import url(jquery.ui.button.min.css);@import url(jquery.ui.checkboxradio.min.css);@import url(jquery.ui.controlgroup.min.css);@import url(jquery.ui.datepicker.min.css);@import url(jquery.ui.dialog.min.css);@import url(jquery.ui.draggable.min.css);@import url(jquery.ui.menu.min.css);@import url(jquery.ui.progressbar.min.css);@import url(jquery.ui.resizable.min.css);@import url(jquery.ui.selectable.min.css);@import url(jquery.ui.selectmenu.min.css);@import url(jquery.ui.sortable.min.css);@import url(jquery.ui.slider.min.css);@import url(jquery.ui.spinner.min.css);@import url(jquery.ui.tabs.min.css);@import url(jquery.ui.tooltip.min.css);
