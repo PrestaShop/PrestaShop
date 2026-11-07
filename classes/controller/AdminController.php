@@ -3,6 +3,7 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+use PrestaShop\PrestaShop\Adapter\Module\Tab\ModuleTabRegister;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButton;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonInterface;
@@ -2184,7 +2185,9 @@ class AdminControllerCore extends Controller
             $subTabHref = $this->getTabLinkFromSubTabs($tabs[$index]['sub_tabs']);
             if (!empty($subTabHref)) {
                 $tabs[$index]['href'] = $subTabHref;
-            } elseif (0 == $tabs[$index]['id_parent'] && '' == $tabs[$index]['icon']) {
+            } elseif (0 == $tabs[$index]['id_parent'] && ('' == $tabs[$index]['icon'] || ModuleTabRegister::DEFAULT_PARENT_CLASS_NAME === $tabs[$index]['class_name'])) {
+                // An icon is enough to keep a top level section that owns a page, but the catch-all
+                // parent owns none: linking to it lands on a controller that does not exist.
                 unset($tabs[$index]);
             } elseif (empty($tabs[$index]['icon'])) {
                 $tabs[$index]['icon'] = 'extension';
