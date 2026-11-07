@@ -26,6 +26,7 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\NumberSymbolList;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
+use PrestaShop\PrestaShop\Core\Module\OverriddenModulesProvider;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -129,6 +130,7 @@ class ModuleManagerBuilder
                     new HookManager(),
                     _PS_MODULE_DIR_,
                     $this->getLanguageContext(),
+                    new OverriddenModulesProvider(_PS_OVERRIDE_DIR_),
                 );
             }
         }
