@@ -1034,8 +1034,8 @@ class CategoryCore extends ObjectModel
 					product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity' : '') . ', pl.`description`, pl.`description_short`, pl.`available_now`,
 					pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_title`, pl.`name`, image_shop.`id_image` id_image,
 					il.`legend` as legend, m.`name` AS manufacturer_name, cl.`name` AS category_default,
-					DATEDIFF(product_shop.`date_add`, DATE_SUB("' . date('Y-m-d') . ' 00:00:00",
-					INTERVAL ' . (int) $nbDaysNewProduct . ' DAY)) > 0 AS new, product_shop.price AS orderprice, psales.`quantity` as sales
+					product_shop.`date_add` >= DATE_SUB("' . date('Y-m-d') . ' 00:00:00",
+					INTERVAL ' . ((int) $nbDaysNewProduct - 1) . ' DAY) AS new, product_shop.price AS orderprice, psales.`quantity` as sales
 				FROM `' . _DB_PREFIX_ . 'category_product` cp
 				LEFT JOIN `' . _DB_PREFIX_ . 'product` p
 					ON p.`id_product` = cp.`id_product`
