@@ -31,6 +31,7 @@ Feature: Attribute group management
       | public_name[fr-FR] | Public couleur    |
       | type               | radio             |
       | shopIds            | shop1,shop2,shop4 |
+      | position           | 4                 |
 
   Scenario: Editing attribute group
     When I edit attribute group "attributeGroup1" with specified properties:

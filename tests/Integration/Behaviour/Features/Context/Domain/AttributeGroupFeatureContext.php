@@ -141,6 +141,9 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['shopIds'])) {
             Assert::assertEquals($this->referencesToIds($data['shopIds']), $attributeGroup->getAssociatedShopIds());
         }
+        if (isset($data['position'])) {
+            Assert::assertSame((int) $data['position'], $attributeGroup->getPosition());
+        }
     }
 
     /**
