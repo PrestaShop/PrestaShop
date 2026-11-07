@@ -95,6 +95,7 @@ class Module implements ModuleInterface
         'nbRates' => 0,
         'fullDescription' => '',
         'confirmUninstall' => '',
+        'confirmUpgrade' => '',
     ];
 
     /**
