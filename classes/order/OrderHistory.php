@@ -378,36 +378,19 @@ class OrderHistoryCore extends ObjectModel
 
         // set orders as paid
         if ($new_os->paid == 1) {
-            if ($order->total_paid != 0) {
-                $payment_method = Module::getInstanceByName($order->module);
-            }
 
-            $invoices = $order->getInvoicesCollection();
-            foreach ($invoices as $invoice) {
-                /** @var OrderInvoice $invoice */
-                $rest_paid = $invoice->getRestPaid();
-                if ($rest_paid > 0) {
-                    $payment = new OrderPayment();
-                    $payment->order_reference = Tools::substr($order->reference, 0, 9);
-                    $payment->id_currency = $order->id_currency;
-                    $payment->amount = $rest_paid;
-                    $payment->payment_method = isset($payment_method) && $payment_method instanceof Module ? $payment_method->displayName : null;
-                    $payment->conversion_rate = $order->conversion_rate;
-                    $payment->save();
-
-                    // Update total_paid_real value for backward compatibility reasons
-                    $order->total_paid_real += $rest_paid;
-                    $order->save();
-
-                    Db::getInstance()->insert(
-                        'order_invoice_payment',
-                        [
-                            'id_order_invoice' => (int) $invoice->id,
-                            'id_order_payment' => (int) $payment->id,
-                            'id_order' => (int) $order->id,
-                        ]
-                    );
+            // Are invoices managed by Prestashop?
+            if (true === (bool) Configuration::get('PS_INVOICE')) {
+                $invoices = $order->getInvoicesCollection();
+                foreach ($invoices as $invoice) {
+                    /** @var OrderInvoice $invoice */
+                    $rest_paid = $invoice->getRestPaid();
+                    $this->createOrderPayment($order, $rest_paid, (int) $invoice->id);
                 }
+            } else {
+                // Disabled invoices? Then deduce $rest_paid from order payments, if any
+                $rest_paid = $order->total_paid - $order->getTotalPaid();
+                $this->createOrderPayment($order, $rest_paid);
             }
         }
 
@@ -615,5 +598,50 @@ class OrderHistoryCore extends ObjectModel
         } else {
             return $this->add();
         }
+    }
+
+
+    /**
+     * Creates a payment for an order and optionally associates it with an invoice.
+     *
+     * @param OrderCore $order The order object associated with the payment.
+     * @param float $restPaid The remaining amount to be paid.
+     * @param int $invoiceId The ID of the invoice to associate the payment with.
+     *
+     * @return void
+     */
+    protected function createOrderPayment($order, float $restPaid, int $invoiceId = 0): void {
+        if ($restPaid <= 0) {
+            return;
+        }
+
+        $displayName = null;
+        if ($order->total_paid != 0) {
+            $payment_method = Module::getInstanceByName($order->module);
+            if ($payment_method instanceof Module) {
+                $displayName = $payment_method->displayName;
+            }
+        }
+
+        $payment = new OrderPayment();
+        $payment->order_reference = Tools::substr($order->reference, 0, 9);
+        $payment->id_currency = $order->id_currency;
+        $payment->amount = $restPaid;
+        $payment->payment_method = $displayName;
+        $payment->conversion_rate = $order->conversion_rate;
+        $payment->save();
+
+        // Update total_paid_real value for backward compatibility reasons
+        $order->total_paid_real += $restPaid;
+        $order->save();
+
+        Db::getInstance()->insert(
+            'order_invoice_payment',
+            [
+                'id_order_invoice' => (int) $invoiceId,
+                'id_order_payment' => (int) $payment->id,
+                'id_order' => (int) $order->id,
+            ]
+        );
     }
 }
