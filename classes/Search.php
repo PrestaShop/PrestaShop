@@ -483,9 +483,10 @@ class SearchCore
             'FROM `' . _DB_PREFIX_ . 'category_product` cp ' .
             (Group::isFeatureActive() ? 'INNER JOIN `' . _DB_PREFIX_ . 'category_group` cg ON cp.`id_category` = cg.`id_category`' : '') . ' ' .
             'INNER JOIN `' . _DB_PREFIX_ . 'category` c ON cp.`id_category` = c.`id_category` ' .
+            Shop::addSqlAssociation('category', 'c') . ' ' .
             'INNER JOIN `' . _DB_PREFIX_ . 'product` p ON cp.`id_product` = p.`id_product` ' .
             Shop::addSqlAssociation('product', 'p', false) . ' ' .
-            'WHERE c.`active` = 1 ' .
+            'WHERE category_shop.`active` = 1 ' .
             'AND product_shop.`active` = 1 ' .
             'AND product_shop.`visibility` IN ("both", "search") ' .
             'AND product_shop.indexed = 1 ' .
