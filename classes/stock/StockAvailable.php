@@ -530,6 +530,12 @@ class StockAvailableCore extends ObjectModel
             return Db::getInstance()->update('stock_available', ['quantity' => 0], 'id_shop IN (' . $id_shops_list . ')');
         }
 
+        if (!$shop_group->share_stock) {
+            // Stock is no longer shared (rows use id_shop = X, id_shop_group = 0): the shared row
+            // (id_shop = 0, id_shop_group = group) is obsolete, remove it instead of leaving an orphan.
+            return Db::getInstance()->delete('stock_available', 'id_shop_group = ' . (int) $shop_group->id);
+        }
+
         return Db::getInstance()->update('stock_available', ['quantity' => 0], 'id_shop_group = ' . $shop_group->id);
     }
 
