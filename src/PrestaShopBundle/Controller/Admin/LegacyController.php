@@ -256,7 +256,7 @@ class LegacyController extends PrestaShopAdminController
 
             $isAllowed = $this->isGranted($action, $grantSubject);
         } else {
-            // Other cases are likely public controllers with no permission management like AdminPdf
+            // Other cases are likely public controllers with no permission management
             $isAllowed = true;
         }
 
