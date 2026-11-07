@@ -92,6 +92,9 @@
               data-empty="{{ 'No module'|trans({}, 'Admin.Advparameters.Feature')|escape }}"
             >
             </div>
+            <p class="form-text text-muted mt-2">
+              {{ 'These permissions narrow what a profile may do with an individual module, they do not grant access on their own. Configure also requires the Edit permission on the "Modules and Services" page, and Uninstall requires Delete.'|trans({}, 'Admin.Advparameters.Help') }}
+            </p>
           </div>
         {% endif %}
       </div>
