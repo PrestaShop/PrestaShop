@@ -65,6 +65,11 @@ class StockConfiguration extends AbstractMultistoreConfiguration
     {
         $errors = [];
 
+        // When stock management is disabled, the "Allow ordering of out-of-stock products" switch is
+        // forced on and disabled in the UI, so the browser does not submit it. Treat the missing/null
+        // value as its forced state (true) instead of letting the bool resolver reject it. See issue #43312.
+        $config['allow_ordering_oos'] = (bool) ($config['allow_ordering_oos'] ?? true);
+
         if ($this->validateConfiguration($config)) {
             $shopConstraint = $this->getShopConstraint();
             $this->updateConfigurationValue('PS_ORDER_OUT_OF_STOCK', 'allow_ordering_oos', $config, $shopConstraint);
