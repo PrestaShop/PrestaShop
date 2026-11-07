@@ -4598,6 +4598,11 @@
       <title>Triggers before product is added to cart</title>
       <description>Allows responding to add to cart events.</description>
     </hook>
+    <hook id="actionCartUpdateQuantityAfter">
+      <name>actionCartUpdateQuantityAfter</name>
+      <title>Triggers after a product quantity has been added or updated in the cart</title>
+      <description>Allows responding to a completed add to cart or quantity change, once the cart and its cart rules have been refreshed.</description>
+    </hook>
     <hook id="actionValidateCartRule">
       <name>actionValidateCartRule</name>
       <title>Alter cart rule validation process</title>
