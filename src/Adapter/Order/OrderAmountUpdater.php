@@ -438,8 +438,9 @@ class OrderAmountUpdater
                     $orderCartRule->id_order = $order->id;
                     $orderCartRule->name = $cartRule->name;
                     $orderCartRule->free_shipping = $cartRule->free_shipping;
-                    $orderCartRule->value = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxIncluded(), $computingPrecision);
-                    $orderCartRule->value_tax_excl = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxExcluded(), $computingPrecision);
+                    // Stored unrounded, like at order creation, so that the values add up to the order total discounts
+                    $orderCartRule->value = $cartRuleData->getDiscountApplied()->getTaxIncluded();
+                    $orderCartRule->value_tax_excl = $cartRuleData->getDiscountApplied()->getTaxExcluded();
 
                     if ($orderCartRule->free_shipping && !$this->getOrderConfiguration('PS_ORDER_RECALCULATE_SHIPPING', $order)) {
                         $orderCartRule->value = $orderCartRule->value - $calculator->getFees()->getInitialShippingFees()->getTaxIncluded() + $order->total_shipping;
@@ -477,8 +478,8 @@ class OrderAmountUpdater
             $orderCartRule->id_order_invoice = $orderInvoiceId ?? 0;
             $orderCartRule->name = $cartRule->name;
             $orderCartRule->free_shipping = $cartRule->free_shipping;
-            $orderCartRule->value = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxIncluded(), $computingPrecision);
-            $orderCartRule->value_tax_excl = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxExcluded(), $computingPrecision);
+            $orderCartRule->value = $cartRuleData->getDiscountApplied()->getTaxIncluded();
+            $orderCartRule->value_tax_excl = $cartRuleData->getDiscountApplied()->getTaxExcluded();
             $orderCartRule->save();
         }
     }

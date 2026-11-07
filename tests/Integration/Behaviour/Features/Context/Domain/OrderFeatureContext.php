@@ -70,6 +70,7 @@ use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Tests\Resources\TestCase\ExtendedTestCaseMethodsTrait;
+use Tools;
 
 class OrderFeatureContext extends AbstractDomainFeatureContext
 {
@@ -528,6 +529,32 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 )
             );
         }
+    }
+
+    /**
+     * @Then the cart rules of order :reference should add up to its total discounts
+     */
+    public function checkOrderCartRulesAddUpToTotalDiscounts(string $orderReference): void
+    {
+        $order = new Order(SharedStorage::getStorage()->get($orderReference));
+        $sumTaxIncluded = 0.0;
+        $sumTaxExcluded = 0.0;
+        foreach ($order->getCartRules() as $orderCartRule) {
+            $sumTaxIncluded += (float) $orderCartRule['value'];
+            $sumTaxExcluded += (float) $orderCartRule['value_tax_excl'];
+        }
+
+        $precision = Context::getContext()->getComputingPrecision();
+        Assert::assertSame(
+            (float) $order->total_discounts_tax_incl,
+            Tools::ps_round($sumTaxIncluded, $precision, (int) $order->round_mode),
+            sprintf('Order cart rules tax included sum %s does not match total_discounts_tax_incl', $sumTaxIncluded)
+        );
+        Assert::assertSame(
+            (float) $order->total_discounts_tax_excl,
+            Tools::ps_round($sumTaxExcluded, $precision, (int) $order->round_mode),
+            sprintf('Order cart rules tax excluded sum %s does not match total_discounts_tax_excl', $sumTaxExcluded)
+        );
     }
 
     /**
@@ -1182,6 +1209,28 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         if ($productReference) {
             $this->getSharedStorage()->set($productReference, $this->getProductIdByName($productName));
+        }
+    }
+
+    /**
+     * @Then product :productName in order :orderReference should have tax amounts:
+     */
+    public function checkProductTaxAmounts(string $productName, string $orderReference, TableNode $table): void
+    {
+        $orderDetailId = (int) $this->getOrderDetailFromOrder($productName, $orderReference)['id_order_detail'];
+        $order = new Order(SharedStorage::getStorage()->get($orderReference));
+        $taxRows = array_values(array_filter(
+            $order->getOrderDetailTaxes(),
+            static fn (array $taxRow): bool => (int) $taxRow['id_order_detail'] === $orderDetailId
+        ));
+        Assert::assertCount(1, $taxRows, sprintf('Expected one tax row for product %s', $productName));
+
+        foreach ($table->getRowsHash() as $field => $expectedValue) {
+            Assert::assertEquals(
+                (float) $expectedValue,
+                (float) $taxRows[0][$field],
+                sprintf('Invalid tax field %s for product %s, expected %s instead of %s', $field, $productName, $expectedValue, $taxRows[0][$field])
+            );
         }
     }
 

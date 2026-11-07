@@ -65,17 +65,21 @@ class Calculator
      */
     protected $computePrecision;
 
+    private ?int $priceRoundMode = null;
+
     /**
      * @param CartCore $cart
      * @param int|null $carrierId
      * @param int|null $computePrecision
      * @param int|null $orderId
+     * @param int|null $priceRoundMode PS_ROUND_* rounding mode of the prices, null uses the shop PS_PRICE_ROUND_MODE
      */
-    public function __construct(CartCore $cart, ?int $carrierId = null, ?int $computePrecision = null, ?int $orderId = null, ?FeatureFlagStateCheckerInterface $featureFlagManager = null)
+    public function __construct(CartCore $cart, ?int $carrierId = null, ?int $computePrecision = null, ?int $orderId = null, ?FeatureFlagStateCheckerInterface $featureFlagManager = null, ?int $priceRoundMode = null)
     {
         $this->setCart($cart);
         $this->setCarrierId($carrierId);
         $this->orderId = $orderId;
+        $this->priceRoundMode = $priceRoundMode;
         $this->cartRows = new CartRowCollection();
         $this->fees = new Fees($this->orderId);
         $this->cartRules = new CartRuleCollection();
@@ -388,8 +392,8 @@ class Calculator
     private function rounded(AmountImmutable $amount, int $computePrecision)
     {
         return new AmountImmutable(
-            Tools::ps_round($amount->getTaxIncluded(), $computePrecision),
-            Tools::ps_round($amount->getTaxExcluded(), $computePrecision)
+            Tools::ps_round($amount->getTaxIncluded(), $computePrecision, $this->priceRoundMode),
+            Tools::ps_round($amount->getTaxExcluded(), $computePrecision, $this->priceRoundMode)
         );
     }
 
@@ -406,7 +410,7 @@ class Calculator
     private function roundedTaxIncluded(AmountImmutable $amount, int $computePrecision): AmountImmutable
     {
         return new AmountImmutable(
-            Tools::ps_round($amount->getTaxIncluded(), $computePrecision),
+            Tools::ps_round($amount->getTaxIncluded(), $computePrecision, $this->priceRoundMode),
             $amount->getTaxExcluded()
         );
     }
