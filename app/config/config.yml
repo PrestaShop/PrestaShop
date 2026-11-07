@@ -66,6 +66,7 @@ framework:
     pools:
       '%cache.driver%':
         adapter: '%cache.adapter%'
+        default_lifetime: '%cache.default_lifetime%'
 
 # Monolog configuration
 monolog:
