@@ -17,7 +17,12 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/employee_dropdown.html.twig')]
 class EmployeeDropdown
 {
-    public ?ActionsBarButtonsCollection $displayBackOfficeEmployeeMenu = null;
+    /**
+     * Protected on purpose: a public property is exposed to the component template under its own
+     * name, and a template reading it directly gets this null instead of going through the getter
+     * that dispatches the hook. That is exactly how displayBackOfficeEmployeeMenu stopped firing.
+     */
+    protected ?ActionsBarButtonsCollection $displayBackOfficeEmployeeMenu = null;
 
     public function __construct(
         protected readonly HookDispatcherInterface $hookDispatcher,
@@ -30,7 +35,7 @@ class EmployeeDropdown
         return $this->employeeContext->getEmployee();
     }
 
-    public function getDisplayBackOfficeEmployeeMenu()
+    public function getDisplayBackOfficeEmployeeMenu(): ActionsBarButtonsCollection
     {
         if ($this->displayBackOfficeEmployeeMenu === null) {
             $menuLinksCollections = new ActionsBarButtonsCollection();
