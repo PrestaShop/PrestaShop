@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ToolsCore
 {
-    public const CACERT_LOCATION = 'https://curl.haxx.se/ca/cacert.pem';
+    public const CACERT_LOCATION = 'https://curl.se/ca/cacert.pem';
     public const SERVICE_LOCALE_REPOSITORY = 'prestashop.core.localization.locale.repository';
     public const CACHE_LIFETIME_SECONDS = 604800;
 
