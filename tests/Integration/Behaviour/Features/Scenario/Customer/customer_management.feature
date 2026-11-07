@@ -219,6 +219,30 @@ Feature: Customer Management
       | defaultGroupId | Visitor |
     Then I should be returned an error message 'Customer default group with id "1" must be in access groups'
 
+  Scenario: Fail to create a customer in a group that does not exist
+    When I attempt to create a customer "CUST-UNKNOWN-GROUP-1" with following properties:
+      | firstName      | Mathieu                        |
+      | lastName       | Napoler                        |
+      | email          | unknown.group1@prestashop.com  |
+      | password       | PrestaShopForever1_!           |
+      | defaultGroupId | Customer                       |
+      | groupIds       | [Customer, 999999]             |
+    Then I should be returned an error message 'Customer cannot be assigned to non-existing group(s) "999999"'
+
+  Scenario: Fail to give a customer a group that does not exist
+    When I create a customer "CUST-UNKNOWN-GROUP-2" with following properties:
+      | firstName      | Mathieu                        |
+      | lastName       | Customer                       |
+      | email          | unknown.group2@prestashop.com  |
+      | password       | PrestaShopForever1_!           |
+      | defaultGroupId | Customer                       |
+      | groupIds       | [Customer]                     |
+    And I attempt to edit customer "CUST-UNKNOWN-GROUP-2" and I change the following properties:
+      | groupIds | [Customer, 999999] |
+    Then I should be returned an error message 'Customer cannot be assigned to non-existing group(s) "999999"'
+    And I query customer "CUST-UNKNOWN-GROUP-2" I should get a Customer with properties:
+      | groupIds | [Customer] |
+
   Scenario: Create a customer subscribed to the newsletter
     When I create a customer "CUST-14" with following properties:
       | firstName            | Mathieu                         |
