@@ -18,6 +18,13 @@ use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\ValueObject\CatalogPriceR
 final class CatalogPriceRuleFormDataHandler implements FormDataHandlerInterface
 {
     /**
+     * Stored in specific_price_rule.price to mean "this rule sets no price of its own".
+     * A price of 0 is a real price - it makes the products free - so the two cannot be
+     * conflated, and an absent price has to become this rather than being cast to 0.
+     */
+    private const NO_FIXED_PRICE = -1;
+
+    /**
      * @var CommandBusInterface
      */
     private $commandBus;
@@ -56,8 +63,8 @@ final class CatalogPriceRuleFormDataHandler implements FormDataHandlerInterface
             $data['id_shop'] = $this->contextShopId;
         }
 
-        if ($data['leave_initial_price']) {
-            $data['price'] = -1;
+        if ($this->hasNoFixedPrice($data)) {
+            $data['price'] = self::NO_FIXED_PRICE;
         }
 
         $command = new AddCatalogPriceRuleCommand(
@@ -108,8 +115,8 @@ final class CatalogPriceRuleFormDataHandler implements FormDataHandlerInterface
      */
     private function fillCommandWithData(EditCatalogPriceRuleCommand $command, array $data)
     {
-        if ($data['leave_initial_price']) {
-            $data['price'] = -1;
+        if ($this->hasNoFixedPrice($data)) {
+            $data['price'] = self::NO_FIXED_PRICE;
         }
 
         $command->setName($data['name']);
@@ -129,5 +136,15 @@ final class CatalogPriceRuleFormDataHandler implements FormDataHandlerInterface
         if ($data['date_range']['to']) {
             $command->setDateTimeTo($data['date_range']['to']);
         }
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    private function hasNoFixedPrice(array $data): bool
+    {
+        return !empty($data['leave_initial_price'])
+            || null === $data['price']
+            || '' === $data['price'];
     }
 }
