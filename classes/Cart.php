@@ -1943,10 +1943,11 @@ class CartCore extends ObjectModel
         Cache::clean('Cart::getCartRules_' . $this->id . '-' . CartRule::FILTER_ACTION_REDUCTION);
         Cache::clean('Cart::getCartRules_' . $this->id . '-' . CartRule::FILTER_ACTION_GIFT);
 
-        Cache::clean('Cart::getCartRules_' . $this->id . '-' . CartRule::FILTER_ACTION_ALL . '-ids');
-        Cache::clean('Cart::getCartRules_' . $this->id . '-' . CartRule::FILTER_ACTION_SHIPPING . '-ids');
-        Cache::clean('Cart::getCartRules_' . $this->id . '-' . CartRule::FILTER_ACTION_REDUCTION . '-ids');
-        Cache::clean('Cart::getCartRules_' . $this->id . '-' . CartRule::FILTER_ACTION_GIFT . '-ids');
+        Cache::clean('Cart::getOrderedCartRulesIds_' . $this->id . '-' . CartRule::FILTER_ACTION_ALL . '-ids');
+        Cache::clean('Cart::getOrderedCartRulesIds_' . $this->id . '-' . CartRule::FILTER_ACTION_SHIPPING . '-ids');
+        Cache::clean('Cart::getOrderedCartRulesIds_' . $this->id . '-' . CartRule::FILTER_ACTION_REDUCTION . '-ids');
+        Cache::clean('Cart::getOrderedCartRulesIds_' . $this->id . '-' . CartRule::FILTER_ACTION_GIFT . '-ids');
+        Cache::clean('getContextualValue_*');
 
         $result = Db::getInstance()->delete('cart_cart_rule', '`id_cart_rule` = ' . (int) $id_cart_rule . ' AND `id_cart` = ' . (int) $this->id, 1);
 
