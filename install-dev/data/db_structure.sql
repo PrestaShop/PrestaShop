@@ -1586,6 +1586,7 @@ CREATE TABLE `PREFIX_order_state` (
   `logable` tinyint(1) NOT NULL DEFAULT '0',
   `delivery` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
   `shipped` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
+  `reserve_products` tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
   `paid` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
   `pdf_invoice` tinyint(1) UNSIGNED NOT NULL default '0',
   `pdf_delivery` tinyint(1) UNSIGNED NOT NULL default '0',

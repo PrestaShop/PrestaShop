@@ -192,6 +192,14 @@ class OrderStateType extends TranslatorAwareType
                 ],
                 'help' => $this->trans('This will mark the order as shipped. It will register a stock movement entry, prevent modifying the order and other things.', 'Admin.Shopparameters.Help'),
             ])
+            ->add('reserve_products', CheckboxType::class, [
+                'required' => false,
+                'label' => $this->trans('Reserve the products of the associated order.', 'Admin.Shopparameters.Feature'),
+                'attr' => [
+                    'material_design' => true,
+                ],
+                'help' => $this->trans('While an order is in this status its products count as reserved, so they are subtracted from the quantity available for sale without having left the stock yet.', 'Admin.Shopparameters.Help'),
+            ])
             ->add('paid', CheckboxType::class, [
                 'required' => false,
                 'label' => $this->trans('Set the associated order as paid.', 'Admin.Shopparameters.Feature'),
