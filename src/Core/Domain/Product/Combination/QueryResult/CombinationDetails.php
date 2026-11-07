@@ -46,12 +46,18 @@ class CombinationDetails
     private $impactOnWeight;
 
     /**
+     * @var DecimalNumber
+     */
+    private $impactOnShippingCost;
+
+    /**
      * @param string $gtin this is the new renamed ean13
      * @param string $isbn
      * @param string $mpn
      * @param string $reference
      * @param string $upc
      * @param DecimalNumber $impactOnWeight
+     * @param DecimalNumber|null $impactOnShippingCost
      */
     public function __construct(
         string $gtin,
@@ -59,7 +65,8 @@ class CombinationDetails
         string $mpn,
         string $reference,
         string $upc,
-        DecimalNumber $impactOnWeight
+        DecimalNumber $impactOnWeight,
+        ?DecimalNumber $impactOnShippingCost = null
     ) {
         $this->gtin = $gtin;
         $this->isbn = $isbn;
@@ -67,6 +74,9 @@ class CombinationDetails
         $this->reference = $reference;
         $this->upc = $upc;
         $this->impactOnWeight = $impactOnWeight;
+        // Trailing and optional so that a caller written before the field keeps working; a
+        // combination with no impact of its own is worth zero, not null.
+        $this->impactOnShippingCost = $impactOnShippingCost ?? new DecimalNumber('0');
     }
 
     /**
@@ -120,5 +130,13 @@ class CombinationDetails
     public function getImpactOnWeight(): DecimalNumber
     {
         return $this->impactOnWeight;
+    }
+
+    /**
+     * @return DecimalNumber
+     */
+    public function getImpactOnShippingCost(): DecimalNumber
+    {
+        return $this->impactOnShippingCost;
     }
 }
