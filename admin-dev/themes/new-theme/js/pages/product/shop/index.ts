@@ -13,7 +13,7 @@ $(() => {
     'IframeClient',
   ]);
 
-  // eslint-disable-next-line
+  // eslint-disable-next-line prefer-destructuring
   const iframeClient: IframeClient = window.prestashop.instance.iframeClient;
   document.querySelector<HTMLElement>(ProductMap.shops.cancelButton)?.addEventListener('click', () => {
     iframeClient.dispatchEvent(ProductEventMap.cancelProductShops);

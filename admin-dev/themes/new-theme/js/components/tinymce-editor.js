@@ -61,7 +61,6 @@ class TinyMCEEditor {
     const cfg = {
       selector: '.rte',
       plugins:
-        /* eslint-disable-next-line max-len */
         'align colorpicker link image filemanager table media placeholder lists advlist code table autoresize hr',
       browser_spellcheck: true,
       toolbar1:

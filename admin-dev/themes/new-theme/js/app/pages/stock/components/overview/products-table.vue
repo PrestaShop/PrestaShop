@@ -123,7 +123,6 @@
   import TranslationMixin from '@app/pages/stock/mixins/translate';
   import ProductLine from './product-line.vue';
 
-  /* eslint-disable camelcase */
   export interface StockProduct {
     active: number;
     attribute_name: string;
@@ -152,7 +151,6 @@
     supplier_name: string;
     total_combinations: number;
   }
-  /* eslint-enable camelcase */
 
   export default defineComponent({
     props: {
