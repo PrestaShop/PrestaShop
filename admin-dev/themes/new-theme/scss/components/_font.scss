@@ -9,3 +9,9 @@
 .font-16 {
   font-size: 16px;
 }
+
+// Primary text
+.text-primary {
+  /* stylelint-disable-next-line declaration-no-important */
+  color: var(--#{$cdk}blue-700) !important;
+}
