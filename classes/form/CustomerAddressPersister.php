@@ -23,6 +23,21 @@ class CustomerAddressPersisterCore
 
     private function authorizeChange(Address $address, $token)
     {
+        // Prevent saving an address without a valid customer, which would create
+        // an orphan address with id_customer = 0.
+        if (!Validate::isLoadedObject($this->customer)) {
+            return false;
+        }
+
+        // Prevent modifying customer addresses when the current cart
+        // belongs to another customer.
+        if (
+            (int) $this->cart->id_customer > 0
+            && (int) $this->cart->id_customer !== (int) $this->customer->id
+        ) {
+            return false;
+        }
+
         if ($address->id_customer && (int) $address->id_customer !== (int) $this->customer->id) {
             // Can't touch anybody else's address
             return false;
