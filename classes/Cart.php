@@ -811,6 +811,7 @@ class CartCore extends ObjectModel
         $pa_ids = [];
         $cart_base_product_quantity = [];
         if (is_iterable($products)) {
+            Product::prefetchPropertiesQuantities($products);
             $customerGroupId = (int) (new Customer((int) $this->id_customer))->id_default_group;
             foreach ($products as $key => $product) {
                 $products_ids[] = $product['id_product'];
