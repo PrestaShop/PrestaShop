@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartDeliverySettingsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartOrderMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductPriceInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\BulkCartException;
@@ -1028,6 +1029,40 @@ class CartFeatureContext extends AbstractDomainFeatureContext
                 $quantity
             ));
         }
+    }
+
+    /**
+     * @When I store the order message :orderMessage on the cart :cartReference
+     */
+    public function storeOrderMessageOnCart(string $orderMessage, string $cartReference): void
+    {
+        try {
+            $this->getCommandBus()->handle(new UpdateCartOrderMessageCommand(
+                (int) $this->getSharedStorage()->get($cartReference),
+                $orderMessage
+            ));
+        } catch (CartException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then I should get an error that the cart already has an order
+     */
+    public function assertLastErrorIsCartAlreadyOrdered(): void
+    {
+        $this->assertLastErrorIs(CartException::class);
+    }
+
+    /**
+     * @Then I should get an error that the order message is invalid
+     */
+    public function assertLastErrorIsInvalidOrderMessage(): void
+    {
+        $this->assertLastErrorIs(
+            CartConstraintException::class,
+            CartConstraintException::INVALID_ORDER_MESSAGE
+        );
     }
 
     /**
