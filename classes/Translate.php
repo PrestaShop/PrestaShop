@@ -93,16 +93,20 @@ class TranslateCore
         }
 
         if (!isset($translationsMerged[$name][$iso])) {
-            $filesByPriority = [
-                // PrestaShop 1.5 translations
-                _PS_MODULE_DIR_ . $name . '/translations/' . $iso . '.php',
+            // Ordered from lowest to highest priority: every file found is merged over the previous
+            // ones, so the last one that exists wins. The 1.5 location comes after the 1.4 one because
+            // it is the only place the back office translation pages read from and write to, and a
+            // module shipping both files would otherwise ignore anything translated from the back office.
+            $filesByAscendingPriority = [
                 // PrestaShop 1.4 translations
                 _PS_MODULE_DIR_ . $name . '/' . $iso . '.php',
+                // PrestaShop 1.5 translations
+                _PS_MODULE_DIR_ . $name . '/translations/' . $iso . '.php',
                 // Translations in theme
-                _PS_THEME_DIR_ . 'modules/' . $name . '/translations/' . $iso . '.php',
                 _PS_THEME_DIR_ . 'modules/' . $name . '/' . $iso . '.php',
+                _PS_THEME_DIR_ . 'modules/' . $name . '/translations/' . $iso . '.php',
             ];
-            foreach ($filesByPriority as $file) {
+            foreach ($filesByAscendingPriority as $file) {
                 if (file_exists($file)) {
                     include_once $file;
                     $_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
