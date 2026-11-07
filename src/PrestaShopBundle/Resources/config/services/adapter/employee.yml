@@ -39,6 +39,7 @@ services:
       - '@prestashop.core.crypto.hashing'
       - '@prestashop.core.employee.profile_access_checker'
       - '@prestashop.adapter.data_provider.employee'
+      - '@prestashop.adapter.image.uploader.employee_image_uploader'
 
   prestashop.adapter.employee.command_handler.edit_employee_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\EditEmployeeHandler'
@@ -48,6 +49,7 @@ services:
       - '@prestashop.core.employee.profile_access_checker'
       - '@prestashop.adapter.data_provider.employee'
       - '@prestashop.adapter.legacy.context'
+      - '@prestashop.adapter.image.uploader.employee_image_uploader'
 
   prestashop.adapter.employee.avatar_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Employee\AvatarProvider'
