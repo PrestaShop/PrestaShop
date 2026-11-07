@@ -169,7 +169,18 @@ class OrderCarrierCore extends ObjectModel
             }
 
             if (!$this->sendInTransitEmail($order)) {
-                return false;
+                // WHY: parent::update() has already committed the row above. Returning false here
+                // makes WebserviceRequest answer "Unable to save resource" (error 46) for a
+                // resource that was saved, so the caller sees a failed write that did happen.
+                // The notification failure is reported through the log instead; Mail::Send()
+                // additionally logs its own transport errors, so nothing is swallowed.
+                PrestaShopLogger::addLog(
+                    sprintf('Order #%d: the "in transit" e-mail could not be sent.', (int) $this->id_order),
+                    3,
+                    null,
+                    'Order',
+                    (int) $this->id_order
+                );
             }
         }
 
