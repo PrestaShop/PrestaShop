@@ -269,8 +269,17 @@ class LegacyControllerContext
         $this->addJqueryUI(['ui.slider', 'ui.datepicker']);
 
         $this->addJS($adminDir . '/themes/default/js/vendor/bootstrap.min.js');
+
+        // Modernizr is not used by the core and is loaded only for backward compatibility with modules.
         $this->addJS($adminDir . '/themes/default/js/vendor/modernizr.min.js');
-        $this->addJS($adminDir . '/themes/default/js/modernizr-loads.js');
+
+        // Load the default theme scripts in dependency order
+        $this->addJS($adminDir . '/themes/default/js/vendor/enquire.min.js');
+        $this->addJS($adminDir . '/themes/default/js/bundle/utils/animations.js');
+        $this->addJS($adminDir . '/themes/default/js/bundle/components/navbar-transition-handler.js');
+        $this->addJS($adminDir . '/themes/default/js/admin-theme.js');
+
+        // Load date handling and the theme bundle
         $this->addJS($adminDir . '/themes/default/js/vendor/moment-with-langs.min.js');
         $this->addJS($adminDir . '/themes/default/public/theme.bundle.js?v=' . $this->psVersion);
 
