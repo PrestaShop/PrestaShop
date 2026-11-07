@@ -111,6 +111,16 @@ final class StringModifier implements StringModifierInterface
 
         $return_str = preg_replace('/[\s\'\:\/\[\]\-]+/', ' ', $return_str);
 
+        // A separator at either end collapses to a space, which would otherwise become a leading or
+        // trailing dash. Square brackets are the visible case: they survive the filtering above, while
+        // round ones are dropped outright, which is why only they left a dangling dash.
+        $trimmed = trim($return_str);
+        if ($trimmed !== '') {
+            // Kept as it was when the name is nothing but separators, since an empty result would not
+            // pass Validate::isLinkRewrite() while the single dash does.
+            $return_str = $trimmed;
+        }
+
         return str_replace([' ', '/'], '-', $return_str);
     }
 
