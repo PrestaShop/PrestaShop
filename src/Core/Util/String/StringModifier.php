@@ -55,11 +55,11 @@ final class StringModifier implements StringModifierInterface
      */
     public function cutEnd(string $string, int $expectedLength): string
     {
-        $length = strlen($string);
+        $length = mb_strlen($string);
 
         if ($length > $expectedLength) {
             // cut symbols difference from the end of the string
-            $string = substr($string, 0, $expectedLength - $length);
+            $string = mb_substr($string, 0, $expectedLength - $length);
         }
 
         return $string;
