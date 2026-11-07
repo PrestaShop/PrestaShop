@@ -29,6 +29,7 @@ use PrestaShopBundle\ApiPlatform\Serializer\CQRSApiSerializer;
 use Psr\Container\ContainerInterface;
 use ReflectionException;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
@@ -228,13 +229,23 @@ class QueryListProvider implements ProviderInterface
             [NormalizationMapper::NORMALIZATION_MAPPING => $filtersMapping]
         );
 
+        $offset = array_key_exists('offset', $queryParameters) ? (int) $queryParameters['offset'] : null;
+        $limit = array_key_exists('limit', $queryParameters) ? (int) $queryParameters['limit'] : null;
+        // WHY: the values reach Doctrine or the SQL query unchanged, where a negative or zero value is a server error
+        if (null !== $offset && $offset < 0) {
+            throw new UnprocessableEntityHttpException('The offset must be zero or greater.');
+        }
+        if (null !== $limit && $limit < 1) {
+            throw new UnprocessableEntityHttpException('The limit must be greater than zero.');
+        }
+
         $orderBy = $this->mapOrderByFieldForGrid($queryParameters['orderBy'] ?? null, $filtersMapping);
         $paginationParameters = [
             'filters' => $paginationFilters,
             'orderBy' => $orderBy,
             'sortOrder' => $queryParameters['sortOrder'] ?? 'asc',
-            'offset' => array_key_exists('offset', $queryParameters) ? (int) $queryParameters['offset'] : null,
-            'limit' => array_key_exists('limit', $queryParameters) ? (int) $queryParameters['limit'] : null,
+            'offset' => $offset,
+            'limit' => $limit,
         ];
 
         /* remove null parameters from the request so the default filter parameters can be used instead of null values. */
