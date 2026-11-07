@@ -1827,7 +1827,7 @@ class FrontControllerCore extends Controller
         }
 
         $page_name = $this->getPageName();
-        $meta_tags = Meta::getMetaTags($this->context->language->id, $page_name);
+        $meta_tags = Meta::getMetaTags($this->context->language->id, $this->getMetaPageName($page_name));
 
         $my_account_controllers = [
             'address',
@@ -2101,6 +2101,22 @@ class FrontControllerCore extends Controller
     protected function getCurrentURL()
     {
         return Tools::getCurrentUrl();
+    }
+
+    /**
+     * Meta rows are keyed by php_self, which can differ from the page name given to the theme.
+     */
+    private function getMetaPageName(string $pageName): string
+    {
+        if (empty($this->php_self) || $this->php_self === $pageName) {
+            return $pageName;
+        }
+
+        if (Meta::getMetaByPage($pageName, $this->context->language->id)) {
+            return $pageName;
+        }
+
+        return $this->php_self;
     }
 
     public function getPageName()
