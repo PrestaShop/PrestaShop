@@ -56,7 +56,7 @@ final class BackUrlRedirectResponseListener
             return;
         }
 
-        $backUrl = $this->backUrlProvider->getBackUrl($currentRequest);
+        $backUrl = $this->resolveRelativeUrl($this->backUrlProvider->getBackUrl($currentRequest), $currentRequest);
         if (
             // No back url nothing to change
             empty($backUrl)
@@ -70,6 +70,19 @@ final class BackUrlRedirectResponseListener
 
         $backUrlResponse = $originalResponse->setTargetUrl($backUrl);
         $event->setResponse($backUrlResponse);
+    }
+
+    /**
+     * Legacy pages pass back urls like "index.php?controller=AdminGroups", relative to the admin folder. Used as is,
+     * the browser resolves them against the current Symfony path (/admin/index.php/sell/customers/1/) instead.
+     */
+    private function resolveRelativeUrl(string $url, Request $request): string
+    {
+        if ('' === $url || preg_match('#^([a-z][a-z0-9+.-]*:|[/?\#])#i', $url)) {
+            return $url;
+        }
+
+        return $request->getBasePath() . '/' . $url;
     }
 
     /**
