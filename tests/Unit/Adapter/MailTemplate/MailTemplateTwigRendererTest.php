@@ -103,6 +103,49 @@ class MailTemplateTwigRendererTest extends TestCase
         $this->assertEquals($expectedTemplate, $generatedTemplate);
     }
 
+    public function testRenderHtmlOfLayoutDeclaredWithAnAbsoluteModulePath(): void
+    {
+        $moduleDirectory = '/var/www/html/modules';
+        $templatePaths = [
+            MailTemplateInterface::HTML_TYPE => $moduleDirectory . '/testmaillayout/mails/layouts/test_layout.html.twig',
+        ];
+        $expectedTemplate = 'mail_template';
+        $expectedVariables = ['locale' => null, 'url' => 'http://test.com', 'templateType' => MailTemplateInterface::HTML_TYPE, 'giftWrapping' => 1];
+        $expectedLanguage = $this->createLanguageMock();
+        $mailLayout = $this->createMailLayoutMock($templatePaths);
+
+        $generator = new MailTemplateTwigRenderer(
+            $this->createEngineMock('@Modules/testmaillayout/mails/layouts/test_layout.html.twig', $expectedVariables, $expectedTemplate),
+            $this->createVariablesBuilderMock($expectedVariables, $expectedLanguage),
+            $this->createHookDispatcherMock($mailLayout, MailTemplateInterface::HTML_TYPE),
+            true,
+            $moduleDirectory
+        );
+
+        $this->assertEquals($expectedTemplate, $generator->renderHtml($mailLayout, $expectedLanguage));
+    }
+
+    public function testRenderHtmlOfLayoutOutsideTheModulesFolderIsLeftUntouched(): void
+    {
+        $templatePaths = [
+            MailTemplateInterface::HTML_TYPE => '@MailThemes/modern/core/account.html.twig',
+        ];
+        $expectedTemplate = 'mail_template';
+        $expectedVariables = ['locale' => null, 'url' => 'http://test.com', 'templateType' => MailTemplateInterface::HTML_TYPE, 'giftWrapping' => 1];
+        $expectedLanguage = $this->createLanguageMock();
+        $mailLayout = $this->createMailLayoutMock($templatePaths);
+
+        $generator = new MailTemplateTwigRenderer(
+            $this->createEngineMock($templatePaths[MailTemplateInterface::HTML_TYPE], $expectedVariables, $expectedTemplate),
+            $this->createVariablesBuilderMock($expectedVariables, $expectedLanguage),
+            $this->createHookDispatcherMock($mailLayout, MailTemplateInterface::HTML_TYPE),
+            true,
+            '/var/www/html/modules'
+        );
+
+        $this->assertEquals($expectedTemplate, $generator->renderHtml($mailLayout, $expectedLanguage));
+    }
+
     public function testRenderHtmlWithFallback(): void
     {
         $templatePaths = [
