@@ -13,6 +13,7 @@ use Currency;
 use Db;
 use DbQuery;
 use Language;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use RuntimeException;
 
 class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
@@ -205,6 +206,50 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
 
         if ((int) $currency->precision != (int) $precision) {
             throw new RuntimeException(sprintf('Currency "%s" has "%s" precision, but "%s" was expected.', $reference, $currency->precision, $precision));
+        }
+    }
+
+    /**
+     * Simulates the beginning of a back office request: the context currency is the default
+     * currency, and its computing precision is stored in cache before any command is handled.
+     *
+     * @Given the context currency is the default one and its computing precision is cached
+     */
+    public function setDefaultContextCurrencyAndCacheComputingPrecision(): void
+    {
+        $context = Context::getContext();
+        $context->currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
+        $context->resetComputingPrecision();
+        $context->getComputingPrecision();
+    }
+
+    /**
+     * Simulates the legacy context initialisation of a back office request: the legacy context has no
+     * currency yet, and the currency context builder sets the default one through the ContextStateManager.
+     *
+     * @Given the default currency is set in a context without currency by the context state manager
+     */
+    public function setDefaultCurrencyInContextWithoutCurrency(): void
+    {
+        $context = Context::getContext();
+        $context->currency = null;
+        $context->resetComputingPrecision();
+
+        /** @var ContextStateManager $contextStateManager */
+        $contextStateManager = CommonFeatureContext::getContainer()->get(ContextStateManager::class);
+        $contextStateManager->setCurrency(new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT')));
+        $context->getComputingPrecision();
+    }
+
+    /**
+     * @Then the context computing precision should be :precision
+     */
+    public function assertContextComputingPrecision($precision): void
+    {
+        $computingPrecision = Context::getContext()->getComputingPrecision();
+
+        if ($computingPrecision !== (int) $precision) {
+            throw new RuntimeException(sprintf('Context computing precision is "%s", but "%s" was expected.', $computingPrecision, $precision));
         }
     }
 
