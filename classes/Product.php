@@ -242,6 +242,14 @@ class ProductCore extends ObjectModel
     public $base_price;
 
     /**
+     * The final price the constructor computed into $price when the product was loaded in full. Kept so
+     * update() can tell an untouched computed value from one a caller actually assigned.
+     *
+     * @var float|null
+     */
+    protected $computedPrice;
+
+    /**
      * @var int|null TaxRulesGroup identifier
      */
     public $id_tax_rules_group;
@@ -724,6 +732,7 @@ class ProductCore extends ObjectModel
             } else {
                 $this->price = Product::getPriceStatic((int) $this->id, false, null, 6, null, false, true, 1, false, null, null, null, $this->specificPrice);
             }
+            $this->computedPrice = $this->price;
             $this->tags = Tag::getProductTags((int) $this->id);
 
             $this->loadStockData();
@@ -801,9 +810,30 @@ class ProductCore extends ObjectModel
             $this->product_type = ProductType::TYPE_VIRTUAL;
         }
 
+        /*
+         * Loading a product in full replaces $price with the final price for display - ecotax included,
+         * reductions applied - and $base_price keeps the stored one. Writing the computed value back
+         * bakes it into the catalogue price, and because the next load computes on top of it, a plain
+         * new Product($id, true) followed by save() raises the price by the ecotax every single time.
+         * A price the caller actually assigned still differs from what the constructor left behind, and
+         * is saved as asked.
+         */
+        $computedPriceUntouched = null !== $this->computedPrice
+            && (string) $this->price === (string) $this->computedPrice;
+        if ($computedPriceUntouched) {
+            $this->price = $this->base_price;
+        }
+
         $return = parent::update($null_values);
+
         $this->setGroupReduction();
+        // updateUnitRatio() derives unit_price_ratio from $price, so it runs while the stored one is set,
+        // and the object then agrees with the row it just wrote.
         $this->updateUnitRatio();
+
+        if ($computedPriceUntouched) {
+            $this->price = $this->computedPrice;
+        }
 
         Hook::exec('actionProductSave', ['id_product' => (int) $this->id, 'product' => $this]);
         Hook::exec('actionProductUpdate', ['id_product' => (int) $this->id, 'product' => $this]);
