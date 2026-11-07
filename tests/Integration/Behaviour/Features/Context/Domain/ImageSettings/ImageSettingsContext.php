@@ -26,6 +26,9 @@ class ImageSettingsContext extends AbstractDomainFeatureContext
         $command->setFormats($data['formats']);
         $command->setBaseFormat($data['base-format']);
         $command->setAvifQuality($data['avif-quality']);
+        if (isset($data['avif-speed'])) {
+            $command->setAvifSpeed($data['avif-speed']);
+        }
         $command->setJpegQuality($data['jpeg-quality']);
         $command->setPngQuality($data['png-quality']);
         $command->setWebpQuality($data['webp-quality']);
@@ -63,6 +66,12 @@ class ImageSettingsContext extends AbstractDomainFeatureContext
         if (isset($expectedData['avif-quality'])) {
             if ($imageSettings->getAvifQuality() !== $expectedData['avif-quality']) {
                 $errors[] = 'avif-quality';
+            }
+        }
+
+        if (isset($expectedData['avif-speed'])) {
+            if ($imageSettings->getAvifSpeed() !== $expectedData['avif-speed']) {
+                $errors[] = 'avif-speed';
             }
         }
 
@@ -127,6 +136,7 @@ class ImageSettingsContext extends AbstractDomainFeatureContext
         foreach (
             [
                 'avif-quality',
+                'avif-speed',
                 'jpeg-quality',
                 'png-quality',
                 'webp-quality',

@@ -206,6 +206,7 @@ final class ImageCopier
             return false;
         }
         unlink($origTmpfile);
+        ImageManager::clearDecodedSource();
 
         return true;
     }
