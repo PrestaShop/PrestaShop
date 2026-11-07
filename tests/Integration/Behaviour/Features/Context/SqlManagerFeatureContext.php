@@ -160,7 +160,7 @@ class SqlManagerFeatureContext extends AbstractDomainFeatureContext
         try {
             /** @var SqlRequestId $sqlRequestId */
             $sqlRequestId = $this->getCommandBus()->handle(
-                (new EditSqlRequestCommand(new SqlRequestId((int) $sqlRequestId)))
+                (new EditSqlRequestCommand((int) $sqlRequestId))
                     ->setName($data['name'])
                     ->setSql($data['sql'])
             );
