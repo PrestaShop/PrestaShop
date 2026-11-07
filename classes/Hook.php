@@ -52,6 +52,11 @@ class HookCore extends ObjectModel
     protected static $disabledHookModules = [];
 
     /**
+     * @var array<string, true> Module failures already logged during this request
+     */
+    private static array $loggedModuleFailures = [];
+
+    /**
      * @see ObjectModel::$definition
      */
     public static $definition = [
@@ -461,13 +466,8 @@ class HookCore extends ObjectModel
         } catch (ModuleErrorInterface $e) {
             // Exceptions that implements ModuleErrorInterface are usefull to display error messages
             throw $e;
-        } catch (Exception $e) {
-            $environment = ServiceLocator::get(
-                '\\PrestaShop\\PrestaShop\\Adapter\\Environment'
-            );
-            if ($environment->isDebug()) {
-                throw new CoreException($e->getMessage(), $e->getCode(), $e);
-            }
+        } catch (Throwable $e) {
+            self::handleModuleFailure($e, $module, $hookName);
         }
 
         return '';
@@ -1221,16 +1221,53 @@ class HookCore extends ObjectModel
 
         try {
             return $module->renderWidget($hook_name, $params);
-        } catch (Exception $e) {
-            $environment = ServiceLocator::get(
-                '\\PrestaShop\\PrestaShop\\Adapter\\Environment'
-            );
-            if ($environment->isDebug()) {
-                throw new CoreException($e->getMessage(), $e->getCode(), $e);
-            }
+        } catch (Throwable $e) {
+            self::handleModuleFailure($e, $module, $hook_name);
         }
 
         return '';
+    }
+
+    /**
+     * A module that fails must not take the whole page down: the page renders without it.
+     *
+     * @throws CoreException In debug mode, so that the developer sees the failure
+     */
+    private static function handleModuleFailure(Throwable $e, Module $module, ?string $hookName): void
+    {
+        $environment = ServiceLocator::get(
+            '\\PrestaShop\\PrestaShop\\Adapter\\Environment'
+        );
+        if ($environment->isDebug()) {
+            // A database exception has a string code, that CoreException refuses
+            throw new CoreException($e->getMessage(), (int) $e->getCode(), $e);
+        }
+
+        // A hook of a product list fails once per product: log it once
+        $failure = $module->name . '|' . $hookName . '|' . $e::class . '|' . $e->getFile() . ':' . $e->getLine();
+        if (isset(self::$loggedModuleFailures[$failure])) {
+            return;
+        }
+        self::$loggedModuleFailures[$failure] = true;
+
+        $message = sprintf(
+            'Module "%s" failed on hook "%s": %s: %s in %s:%d',
+            $module->name,
+            (string) $hookName,
+            $e::class,
+            $e->getMessage(),
+            $e->getFile(),
+            $e->getLine()
+        );
+        try {
+            ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\LegacyLogger')->error(
+                $message,
+                ['object_type' => 'Module', 'object_id' => (int) $module->id]
+            );
+        } catch (Throwable) {
+            // The failure may come from the database the log is written to
+            error_log($message);
+        }
     }
 
     /**
