@@ -24,6 +24,21 @@ admin_attachments_create:
     _legacy_controller: AdminAttachments
     _legacy_link: AdminAttachments:addattachment
 
+# The filters of the products grid shown on the edit page are submitted to the edit URL
+admin_attachments_products_filter:
+  path: /{attachmentId}/edit
+  methods: [ POST ]
+  condition: "request.request.has('attachment_product')"
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    _legacy_controller: AdminAttachments
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.attachment_product
+    redirectRoute: admin_attachments_edit
+    redirectQueryParamsToKeep:
+      - 'attachmentId'
+  requirements:
+    attachmentId: \d+
+
 admin_attachments_edit:
   path: /{attachmentId}/edit
   methods: [ GET, POST ]
@@ -33,6 +48,25 @@ admin_attachments_edit:
     _legacy_link: AdminAttachments:updateattachment
     _legacy_parameters:
       id_attachment: attachmentId
+  requirements:
+    attachmentId: \d+
+
+admin_attachments_remove_product:
+  path: /{attachmentId}/products/{productId}/remove
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\AttachmentController::removeProductAction
+    _legacy_controller: AdminAttachments
+  requirements:
+    attachmentId: \d+
+    productId: \d+
+
+admin_attachments_remove_products_bulk:
+  path: /{attachmentId}/products/remove-bulk
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\AttachmentController::removeProductsBulkAction
+    _legacy_controller: AdminAttachments
   requirements:
     attachmentId: \d+
 

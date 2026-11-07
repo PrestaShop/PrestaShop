@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroupsProviderInterface;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\CategoryProductFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType;
@@ -242,6 +243,9 @@ class CategoryController extends PrestaShopAdminController
         FormHandlerInterface $categoryFormHandler,
         #[Autowire(service: 'prestashop.adapter.group.provider.default_groups_provider')]
         DefaultGroupsProviderInterface $defaultGroupsProvider,
+        CategoryProductFilters $categoryProductFilters,
+        #[Autowire(service: 'prestashop.core.grid.factory.category_product')]
+        GridFactoryInterface $categoryProductGridFactory,
     ): Response {
         try {
             /** @var EditableCategory $editableCategory */
@@ -290,6 +294,7 @@ class CategoryController extends PrestaShopAdminController
             '@PrestaShop/Admin/Sell/Catalog/Categories/edit.html.twig',
             [
                 'categoryId' => $categoryId,
+                'categoryProductGrid' => $this->presentGrid($categoryProductGridFactory->getGrid($categoryProductFilters)),
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'enableSidebar' => true,
                 'contextLangId' => $this->getLanguageContext()->getId(),

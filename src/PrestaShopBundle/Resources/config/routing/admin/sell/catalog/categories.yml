@@ -92,6 +92,21 @@ admin_categories_create_root:
     _legacy_parameters:
       id_category: categoryId
 
+# The filters of the products grid shown on the edit page are submitted to the edit URL
+admin_categories_products_filter:
+  path: /{categoryId}/edit
+  methods: [ POST ]
+  condition: "request.request.has('category_product')"
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    _legacy_controller: AdminCategories
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.category_product
+    redirectRoute: admin_categories_edit
+    redirectQueryParamsToKeep:
+      - 'categoryId'
+  requirements:
+    categoryId: \d+
+
 admin_categories_edit:
   path: /{categoryId}/edit
   methods: [ GET, POST ]
