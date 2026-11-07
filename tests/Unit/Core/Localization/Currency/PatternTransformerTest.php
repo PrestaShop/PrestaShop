@@ -168,4 +168,49 @@ class PatternTransformerTest extends TestCase
             ],
         ];
     }
+
+    /**
+     * CLDR marks the direction of a currency pattern with U+200F for locales such as Hebrew and with
+     * U+200E for Persian. Only the first used to be recognised, so the Persian pattern was reported
+     * as having no transformation type at all and the back office could not tell where its symbol sits.
+     *
+     * @dataProvider getDirectionalPatterns
+     */
+    public function testADirectionalMarkDoesNotHideTheTransformationType(string $expectedType, string $pattern): void
+    {
+        $transformer = new PatternTransformer();
+
+        $this->assertSame($expectedType, $transformer->getTransformationType($pattern));
+    }
+
+    public function getDirectionalPatterns(): array
+    {
+        return [
+            'persian, left to right mark' => [
+                PatternTransformer::TYPE_LEFT_SYMBOL_WITHOUT_SPACE,
+                "\u{200E}\u{00A4}#,##0.00",
+            ],
+            'hebrew, right to left mark' => [
+                PatternTransformer::TYPE_RIGHT_SYMBOL_WITH_SPACE,
+                "\u{200F}#,##0.00\u{00A0}\u{00A4}",
+            ],
+            'no mark at all' => [
+                PatternTransformer::TYPE_LEFT_SYMBOL_WITHOUT_SPACE,
+                "\u{00A4}#,##0.00",
+            ],
+        ];
+    }
+
+    /**
+     * A transformed pattern has to keep the directional mark it came with.
+     */
+    public function testTheLeftToRightMarkSurvivesATransformation(): void
+    {
+        $transformer = new PatternTransformer();
+
+        $this->assertSame(
+            "\u{200E}#,##0.00\u{00A0}\u{00A4}",
+            $transformer->transform("\u{200E}\u{00A4}#,##0.00", PatternTransformer::TYPE_RIGHT_SYMBOL_WITH_SPACE)
+        );
+    }
 }
