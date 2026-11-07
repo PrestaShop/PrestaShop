@@ -25,6 +25,13 @@ class CategoryCore extends ObjectModel
     /** @var bool Status for display */
     public $active = true;
 
+    /**
+     * Whether search engines may index this category's page.
+     *
+     * @var bool
+     */
+    public $indexation = true;
+
     /** @var int category position */
     public $position;
 
@@ -102,6 +109,7 @@ class CategoryCore extends ObjectModel
             'nright' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
             'level_depth' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
             'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true],
+            'indexation' => ['type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'],
             'id_parent' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
             'id_shop_default' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'is_root_category' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],

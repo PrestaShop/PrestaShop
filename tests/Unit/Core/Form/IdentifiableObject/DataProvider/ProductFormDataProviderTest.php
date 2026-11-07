@@ -834,6 +834,17 @@ class ProductFormDataProviderTest extends TestCase
             $expectedOutputData,
         ];
 
+        $expectedOutputData = $this->getDefaultOutputData();
+        $productData = [
+            'indexation' => false,
+        ];
+        $expectedOutputData['seo']['indexation'] = false;
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
         return $datasets;
     }
 
@@ -1381,7 +1392,8 @@ class ProductFormDataProviderTest extends TestCase
             $product['meta_description'] ?? [],
             $product['link_rewrite'] ?? [],
             $product['redirect_type'] ?? RedirectType::TYPE_NOT_FOUND,
-            $product['redirect_target'] ?? null
+            $product['redirect_target'] ?? null,
+            $product['indexation'] ?? true
         );
     }
 
@@ -1679,6 +1691,7 @@ class ProductFormDataProviderTest extends TestCase
                     'type' => RedirectType::TYPE_NOT_FOUND,
                     'target' => null,
                 ],
+                'indexation' => true,
                 'tags' => [],
             ],
             'shipping' => [
