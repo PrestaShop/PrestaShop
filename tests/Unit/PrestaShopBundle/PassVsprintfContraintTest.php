@@ -51,4 +51,50 @@ class PassVsprintfContraintTest extends ConstraintValidatorTestCase
 
         $this->buildViolation($constraint->message)->assertRaised();
     }
+
+    /**
+     * @dataProvider getBlankTranslations
+     */
+    public function testABlankTranslationOfAStringWithParametersIsAccepted(string $blank): void
+    {
+        $translation = (new Translation())
+            ->setKey('Your order with the reference %order_name% has been shipped.')
+            ->setTranslation($blank);
+
+        $this->validator->validate($translation, new PassVsprintf());
+
+        $this->assertNoViolation();
+    }
+
+    public function getBlankTranslations(): array
+    {
+        return [
+            'a single space' => [' '],
+            'several spaces' => ['   '],
+            'empty' => [''],
+        ];
+    }
+
+    public function testAWordingThatDropsANamedParameterIsAccepted(): void
+    {
+        $translation = (new Translation())
+            ->setKey('Your order with the reference %order_name% has been shipped.')
+            ->setTranslation('Your order has been shipped.');
+
+        $this->validator->validate($translation, new PassVsprintf());
+
+        $this->assertNoViolation();
+    }
+
+    public function testAWordingThatDropsASprintfParameterNextToANamedOneIsRefused(): void
+    {
+        $translation = (new Translation())
+            ->setKey('Order %order_name% contains %s products')
+            ->setTranslation('Order %order_name% contains products');
+        $constraint = new PassVsprintf();
+
+        $this->validator->validate($translation, $constraint);
+
+        $this->buildViolation($constraint->message)->assertRaised();
+    }
 }

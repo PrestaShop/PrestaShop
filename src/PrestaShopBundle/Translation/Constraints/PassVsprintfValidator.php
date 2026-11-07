@@ -36,6 +36,8 @@ class PassVsprintfValidator extends ConstraintValidator
         if (empty($property)) {
             return 0;
         }
+        // Named %param% placeholders are replaced with strtr(), not vsprintf()
+        $property = preg_replace(Translator::$regexClassicParams, '', $property);
         $matches = [];
         if (preg_match_all(Translator::$regexSprintfParams, $property, $matches) === false) {
             throw new Exception('Preg_match failed');
