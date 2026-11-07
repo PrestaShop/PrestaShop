@@ -573,6 +573,55 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Given I set sales counters for product :productName to :quantity units and :sales sales
+     */
+    public function setProductSalesCounters(string $productName, int $quantity, int $sales): void
+    {
+        $productId = $this->getProductByName($productName)->getProductId();
+        $connection = $this->getContainer()->get('doctrine.dbal.default_connection');
+        $connection->createQueryBuilder()
+            ->delete(_DB_PREFIX_ . 'product_sale')
+            ->where('id_product = :productId')
+            ->setParameter('productId', $productId)
+            ->executeStatement();
+        $connection->createQueryBuilder()
+            ->insert(_DB_PREFIX_ . 'product_sale')
+            ->values(['id_product' => ':productId', 'quantity' => ':quantity', 'sale_nbr' => ':sales'])
+            ->setParameter('productId', $productId)
+            ->setParameter('quantity', $quantity)
+            ->setParameter('sales', $sales)
+            ->executeStatement();
+    }
+
+    /**
+     * @Then sales counters for product :productName should be :quantity units and :sales sales
+     */
+    public function assertProductSalesCounters(string $productName, int $quantity, int $sales): void
+    {
+        $counters = $this->getProductSalesCounters($this->getProductByName($productName)->getProductId());
+        Assert::assertSame($quantity, $counters['quantity']);
+        Assert::assertSame($sales, $counters['sale_nbr']);
+    }
+
+    private function getProductSalesCounters(int $productId): array
+    {
+        $connection = $this->getContainer()->get('doctrine.dbal.default_connection');
+        $row = $connection->createQueryBuilder()
+            ->select('quantity', 'sale_nbr')
+            ->from(_DB_PREFIX_ . 'product_sale')
+            ->where('id_product = :productId')
+            ->setParameter('productId', $productId)
+            ->setMaxResults(1)
+            ->executeQuery()
+            ->fetchAssociative();
+
+        return [
+            'quantity' => (int) ($row['quantity'] ?? 0),
+            'sale_nbr' => (int) ($row['sale_nbr'] ?? 0),
+        ];
+    }
+
+    /**
      * @When I edit product :productName to order :orderReference with following products details:
      *
      * @param string $productName
