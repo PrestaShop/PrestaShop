@@ -8,6 +8,15 @@ services:
       - '@prestashop.adapter.language.language_pack_installer'
       - '@prestashop.core.cache.clearer.cache_clearer_chain'
 
+  prestashop.core.language.pack.translation_pack_validator:
+    class: 'PrestaShop\PrestaShop\Core\Language\Pack\Import\TranslationPackValidator'
+
+  prestashop.adapter.language.pack.uploaded_importer:
+    class: 'PrestaShop\PrestaShop\Adapter\Language\Pack\UploadedLanguagePackImporter'
+    arguments:
+      - '@prestashop.core.language.pack.translation_pack_validator'
+      - '@translator'
+
   prestashop.adapter.language.language_flag_thumbnail_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageFlagThumbnailProvider'
     arguments:
