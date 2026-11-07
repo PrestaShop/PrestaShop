@@ -145,6 +145,7 @@ class AdminShopControllerCore extends AdminController
                     }
 
                     $url['name'] = $title;
+                    $url['edit_url'] = $this->context->link->getAdminLink('AdminShopUrl', true, [], ['updateshop_url' => 1, 'id_shop_url' => $url['id_shop_url']]);
                     $data[$group_key][$shop_key]['urls'][$url['id_shop_url']] = $url;
                 }
             }
