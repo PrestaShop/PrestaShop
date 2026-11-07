@@ -595,7 +595,7 @@ class MailCore extends ObjectModel
                     break;
 
                 case Mail::TYPE_TEXT:
-                    $templateTxt = strtr($templateTxt, $templateVars);
+                    $templateTxt = strtr($templateTxt, self::getTextTemplateVars($templateVars));
                     $email->text($templateTxt);
                     break;
 
@@ -603,7 +603,7 @@ class MailCore extends ObjectModel
                     $templateHtml = strtr($templateHtml, $templateVars);
                     $email->html($templateHtml);
 
-                    $templateTxt = strtr($templateTxt, $templateVars);
+                    $templateTxt = strtr($templateTxt, self::getTextTemplateVars($templateVars));
                     $email->text($templateTxt);
                     break;
 
@@ -1085,5 +1085,21 @@ class MailCore extends ObjectModel
         // Either the placeholder, or the content id itself for a template that writes the img tag.
         return false !== strpos($templateHtml, '{shop_logo}')
             || false !== strpos($templateHtml, 'cid:shop_logo');
+    }
+
+    /**
+     * {shop_name} is HTML-escaped for the html part, the text part shows entities as they are.
+     *
+     * @param array<string, mixed> $templateVars
+     *
+     * @return array<string, mixed>
+     */
+    private static function getTextTemplateVars(array $templateVars): array
+    {
+        if (isset($templateVars['{shop_name}']) && is_string($templateVars['{shop_name}'])) {
+            $templateVars['{shop_name}'] = html_entity_decode($templateVars['{shop_name}'], ENT_QUOTES, 'UTF-8');
+        }
+
+        return $templateVars;
     }
 }
