@@ -19,6 +19,9 @@ Each AI tool has its own configuration format (`CLAUDE.md`, `.cursorrules`, `.gi
 ├── CONTEXT.md              # Root context: project-wide rules, architecture, and index of all sub-contexts
 ├── STRUCTURE.md            # This file — explains the architecture of the .ai/ folder
 │
+├── bin/                    # Tooling: generate-ai-index.sh (builds generated/),
+│                           # check-conventions.php (checks a branch diff against these files)
+│
 ├── skills/                 # Cross-cutting skills not tied to a single domain or component
 │   └── {skill-name}/
 │       └── SKILL.md
