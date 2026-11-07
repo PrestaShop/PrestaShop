@@ -132,7 +132,7 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        $qb = $this->getBaseQueryBuilder($searchCriteria->getFilters());
+        $qb = $this->getBaseQueryBuilder($searchCriteria->getFilters(), true);
         $qb = $this->applyNewCustomerFilter($qb, $searchCriteria->getFilters());
         $qb->select('count(o.id_order)');
 
@@ -144,34 +144,8 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
      *
      * @return QueryBuilder
      */
-    private function getBaseQueryBuilder(array $filters)
+    private function getBaseQueryBuilder(array $filters, bool $forCounting = false)
     {
-        $qb = $this->connection
-            ->createQueryBuilder()
-            ->from($this->dbPrefix . 'orders', 'o')
-            ->leftJoin('o', $this->dbPrefix . 'customer', 'cu', 'o.id_customer = cu.id_customer')
-            ->leftJoin('o', $this->dbPrefix . 'currency', 'cur', 'o.id_currency = cur.id_currency')
-            ->innerJoin('o', $this->dbPrefix . 'address', 'a', 'o.id_address_delivery = a.id_address')
-            ->innerJoin('a', $this->dbPrefix . 'country', 'c', 'a.id_country = c.id_country')
-            ->innerJoin(
-                'c',
-                $this->dbPrefix . 'country_lang',
-                'cl',
-                'c.id_country = cl.id_country AND cl.id_lang = :context_lang_id'
-            )
-            ->leftJoin('o', $this->dbPrefix . 'order_state', 'os', 'o.current_state = os.id_order_state')
-            ->leftJoin(
-                'os',
-                $this->dbPrefix . 'order_state_lang',
-                'osl',
-                'os.id_order_state = osl.id_order_state AND osl.id_lang = :context_lang_id'
-            )
-            ->leftJoin('o', $this->dbPrefix . 'shop', 's', 'o.id_shop = s.id_shop')
-            ->andWhere('o.`id_shop` IN (:context_shop_ids)')
-            ->setParameter('context_lang_id', $this->contextLangId, PDO::PARAM_INT)
-            ->setParameter('context_shop_ids', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
-        ;
-
         $strictComparisonFilters = [
             'id_order' => 'o.id_order',
             'country_name' => 'c.id_country',
@@ -188,6 +162,49 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
         $dateComparisonFilters = [
             'date_add' => 'o.`date_add`',
         ];
+
+        $qb = $this->connection
+            ->createQueryBuilder()
+            ->from($this->dbPrefix . 'orders', 'o')
+            ->innerJoin('o', $this->dbPrefix . 'address', 'a', 'o.id_address_delivery = a.id_address')
+            ->innerJoin('a', $this->dbPrefix . 'country', 'c', 'a.id_country = c.id_country')
+            ->innerJoin(
+                'c',
+                $this->dbPrefix . 'country_lang',
+                'cl',
+                'c.id_country = cl.id_country AND cl.id_lang = :context_lang_id'
+            )
+            ->andWhere('o.`id_shop` IN (:context_shop_ids)')
+            ->setParameter('context_lang_id', $this->contextLangId, PDO::PARAM_INT)
+            ->setParameter('context_shop_ids', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
+        ;
+
+        // These joins match at most one row, so a count only needs the ones a filter reads from
+        $filteredAliases = $this->getFilteredAliases(
+            array_keys($filters),
+            $strictComparisonFilters + $likeComparisonFilters + $dateComparisonFilters
+        );
+
+        if (!$forCounting || isset($filteredAliases['cu'])) {
+            $qb->leftJoin('o', $this->dbPrefix . 'customer', 'cu', 'o.id_customer = cu.id_customer');
+        }
+        if (!$forCounting || isset($filteredAliases['cur'])) {
+            $qb->leftJoin('o', $this->dbPrefix . 'currency', 'cur', 'o.id_currency = cur.id_currency');
+        }
+        if (!$forCounting || isset($filteredAliases['os']) || isset($filteredAliases['osl'])) {
+            $qb->leftJoin('o', $this->dbPrefix . 'order_state', 'os', 'o.current_state = os.id_order_state');
+        }
+        if (!$forCounting || isset($filteredAliases['osl'])) {
+            $qb->leftJoin(
+                'os',
+                $this->dbPrefix . 'order_state_lang',
+                'osl',
+                'os.id_order_state = osl.id_order_state AND osl.id_lang = :context_lang_id'
+            );
+        }
+        if (!$forCounting || isset($filteredAliases['s'])) {
+            $qb->leftJoin('o', $this->dbPrefix . 'shop', 's', 'o.id_shop = s.id_shop');
+        }
 
         foreach ($filters as $filterName => $filterValue) {
             if ('customer' === $filterName) {
@@ -239,6 +256,26 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
         }
 
         return $qb;
+    }
+
+    /**
+     * @param array<int|string> $filterNames
+     * @param array<string, string> $columnsByFilter
+     *
+     * @return array<string, true> table aliases read by the filters
+     */
+    private function getFilteredAliases(array $filterNames, array $columnsByFilter): array
+    {
+        $aliases = [];
+        foreach ($filterNames as $filterName) {
+            // The customer filter reads cu. through getCustomerField()
+            $alias = 'customer' === $filterName ? 'cu' : strstr($columnsByFilter[$filterName] ?? '', '.', true);
+            if ($alias) {
+                $aliases[$alias] = true;
+            }
+        }
+
+        return $aliases;
     }
 
     /**
