@@ -59,6 +59,11 @@ class CombinationForEditing
     private $isDefault;
 
     /**
+     * @var int[]
+     */
+    private array $carrierReferenceIds;
+
+    /**
      * @param int $combinationId
      * @param int $productId
      * @param string $name
@@ -68,6 +73,7 @@ class CombinationForEditing
      * @param int[] $imageIds
      * @param string $coverThumbnailUrl
      * @param bool $isDefault
+     * @param int[] $carrierReferenceIds
      */
     public function __construct(
         int $combinationId,
@@ -78,7 +84,8 @@ class CombinationForEditing
         CombinationStock $stock,
         array $imageIds,
         string $coverThumbnailUrl,
-        bool $isDefault
+        bool $isDefault,
+        array $carrierReferenceIds = []
     ) {
         $this->combinationId = $combinationId;
         $this->productId = $productId;
@@ -89,6 +96,7 @@ class CombinationForEditing
         $this->imageIds = $imageIds;
         $this->coverThumbnailUrl = $coverThumbnailUrl;
         $this->isDefault = $isDefault;
+        $this->carrierReferenceIds = $carrierReferenceIds;
     }
 
     /**
@@ -161,5 +169,13 @@ class CombinationForEditing
     public function isDefault(): bool
     {
         return $this->isDefault;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getCarrierReferenceIds(): array
+    {
+        return $this->carrierReferenceIds;
     }
 }

@@ -8297,7 +8297,7 @@ class ProductCore extends ObjectModel
         return $manager !== null && $manager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_NEW_PRICING);
     }
 
-    protected static function isCombinationFeatureValuesEnabled(): bool
+    public static function isCombinationFeatureValuesEnabled(): bool
     {
         $manager = self::getFeatureFlagManager();
 
