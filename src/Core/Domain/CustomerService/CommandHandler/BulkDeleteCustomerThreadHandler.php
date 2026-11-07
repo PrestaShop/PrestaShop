@@ -14,6 +14,8 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Repository\CustomerThreadR
 
 /**
  * Handles command for customer thread bulk deletion
+ *
+ * @deprecated since 9.3, will be removed in the next major version - use \PrestaShop\PrestaShop\Adapter\CustomerService\CommandHandler\BulkDeleteCustomerThreadHandler instead
  */
 #[AsCommandHandler]
 class BulkDeleteCustomerThreadHandler implements BulkDeleteCustomerThreadHandlerInterface

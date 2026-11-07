@@ -4,7 +4,7 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler;
+namespace PrestaShop\PrestaShop\Adapter\CustomerService\QueryHandler;
 
 use Contact;
 use Context;
@@ -17,6 +17,7 @@ use Order;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerThreadNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler\GetCustomerThreadForViewingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerInformation;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadMessage;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadTimeline;
@@ -36,7 +37,7 @@ use Validate;
  * @internal
  */
 #[AsQueryHandler]
-class GetCustomerThreadForViewingHandler implements GetCustomerThreadForViewingHandlerInterface
+final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForViewingHandlerInterface
 {
     /**
      * @var Context
@@ -51,7 +52,7 @@ class GetCustomerThreadForViewingHandler implements GetCustomerThreadForViewingH
     /**
      * @var Locale
      */
-    protected $locale;
+    private $locale;
 
     /**
      * @param Context $context
