@@ -16,6 +16,7 @@ use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutVariablesBuilderInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\HTMLToTextTransformation;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationCollectionInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationInterface;
 use Twig\Environment;
@@ -169,6 +170,63 @@ class MailTemplateTwigRendererTest extends TestCase
 
         $generatedTemplate = $generator->renderTxt($mailLayout, $expectedLanguage);
         $this->assertEquals($expectedTemplate, $generatedTemplate);
+    }
+
+    /**
+     * A layout authored as text is already text, so the conversion from HTML must not run over it. It would
+     * drop the line breaks, the leading and trailing spaces and anything that looks like a tag.
+     *
+     * @see https://github.com/PrestaShop/PrestaShop/issues/32971
+     */
+    public function testTextLayoutIsNotConvertedFromHtml(): void
+    {
+        $templatePaths = [
+            MailTemplateInterface::TXT_TYPE => '@Resources/mails/templates/account.txt.twig',
+        ];
+        $renderedTemplate = "Keep this <br> as written\n\nand keep this blank line\n";
+        $expectedVariables = ['locale' => null, 'url' => 'http://test.com', 'templateType' => MailTemplateInterface::TXT_TYPE, 'giftWrapping' => 1];
+        $expectedLanguage = $this->createLanguageMock();
+        $mailLayout = $this->createMailLayoutMock($templatePaths);
+
+        $generator = new MailTemplateTwigRenderer(
+            $this->createEngineMock($templatePaths[MailTemplateInterface::TXT_TYPE], $expectedVariables, $renderedTemplate),
+            $this->createVariablesBuilderMock($expectedVariables, $expectedLanguage),
+            $this->createHookDispatcherMock($mailLayout, MailTemplateInterface::TXT_TYPE),
+            true
+        );
+        $generator->addTransformation(new HTMLToTextTransformation());
+
+        $this->assertSame($renderedTemplate, $generator->renderTxt($mailLayout, $expectedLanguage));
+    }
+
+    /**
+     * When there is no text layout the text part is derived from the HTML one, and that is exactly what the
+     * conversion is for, so it must still run.
+     *
+     * @see https://github.com/PrestaShop/PrestaShop/issues/32971
+     */
+    public function testTextFallingBackToTheHtmlLayoutIsStillConverted(): void
+    {
+        $templatePaths = [
+            MailTemplateInterface::HTML_TYPE => '@Resources/mails/templates/account.html.twig',
+            MailTemplateInterface::TXT_TYPE => '',
+        ];
+        $renderedTemplate = '<p>Hello</p><br><p>World</p>';
+        $expectedVariables = ['locale' => null, 'url' => 'http://test.com', 'templateType' => MailTemplateInterface::TXT_TYPE, 'giftWrapping' => 1];
+        $expectedLanguage = $this->createLanguageMock();
+        $mailLayout = $this->createMailLayoutMock($templatePaths);
+
+        $generator = new MailTemplateTwigRenderer(
+            $this->createEngineMock($templatePaths[MailTemplateInterface::HTML_TYPE], $expectedVariables, $renderedTemplate),
+            $this->createVariablesBuilderMock($expectedVariables, $expectedLanguage),
+            $this->createHookDispatcherMock($mailLayout, MailTemplateInterface::TXT_TYPE, 1),
+            true
+        );
+        $generator->addTransformation(new HTMLToTextTransformation());
+
+        $converted = $generator->renderTxt($mailLayout, $expectedLanguage);
+        $this->assertStringNotContainsString('<p>', $converted);
+        $this->assertStringContainsString('Hello', $converted);
     }
 
     public function testRenderWithTransformations()
