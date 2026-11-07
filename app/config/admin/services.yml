@@ -5,6 +5,19 @@ services:
     autowire: true
     autoconfigure: true
 
+  # Back office only: it adds the admin CSRF token to the URLs it generates, and RouterPass aliases router to it
+  prestashop.router:
+    class: PrestaShopBundle\Service\Routing\Router
+    parent: 'router.default'
+    public: true
+    autowire: false
+    autoconfigure: false
+    arguments:
+      $container: '@service_container'
+    calls:
+      - [ 'setUserTokenManager', [ '@PrestaShopBundle\Security\Admin\UserTokenManager' ] ]
+      - [ 'setAnonymousRouteProvider', [ '@PrestaShopBundle\Routing\AnonymousRouteProvider' ] ]
+
   # SECURITY
   PrestaShopBundle\EventListener\Admin\TokenizedUrlsListener:
     autowire: true

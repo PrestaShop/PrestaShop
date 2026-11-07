@@ -23,6 +23,10 @@ class RouterPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
+        if (!$container->hasDefinition('prestashop.router')) {
+            return;
+        }
+
         $container->setAlias('router', 'prestashop.router')->setPublic(true);
     }
 }
