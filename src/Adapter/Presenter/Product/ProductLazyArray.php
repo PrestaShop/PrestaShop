@@ -43,6 +43,61 @@ use Validate;
 class ProductLazyArray extends AbstractLazyArray
 {
     /**
+     * Price fields emptied when the customer may not see prices
+     */
+    private const HIDDEN_WHEN_PRICES_ARE_HIDDEN = [
+        'discount_amount',
+        'discount_amount_tax_excluded',
+        'discount_amount_tax_included',
+        'discount_amount_to_display',
+        'discount_amount_to_display_tax_excluded',
+        'discount_amount_to_display_tax_included',
+        'discount_percentage',
+        'discount_percentage_absolute',
+        'discount_to_display',
+        'discount_to_display_tax_excluded',
+        'discount_to_display_tax_included',
+        'discount_type',
+        'nopackprice',
+        'nopackprice_to_display',
+        'price',
+        'price_amount',
+        'price_amount_tax_excluded',
+        'price_amount_tax_included',
+        'price_tax_excluded',
+        'price_tax_included',
+        'reduction',
+        'reduction_tax_excluded',
+        'reduction_tax_included',
+        'regular_price',
+        'regular_price_amount',
+        'regular_price_amount_tax_excluded',
+        'regular_price_amount_tax_included',
+        'regular_price_tax_excluded',
+        'regular_price_tax_included',
+        'unit_price',
+        'unit_price_full',
+    ];
+
+    /**
+     * Raw price inputs of the product row, emptied once the presented values are computed
+     */
+    private const RAW_PRICES_HIDDEN_WHEN_PRICES_ARE_HIDDEN = [
+        'attribute_price',
+        'customer_group_discount',
+        'ecotax',
+        'price_tax_exc',
+        'price_without_reduction',
+        'price_without_reduction_without_tax',
+        'quantity_discounts',
+        'specific_prices',
+        'unit_price_ratio',
+        'unit_price_tax_excluded',
+        'unit_price_tax_included',
+        'wholesale_price',
+    ];
+
+    /**
      * @var ImageRetriever
      */
     protected $imageRetriever;
@@ -1168,14 +1223,31 @@ class ProductLazyArray extends AbstractLazyArray
             $this->product['nopackprice'] = null;
             $this->product['nopackprice_to_display'] = null;
         }
+
+        // Hidden prices must not reach the JSON of the presented product either
+        if (!$this->shouldShowPrice($settings, $this->product)) {
+            $this->product['has_discount'] = false;
+            foreach (self::HIDDEN_WHEN_PRICES_ARE_HIDDEN as $field) {
+                $this->product[$field] = null;
+            }
+            foreach (self::RAW_PRICES_HIDDEN_WHEN_PRICES_ARE_HIDDEN as $field) {
+                if (array_key_exists($field, $this->product)) {
+                    $this->product[$field] = null;
+                }
+            }
+        }
     }
 
     /**
-     * @return float
+     * @return float|null
      */
     #[LazyArrayAttribute(arrayAccess: true)]
     public function getRoundedDisplayPrice()
     {
+        if (null === $this->product['price_amount']) {
+            return null;
+        }
+
         return Tools::ps_round(
             $this->product['price_amount'],
             Context::getContext()->currency->precision
@@ -1504,11 +1576,15 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * Returns extra price associated with current combination, if provided
      *
-     * @return float
+     * @return float|null
      */
     #[LazyArrayAttribute(arrayAccess: true)]
     public function getAttributePrice()
     {
+        if (!$this->shouldShowPrice($this->settings, $this->product)) {
+            return null;
+        }
+
         if (!isset($this->product['attribute_price'])) {
             if (!empty($this->product['id_product_attribute'])) {
                 $this->product[
@@ -1705,6 +1781,17 @@ class ProductLazyArray extends AbstractLazyArray
 
         if (empty($this->product['show_quantities'])) {
             $whitelist = array_diff($whitelist, ['quantity', 'quantity_all_versions']);
+        }
+
+        if (!$this->shouldShowPrice($this->settings, $this->product)) {
+            $whitelist = array_diff($whitelist, [
+                'attribute_price',
+                'ecotax',
+                'price_tax_exc',
+                'price_without_reduction',
+                'quantity_discounts',
+                'specific_prices',
+            ]);
         }
 
         return $whitelist;

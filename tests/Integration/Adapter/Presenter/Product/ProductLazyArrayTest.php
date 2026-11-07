@@ -165,6 +165,104 @@ class ProductLazyArrayTest extends TestCase
     }
 
     /**
+     * @dataProvider providerHiddenPrices
+     */
+    public function testPricesAreEmptiedWhenTheyMustNotBeShown(bool $settingsShowPrices, int $productShowPrice): void
+    {
+        $this->setDefaultConfiguration();
+        $this->mockProductPresentationSettings->method('shouldShowPrice')->willReturn($settingsShowPrices);
+
+        $productLazyArray = new ProductLazyArray(
+            $this->mockProductPresentationSettings,
+            array_merge($this->baseProduct, [
+                'show_price' => $productShowPrice,
+                'price_tax_exc' => 10.0,
+                'price_without_reduction' => 12.0,
+                'specific_prices' => ['reduction' => '2.000000', 'reduction_type' => 'amount', 'reduction_tax' => '1'],
+                'quantity_discounts' => [['quantity' => 2]],
+                'ecotax' => 1.0,
+                'attribute_price' => 5.0,
+            ]),
+            $this->mockLanguage,
+            $this->mockImageRetriever,
+            $this->mockLink,
+            $this->mockPriceFormatter,
+            $this->mockProductColorsRetriever,
+            $this->mockTranslatorInterface,
+            $this->mockHookManager,
+            $this->mockConfiguration
+        );
+
+        foreach (['price', 'price_amount', 'regular_price', 'regular_price_amount',
+            'price_tax_included', 'price_tax_excluded', 'unit_price', 'nopackprice', 'nopackprice_to_display'] as $field) {
+            $this->assertNull($productLazyArray[$field], sprintf('"%s" still carries a price', $field));
+        }
+        $this->assertFalse($productLazyArray['has_discount']);
+        $this->assertNull($productLazyArray['rounded_display_price']);
+        $embedded = $productLazyArray['embedded_attributes'];
+        foreach (['attribute_price', 'ecotax', 'price_tax_exc', 'price_without_reduction', 'quantity_discounts', 'specific_prices'] as $field) {
+            $this->assertArrayNotHasKey($field, $embedded);
+        }
+        // the raw row is serialised with the product too
+        foreach (['attribute_price', 'ecotax', 'price_tax_exc', 'price_without_reduction', 'quantity_discounts', 'specific_prices'] as $field) {
+            $this->assertEmpty($productLazyArray[$field], sprintf('"%s" is still in the product', $field));
+        }
+    }
+
+    public function testTheCombinationPriceIsNotLoadedWhenPricesAreHidden(): void
+    {
+        $this->setDefaultConfiguration();
+        $this->mockProductPresentationSettings->method('shouldShowPrice')->willReturn(false);
+
+        $productLazyArray = new ProductLazyArray(
+            $this->mockProductPresentationSettings,
+            // combination 14 of the fixtures adds 20.00 to the product price
+            array_merge($this->baseProduct, ['show_price' => 1, 'id_product' => 3, 'id_product_attribute' => 14]),
+            $this->mockLanguage,
+            $this->mockImageRetriever,
+            $this->mockLink,
+            $this->mockPriceFormatter,
+            $this->mockProductColorsRetriever,
+            $this->mockTranslatorInterface,
+            $this->mockHookManager,
+            $this->mockConfiguration
+        );
+
+        $this->assertNull($productLazyArray['attribute_price']);
+    }
+
+    public static function providerHiddenPrices(): iterable
+    {
+        yield 'prices hidden by the settings' => [false, 1];
+        yield 'prices hidden on the product' => [true, 0];
+    }
+
+    public function testPricesAreKeptWhenTheyMayBeShown(): void
+    {
+        $this->setDefaultConfiguration();
+        $this->mockProductPresentationSettings->method('shouldShowPrice')->willReturn(true);
+
+        $productLazyArray = new ProductLazyArray(
+            $this->mockProductPresentationSettings,
+            // the per-product flag is the other half of the gate, baseProduct leaves it unset
+            array_merge($this->baseProduct, ['show_price' => 1]),
+            $this->mockLanguage,
+            $this->mockImageRetriever,
+            $this->mockLink,
+            $this->mockPriceFormatter,
+            $this->mockProductColorsRetriever,
+            $this->mockTranslatorInterface,
+            $this->mockHookManager,
+            $this->mockConfiguration
+        );
+
+        // the formatted strings run through the mocked PriceFormatter, so assert on the raw amounts
+        $this->assertNotNull($productLazyArray['price_amount']);
+        $this->assertNotNull($productLazyArray['regular_price_amount']);
+        $this->assertNotNull($productLazyArray['price_amount_tax_included']);
+    }
+
+    /**
      * @param array $product
      * @param string $availabilityMessage
      *
