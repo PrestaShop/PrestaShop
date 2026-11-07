@@ -47,9 +47,14 @@ if (isset($container) && $container instanceof Symfony\Component\DependencyInjec
     }
 
     $driver = 'array';
+    // WHY: the adapter, not the extension, decides whether a driver is usable - Symfony also
+    // requires memcached >= 3.1.6 and apc.enabled=1, and its adapters throw from their
+    // constructor when that is not met. Picking a driver on extension_loaded() alone makes
+    // every Symfony page fail to boot, including the one the merchant would need to turn the
+    // caching system back off.
     $cacheType = [
-        'CacheMemcached' => ['memcached'],
-        'CacheApc' => ['apcu'],
+        'CacheMemcached' => ['memcached' => Symfony\Component\Cache\Adapter\MemcachedAdapter::class],
+        'CacheApc' => ['apcu' => Symfony\Component\Cache\Adapter\ApcuAdapter::class],
     ];
     $adapters = [
         'array' => 'cache.adapter.array',
@@ -64,8 +69,8 @@ if (isset($container) && $container instanceof Symfony\Component\DependencyInjec
     )
         && true === $parameters['parameters']['ps_cache_enable']
     ) {
-        foreach ($cacheType[$parameters['parameters']['ps_caching']] as $type) {
-            if (extension_loaded($type)) {
+        foreach ($cacheType[$parameters['parameters']['ps_caching']] as $type => $adapterClass) {
+            if ($adapterClass::isSupported()) {
                 $driver = $type;
                 break;
             }
