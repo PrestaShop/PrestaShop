@@ -383,10 +383,15 @@ class CountryCore extends ObjectModel
      */
     public static function isNeedDniByCountryId($idCountry)
     {
-        return (bool) Db::getInstance()->getValue('
+        $key = 'Country::isNeedDniByCountryId_' . (int) $idCountry;
+        if (!Cache::isStored($key)) {
+            Cache::store($key, (bool) Db::getInstance()->getValue('
 			SELECT `need_identification_number`
 			FROM `' . _DB_PREFIX_ . 'country`
-			WHERE `id_country` = ' . (int) $idCountry);
+			WHERE `id_country` = ' . (int) $idCountry));
+        }
+
+        return Cache::retrieve($key);
     }
 
     /**

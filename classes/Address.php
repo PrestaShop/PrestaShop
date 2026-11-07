@@ -382,11 +382,7 @@ class AddressCore extends ObjectModel
      */
     public static function dniRequired($idCountry)
     {
-        return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-            'SELECT c.`need_identification_number` ' .
-            'FROM `' . _DB_PREFIX_ . 'country` c ' .
-            'WHERE c.`id_country` = ' . (int) $idCountry
-        );
+        return Country::isNeedDniByCountryId((int) $idCountry);
     }
 
     /**
