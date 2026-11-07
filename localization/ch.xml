@@ -9,9 +9,9 @@
 		<language iso_code="it" />
 	</languages>
 	<taxes>
-		<tax id="1" name="TVA CH 7.7%" rate="7.7" />
-		<tax id="2" name="TVA CH 3.7%" rate="3.7" />
-		<tax id="3" name="TVA CH 2.5%" rate="2.5" />
+		<tax id="1" name="TVA CH 8.1%" rate="8.1" />
+		<tax id="2" name="TVA CH 3.8%" rate="3.8" />
+		<tax id="3" name="TVA CH 2.6%" rate="2.6" />
 
 		<taxRulesGroup name="CH Standard Rate (7.7%)">
 			<taxRule iso_code_country="ch" id_tax="1" />
