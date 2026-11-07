@@ -60,3 +60,28 @@ Feature: Discount priority - Incompatible auto discounts
       | total_discount | -$15.00 |
       | total          | $92.00  |
 
+
+  Scenario: An automatic free gift and an incompatible automatic cart level discount settle on a single discount
+    Given there is a product in the catalog named "giftProduct" with a price of 25.0 and 1000 items in stock
+    And there is a product "gift_product_ref" with name "giftProduct"
+    When I create a "free_gift" discount "auto_free_gift" with following properties:
+      | name[en-US]  | Auto Free Gift      |
+      | active       | true                |
+      | valid_from   | 2025-01-01 10:00:00 |
+      | valid_to     | 2026-12-31 23:59:59 |
+      | gift_product | gift_product_ref    |
+    And I create a "cart_level" discount "auto_cart_percent" with following properties:
+      | name[en-US]       | Auto Cart Percent   |
+      | active            | true                |
+      | valid_from        | 2025-01-01 10:00:00 |
+      | valid_to          | 2026-12-31 23:59:59 |
+      | reduction_percent | 10.0                |
+    And I create an empty cart "cart_gift_incompat" for customer "testCustomer"
+    When I add 1 product "product1" to the cart "cart_gift_incompat"
+    Then cart "cart_gift_incompat" should have 1 cart rules applied
+    And discount "auto_cart_percent" is applied to my cart
+    And my cart "cart_gift_incompat" should have the following details:
+      | total_products | $100.00 |
+      | shipping       | $7.00   |
+      | total_discount | -$10.00 |
+      | total          | $97.00  |
