@@ -1,4 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order_state
+@restore-order-states-before-scenario
 @restore-order-states-after-feature
 Feature: OrderState
   Background:
@@ -123,3 +124,39 @@ Feature: OrderState
     Then the order state "order_state_1st" should have the following details:
       | name[en-US]     | The 1st Order State       |
       | name[fr-FR]     | Le 1er statut modifié     |
+
+  Scenario: Adding an order state that reuses an existing name is refused
+    When I add a new order state "order_state_duplicate" with the following details:
+      | name[en-US]     | The 1st Order State       |
+      | name[fr-FR]     | Le statut en double       |
+      | color           | #CDEF12                   |
+      | isLoggable      | 0                         |
+      | isInvoice       | 0                         |
+      | isHidden        | 0                         |
+      | hasSendMail     | 0                         |
+      | hasPdfInvoice   | 0                         |
+      | hasPdfDelivery  | 0                         |
+      | isShipped       | 0                         |
+      | isPaid          | 0                         |
+      | isDelivery      | 0                         |
+    Then I should get an error that the order state name is already used
+
+  Scenario: Renaming an order state to the name of another one is refused
+    When I update the order state "order_state_2nd" with the following details:
+      | name[en-US]     | The 1st Order State       |
+    Then I should get an error that the order state name is already used
+    And the order state "order_state_2nd" should have the following details:
+      | name[en-US]     | The 2nd Order State       |
+      | name[fr-FR]     | Le 2e statut de commande  |
+      | color           | #7890AB                   |
+      | hasSendMail     | 0                         |
+
+  Scenario: Saving an order state while keeping its own name is accepted
+    When I update the order state "order_state_1st" with the following details:
+      | name[en-US]     | The 1st Order State       |
+      | color           | #ABCDEF                   |
+    And the order state "order_state_1st" should have the following details:
+      | name[en-US]     | The 1st Order State       |
+      | name[fr-FR]     | Le 1er statut de commande |
+      | color           | #ABCDEF                   |
+      | hasSendMail     | 0                         |
