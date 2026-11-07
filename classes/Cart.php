@@ -812,6 +812,7 @@ class CartCore extends ObjectModel
         $cart_base_product_quantity = [];
         if (is_iterable($products)) {
             $customerGroupId = (int) (new Customer((int) $this->id_customer))->id_default_group;
+            SpecificPrice::prefetchCouldHaveSpecificPrice(array_column($products, 'id_product'));
             foreach ($products as $key => $product) {
                 $products_ids[] = $product['id_product'];
                 $pa_ids[] = $product['id_product_attribute'];

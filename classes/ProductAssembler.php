@@ -189,6 +189,7 @@ class ProductAssemblerCore
     public function assembleProducts(array $rawProducts)
     {
         $enrichedProducts = $this->addMissingProductFieldsForMultipleProducts($rawProducts);
+        SpecificPrice::prefetchCouldHaveSpecificPrice(array_column($enrichedProducts, 'id_product'));
 
         foreach ($enrichedProducts as &$product) {
             $product = Product::getProductProperties(
