@@ -25,13 +25,9 @@ abstract class AbstractCmsPageHandler extends AbstractObjectModelHandler
     /**
      * Gets cms object if it exists. If it does not exist it throws exceptions.
      *
-     * @param int $cmsId
-     *
-     * @return CMS
-     *
      * @throws CmsPageException
      */
-    protected function getCmsPageIfExistsById($cmsId)
+    protected function getCmsPageIfExistsById(int $cmsId): CMS
     {
         try {
             $cms = new CMS($cmsId);
@@ -49,11 +45,9 @@ abstract class AbstractCmsPageHandler extends AbstractObjectModelHandler
     /**
      * Checks whether cms page category exists by provided id.
      *
-     * @param int $cmsCategoryId
-     *
      * @throws CmsPageCategoryException
      */
-    protected function assertCmsCategoryExists($cmsCategoryId)
+    protected function assertCmsCategoryExists(int $cmsCategoryId): void
     {
         try {
             $cmsCategory = new CMSCategory($cmsCategoryId);
