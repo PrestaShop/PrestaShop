@@ -8,6 +8,8 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategor
 use PrestaShopBundle\Utils\Tree;
 
 /**
+ * @deprecated since 9.3 and will be removed in 10.0 - This controller was migrated in 9.3
+ *
  * @property Shop|null $object
  */
 class AdminShopControllerCore extends AdminController
@@ -145,6 +147,7 @@ class AdminShopControllerCore extends AdminController
                     }
 
                     $url['name'] = $title;
+                    $url['edit_url'] = $this->context->link->getAdminLink('AdminShopUrl', true, [], ['updateshop_url' => 1, 'id_shop_url' => $url['id_shop_url']]);
                     $data[$group_key][$shop_key]['urls'][$url['id_shop_url']] = $url;
                 }
             }
