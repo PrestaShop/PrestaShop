@@ -81,7 +81,7 @@ final class OrderAddPaymentConversionRateTest extends TestCase
         $order = $this->createOrder();
 
         $this->assertTrue($order->addOrderPayment(self::PAYMENT_AMOUNT));
-        $this->assertPaymentRate($order, self::ORDER_CONVERSION_RATE);
+        $this->assertPaymentRate($order, self::ORDER_CONVERSION_RATE, (int) $order->id_currency);
     }
 
     public function testItUsesTheHistoricalOrderRateForAnExplicitMatchingCurrency(): void
@@ -91,7 +91,7 @@ final class OrderAddPaymentConversionRateTest extends TestCase
         $currency->conversion_rate = 1.25;
 
         $this->assertTrue($order->addOrderPayment(self::PAYMENT_AMOUNT, null, null, $currency));
-        $this->assertPaymentRate($order, self::ORDER_CONVERSION_RATE);
+        $this->assertPaymentRate($order, self::ORDER_CONVERSION_RATE, (int) $order->id_currency);
     }
 
     public function testItUsesTheExplicitRateForAnotherCurrency(): void
@@ -107,7 +107,7 @@ final class OrderAddPaymentConversionRateTest extends TestCase
 
         try {
             $this->assertTrue($order->addOrderPayment(self::PAYMENT_AMOUNT, null, null, $currency));
-            $this->assertPaymentRate($order, 1.25);
+            $this->assertPaymentRate($order, 1.25, (int) $currency->id);
         } finally {
             $context->currency = $previousCurrency;
         }
@@ -119,8 +119,11 @@ final class OrderAddPaymentConversionRateTest extends TestCase
         $order->conversion_rate = 0;
         $this->assertTrue($order->update());
 
+        // Reload the order to test the database-hydrated conversion rate.
+        $order = new Order((int) $order->id);
+
         $this->assertTrue($order->addOrderPayment(self::PAYMENT_AMOUNT));
-        $this->assertPaymentRate($order, 1.0);
+        $this->assertPaymentRate($order, 1.0, (int) $order->id_currency);
     }
 
     private function createOrder(): Order
@@ -146,14 +149,15 @@ final class OrderAddPaymentConversionRateTest extends TestCase
         return $order;
     }
 
-    private function assertPaymentRate(Order $order, float $expected): void
+    private function assertPaymentRate(Order $order, float $expectedRate, int $expectedCurrencyId): void
     {
         $payments = $order->getOrderPaymentCollection();
         self::assertCount(1, $payments);
 
         foreach ($payments as $payment) {
             self::assertInstanceOf(OrderPayment::class, $payment);
-            self::assertSame($expected, (float) $payment->conversion_rate);
+            self::assertSame($expectedRate, (float) $payment->conversion_rate);
+            self::assertSame($expectedCurrencyId, (int) $payment->id_currency);
         }
     }
 
