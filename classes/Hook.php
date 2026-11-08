@@ -989,175 +989,129 @@ class HookCore extends ObjectModel
             }
         }
 
-        foreach ($module_list as $key => $hookRegistration) {
-            // If the caller provided a specific module ID for which ONLY this hook
-            // should be executed, we check if it matches.
-            if ($id_module && $id_module != $hookRegistration['id_module']) {
-                continue;
-            }
+        try {
+            foreach ($module_list as $key => $hookRegistration) {
+                // If the caller provided a specific module ID for which ONLY this hook
+                // should be executed, we check if it matches.
+                if ($id_module && $id_module != $hookRegistration['id_module']) {
+                    continue;
+                }
 
-            // If non native modules are disabled and this module is not a native one.
-            if (
-                (bool) $disable_non_native_modules
-                && Hook::$native_module
-                && count(Hook::$native_module)
-                && !in_array($hookRegistration['module'], Hook::$native_module)
-            ) {
-                continue;
-            }
+                // If non native modules are disabled and this module is not a native one.
+                if (
+                    (bool) $disable_non_native_modules
+                    && Hook::$native_module
+                    && count(Hook::$native_module)
+                    && !in_array($hookRegistration['module'], Hook::$native_module)
+                ) {
+                    continue;
+                }
 
-            $registeredHookId = $hookRegistration['id_hook'];
-            if ($registeredHookId === $id_hook) {
-                // The module is registered to the canonical (proper) hook name
-                $registeredHookName = $hook_name;
-            } else {
-                // The module is registered to an alias
-                $registeredHookName = static::getNameById(
-                    $hookRegistration['id_hook']
-                );
-
-                // We throw an error - aliases are deprecated.
-                trigger_error(
-                    sprintf(
-                        'The hook "%s" is deprecated, please use "%s" instead in module "%s".',
-                        $registeredHookName,
-                        $hook_name,
-                        $hookRegistration['module']
-                    ),
-                    E_USER_DEPRECATED
-                );
-            }
-
-            // Check conditions to execute the module
-            if ($check_exceptions) {
-                // First, we check controller exceptions configured in backoffice when setting up the hook
-                // The merchant can exclude certain hooks from certain controllers
-                $exceptions = Module::getExceptionsStatic(
-                    $hookRegistration['id_module'],
-                    $hookRegistration['id_hook']
-                );
-
-                $controller_obj = Context::getContext()->controller;
-                if ($controller_obj === null) {
-                    $controller = null;
+                $registeredHookId = $hookRegistration['id_hook'];
+                if ($registeredHookId === $id_hook) {
+                    // The module is registered to the canonical (proper) hook name
+                    $registeredHookName = $hook_name;
                 } else {
-                    $controller = isset($controller_obj->controller_name)
-                        ? $controller_obj->controller_name
-                        : $controller_obj->php_self;
+                    // The module is registered to an alias
+                    $registeredHookName = static::getNameById(
+                        $hookRegistration['id_hook']
+                    );
+
+                    // We throw an error - aliases are deprecated.
+                    trigger_error(
+                        sprintf(
+                            'The hook "%s" is deprecated, please use "%s" instead in module "%s".',
+                            $registeredHookName,
+                            $hook_name,
+                            $hookRegistration['module']
+                        ),
+                        E_USER_DEPRECATED
+                    );
                 }
 
-                // Check if current controller is a module controller and prefix it's name if needed
-                // to standardized format
-                if (
-                    isset($controller_obj->module)
-                    && Validate::isLoadedObject($controller_obj->module)
-                ) {
-                    $controller =
-                        'module-' .
-                        $controller_obj->module->name .
-                        '-' .
-                        $controller;
-                }
-
-                // If our controller is on the list of exceptions, nothing to do here
-                if (in_array($controller, $exceptions)) {
-                    continue;
-                }
-
-                // Backward compatibility of controller names
-                $matching_name = [
-                    'authentication' => 'auth',
-                ];
-                if (
-                    !is_null($controller)
-                    && isset($matching_name[$controller])
-                    && in_array($matching_name[$controller], $exceptions)
-                ) {
-                    continue;
-                }
-
-                /*
-                 * Next, we check employee permissions in backoffice - we check for 'view' permission on the given module.
-                 * We only do this for display hooks, other hooks are not concerned by this check and should be always executed.
-                 */
-                if (Hook::isDisplayHookName($registeredHookName)
-                    && Validate::isLoadedObject($context->employee)
-                    && !Module::getPermissionStatic(
+                // Check conditions to execute the module
+                if ($check_exceptions) {
+                    // First, we check controller exceptions configured in backoffice when setting up the hook
+                    // The merchant can exclude certain hooks from certain controllers
+                    $exceptions = Module::getExceptionsStatic(
                         $hookRegistration['id_module'],
-                        'view',
-                        $context->employee
-                    )
-                ) {
-                    continue;
-                }
-            }
+                        $hookRegistration['id_hook']
+                    );
 
-            // We check if this module is valid
-            if (
-                !($moduleInstance = Module::getInstanceByName(
-                    $hookRegistration['module']
-                ))
-            ) {
-                continue;
-            }
-
-            if (Hook::isHookCallableOn($moduleInstance, $registeredHookName)) {
-                $hook_args['altern'] = ++$altern;
-
-                // If this is a chain hook and it's not the first module to call,
-                // we will pass the response from the previous one as parameters.
-                if (0 !== $key && true === $chain) {
-                    $hook_args = $output;
-                }
-
-                $display = Hook::callHookOn(
-                    $moduleInstance,
-                    $registeredHookName,
-                    $hook_args
-                );
-
-                // Case 1 - each module response to different array key. We don't care about the response.
-                if ($array_return) {
-                    $output[$moduleInstance->name] = $display;
-                // Case 2 - chaining. Here, each module MUST return an array that will the next module receive as parameters.
-                } elseif (true === $chain) {
-                    $output = $display;
-                // Case 3 - classic display hook. Here we need to verify if the response is not an array.
-                } else {
-                    // If it's an array, we will disregard the response
-                    if (is_array($display)) {
-                        // And notify the developer in debug mode.
-                        if (_PS_MODE_DEV_) {
-                            trigger_error(
-                                sprintf(
-                                    'Module %s returned an array on hook %s. This is not allowed, the response must be joinable to a string.',
-                                    $moduleInstance->name,
-                                    $hook_name
-                                ),
-                                E_USER_NOTICE
-                            );
-                        }
+                    $controller_obj = Context::getContext()->controller;
+                    if ($controller_obj === null) {
+                        $controller = null;
                     } else {
-                        $output .= $display;
+                        $controller = isset($controller_obj->controller_name)
+                            ? $controller_obj->controller_name
+                            : $controller_obj->php_self;
+                    }
+
+                    // Check if current controller is a module controller and prefix it's name if needed
+                    // to standardized format
+                    if (
+                        isset($controller_obj->module)
+                        && Validate::isLoadedObject($controller_obj->module)
+                    ) {
+                        $controller =
+                            'module-' .
+                            $controller_obj->module->name .
+                            '-' .
+                            $controller;
+                    }
+
+                    // If our controller is on the list of exceptions, nothing to do here
+                    if (in_array($controller, $exceptions)) {
+                        continue;
+                    }
+
+                    // Backward compatibility of controller names
+                    $matching_name = [
+                        'authentication' => 'auth',
+                    ];
+                    if (
+                        !is_null($controller)
+                        && isset($matching_name[$controller])
+                        && in_array($matching_name[$controller], $exceptions)
+                    ) {
+                        continue;
+                    }
+
+                    /*
+                    * Next, we check employee permissions in backoffice - we check for 'view' permission on the given module.
+                    * We only do this for display hooks, other hooks are not concerned by this check and should be always executed.
+                    */
+                    if (Hook::isDisplayHookName($registeredHookName)
+                        && Validate::isLoadedObject($context->employee)
+                        && !Module::getPermissionStatic(
+                            $hookRegistration['id_module'],
+                            'view',
+                            $context->employee
+                        )
+                    ) {
+                        continue;
                     }
                 }
 
-                if ($isRegistryEnabled) {
-                    $hookRegistry->hookedByCallback(
-                        $moduleInstance,
-                        $hook_args,
-                        $hook_name
-                    );
+                // We check if this module is valid
+                if (
+                    !($moduleInstance = Module::getInstanceByName(
+                        $hookRegistration['module']
+                    ))
+                ) {
+                    continue;
                 }
-            } elseif (Hook::isDisplayHookName($registeredHookName)) {
-                if ($moduleInstance instanceof WidgetInterface) {
+
+                if (Hook::isHookCallableOn($moduleInstance, $registeredHookName)) {
+                    $hook_args['altern'] = ++$altern;
+
                     // If this is a chain hook and it's not the first module to call,
                     // we will pass the response from the previous one as parameters.
                     if (0 !== $key && true === $chain) {
                         $hook_args = $output;
                     }
 
-                    $display = Hook::coreRenderWidget(
+                    $display = Hook::callHookOn(
                         $moduleInstance,
                         $registeredHookName,
                         $hook_args
@@ -1188,17 +1142,66 @@ class HookCore extends ObjectModel
                             $output .= $display;
                         }
                     }
-                }
 
-                if ($isRegistryEnabled) {
-                    $hookRegistry->hookedByWidget($moduleInstance, $hook_args, $hook_name);
+                    if ($isRegistryEnabled) {
+                        $hookRegistry->hookedByCallback(
+                            $moduleInstance,
+                            $hook_args,
+                            $hook_name
+                        );
+                    }
+                } elseif (Hook::isDisplayHookName($registeredHookName)) {
+                    if ($moduleInstance instanceof WidgetInterface) {
+                        // If this is a chain hook and it's not the first module to call,
+                        // we will pass the response from the previous one as parameters.
+                        if (0 !== $key && true === $chain) {
+                            $hook_args = $output;
+                        }
+
+                        $display = Hook::coreRenderWidget(
+                            $moduleInstance,
+                            $registeredHookName,
+                            $hook_args
+                        );
+
+                        // Case 1 - each module response to different array key. We don't care about the response.
+                        if ($array_return) {
+                            $output[$moduleInstance->name] = $display;
+                        // Case 2 - chaining. Here, each module MUST return an array that will the next module receive as parameters.
+                        } elseif (true === $chain) {
+                            $output = $display;
+                        // Case 3 - classic display hook. Here we need to verify if the response is not an array.
+                        } else {
+                            // If it's an array, we will disregard the response
+                            if (is_array($display)) {
+                                // And notify the developer in debug mode.
+                                if (_PS_MODE_DEV_) {
+                                    trigger_error(
+                                        sprintf(
+                                            'Module %s returned an array on hook %s. This is not allowed, the response must be joinable to a string.',
+                                            $moduleInstance->name,
+                                            $hook_name
+                                        ),
+                                        E_USER_NOTICE
+                                    );
+                                }
+                            } else {
+                                $output .= $display;
+                            }
+                        }
+                    }
+
+                    if ($isRegistryEnabled) {
+                        $hookRegistry->hookedByWidget($moduleInstance, $hook_args, $hook_name);
+                    }
                 }
             }
-        }
-
-        if ($different_shop && isset($old_shop, $old_context, $shop->id)) {
-            $context->shop = $old_shop;
-            $context->shop->setContext($old_context, $old_context_id);
+        } finally {
+            // Always restore the original multistore context, even if a module throws.
+            if ($different_shop && isset($old_shop, $old_context, $shop->id)) {
+                $context->shop = $old_shop;
+                $context->shop->setContext($old_context, $old_context_id);
+            }
         }
 
         if (true === $chain) {

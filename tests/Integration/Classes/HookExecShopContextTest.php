@@ -16,6 +16,7 @@ use Module;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShopBundle\Entity\Shop;
 use PrestaShopBundle\Entity\ShopGroup;
+use RuntimeException;
 use Shop as LegacyShop;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Tests\Resources\DatabaseDump;
@@ -96,6 +97,38 @@ class HookExecShopContextTest extends KernelTestCase
         self::assertSame(1, LegacyShop::getContextShopGroupID());
         self::assertNull(LegacyShop::getContextShopID());
         self::assertSame(1, (int) Context::getContext()->shop->id);
+    }
+
+    public function testExecOnAnotherShopRestoresShopGroupContextWhenExecutionThrows(): void
+    {
+        LegacyShop::setContext(LegacyShop::CONTEXT_GROUP, 1);
+
+        $context = Context::getContext();
+        $originalController = $context->controller;
+
+        // Simulate an exception while Hook::exec() processes a registered module.
+        $context->controller = new class() {
+            public function __isset(string $name): bool
+            {
+                throw new RuntimeException('Simulated hook execution failure');
+            }
+        };
+
+        try {
+            try {
+                Hook::exec(self::HOOK_NAME, [], null, false, true, false, self::$secondShopId);
+                self::fail('Hook::exec() should have propagated the exception.');
+            } catch (RuntimeException $exception) {
+                self::assertSame('Simulated hook execution failure', $exception->getMessage());
+            }
+
+            self::assertSame(LegacyShop::CONTEXT_GROUP, LegacyShop::getContext());
+            self::assertSame(1, LegacyShop::getContextShopGroupID());
+            self::assertNull(LegacyShop::getContextShopID());
+            self::assertSame(1, (int) $context->shop->id);
+        } finally {
+            $context->controller = $originalController;
+        }
     }
 
     public function testExecOnAnotherShopRestoresShopContext(): void
