@@ -58,7 +58,7 @@ class ExtraPropertiesGridDefinitionModifier
         $filters = $definition->getFilters();
 
         foreach ($definitions as $extraDefinition) {
-            // H8: JSON fields have no meaningful grid representation — skip them.
+            // JSON fields have no meaningful grid representation — skip them.
             if (ExtraPropertyType::JSON === $extraDefinition->getType()) {
                 continue;
             }
@@ -102,7 +102,7 @@ class ExtraPropertiesGridDefinitionModifier
 
     protected function buildColumn(string $label, ExtraPropertyDefinition $definition): ColumnInterface
     {
-        // H8: column type is derived from the logical field type, not the form type override.
+        // Column type is derived from the logical field type, not the form type override.
         $columnId = $definition->getFieldName();
         $moduleName = $definition->getNormalizedModuleKey();
         $fieldName = $definition->getPropertyName();

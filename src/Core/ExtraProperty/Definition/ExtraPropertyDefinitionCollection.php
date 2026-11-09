@@ -98,6 +98,7 @@ final class ExtraPropertyDefinitionCollection implements Countable, IteratorAggr
      *
      * Pass null to get core (no-module) definitions.
      * Pass '_core' as a string alias for core fields.
+     * Unused by the core, kept as public API for modules.
      *
      * @param string|null $moduleName Module technical name, or null/'_core'/'' for core fields
      */
@@ -185,7 +186,7 @@ final class ExtraPropertyDefinitionCollection implements Countable, IteratorAggr
      * Returns a new collection containing only definitions associated with the given grid ID.
      *
      * A definition is included when any of its associated_grids entries targets $gridId,
-     * using the "gridId[.columnId[:before|after]]" format.
+     * using the "gridId[:columnId[:before|after]]" format.
      *
      * @param string $gridId Grid identifier (e.g. 'product', 'customer')
      */

@@ -201,7 +201,13 @@ abstract class AbstractFormCore implements FormInterface
 
             if (array_key_exists($field->getName(), $params)) {
                 // overwrite it if necessary
-                $field->setValue($params[$field->getName()]);
+                $value = $params[$field->getName()];
+                // Normalize editable text before validation. Passwords and non-text values
+                // (including hidden tokens and choice identifiers) must remain unchanged.
+                if (is_string($value) && in_array($field->getType(), ['text', 'email', 'tel', 'url', 'search', 'textarea'], true)) {
+                    $value = trim($value);
+                }
+                $field->setValue($value);
             } elseif ($field->getType() === 'checkbox') {
                 // checkboxes that are not submitted
                 // are interpreted as booleans switched off

@@ -49,7 +49,7 @@ class OrderShipmentCreator
             $orderCarrier = new OrderCarrier();
             $orderCarrier->id_order = (int) $order->id;
             $orderCarrier->id_carrier = $carrierId;
-            $orderCarrier->weight = (float) $productWeight[0];
+            $orderCarrier->weight = (float) array_sum($productWeight);
             $orderCarrier->shipping_cost_tax_excl = 0;
             $orderCarrier->shipping_cost_tax_incl = 0;
             $orderCarrier->add();
