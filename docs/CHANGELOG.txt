@@ -24,6 +24,38 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Changelog for PrestaShop 8
 
 ####################################
+#   v8.2.9 - (2026-10-28)
+####################################
+
+- Back Office:
+  - Bug fix:
+    - GHSA-fxq4-2mc8-99pr Only load translation files of installed modules and reject PHP archives in import uploads (by @nicosomb)
+    - GHSA-95w6-v2wq-cv8w Download theme archives from a URL into the cache directory (by @mattgoud)
+- Front Office:
+  - Bug fix:
+    - GHSA-fg9q-mm4c-h5xc Require the order secure key to download a customization file by reference (by @M0rgan01)
+- Core:
+  - Bug fix:
+    - Update ps_emailsubscription (by @jolelievre)
+    - #43444: Update psgdpr to 1.4.4 (by @nicosomb)
+    - GHSA-g6p7-cx52-hcrj Generate the password reset tokens with a CSPRNG (by @M0rgan01)
+    - GHSA-7q68-ch46-pxmc Keep extracted archives and installed themes inside their destination folder (by @nicosomb)
+    - GHSA-wrmc-gmx5-9hhc Keep attachment files inside the download directory (by @nicosomb)
+    - GHSA-99cp-c6mm-p7h5 Block corrupted SVG files uploaded through the FileManager and the logo uploader (by @Quetzacoalt91)
+    - GHSA-2676-hc74-gg7v Prevent duplicate orders from a single cart in concurrent checkouts (by @M0rgan01)
+    - GHSA-mgcf-mrg4-mcxv Require the order edit permission to add a product to an existing order (by @M0rgan01)
+    - GHSA-r246-6gw4-pj3p Take the cart rule quantity when the order validation checks it (by @mattgoud)
+    - GHSA-5p6p-mx64-96jf Always validate the mail template name before writing translation files (by @mattgoud)
+- Installer:
+  - Bug fix:
+    - GHSA-h2q4-7fp7-m5jp Fix dangerous unserialization in the installer session (by @clotairer)
+    - GHSA-8rxw-79mh-gmm5 Refuse to run the web installer on an already installed shop (by @mattgoud)
+- Web Services:
+  - Bug fix:
+    - GHSA-hjwq-7qvv-qxj4 Keep webservice record access within the shops a key is allowed on (by @M0rgan01)
+    - GHSA-3f36-4qv4-vfgh Keep webservice keys within the shops they are allowed on (by @M0rgan01)
+
+####################################
 #   v8.2.8 - (2026-08-12)
 ####################################
 

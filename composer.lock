@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d477c15f07de83536f10b3e9f4121bed",
+    "content-hash": "643e830e01578defe738ee880b9b00a9",
     "packages": [
         {
             "name": "api-platform/core",
@@ -6590,20 +6590,20 @@
         },
         {
             "name": "prestashop/ps_emailsubscription",
-            "version": "v2.8.2",
+            "version": "v3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_emailsubscription.git",
-                "reference": "ce4e159df07b75423abf6804938dddb51b37a1fa"
+                "reference": "0dc8168e5c058adb9e16a72f3bbdbb0b2b36145e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_emailsubscription/zipball/ce4e159df07b75423abf6804938dddb51b37a1fa",
-                "reference": "ce4e159df07b75423abf6804938dddb51b37a1fa",
+                "url": "https://api.github.com/repos/PrestaShop/ps_emailsubscription/zipball/0dc8168e5c058adb9e16a72f3bbdbb0b2b36145e",
+                "reference": "0dc8168e5c058adb9e16a72f3bbdbb0b2b36145e",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4"
+                "php": ">=7.1"
             },
             "require-dev": {
                 "prestashop/php-dev-tools": "^3.4"
@@ -6627,9 +6627,10 @@
             "description": "PrestaShop module ps_emailsubscription",
             "homepage": "https://github.com/PrestaShop/ps_emailsubscription",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_emailsubscription/tree/v2.8.2"
+                "issues": "https://github.com/PrestaShop/ps_emailsubscription/issues",
+                "source": "https://github.com/PrestaShop/ps_emailsubscription/tree/v3.0.1"
             },
-            "time": "2024-03-07T09:34:54+00:00"
+            "time": "2026-10-28T10:26:55+00:00"
         },
         {
             "name": "prestashop/ps_facetedsearch",

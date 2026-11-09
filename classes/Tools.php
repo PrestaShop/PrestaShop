@@ -34,9 +34,11 @@ use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
+use PrestaShop\PrestaShop\Core\Security\Exception\ZipExtractionException;
 use PrestaShop\PrestaShop\Core\Security\Hashing;
 use PrestaShop\PrestaShop\Core\Security\OpenSsl\OpenSSL;
 use PrestaShop\PrestaShop\Core\Security\PasswordGenerator;
+use PrestaShop\PrestaShop\Core\Security\SafeZipExtractor;
 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use PrestaShop\PrestaShop\Core\Util\String\StringModifier;
 use Symfony\Component\Filesystem\Filesystem;
@@ -2347,7 +2349,7 @@ class ToolsCore
      *
      * @param string $url the remote location
      *
-     * @return bool|string false if failure, else the local filename
+     * @return bool|string false if failure, else the path of the local file, in the sandbox folder of the cache directory
      */
     public static function createFileFromUrl($url)
     {
@@ -2362,8 +2364,18 @@ class ToolsCore
         if (!$remoteFile) {
             return false;
         }
-        $localFile = fopen(basename($url), 'wb');
+        $sandboxDir = _PS_CACHE_DIR_ . 'sandbox' . DIRECTORY_SEPARATOR;
+        if (!file_exists($sandboxDir) && !mkdir($sandboxDir, PsFileSystem::DEFAULT_MODE_FOLDER, true) && !is_dir($sandboxDir)) {
+            fclose($remoteFile);
+
+            return false;
+        }
+        // Unique name in the sandbox folder, the download never replaces an existing file
+        $localPath = $sandboxDir . uniqid('ps_download_', true) . '_' . basename($url);
+        $localFile = fopen($localPath, 'xb');
         if (!$localFile) {
+            fclose($remoteFile);
+
             return false;
         }
 
@@ -2375,7 +2387,7 @@ class ToolsCore
         fclose($remoteFile);
         fclose($localFile);
 
-        return basename($url);
+        return $localPath;
     }
 
     public static function simplexml_load_file($url, $class_name = null)
@@ -3551,7 +3563,7 @@ exit;
     }
 
     /**
-     * Extract a zip file to the given directory
+     * Extract a zip file to the given directory, only when all its entries stay inside it
      *
      * @param string $from_file
      * @param string $to_dir
@@ -3564,12 +3576,13 @@ exit;
             mkdir($to_dir, PsFileSystem::DEFAULT_MODE_FOLDER);
         }
 
-        $zip = new ZipArchive();
-        if ($zip->open($from_file) === true && $zip->extractTo($to_dir) && $zip->close()) {
-            return true;
+        try {
+            (new SafeZipExtractor())->extract($from_file, $to_dir);
+        } catch (ZipExtractionException $e) {
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     /**

@@ -491,6 +491,10 @@ class ThemeController extends AbstractAdminController
                 ThemeConstraintException::INVALID_DATA => $this->trans(
                         'Invalid data', 'Admin.Notifications.Error'
                 ),
+                ThemeConstraintException::CANNOT_DOWNLOAD_FROM_URL => $this->trans(
+                    'Cannot download the theme from the given URL. Please check the URL and try again.',
+                    'Admin.Design.Notification'
+                ),
             ],
         ];
     }
