@@ -9,6 +9,8 @@ namespace PrestaShopBundle\ApiPlatform\OpenApi\Factory;
 use ApiPlatform\JsonSchema\DefinitionNameFactoryInterface;
 use ApiPlatform\JsonSchema\ResourceMetadataTrait;
 use ApiPlatform\JsonSchema\Schema;
+use ApiPlatform\JsonSchema\SchemaFactory;
+use ApiPlatform\JsonSchema\SchemaFactoryInterface;
 use ApiPlatform\Metadata\CollectionOperationInterface;
 use ApiPlatform\Metadata\HttpOperation;
 use ApiPlatform\Metadata\Operation;
@@ -16,21 +18,25 @@ use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInter
 use ApiPlatform\Metadata\Resource\Factory\ResourceNameCollectionFactoryInterface;
 use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
 use ApiPlatform\OpenApi\Model\Components;
+use ApiPlatform\OpenApi\Model\MediaType;
 use ApiPlatform\OpenApi\Model\Operation as OpenApiOperation;
 use ApiPlatform\OpenApi\Model\Parameter;
 use ApiPlatform\OpenApi\Model\PathItem;
 use ApiPlatform\OpenApi\Model\Paths;
+use ApiPlatform\OpenApi\Model\RequestBody;
 use ApiPlatform\OpenApi\Model\Response;
 use ApiPlatform\OpenApi\Model\Server;
 use ApiPlatform\OpenApi\OpenApi;
 use ArrayObject;
 use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
+use PrestaShopBundle\ApiPlatform\ExceptionDescriptionTrait;
 use PrestaShopBundle\ApiPlatform\OpenApi\Adapter\SchemaAdapterChain;
 use PrestaShopBundle\ApiPlatform\OpenApi\FileUploadRequestBodyBuilder;
 use PrestaShopBundle\ApiPlatform\Provider\QueryListProvider;
 use ReflectionClass;
 use ReflectionNamedType;
 use ReflectionProperty;
+use Symfony\Component\HttpFoundation\Response as HttpResponse;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
@@ -46,9 +52,12 @@ use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
  *   - it handles multi parameters setters and split the parameters into a sub object like the Admin API expects
  *   - it detects LocalizedValue fields and adapt their format and example
  *   - it synchronizes the documentation with actual resource properties (removes undocumented fields)
+ *   - it documents the error responses mapped by the operations, the body of the DELETE operations and the list
+ *     answered by the write collection operations
  */
 class CQRSOpenApiFactory implements OpenApiFactoryInterface
 {
+    use ExceptionDescriptionTrait;
     use ResourceMetadataTrait;
 
     protected PropertyAccessorInterface $propertyAccessor;
@@ -64,6 +73,9 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
         protected readonly PropertyTypeExtractorInterface $propertyTypeExtractor,
         // No property promotion for this one since it's already defined in the ResourceMetadataTrait
         ResourceMetadataCollectionFactoryInterface $resourceMetadataFactory,
+        protected readonly SchemaFactoryInterface $schemaFactory,
+        /** @var string[] commands handled by an AbstractBulkCommandHandler */
+        protected readonly array $bulkCommands = [],
     ) {
         $this->resourceMetadataFactory = $resourceMetadataFactory;
         $this->propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
@@ -81,6 +93,7 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
         $integerUriVariablesByUri = [];
         $uploadedFilesByUri = [];
         $collectionsByUri = [];
+        $httpOperationsByUri = [];
         $adaptedClasses = [];
 
         foreach ($this->resourceNameCollectionFactory->create() as $resourceClass) {
@@ -106,6 +119,7 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
                         }
                     }
                     if ($operation instanceof HttpOperation && !empty($operation->getUriTemplate())) {
+                        $httpOperationsByUri[$operation->getUriTemplate()][strtolower($operation->getMethod())] = $operation;
                         $integerUriVariables = $this->getIntegerUriVariables($operation);
                         if (!empty($integerUriVariables)) {
                             $integerUriVariablesByUri[$operation->getUriTemplate()][strtolower($operation->getMethod())] = $integerUriVariables;
@@ -123,6 +137,10 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
                         if (!empty($uploadedFileProperties)) {
                             $uploadedFilesByUri[$operation->getUriTemplate()][strtolower($operation->getMethod())] = $uploadedFileProperties;
                         }
+                    }
+
+                    if ($operation instanceof HttpOperation && $this->requiresDeleteBody($operation)) {
+                        $this->buildInputSchema($parentOpenApi, $operation);
                     }
 
                     $definition = $this->getSchemaDefinition($parentOpenApi, $operation);
@@ -175,6 +193,16 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
 
                     if (isset($collectionsByUri[$path][$httpMethod])) {
                         $updatedOperation = $this->adaptCollectionOperation($updatedOperation, $collectionsByUri[$path][$httpMethod]);
+                    }
+
+                    if (isset($httpOperationsByUri[$path][$httpMethod])) {
+                        $updatedOperation = $this->adaptResponses($updatedOperation, $httpOperationsByUri[$path][$httpMethod]);
+                        if ('delete' === $httpMethod) {
+                            $updatedOperation = $this->adaptDeleteOperation($updatedOperation, $httpOperationsByUri[$path][$httpMethod], $parentOpenApi);
+                        }
+                        $updatedOperation = $this->adaptCollectionRequestBody($updatedOperation, $httpOperationsByUri[$path][$httpMethod]);
+                        $updatedOperation = $this->adaptCollectionCreateResponse($updatedOperation, $httpOperationsByUri[$path][$httpMethod]);
+                        $updatedOperation = $this->adaptCollectionNoContentResponse($updatedOperation, $httpOperationsByUri[$path][$httpMethod]);
                     }
 
                     // Add multishop context parameters if needed
@@ -293,6 +321,181 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
     }
 
     /**
+     * API Platform documents generic error responses (400 and 422 on writes, 404 on item routes). The statuses mapped by
+     * the exceptionToStatus of the operation (the resource one when the operation has none, like at runtime) are added,
+     * described by their exceptions (a response written by the resource is kept as is), the generic 404 is only kept
+     * when an exception is mapped to it, and the commands of a bulk handler document their 207 (some items failed).
+     */
+    protected function adaptResponses(OpenApiOperation $openApiOperation, HttpOperation $operation): OpenApiOperation
+    {
+        $exceptionsByStatus = [];
+        foreach ($operation->getExceptionToStatus() ?? [] as $exceptionClass => $status) {
+            $exceptionsByStatus[(int) $status][] = $this->getExceptionDescription($exceptionClass);
+        }
+
+        $responses = $openApiOperation->getResponses() ?? [];
+        $notFoundResponse = $responses[HttpResponse::HTTP_NOT_FOUND] ?? null;
+        if ($notFoundResponse instanceof Response && 'Resource not found' === $notFoundResponse->getDescription() && !isset($exceptionsByStatus[HttpResponse::HTTP_NOT_FOUND])) {
+            unset($responses[HttpResponse::HTTP_NOT_FOUND]);
+        }
+
+        foreach ($exceptionsByStatus as $status => $descriptions) {
+            $description = implode(', ', array_unique($descriptions));
+            $existingResponse = $responses[$status] ?? null;
+            if (!$existingResponse instanceof Response || in_array($existingResponse->getDescription(), ['', 'Resource not found'], true)) {
+                $responses[$status] = ($existingResponse instanceof Response ? $existingResponse : new Response())->withDescription($description);
+            } elseif (in_array($existingResponse->getDescription(), ['Invalid input', 'Unprocessable entity'], true)) {
+                $responses[$status] = $existingResponse->withDescription($existingResponse->getDescription() . ': ' . $description);
+            }
+            // A response written by the resource is kept as is
+        }
+
+        if (in_array($operation->getExtraProperties()['CQRSCommand'] ?? null, $this->bulkCommands, true)) {
+            $responses[HttpResponse::HTTP_MULTI_STATUS] = new Response('Some items could not be processed, each failed item is listed with its error');
+        }
+
+        uksort($responses, fn ($status1, $status2) => strcmp((string) $status1, (string) $status2));
+
+        return $openApiOperation->withResponses($responses);
+    }
+
+    /**
+     * API Platform documents neither a request body nor a response content on a DELETE operation: a DELETE that requires
+     * a body (allowEmptyBody: false, e.g. a bulk delete) documents its input, and a DELETE that answers the resource read
+     * back by its CQRSQuery documents its output.
+     */
+    protected function adaptDeleteOperation(OpenApiOperation $openApiOperation, HttpOperation $operation, OpenApi $openApi): OpenApiOperation
+    {
+        if (null === $openApiOperation->getRequestBody() && $this->requiresDeleteBody($operation)) {
+            $inputDefinitionName = $this->getSchemaDefinitionName($openApi, $operation, Schema::TYPE_INPUT);
+            if (null !== $inputDefinitionName) {
+                $openApiOperation = $openApiOperation->withRequestBody(new RequestBody(
+                    sprintf('The %s resource', $operation->getShortName()),
+                    $this->buildJsonContent($inputDefinitionName, false),
+                    true,
+                ));
+            }
+        }
+
+        $outputDefinitionName = $this->getSchemaDefinitionName($openApi, $operation, Schema::TYPE_OUTPUT);
+        $responses = $openApiOperation->getResponses() ?? [];
+        $successStatus = (string) ($operation->getStatus() ?? HttpResponse::HTTP_NO_CONTENT);
+        if (null !== $outputDefinitionName && ($responses[$successStatus] ?? null) instanceof Response && null === $responses[$successStatus]->getContent()) {
+            $responses[$successStatus] = $responses[$successStatus]->withContent(
+                $this->buildJsonContent($outputDefinitionName, $operation instanceof CollectionOperationInterface)
+            );
+            $openApiOperation = $openApiOperation->withResponses($responses);
+        }
+
+        return $openApiOperation;
+    }
+
+    /**
+     * API Platform documents the request body of a non-POST collection operation as a list of resources, while the
+     * body of a write collection operation (CQRSUpdateCollection, CQRSPartialUpdateCollection...) is one resource.
+     */
+    protected function adaptCollectionRequestBody(OpenApiOperation $openApiOperation, HttpOperation $operation): OpenApiOperation
+    {
+        $requestBody = $openApiOperation->getRequestBody();
+        if (!$operation instanceof CollectionOperationInterface || null === $requestBody || null === $requestBody->getContent()) {
+            return $openApiOperation;
+        }
+
+        $content = new ArrayObject();
+        foreach ($requestBody->getContent() as $mediaTypeName => $mediaType) {
+            $schema = $mediaType->getSchema();
+            if (null !== $schema && 'array' === ($schema['type'] ?? null) && isset($schema['items']['$ref'])) {
+                $mediaType = $mediaType->withSchema(new ArrayObject(['$ref' => $schema['items']['$ref']]));
+            }
+            $content[$mediaTypeName] = $mediaType;
+        }
+
+        return $openApiOperation->withRequestBody($requestBody->withContent($content));
+    }
+
+    /**
+     * API Platform documents the response of a POST collection operation as one resource, while a CQRSCreateCollection
+     * answers the list.
+     */
+    protected function adaptCollectionCreateResponse(OpenApiOperation $openApiOperation, HttpOperation $operation): OpenApiOperation
+    {
+        $successStatus = (string) ($operation->getStatus() ?? HttpResponse::HTTP_CREATED);
+        $response = $openApiOperation->getResponses()[$successStatus] ?? null;
+        if (!$operation instanceof CollectionOperationInterface || HttpOperation::METHOD_POST !== $operation->getMethod()
+            || !$response instanceof Response || null === $response->getContent()) {
+            return $openApiOperation;
+        }
+
+        $content = new ArrayObject();
+        foreach ($response->getContent() as $mediaTypeName => $mediaType) {
+            $schema = $mediaType->getSchema();
+            if (null !== $schema && isset($schema['$ref'])) {
+                $mediaType = $mediaType->withSchema(new ArrayObject(['type' => 'array', 'items' => ['$ref' => $schema['$ref']]]));
+            }
+            $content[$mediaTypeName] = $mediaType;
+        }
+        $responses = $openApiOperation->getResponses();
+        $responses[$successStatus] = $response->withContent($content);
+
+        return $openApiOperation->withResponses($responses);
+    }
+
+    /**
+     * A write collection operation without query answers the list returned by its command, or nothing when the command
+     * returns nothing.
+     */
+    protected function adaptCollectionNoContentResponse(OpenApiOperation $openApiOperation, HttpOperation $operation): OpenApiOperation
+    {
+        $responses = $openApiOperation->getResponses() ?? [];
+        if (!$operation instanceof CollectionOperationInterface || HttpOperation::METHOD_GET === $operation->getMethod()
+            || !empty($operation->getExtraProperties()['CQRSQuery']) || isset($responses[HttpResponse::HTTP_NO_CONTENT])) {
+            return $openApiOperation;
+        }
+
+        $responses[HttpResponse::HTTP_NO_CONTENT] = new Response('The endpoint returns nothing');
+        uksort($responses, fn ($status1, $status2) => strcmp((string) $status1, (string) $status2));
+
+        return $openApiOperation->withResponses($responses);
+    }
+
+    protected function requiresDeleteBody(HttpOperation $operation): bool
+    {
+        return HttpOperation::METHOD_DELETE === $operation->getMethod() && false === ($operation->getExtraProperties()['allowEmptyBody'] ?? true);
+    }
+
+    /**
+     * API Platform only builds the input schema of the POST, PUT and PATCH operations, unless it is forced.
+     */
+    protected function buildInputSchema(OpenApi $openApi, HttpOperation $operation): void
+    {
+        if (null === $operation->getClass()) {
+            return;
+        }
+
+        $schemas = $openApi->getComponents()->getSchemas();
+        $schema = new Schema(Schema::VERSION_OPENAPI);
+        $schema->setDefinitions($schemas);
+        $inputSchema = $this->schemaFactory->buildSchema($operation->getClass(), 'json', Schema::TYPE_INPUT, $operation, $schema, [SchemaFactory::FORCE_SUBSCHEMA => true]);
+        foreach ($inputSchema->getDefinitions() as $definitionName => $definition) {
+            if (!$schemas->offsetExists($definitionName)) {
+                $schemas[$definitionName] = $definition;
+            }
+        }
+    }
+
+    protected function buildJsonContent(string $definitionName, bool $isCollection): ArrayObject
+    {
+        $schema = ['$ref' => '#/components/schemas/' . $definitionName];
+        if ($isCollection) {
+            $schema = ['type' => 'array', 'items' => $schema];
+        }
+
+        return new ArrayObject([
+            'application/json' => new MediaType(new ArrayObject($schema)),
+        ]);
+    }
+
+    /**
      * Some schemas are generated but never referenced by the documented operations (value objects of the CQRS commands,
      * input of the operations only accepting multipart/form-data whose body is documented inline): they are removed.
      */
@@ -388,14 +591,8 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
 
     protected function getSchemaDefinition(OpenApi $openApi, Operation $operation): ?ArrayObject
     {
-        $inputClass = $this->findOutputClass($operation->getClass(), Schema::TYPE_INPUT, $operation, []);
-        if (null === $inputClass) {
-            return null;
-        }
-
-        // Build the operation name like SchemaFactory does so that we have the proper definition in the schema matching this operation
-        $operationSchemaDefinitionName = $this->definitionNameFactory->create($operation->getClass(), 'json', $inputClass, $operation, []);
-        if (!$openApi->getComponents()->getSchemas()->offsetExists($operationSchemaDefinitionName)) {
+        $operationSchemaDefinitionName = $this->getSchemaDefinitionName($openApi, $operation, Schema::TYPE_INPUT);
+        if (null === $operationSchemaDefinitionName) {
             return null;
         }
 
@@ -406,6 +603,20 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
         }
 
         return $definition;
+    }
+
+    protected function getSchemaDefinitionName(OpenApi $openApi, Operation $operation, string $type): ?string
+    {
+        $class = $this->findOutputClass($operation->getClass(), $type, $operation, []);
+        if (null === $class) {
+            return null;
+        }
+
+        // Build the operation name like SchemaFactory does so that we have the proper definition in the schema matching this operation
+        $serializerContext = Schema::TYPE_OUTPUT === $type ? ($operation->getNormalizationContext() ?? []) : [];
+        $definitionName = $this->definitionNameFactory->create($operation->getClass(), 'json', $class, $operation, $serializerContext);
+
+        return $openApi->getComponents()->getSchemas()->offsetExists($definitionName) ? $definitionName : null;
     }
 
     /**

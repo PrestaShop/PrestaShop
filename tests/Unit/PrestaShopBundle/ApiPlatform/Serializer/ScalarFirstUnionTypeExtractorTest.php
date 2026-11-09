@@ -12,17 +12,20 @@ namespace Tests\Unit\PrestaShopBundle\ApiPlatform\Serializer;
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShopBundle\ApiPlatform\Serializer\ApiResourceCollectionTypeExtractor;
 use PrestaShopBundle\ApiPlatform\Serializer\ScalarFirstUnionTypeExtractor;
+use Symfony\Component\PropertyInfo\Extractor\PhpStanExtractor;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
-use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
+use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 use Symfony\Component\PropertyInfo\Type;
+use Tests\Resources\ApiPlatform\Resources\TypedCollectionItem;
 
 class ScalarFirstUnionTypeExtractorTest extends TestCase
 {
     public function testScalarMembersComeBeforeClassMembersKeepingTheirRelativeOrder(): void
     {
         // PHP reflects "int|string|bool|DecimalNumber|null" with the class first.
-        $extractor = new ScalarFirstUnionTypeExtractor($this->reflectionReturning([
+        $extractor = new ScalarFirstUnionTypeExtractor($this->chainReturning([
             new Type(Type::BUILTIN_TYPE_OBJECT, true, DecimalNumber::class),
             new Type(Type::BUILTIN_TYPE_STRING, true),
             new Type(Type::BUILTIN_TYPE_INT, true),
@@ -40,7 +43,7 @@ class ScalarFirstUnionTypeExtractorTest extends TestCase
 
     public function testSeveralClassMembersKeepTheirRelativeOrder(): void
     {
-        $extractor = new ScalarFirstUnionTypeExtractor($this->reflectionReturning([
+        $extractor = new ScalarFirstUnionTypeExtractor($this->chainReturning([
             new Type(Type::BUILTIN_TYPE_OBJECT, false, DecimalNumber::class),
             new Type(Type::BUILTIN_TYPE_OBJECT, false, DateTimeImmutable::class),
             new Type(Type::BUILTIN_TYPE_STRING, false),
@@ -54,13 +57,13 @@ class ScalarFirstUnionTypeExtractorTest extends TestCase
     }
 
     /**
-     * Anything that needs no reordering is left to the rest of the property_info chain.
+     * Anything that needs no reordering is the answer of the decorated chain, unchanged.
      *
      * @dataProvider nothingToReorderProvider
      */
-    public function testStaysSilentWhenThereIsNothingToReorder(?array $reflected): void
+    public function testReturnsTheChainAnswerWhenThereIsNothingToReorder(?array $chainTypes): void
     {
-        $this->assertNull((new ScalarFirstUnionTypeExtractor($this->reflectionReturning($reflected)))->getTypes('Foo', 'bar'));
+        $this->assertSame($chainTypes, (new ScalarFirstUnionTypeExtractor($this->chainReturning($chainTypes)))->getTypes('Foo', 'bar'));
     }
 
     public static function nothingToReorderProvider(): iterable
@@ -91,7 +94,7 @@ class ScalarFirstUnionTypeExtractorTest extends TestCase
         $reflected = (new ReflectionExtractor())->getTypes($object::class, 'value');
         $this->assertSame(Type::BUILTIN_TYPE_OBJECT, $reflected[0]->getBuiltinType(), 'PHP reflects the class member first');
 
-        $types = (new ScalarFirstUnionTypeExtractor(new ReflectionExtractor()))->getTypes($object::class, 'value');
+        $types = (new ScalarFirstUnionTypeExtractor($this->realChain()))->getTypes($object::class, 'value');
         $this->assertSame(
             [Type::BUILTIN_TYPE_STRING, Type::BUILTIN_TYPE_INT, Type::BUILTIN_TYPE_BOOL, Type::BUILTIN_TYPE_OBJECT],
             array_map(static fn (Type $type): string => $type->getBuiltinType(), $types)
@@ -99,11 +102,40 @@ class ScalarFirstUnionTypeExtractorTest extends TestCase
     }
 
     /**
+     * The item type read from the PHPDoc by an extractor of the chain is kept while the union is reordered.
+     */
+    public function testKeepsTheCollectionValueTypeOfTheChain(): void
+    {
+        $types = (new ScalarFirstUnionTypeExtractor($this->realChain()))->getTypes(TypedCollectionItem::class, 'values');
+
+        $this->assertSame(
+            [Type::BUILTIN_TYPE_ARRAY, Type::BUILTIN_TYPE_OBJECT],
+            array_map(static fn (Type $type): string => $type->getBuiltinType(), $types)
+        );
+        $this->assertTrue($types[0]->isCollection());
+        $this->assertSame(Type::BUILTIN_TYPE_STRING, $types[0]->getCollectionValueTypes()[0]->getBuiltinType());
+        $this->assertSame(DecimalNumber::class, $types[1]->getClassName());
+    }
+
+    private function realChain(): PropertyInfoExtractor
+    {
+        $reflectionExtractor = new ReflectionExtractor();
+
+        return new PropertyInfoExtractor(
+            [$reflectionExtractor],
+            [new ApiResourceCollectionTypeExtractor(new PhpStanExtractor()), $reflectionExtractor],
+            [],
+            [$reflectionExtractor],
+            [$reflectionExtractor],
+        );
+    }
+
+    /**
      * @param list<Type>|null $types
      */
-    private function reflectionReturning(?array $types): PropertyTypeExtractorInterface
+    private function chainReturning(?array $types): PropertyInfoExtractor
     {
-        $extractor = $this->createMock(PropertyTypeExtractorInterface::class);
+        $extractor = $this->createMock(PropertyInfoExtractor::class);
         $extractor->method('getTypes')->willReturn($types);
 
         return $extractor;
