@@ -146,6 +146,17 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Given /^Shop group "(.+)" (shares|does not share) its customers$/
+     */
+    public function setCustomerShareForGroup(string $reference, string $share): void
+    {
+        $shopGroup = new ShopGroup((int) $this->getSharedStorage()->get($reference));
+        $shopGroup->share_customer = 'shares' === $share;
+        $shopGroup->update();
+        Shop::cacheShops(true);
+    }
+
+    /**
      * @Given /^I copy "(.+)" shop data from "(.+)" to "(.+)"$/
      *
      * @param string $what
