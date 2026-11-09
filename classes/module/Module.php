@@ -14,6 +14,7 @@ use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
 use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyRegistryInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyException;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
@@ -1322,6 +1323,44 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         return true;
+    }
+
+    /**
+     * Unregister every extra-property definition this module registered, keeping the stored values.
+     *
+     * WHY: called from the failed-install rollback. The module is no longer installed, so it can no
+     * longer be uninstalled to run its own cleanup, yet a module-owned definition left behind is still
+     * served to the product grid, the API and the front office and cannot be deleted from the BO
+     * registry - worse than an orphaned module table. dropData stays false so values kept from an
+     * earlier installation are not destroyed.
+     *
+     * @return bool false if a definition could not be unregistered, the reasons being added to the
+     *              module errors
+     */
+    public function uninstallExtraProperties(): bool
+    {
+        // No context means no reachable container (for example during installation, where
+        // getContainer() would call ContainerFinder with a null context and throw a TypeError that
+        // Module::get() does not catch). Extra properties can only have been registered through the
+        // container, so none exist to clean up.
+        if (empty($this->name) || $this->context === null) {
+            return true;
+        }
+
+        /** @var ExtraPropertyDefinitionRepositoryInterface|null $repository */
+        $repository = $this->get(ExtraPropertyDefinitionRepositoryInterface::class);
+        if ($repository === null) {
+            return true;
+        }
+
+        $success = true;
+        foreach ($repository->getAllDefinitions() as $definition) {
+            if ($definition->getModuleName() === $this->name) {
+                $success = $this->unregisterExtraProperty($definition, false) && $success;
+            }
+        }
+
+        return $success;
     }
 
     /**

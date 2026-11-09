@@ -151,6 +151,11 @@ class ModuleManager implements ModuleManagerInterface
         // and only ever removes overrides this module is the author of.
         $instance->uninstallOverrides();
         $instance->uninstallCoreRegistration();
+        // WHY: an extra-property definition the failed install() registered is unlike an orphaned
+        // module table - it stays served to the grid, the API and the front office and cannot be
+        // removed from the BO, because the module is no longer installed to run its own uninstall.
+        // Values kept from an earlier installation are preserved (no column is dropped).
+        $instance->uninstallExtraProperties();
     }
 
     public function postInstall(string $name): bool
