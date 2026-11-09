@@ -7,6 +7,11 @@ services:
     arguments:
       - '%kernel.project_dir%/app/Resources/security/.htaccess.dist'
 
+  PrestaShop\PrestaShop\Core\Security\SafeZipExtractor:
+    public: false
+    arguments:
+      $sandboxPath: '%prestashop.legacy_cache_dir%sandbox'
+
   PrestaShop\PrestaShop\Core\Security\AccessCheckerInterface:
     alias: 'PrestaShop\PrestaShop\Adapter\Security\Access'
     public: false
@@ -19,3 +24,7 @@ services:
     autowire: true
     arguments:
       $authorizationServers: !tagged_iterator core.oauth2.authorization_server
+
+  PrestaShop\PrestaShop\Core\Security\OAuth2\ApiClientScopeDelegationValidator:
+    public: false
+    autowire: true

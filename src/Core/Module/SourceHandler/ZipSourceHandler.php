@@ -9,6 +9,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Module\SourceHandler;
 
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorException;
+use PrestaShop\PrestaShop\Core\Security\Exception\ZipExtractionException;
+use PrestaShop\PrestaShop\Core\Security\SafeZipExtractor;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use ZipArchive;
 
@@ -22,7 +24,7 @@ class ZipSourceHandler implements SourceHandlerInterface
         'application/x-tgz',
     ];
 
-    private const MODULE_REGEX = '/^(.*)\/\1\.php$/i'; // module_name/module_name.php
+    private const MODULE_REGEX = '/^([a-zA-Z0-9_-]+)\/\1\.php$/i'; // module_name/module_name.php
 
     /** @var string */
     protected $modulePath;
@@ -30,10 +32,14 @@ class ZipSourceHandler implements SourceHandlerInterface
     /** @var TranslatorInterface */
     protected $translator;
 
-    public function __construct(string $modulePath, TranslatorInterface $translator)
+    /** @var SafeZipExtractor */
+    protected $zipExtractor;
+
+    public function __construct(string $modulePath, TranslatorInterface $translator, ?SafeZipExtractor $zipExtractor = null)
     {
         $this->modulePath = rtrim($modulePath, '/') . '/';
         $this->translator = $translator;
+        $this->zipExtractor = $zipExtractor ?? new SafeZipExtractor();
     }
 
     public function canHandle($source): bool
@@ -64,19 +70,40 @@ class ZipSourceHandler implements SourceHandlerInterface
         );
     }
 
+    /**
+     * @throws ModuleErrorException
+     */
     public function handle(string $source): void
     {
-        $zip = new ZipArchive();
-        if ($zip->open($source) !== true || !$zip->extractTo($this->modulePath) || !$zip->close()) {
+        $moduleName = $this->getModuleName($source);
+
+        try {
+            // Only the module folder is installed: nothing else from the archive reaches the modules directory
+            $this->zipExtractor->extract($source, $this->modulePath, $moduleName);
+        } catch (ZipExtractionException $e) {
+            if ($e->isInvalidArchive()) {
+                throw new ModuleErrorException(
+                    $this->translator->trans(
+                        'This file does not seem to be a valid module zip',
+                        [],
+                        'Admin.Modules.Notification'
+                    ),
+                    0,
+                    $e
+                );
+            }
+
             throw new ModuleErrorException(
                 $this->translator->trans(
                     'Cannot extract module in %path%. %error%',
                     [
                         '%path%' => $this->modulePath,
-                        '%error%' => @$zip->getStatusString() ?: '', // Since php 8.0 getStatusString cannot return false nor a warning
+                        '%error%' => '',
                     ],
                     'Admin.Modules.Notification'
-                )
+                ),
+                0,
+                $e
             );
         }
     }

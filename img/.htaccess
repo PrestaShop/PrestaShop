@@ -14,3 +14,12 @@
         Require all granted
     </Files>
 </IfModule>
+
+# Prevent SVG files from rendering on the shop origin when opened directly
+<IfModule mod_headers.c>
+    <FilesMatch "(?i)\.svg$">
+        Header set Content-Security-Policy "script-src 'none'"
+        Header set Content-Disposition "attachment"
+        Header set X-Content-Type-Options "nosniff"
+    </FilesMatch>
+</IfModule>

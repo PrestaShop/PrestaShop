@@ -1473,9 +1473,9 @@ class AdminTranslationsControllerCore extends AdminController
                             throw new PrestaShopException($this->trans('Invalid module name "%module%"', ['%module%' => Tools::safeOutput($module_name)], 'Admin.International.Notification'));
                         }
                         $mail_name = substr($mail_name, $module_name_pipe_pos + 1);
-                        if (!Validate::isTplName($mail_name)) {
-                            throw new PrestaShopException($this->trans('Invalid mail name "%mail%"', ['%mail%' => Tools::safeOutput($mail_name)], 'Admin.International.Notification'));
-                        }
+                    }
+                    if (!Validate::isTplName($mail_name)) {
+                        throw new PrestaShopException($this->trans('Invalid mail name "%mail%"', ['%mail%' => Tools::safeOutput($mail_name)], 'Admin.International.Notification'));
                     }
 
                     if ($type_content == 'html') {
@@ -2774,9 +2774,11 @@ class AdminTranslationsControllerCore extends AdminController
     {
         $array_files = [];
         $initial_root_dir = $root_dir;
+        $installed_modules = $this->getListModules();
         foreach ($modules as $module) {
             $root_dir = $initial_root_dir;
-            if (isset($module[0]) && $module[0] == '.') {
+            // Only installed modules can have their translation files loaded
+            if (!in_array($module, $installed_modules, true)) {
                 continue;
             }
 

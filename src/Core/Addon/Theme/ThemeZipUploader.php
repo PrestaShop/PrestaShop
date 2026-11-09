@@ -36,17 +36,17 @@ final class ThemeZipUploader implements ThemeUploaderInterface
         $this->assertThemeWasUploadedWithoutErrors($uploadedTheme);
         $this->assertUploadedFileIsZip($uploadedTheme);
 
-        $themesDir = $this->configuration->get('_PS_ALL_THEMES_DIR_');
-        $destination = $themesDir . $uploadedTheme->getClientOriginalName();
-
-        if (!preg_match('/^[a-zA-Z0-9_.-]+$/', $uploadedTheme->getClientOriginalName())) {
-            $destination = $themesDir . sha1_file($uploadedTheme->getPathname()) . '.zip';
+        $themesDirectory = $this->configuration->get('_PS_ALL_THEMES_DIR_');
+        $contentHash = sha1_file($uploadedTheme->getPathname());
+        if (!is_string($themesDirectory) || '' === $themesDirectory || false === $contentHash) {
+            throw new ThemeUploadException('The uploaded theme cannot be stored.', ThemeUploadException::FAILED_TO_MOVE_FILE);
         }
 
-        move_uploaded_file(
-            $uploadedTheme->getPathname(),
-            $destination
-        );
+        // The stored name never comes from the client: always a .zip named after its content
+        $destination = $themesDirectory . $contentHash . '.zip';
+        if (!move_uploaded_file($uploadedTheme->getPathname(), $destination)) {
+            throw new ThemeUploadException('The uploaded theme cannot be moved to the themes folder.', ThemeUploadException::FAILED_TO_MOVE_FILE);
+        }
 
         return $destination;
     }

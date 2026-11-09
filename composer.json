@@ -26,7 +26,6 @@
         "ext-openssl": "*",
         "ext-simplexml": "*",
         "ext-zip": "*",
-        "api-platform/core": "^3.4",
         "beberlei/doctrineextensions": "^1.0",
         "bjeavons/zxcvbn-php": "^1.4",
         "composer/ca-bundle": "^1.0",
@@ -56,6 +55,7 @@
         "phpdocumentor/type-resolver": "^2.1",
         "phpoffice/phpspreadsheet": "^1.30.7",
         "phpstan/phpdoc-parser": "^2.3",
+        "prestashop/api-platform-core": "^3.4.18",
         "prestashop/autoload": "^1.0.2",
         "prestashop/blockreassurance": "^6",
         "prestashop/blockwishlist": "^4.0",
@@ -210,6 +210,10 @@
         "vincentlanglet/twig-cs-fixer": "^3.1"
     },
     "repositories": {
+        "api-platform-core": {
+            "type": "vcs",
+            "url": "https://github.com/PrestaShop/api-platform-core"
+        },
         "php-sql-parser": {
             "type": "vcs",
             "url": "https://github.com/PrestaShop/PHP-SQL-Parser"

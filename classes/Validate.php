@@ -568,6 +568,78 @@ class ValidateCore
     }
 
     /**
+     * Check for SVG file validity (no XSS please !).
+     *
+     * Browsers parse SVG files as XML: entities, character references and namespace prefixes can hide
+     * a script from isCleanHtml(), so the parsed document is checked as well.
+     *
+     * @param string $svg SVG content to validate
+     *
+     * @return bool Validity is ok or not
+     */
+    public static function isCleanSVG($svg)
+    {
+        if (!is_string($svg) || $svg === '' || !self::isCleanHtml($svg)) {
+            return false;
+        }
+
+        $document = new DOMDocument();
+        $useInternalErrors = libxml_use_internal_errors(true);
+        try {
+            // Parsed first without expanding entities: nothing is loaded, and the DTD is read once decoded (UTF-16 included) like browsers do
+            if (!$document->loadXML($svg, LIBXML_NONET)) {
+                return false;
+            }
+
+            // Only internal entities with a literal value are allowed, as Illustrator uses them for namespaces.
+            // Attribute defaults (<!ATTLIST>) are applied by browsers but not added by DOMDocument,
+            // and external or parameter entities would be loaded when expanding entities below.
+            if ($document->doctype !== null) {
+                $declarations = preg_replace('/<!ENTITY\s+[^\s%>]+\s+("[^"]*"|\'[^\']*\')\s*>|<!--.*?-->/s', '', (string) $document->doctype->internalSubset);
+                if (trim($declarations) !== '') {
+                    return false;
+                }
+            }
+
+            // Internal entities are expanded like browsers do, so that the checks below see the actual elements and attributes
+            if (!$document->loadXML($svg, LIBXML_NOENT | LIBXML_NONET)) {
+                return false;
+            }
+        } finally {
+            libxml_clear_errors();
+            libxml_use_internal_errors($useInternalErrors);
+        }
+
+        $xpath = new DOMXPath($document);
+        // XSLT stylesheets can build a script from strings
+        if ($xpath->query('//processing-instruction("xml-stylesheet")')->length > 0) {
+            return false;
+        }
+
+        foreach ($xpath->query('//*') as $element) {
+            $elementName = strtolower($element->localName);
+            // Namespace prefixes (<svg:script>) hide these elements from isCleanHtml()
+            if (in_array($elementName, ['embed', 'form', 'frame', 'iframe', 'input', 'object', 'script'])) {
+                return false;
+            }
+
+            foreach ($element->attributes as $attribute) {
+                $attributeName = strtolower($attribute->localName);
+                // References are decoded in values, and browsers ignore whitespaces in URL schemes (java&#9;script:)
+                $value = strtolower(preg_replace('/[\x00-\x20]+/', '', $attribute->value));
+                if (strpos($attributeName, 'on') === 0
+                    || strpos($value, 'script:') !== false
+                    || ($elementName === 'use' && $attributeName === 'href' && strpos($value, 'data:') === 0)
+                ) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Check for product reference validity.
      *
      * @param string $reference Product reference to validate

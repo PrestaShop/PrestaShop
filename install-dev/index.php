@@ -23,6 +23,13 @@ if (
 require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'init.php';
 require_once(__DIR__).DIRECTORY_SEPARATOR.'autoload.php';
 
+// The web installer only runs on a shop that is not installed yet, or while its own installation is running
+$installationState = new PrestaShopBundle\Install\InstallationState(_PS_CORE_DIR_ . '/app/config/parameters.php', PS_INSTALLATION_LOCK_FILE);
+if ($installationState->isInstalled()) {
+    http_response_code(409);
+    exit('PrestaShop is already installed. To install it again, delete the app/config/parameters.php file first.');
+}
+
 define('_PS_APP_ID_', AdminKernel::APP_ID);
 PrestaShop\PrestaShop\Core\Util\CacheClearLocker::waitUntilUnlocked(_PS_ENV_, _PS_APP_ID_);
 
