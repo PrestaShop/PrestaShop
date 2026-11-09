@@ -14,6 +14,7 @@ use DateTime;
 use Gender;
 use Group;
 use Order;
+use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleHtmlAuthorizationChecker;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
@@ -31,7 +32,7 @@ use Validate;
  * @internal
  */
 #[AsQueryHandler]
-final class GetCartForViewingHandler implements GetCartForViewingHandlerInterface
+final class GetCartForViewingHandler extends AbstractCartHandler implements GetCartForViewingHandlerInterface
 {
     public function __construct(
         private ImageManager $imageManager,
@@ -270,17 +271,21 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
     private function getCartRulesForView(Cart $cart)
     {
         $cartRules = $cart->getCartRules();
+        $calculatedDiscounts = $this->getCalculatedCartRuleDiscounts($cart);
         $cartRulesView = [];
 
         $cartCurrency = new Currency($cart->id_currency);
 
         foreach ($cartRules as $cartRule) {
+            $value = isset($calculatedDiscounts[(int) $cartRule['id_cart_rule']])
+                ? $calculatedDiscounts[(int) $cartRule['id_cart_rule']]->getTaxIncluded()
+                : $cartRule['value_real'];
             $cartRulesView[] = [
                 'id' => $cartRule['id_cart_rule'],
                 'name' => $cartRule['name'],
                 'is_free_shipping' => !$cartRule['value_real'] && $cartRule['free_shipping'],
                 'formatted_value' => $this->locale->formatPrice(
-                    $cartRule['value_real'],
+                    $value,
                     $cartCurrency->iso_code
                 ),
             ];
