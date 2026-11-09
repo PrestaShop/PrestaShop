@@ -274,9 +274,9 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
         }
 
         // Physical file location
-        $file = _PS_DOWNLOAD_DIR_ . $attachment->file;
+        $file = $attachment->getFilePath();
         // Check if file exists
-        if (!file_exists($file)) {
+        if (null === $file || !file_exists($file)) {
             throw new WebserviceException(
                 sprintf(
                     'Unable to load the attachment file for attachment %d',
@@ -332,8 +332,9 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
 
         try {
             $file = $uploader->upload($fileToUpload);
-            if (!empty($attachment->id)) {
-                unlink(_PS_DOWNLOAD_DIR_ . $attachment->file);
+            $oldFilePath = $attachment->getFilePath();
+            if (!empty($attachment->id) && null !== $oldFilePath) {
+                unlink($oldFilePath);
             }
 
             $defaultLanguage = Configuration::get('PS_LANG_DEFAULT');

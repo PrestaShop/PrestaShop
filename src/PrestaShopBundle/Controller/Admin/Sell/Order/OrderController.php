@@ -705,7 +705,7 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
      *
      * @param int $orderId
      * @param Request $request

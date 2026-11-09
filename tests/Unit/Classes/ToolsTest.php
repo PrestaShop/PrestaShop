@@ -29,6 +29,8 @@ namespace Tests\Unit\Classes;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
 use ReflectionParameter;
+use Symfony\Component\Filesystem\Filesystem;
+use Tests\Resources\FakeHttpStreamWrapper;
 use Tests\Resources\TestCase\ExtendedTestCaseMethodsTrait;
 use Tools;
 
@@ -1289,5 +1291,28 @@ class ToolsTest extends TestCase
         $this->assertTrue($method->isPublic());
         $this->assertTrue($method->isStatic());
         $this->assertSame(2, $method->getNumberOfParameters());
+    }
+
+    public function testCreateFileFromUrlWritesIntoTheCacheDirectory(): void
+    {
+        $fileName = uniqid('archive_') . '.zip';
+        (new Filesystem())->mkdir(_PS_CACHE_DIR_);
+
+        FakeHttpStreamWrapper::register('archive content');
+        try {
+            $localFile = Tools::createFileFromUrl('http://example.com/' . $fileName);
+        } finally {
+            FakeHttpStreamWrapper::unregister();
+        }
+
+        try {
+            $this->assertIsString($localFile);
+            $this->assertStringStartsWith(_PS_CACHE_DIR_ . 'sandbox' . DIRECTORY_SEPARATOR, $localFile);
+            $this->assertSame('archive content', file_get_contents($localFile));
+            $this->assertFalse(file_exists($fileName));
+        } finally {
+            @unlink($localFile);
+            @unlink($fileName);
+        }
     }
 }

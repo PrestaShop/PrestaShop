@@ -280,23 +280,32 @@ class OrderConfirmationControllerCore extends FrontController
         }
 
         $order = new PaymentFree();
-        $order->validateOrder(
-            $cart->id,
-            (int) Configuration::get('PS_OS_PAYMENT'),
-            0,
-            $this->trans('Free order', [], 'Admin.Orderscustomers.Feature'),
-            null,
-            [],
-            null,
-            false,
-            $cart->secure_key
-        );
+        try {
+            $order->validateOrder(
+                $cart->id,
+                (int) Configuration::get('PS_OS_PAYMENT'),
+                0,
+                $this->trans('Free order', [], 'Admin.Orderscustomers.Feature'),
+                null,
+                [],
+                null,
+                false,
+                $cart->secure_key
+            );
+            $orderId = (int) $order->currentOrder;
+        } catch (PrestaShopException $e) {
+            // A concurrent request may have placed the order meanwhile: show that confirmation instead of failing
+            $orderId = (int) Order::getIdByCartId((int) $cart->id);
+            if ($orderId === 0) {
+                throw $e;
+            }
+        }
 
         // redirect back to us with rest of the data
         // note the id_module parameter with value -1
         // it acts as a marker for the module check to use "free_payment"
         // for the check
-        Tools::redirect('index.php?controller=order-confirmation&id_cart=' . (int) $cart->id . '&id_module=-1&id_order=' . (int) $order->currentOrder . '&key=' . $cart->secure_key);
+        Tools::redirect('index.php?controller=order-confirmation&id_cart=' . (int) $cart->id . '&id_module=-1&id_order=' . $orderId . '&key=' . $cart->secure_key);
     }
 
     public function getBreadcrumbLinks()
