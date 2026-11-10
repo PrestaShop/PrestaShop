@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Addon\Theme;
 
+use ErrorException;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 
@@ -42,6 +43,21 @@ class ThemeTest extends TestCase
         $this->assertSame('a/', $theme->getDirectory());
     }
 
+    public function testConstructWithoutName(): void
+    {
+        set_error_handler(static function (int $severity, string $message): bool {
+            throw new ErrorException($message, 0, $severity);
+        });
+        try {
+            $theme = new Theme(['directory' => 'a/'], '', '');
+        } finally {
+            restore_error_handler();
+        }
+
+        $this->assertFalse($theme->has('name'));
+        $this->assertNull($theme->getName());
+    }
+
     public function testGetAttributesFromThemeParent(): void
     {
         $theme = new Theme(
@@ -55,6 +71,37 @@ class ThemeTest extends TestCase
         );
 
         $this->assertSame('For testing purposes', $theme->get('display_name'));
+    }
+
+    public function testChildThemeWithoutNameDoesNotInheritParentName(): void
+    {
+        $theme = new Theme(
+            [
+                'parent' => 'fake-theme',
+                'directory' => 'a/',
+            ],
+            sys_get_temp_dir() . '/ThemeTest',
+            dirname(__DIR__, 4) . '/Resources/themes/'
+        );
+
+        $this->assertSame('For testing purposes', $theme->get('display_name'));
+        $this->assertFalse($theme->has('name'));
+        $this->assertNull($theme->getName());
+    }
+
+    public function testChildThemeKeepsItsOwnName(): void
+    {
+        $theme = new Theme(
+            [
+                'name' => 'foo',
+                'parent' => 'fake-theme',
+                'directory' => 'a/',
+            ],
+            sys_get_temp_dir() . '/ThemeTest',
+            dirname(__DIR__, 4) . '/Resources/themes/'
+        );
+
+        $this->assertSame('foo', $theme->getName());
     }
 
     public function testGetPageLayouts(): void
