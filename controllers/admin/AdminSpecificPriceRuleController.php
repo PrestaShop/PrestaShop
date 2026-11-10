@@ -4,6 +4,8 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
+
 /**
  * @property SpecificPriceRule $object
  */
@@ -351,6 +353,17 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
     public function processSave()
     {
         $_POST['price'] = Tools::getValue('leave_bprice_on') ? '-1' : Tools::getValue('price');
+
+        $from = Tools::getValue('from');
+        $to = Tools::getValue('to');
+        if (!DateTimeUtil::isNull($from) && !DateTimeUtil::isNull($to)) {
+            $fromTimestamp = strtotime($from);
+            $toTimestamp = strtotime($to);
+            if (false !== $fromTimestamp && false !== $toTimestamp && $fromTimestamp > $toTimestamp) {
+                // Errors set before saving prevent the object from being saved and keep the submitted values in the form
+                $this->errors[] = $this->trans('The selected date range is not valid.', [], 'Admin.Notifications.Error');
+            }
+        }
 
         /** @var SpecificPriceRule $object */
         $object = parent::processSave();

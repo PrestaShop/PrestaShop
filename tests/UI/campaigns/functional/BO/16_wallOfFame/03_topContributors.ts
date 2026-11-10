@@ -23,7 +23,7 @@ Scenario:
 - Check Top Contributors card description
 - Check Top Contributors table column headers
 - Click action button for Progi1984 contributor
-- Verify modal displays name, GitHub username and avatar
+- Verify modal displays name, company and avatar
 - Close the modal
 - Click View all button and verify URL
 */
@@ -95,11 +95,12 @@ describe('BO - Community : Wall of Fame - Top Contributors', async () => {
       expect(name, 'Modal should display the contributor name').to.contains('Progi1984');
     });
 
-    it('should check the GitHub username is displayed in the modal', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkContributorModalUsername', baseContext);
+    it('should check the company is displayed in the modal', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkContributorModalCompany', baseContext);
 
-      const username = await boWallOfFamePage.getContributorModalGitHubUsername(page);
-      expect(username, 'Modal should display the GitHub username').to.contains('lefevre.dev');
+      // The tag next to the name shows the company of the contributor's GitHub profile: live data, check it is filled
+      const company = await boWallOfFamePage.getContributorModalGitHubUsername(page);
+      expect(company.trim(), 'Modal should display the contributor company').to.not.equal('');
     });
 
     it('should check the avatar is visible in the modal', async function () {

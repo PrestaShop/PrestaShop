@@ -3,6 +3,7 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Product\Search\Facet;
 use PrestaShop\PrestaShop\Core\Product\Search\FacetsRendererInterface;
 use PrestaShop\PrestaShop\Core\Product\Search\Pagination;
@@ -333,11 +334,13 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             ->setPage(max((int) Tools::getValue('page'), 1))
         ;
 
-        // set the sort order if provided in the URL
+        // Set the sort order if provided in the URL and valid.
         if ($encodedSortOrder = Tools::getValue('order')) {
-            $query->setSortOrder(SortOrder::newFromString(
-                $encodedSortOrder
-            ));
+            try {
+                $query->setSortOrder(SortOrder::newFromString($encodedSortOrder));
+            } catch (CoreException $e) {
+                // Invalid URL sorting leaves the query's default sort order in place.
+            }
         }
 
         // get the parameters containing the encoded facets from the URL

@@ -1250,15 +1250,16 @@ abstract class ModuleCore implements ModuleInterface
      */
     public function registerExtraProperty(ExtraPropertyDefinition $definition): bool
     {
-        // Inject the calling module's name when the developer did not explicitly set it.
-        if (null === $definition->getModuleName() && !empty($this->name)) {
-            $definition = $definition->withModuleName($this->name);
-        }
-
         /** @var ExtraPropertyRegistryInterface $entityCustomFieldRegistry */
         $entityCustomFieldRegistry = $this->get(ExtraPropertyRegistryInterface::class);
 
         try {
+            // Inject the calling module's name when the developer did not explicitly set it. Inside
+            // the try: the rebuilt definition runs the module-only checks (label/description domain).
+            if (null === $definition->getModuleName() && !empty($this->name)) {
+                $definition = $definition->withModuleName($this->name);
+            }
+
             $entityCustomFieldRegistry->register($definition);
         } catch (ExtraPropertyException $e) {
             // The registry logged the reason already; carry it to whatever displays module errors
@@ -1285,14 +1286,14 @@ abstract class ModuleCore implements ModuleInterface
      */
     public function unregisterExtraProperty(ExtraPropertyDefinition $definition, bool $dropData = false): bool
     {
-        if (null === $definition->getModuleName() && !empty($this->name)) {
-            $definition = $definition->withModuleName($this->name);
-        }
-
         /** @var ExtraPropertyRegistryInterface $entityCustomFieldRegistry */
         $entityCustomFieldRegistry = $this->get(ExtraPropertyRegistryInterface::class);
 
         try {
+            if (null === $definition->getModuleName() && !empty($this->name)) {
+                $definition = $definition->withModuleName($this->name);
+            }
+
             $entityCustomFieldRegistry->unregister($definition, $dropData);
         } catch (ExtraPropertyException $e) {
             $this->_errors[] = $e->getMessage();
