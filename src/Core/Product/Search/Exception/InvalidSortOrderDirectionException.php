@@ -4,25 +4,25 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
-namespace PrestaShop\PrestaShop\Core\Product\Search\Exception;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
+namespace PrestaShop\PrestaShop\Core\Product\Search\Exception;
 
 /**
  * Thrown when sort order direction is not valid
  */
-class InvalidSortOrderDirectionException extends CoreException
+class InvalidSortOrderDirectionException extends InvalidSortOrderException
 {
     /**
      * @param string $direction the invalid direction
      */
-    public function __construct($direction)
+    public function __construct(string $direction)
     {
         $message = sprintf(
             'Invalid SortOrder direction `%s`. Expecting one of: `ASC`, `DESC`, or `RANDOM`.',
             $direction
         );
 
-        parent::__construct($message, 0, null);
+        parent::__construct($message);
     }
 }
