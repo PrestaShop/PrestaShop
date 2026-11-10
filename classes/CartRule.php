@@ -1567,7 +1567,7 @@ class CartRuleCore extends ObjectModel
                 $basePriceContainsDiscount = isset($basePriceForPercentReduction) && $order_total === $basePriceForPercentReduction;
                 foreach ($context->cart->getCartRules(CartRule::FILTER_ACTION_GIFT, false) as $cart_rule) {
                     $freeProductsPrice = Tools::ps_round($cart_rule['obj']->getContextualValue($use_tax, $context, CartRule::FILTER_ACTION_GIFT, $package), Context::getContext()->getComputingPrecision());
-                    if ($basePriceContainsDiscount && isset($basePriceForPercentReduction)) {
+                    if ($basePriceContainsDiscount) {
                         // Gifts haven't been excluded yet, we need to do it
                         $basePriceForPercentReduction -= $freeProductsPrice;
                     }
@@ -1581,7 +1581,7 @@ class CartRuleCore extends ObjectModel
                             $roundTotal = $use_tax ? $product['total_wt'] : $product['total'];
                             $excludedReduction = Tools::ps_round($roundTotal, Context::getContext()->getComputingPrecision());
                             $order_total -= $excludedReduction;
-                            if ($basePriceContainsDiscount && isset($basePriceForPercentReduction)) {
+                            if ($basePriceContainsDiscount) {
                                 $basePriceForPercentReduction -= $excludedReduction;
                             }
                         }

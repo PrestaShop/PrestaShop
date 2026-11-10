@@ -61,7 +61,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
     protected $extraPropertiesBag = null;
 
     /**
-     * @var ArrayObject
+     * @var ArrayObject<string, array{type: string, value: mixed, isRewritable?: bool}>
      */
     private $arrayAccessList;
 
@@ -82,13 +82,14 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      */
     public function __construct()
     {
-        $this->arrayAccessList = new ArrayObject();
+        /** @var ArrayObject<string, array{type: string, value: mixed, isRewritable?: bool}> $arrayAccessList */
+        $arrayAccessList = new ArrayObject();
         $reflectionClass = new ReflectionClass(static::class);
         $methods = $reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC);
         foreach ($methods as $method) {
             $attributeInstance = $this->getAttributeInstanceFromMethod($method);
             if ($this->isArrayAccessMethod($attributeInstance, $method)) {
-                $this->arrayAccessList->offsetSet(
+                $arrayAccessList->offsetSet(
                     $this->getIndexNameFromMethod($attributeInstance, $method),
                     [
                         'type' => 'method',
@@ -98,6 +99,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
                 );
             }
         }
+        $this->arrayAccessList = $arrayAccessList;
         // The extra_properties index is opt-in: it is only exposed when the concrete LazyArray
         // initialized the bag (presenters call initExtraPropertiesBag() before this constructor),
         // so lazy arrays without extra properties never leak a bag in loops/serialization.
