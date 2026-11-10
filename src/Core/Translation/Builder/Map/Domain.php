@@ -138,6 +138,8 @@ class Domain
      * @param array $tree
      *
      * @return array
+     *
+     * @phpstan-impure
      */
     public function mergeTree(array &$tree): array
     {

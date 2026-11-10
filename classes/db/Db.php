@@ -188,6 +188,8 @@ abstract class DbCore
      * @param bool $master Decides whether the connection to be returned by the master server or the slave server
      *
      * @return Db Singleton instance of Db object
+     *
+     * @phpstan-impure
      */
     public static function getInstance($master = true)
     {

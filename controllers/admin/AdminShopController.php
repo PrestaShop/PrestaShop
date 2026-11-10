@@ -481,14 +481,14 @@ class AdminShopControllerCore extends AdminController
             $this->fields_form['input'][] = [
                 'type' => 'hidden',
                 'name' => 'id_shop_group',
-                'default' => isset($group) ? $group->name : '',
+                'default' => $group->name,
             ];
             $this->fields_form['input'][] = [
                 'type' => 'textShopGroup',
                 'label' => $this->trans('Shop group', [], 'Admin.Shopparameters.Feature'),
                 'desc' => $this->trans('You can\'t edit the shop group because the current shop belongs to a group with the "share" option enabled.', [], 'Admin.Shopparameters.Help'),
                 'name' => 'id_shop_group',
-                'value' => isset($group) ? $group->name : '',
+                'value' => $group->name,
             ];
         }
 

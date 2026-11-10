@@ -20,6 +20,7 @@ use ApiPlatform\OpenApi\Model\Operation as OpenApiOperation;
 use ApiPlatform\OpenApi\Model\Parameter;
 use ApiPlatform\OpenApi\Model\PathItem;
 use ApiPlatform\OpenApi\Model\Paths;
+use ApiPlatform\OpenApi\Model\Reference;
 use ApiPlatform\OpenApi\Model\Response;
 use ApiPlatform\OpenApi\Model\Server;
 use ApiPlatform\OpenApi\OpenApi;
@@ -310,6 +311,7 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
             array_push($schemasToScan, ...$this->getReferencedSchemas($schemas->offsetGet($schemaName)));
         }
 
+        /** @var ArrayObject<string, Schema|Reference> $filteredSchemas */
         $filteredSchemas = new ArrayObject();
         foreach ($schemas as $schemaName => $schema) {
             if (isset($usedSchemas[$schemaName])) {
