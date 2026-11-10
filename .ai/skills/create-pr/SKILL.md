@@ -21,7 +21,19 @@ Guide a contributor through creating a pull request that complies with the Prest
 - Run `git log` and `git diff` against the target branch to understand what changed.
 - Identify the target branch from git (see branching rules in `.ai/CONTEXT.md`).
 
-### 2. Auto-fill fields
+### 2. Check the conventions
+
+Run the convention check against the target branch:
+
+```bash
+php .ai/bin/check-conventions.php upstream/develop   # or upstream/9.2.x for a bug fix
+```
+
+- Read every context file it lists: the diff is judged against them.
+- Fix every `FAIL` line before opening the PR.
+- Fix each `CHECK` line, or say in the description why it stays.
+
+### 3. Auto-fill fields
 
 From code analysis and git context, infer as much as possible:
 
@@ -36,13 +48,13 @@ From code analysis and git context, infer as much as possible:
 | **How to test** | Write step-by-step verification instructions from the PR context |
 | **Fixed issue** | Extract from conversation, branch name (e.g. `fix/12345`), or commit messages. Format: `Fixes #<number>` |
 
-### 3. Ask before guessing
+### 4. Ask before guessing
 
 For any **required** field (Branch, Description, Type, Category, BC breaks, Deprecations) that cannot be confidently determined, **ask the user**. Do not guess.
 
 **Optional fields** (UI Tests, Related PRs, Sponsor company) — fill when known, leave the template placeholder otherwise.
 
-### 4. Create the PR
+### 5. Create the PR
 
 Use GitHub MCP tools (`mcp__github__create_pull_request`) or `gh pr create` CLI to create the PR with the filled-in template as the body.
 
