@@ -641,10 +641,43 @@ class ReleaseCreator
         if ($returnCode !== 0) {
             throw new BuildException('Unable to build assets.');
         }
+        $this->checkBuiltAssets();
 
         $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
 
         return $this;
+    }
+
+    /**
+     * Make sure every asset build produced its output and released its lock,
+     * so a failed build cannot end up in the archive.
+     *
+     * @throws BuildException
+     */
+    protected function checkBuiltAssets()
+    {
+        // Asset folder => a file its build produces (the same ones tools/assets/build.sh checks)
+        $assets = [
+            'admin-dev/themes/default' => 'public/theme.css',
+            'admin-dev/themes/new-theme' => 'public/theme.css',
+            'themes' => 'core.js',
+            'themes/classic/_dev' => '../assets/css/theme.css',
+            'themes/hummingbird' => 'assets/css/theme.css',
+        ];
+        $errors = [];
+        foreach ($assets as $folder => $builtFile) {
+            $folderPath = "{$this->tempProjectPath}/{$folder}";
+            if (file_exists("{$folderPath}/buildLock")) {
+                $errors[] = "{$folder}/buildLock is still present";
+            }
+            if (!file_exists("{$folderPath}/{$builtFile}")) {
+                $errors[] = "{$folder}/{$builtFile} is missing";
+            }
+        }
+
+        if (!empty($errors)) {
+            throw new BuildException('Assets build incomplete: ' . implode(', ', $errors) . '.');
+        }
     }
 
     /**

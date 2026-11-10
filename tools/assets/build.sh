@@ -15,6 +15,8 @@ ADMIN_DIR="${PROJECT_PATH}/${ADMIN_DIR:-admin-dev}"
 # Parse command line arguments
 FORCE_BUILD=false
 ASSET_NAME=""
+# PIDs of the asset builds started in the background by "all"
+BUILD_PIDS=()
 
 for arg in "$@"; do
   case $arg in
@@ -130,7 +132,10 @@ build_asset() {
       fi
     ;;
     all)
-      build_asset admin-default & build_asset admin-new-theme & build_asset front-core & build_asset front-classic & build_asset front-hummingbird
+      for asset in admin-default admin-new-theme front-core front-classic front-hummingbird; do
+        build_asset "$asset" &
+        BUILD_PIDS+=($!)
+      done
     ;;
     *)
       echo "Unknown asset to build $1"
@@ -146,5 +151,13 @@ else
   build_asset all
 fi
 
-wait
+# A bare `wait` always returns 0: wait for each build so that a failed one fails the script.
+FAILED_BUILDS=0
+for pid in ${BUILD_PIDS[@]+"${BUILD_PIDS[@]}"}; do
+  wait "$pid" || FAILED_BUILDS=$((FAILED_BUILDS + 1))
+done
+if [[ $FAILED_BUILDS -gt 0 ]]; then
+  echo "$FAILED_BUILDS asset build(s) failed, see the output above"
+  exit 1
+fi
 echo "All done!"
