@@ -116,6 +116,7 @@ Match the task against this table before touching code; a task that mentions a k
 | Legacy to Symfony migration | `AdminXController`, ObjectModel removal, feature flags | [Component/Migration/CONTEXT.md](Component/Migration/CONTEXT.md) |
 | Hooks | `dispatchHook`, `hook.xml` | [Component/Hook/CONTEXT.md](Component/Hook/CONTEXT.md) |
 | Extra properties (custom fields) | `ExtraProperty`, `extra_property_definition` | [Component/ExtraProperty/CONTEXT.md](Component/ExtraProperty/CONTEXT.md) |
+| Local Docker environment, test database | `docker compose`, reset to a clean shop, branch switch, asset rebuild, `buildLock`, `composer create-test-db`; paths: `docker-compose.yml`, `.docker/**`, `tools/assets/**` | [DOCKER-ENV.md](DOCKER-ENV.md) |
 
 ### Cross-repository work: `ps_apiresources`
 
