@@ -77,10 +77,10 @@ final class BusinessEntityQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $sortableFields = [
             'id_business_entity' => 'be.id_business_entity',
-            'name' => 'be.`name`',
-            'legal_name' => 'be.`legal_name`',
-            'status' => 'be.`status`',
-            'shop_name' => 's.`name`',
+            'name' => 'be.name',
+            'legal_name' => 'be.legal_name',
+            'status' => 'be.status',
+            'shop_name' => 's.name',
             'customers_count' => 'customers_count',
         ];
 

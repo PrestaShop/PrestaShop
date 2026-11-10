@@ -30,7 +30,7 @@ class TabTest extends TestCase
 
     private static function removeTestTabs(): void
     {
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT id_tab, class_name, route_name FROM `' . _DB_PREFIX_ . 'tab` WHERE `module` = "module_test_tab"', true, false);
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT id_tab, class_name, route_name FROM ' . _DB_PREFIX_ . 'tab WHERE module = \'module_test_tab\'', true, false);
         foreach ($result as $tabRow) {
             $tab = new Tab($tabRow['id_tab']);
             $tab->delete();
@@ -143,7 +143,7 @@ class TabTest extends TestCase
 
         // testDeleteTabWithRouteName
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-            'SELECT id_tab FROM `' . _DB_PREFIX_ . 'tab` WHERE `route_name` = "admin_route_name_test"',
+            'SELECT id_tab FROM ' . _DB_PREFIX_ . 'tab WHERE route_name = \'admin_route_name_test\'',
             true,
             false
         );
@@ -199,7 +199,7 @@ class TabTest extends TestCase
     {
         foreach ($expectedRoles as $expectedRole) {
             $roles = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-                'SELECT id_authorization_role, slug FROM `' . _DB_PREFIX_ . 'authorization_role` WHERE `slug` = "' . $expectedRole . '"',
+                'SELECT id_authorization_role, slug FROM ' . _DB_PREFIX_ . 'authorization_role WHERE slug = \'' . $expectedRole . '\'',
                 true,
                 false
             );
@@ -209,7 +209,7 @@ class TabTest extends TestCase
             $this->assertEquals($expectedRole, $role['slug']);
 
             $accesses = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-                'SELECT id_profile, id_authorization_role FROM `' . _DB_PREFIX_ . 'access` WHERE `id_authorization_role` = ' . $role['id_authorization_role'],
+                'SELECT id_profile, id_authorization_role FROM ' . _DB_PREFIX_ . 'access WHERE id_authorization_role = ' . $role['id_authorization_role'],
                 true,
                 false
             );
@@ -229,7 +229,7 @@ class TabTest extends TestCase
     {
         foreach ($unexpectedRoles as $unexpectedRole) {
             $roles = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-                'SELECT id_authorization_role, slug FROM `' . _DB_PREFIX_ . 'authorization_role` WHERE `slug` = "' . $unexpectedRole . '"',
+                'SELECT id_authorization_role, slug FROM ' . _DB_PREFIX_ . 'authorization_role WHERE slug = \'' . $unexpectedRole . '\'',
                 true,
                 false
             );

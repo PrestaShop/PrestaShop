@@ -73,7 +73,7 @@ class ExtraPropertyDefaultValueTest extends KernelTestCase
         $kernel = self::$kernel;
         self::initServices();
 
-        Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'product_extra`');
+        Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'product_extra');
     }
 
     public function testTypedDefaultsSurviveThePersistHydrateRoundtrip(): void
@@ -132,7 +132,7 @@ class ExtraPropertyDefaultValueTest extends KernelTestCase
 
         // Stored encoded…
         $stored = Db::getInstance()->getValue(sprintf(
-            'SELECT `%s_dv_json` FROM `%sproduct_extra` WHERE `id_product` = %d',
+            'SELECT %s_dv_json FROM %sproduct_extra WHERE id_product = %d',
             self::MODULE,
             _DB_PREFIX_,
             self::PRODUCT_ID

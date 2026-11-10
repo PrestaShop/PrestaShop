@@ -32,7 +32,7 @@ class AccessTest extends TestCase
 
         // Remove tabs
         $result = Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->executeS(
-            'SELECT id_tab, class_name, route_name FROM `' . _DB_PREFIX_ . 'tab` WHERE `module` = "module_test_tab"',
+            'SELECT id_tab, class_name, route_name FROM ' . _DB_PREFIX_ . 'tab WHERE module = \'module_test_tab\'',
             true,
             false
         );

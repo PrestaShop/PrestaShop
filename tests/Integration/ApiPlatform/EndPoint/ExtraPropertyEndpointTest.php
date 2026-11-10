@@ -115,7 +115,7 @@ final class ExtraPropertyEndpointTest extends ApiTestCase
         // Clear all extra-property values so each test starts from a known, empty state (exact-content assertions
         // would otherwise depend on values persisted by earlier tests).
         foreach (self::EXTRA_VALUE_TABLES as $table) {
-            Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . $table . '`');
+            Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . $table);
         }
     }
 
@@ -308,8 +308,8 @@ final class ExtraPropertyEndpointTest extends ApiTestCase
     public function testCqrsPaginatedCombinationListIsEnriched(): void
     {
         $combinationRows = Db::getInstance()->executeS(
-            'SELECT `id_product_attribute` FROM `' . _DB_PREFIX_ . 'product_attribute`
-             WHERE `id_product` = ' . self::PRODUCT_ID . ' ORDER BY `id_product_attribute` ASC'
+            'SELECT id_product_attribute FROM ' . _DB_PREFIX_ . 'product_attribute
+             WHERE id_product = ' . self::PRODUCT_ID . ' ORDER BY id_product_attribute ASC'
         );
         $combinationIds = array_map(static fn (array $row): int => (int) $row['id_product_attribute'], $combinationRows);
         $this->assertNotEmpty($combinationIds, 'The product fixture should have combinations');
@@ -318,7 +318,7 @@ final class ExtraPropertyEndpointTest extends ApiTestCase
         // 'combination' registration created next to the base table.
         foreach ($combinationIds as $combinationId) {
             Db::getInstance()->execute(sprintf(
-                'INSERT INTO `%sproduct_attribute_extra` (`id_product_attribute`, `%s_api_combo_note`) VALUES (%d, "note-%d")',
+                'INSERT INTO %sproduct_attribute_extra (id_product_attribute, %s_api_combo_note) VALUES (%d, \'note-%d\')',
                 _DB_PREFIX_,
                 self::MODULE_NAME,
                 $combinationId,

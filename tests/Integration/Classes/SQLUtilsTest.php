@@ -19,6 +19,10 @@ class SQLUtilsTest extends TestCase
     public function testSQLRetrieveFilter(array $input, string $expected): void
     {
         $actual = SQLUtils::getSQLRetrieveFilter($input[0], $input[1], $input[2] ?? null);
+        // Identifiers are quoted the PostgreSQL way there
+        if (_DB_TYPE_ == 'pgsql') {
+            $expected = str_replace('`', '"', $expected);
+        }
         $this->assertEquals($expected, $actual);
     }
 

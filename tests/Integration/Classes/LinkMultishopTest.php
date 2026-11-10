@@ -235,12 +235,19 @@ class LinkMultishopTest extends TestCase
         Db::getInstance()->insert('product_shop', $row, false, true, Db::INSERT_IGNORE);
         // Product is multilang per shop: without its lang row in the second shop it does not load there at all.
         $columns = array_keys(Db::getInstance()->getRow('SELECT * FROM ' . _DB_PREFIX_ . 'product_lang WHERE id_product = ' . $productId));
-        $selected = array_map(fn (string $column): string => $column === 'id_shop' ? (string) $this->secondShopId : '`' . $column . '`', $columns);
-        Db::getInstance()->execute(
-            'INSERT IGNORE INTO ' . _DB_PREFIX_ . 'product_lang (`' . implode('`, `', $columns) . '`)
-             SELECT ' . implode(', ', $selected) . ' FROM ' . _DB_PREFIX_ . 'product_lang
-             WHERE id_product = ' . $productId . ' AND id_shop = 1 AND id_lang = ' . $idLang
+        $quotedColumns = array_map([Db::class, 'quoteIdentifier'], $columns);
+        $selected = array_map(fn (string $column): string => $column === 'id_shop' ? (string) $this->secondShopId : Db::quoteIdentifier($column), $columns);
+        $langRowExists = (bool) Db::getInstance()->getValue(
+            'SELECT 1 FROM ' . _DB_PREFIX_ . 'product_lang
+             WHERE id_product = ' . $productId . ' AND id_shop = ' . $this->secondShopId . ' AND id_lang = ' . $idLang
         );
+        if (!$langRowExists) {
+            Db::getInstance()->execute(
+                'INSERT INTO ' . _DB_PREFIX_ . 'product_lang (' . implode(', ', $quotedColumns) . ')
+                 SELECT ' . implode(', ', $selected) . ' FROM ' . _DB_PREFIX_ . 'product_lang
+                 WHERE id_product = ' . $productId . ' AND id_shop = 1 AND id_lang = ' . $idLang
+            );
+        }
 
         $this->assertSame('category-shop-one', (new Product($productId, false, $idLang, 1))->category);
         $this->assertSame('category-shop-two', (new Product($productId, false, $idLang, $this->secondShopId))->category);

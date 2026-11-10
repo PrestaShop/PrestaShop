@@ -219,4 +219,55 @@ class ColumnDefinitionMapperTest extends TestCase
         yield 'int is not enum' => ['int(11)', null];
         yield 'set is not enum' => ["set('a','b')", null];
     }
+
+    /**
+     * @dataProvider postgreSqlDefinitionProvider
+     */
+    public function testGetSqlDefinitionForPostgreSql(ExtraPropertyDefinition $options, string $expected): void
+    {
+        $this->assertSame($expected, ColumnDefinitionMapper::getSqlDefinition($options, true));
+    }
+
+    public static function postgreSqlDefinitionProvider(): iterable
+    {
+        yield 'int' => [
+            new ExtraPropertyDefinition(entityName: 'entity', propertyName: 'test', type: ExtraPropertyType::INT, nullable: false, defaultValue: 0),
+            'INTEGER NOT NULL DEFAULT 0',
+        ];
+        yield 'bool' => [
+            new ExtraPropertyDefinition(entityName: 'entity', propertyName: 'test', type: ExtraPropertyType::BOOL, nullable: true),
+            'SMALLINT NULL',
+        ];
+        yield 'date' => [
+            new ExtraPropertyDefinition(entityName: 'entity', propertyName: 'test', type: ExtraPropertyType::DATE, nullable: true),
+            'TIMESTAMP NULL',
+        ];
+        yield 'json' => [
+            new ExtraPropertyDefinition(entityName: 'entity', propertyName: 'test', type: ExtraPropertyType::JSON, nullable: true),
+            'TEXT NULL',
+        ];
+        yield 'choice is a varchar, its literals go to a CHECK' => [
+            new ExtraPropertyDefinition(entityName: 'entity', propertyName: 'test', type: ExtraPropertyType::CHOICE, nullable: false, enumValues: ['a', 'b'], defaultValue: 'a'),
+            "VARCHAR(255) NOT NULL DEFAULT 'a'",
+        ];
+        // Standard-conforming strings: the backslash is literal, only the quote is doubled
+        yield 'string default keeps backslash' => [
+            new ExtraPropertyDefinition(entityName: 'entity', propertyName: 'test', type: ExtraPropertyType::STRING, nullable: true, defaultValue: "a\\'b"),
+            "VARCHAR(255) NULL DEFAULT 'a\\''b'",
+        ];
+    }
+
+    public function testPostgreSqlEnumCheck(): void
+    {
+        $options = new ExtraPropertyDefinition(entityName: 'entity', propertyName: 'test', type: ExtraPropertyType::CHOICE, nullable: true, enumValues: ['a', "it's"]);
+
+        $this->assertSame("\"col\" IN ('a','it''s')", ColumnDefinitionMapper::getPostgreSqlEnumCheck($options, '"col"'));
+    }
+
+    public function testPostgreSqlEnumCheckIsNullWithoutLiterals(): void
+    {
+        $options = new ExtraPropertyDefinition(entityName: 'entity', propertyName: 'test', type: ExtraPropertyType::STRING, nullable: true);
+
+        $this->assertNull(ColumnDefinitionMapper::getPostgreSqlEnumCheck($options, '"col"'));
+    }
 }

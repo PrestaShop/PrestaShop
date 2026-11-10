@@ -216,7 +216,7 @@ class RequestSqlCore extends ObjectModel
         if (_DB_TYPE_ == 'pgsql') {
             return Db::getInstance()->executeS(
                 'SELECT column_name AS "Field" FROM information_schema.columns
-                WHERE table_schema = current_schema() AND table_name = \'' . pSQL($table) . '\'
+                WHERE table_schema = current_schema() AND table_name = \'' . pSQL(str_replace('`', '', $table)) . '\'
                 ORDER BY ordinal_position'
             );
         }

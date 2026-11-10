@@ -121,7 +121,7 @@ class CustomerThreadQueryBuilderTest extends KernelTestCase
     {
         $this->connection->executeStatement(
             'INSERT INTO ' . $this->dbPrefix . 'customer_message
-                (id_customer_thread, id_employee, id_product, message, private, `read`, date_add, date_upd)
+                (id_customer_thread, id_employee, id_product, message, private, ' . $this->connection->quoteIdentifier('read') . ', date_add, date_upd)
              VALUES (:thread, :employee, 0, :message, 0, 0, NOW(), NOW())',
             [
                 'thread' => $threadId,

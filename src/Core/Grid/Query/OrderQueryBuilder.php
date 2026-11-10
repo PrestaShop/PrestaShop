@@ -248,7 +248,7 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
     {
         return $this->connection
             ->createQueryBuilder()
-            ->select('IF(count(so.id_order) > 0, 0, 1)')
+            ->select('CASE WHEN COUNT(so.id_order) > 0 THEN 0 ELSE 1 END')
             ->from($this->dbPrefix . 'orders', 'so')
             ->where('so.id_customer = o.id_customer')
             ->andWhere('so.id_order < o.id_order')

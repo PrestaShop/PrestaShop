@@ -113,22 +113,20 @@ class ExtraPropertyDefinitionShopAssociationTest extends KernelTestCase
 
         // A fake module row is enough: the fallback only reads ps_module + ps_module_shop.
         Db::getInstance()->execute(sprintf(
-            "INSERT INTO `%smodule` (`name`, `active`, `version`) VALUES ('%s', 1, '1.0.0')",
+            "INSERT INTO %smodule (name, active, version) VALUES ('%s', 1, '1.0.0')",
             _DB_PREFIX_,
             self::MODULE
         ));
         self::$moduleId = (int) Db::getInstance()->Insert_ID();
         // Enabled on shop 1 and the third shop only. ORPHAN_MODULE gets no row at all.
         foreach ([self::DEFAULT_SHOP_ID, self::$thirdShopId] as $shopId) {
-            Db::getInstance()->execute(sprintf(
-                'INSERT IGNORE INTO `%smodule_shop` (`id_module`, `id_shop`) VALUES (%d, %d)',
-                _DB_PREFIX_,
-                self::$moduleId,
-                $shopId
-            ));
+            Db::getInstance()->insert('module_shop', [
+                'id_module' => self::$moduleId,
+                'id_shop' => $shopId,
+            ], false, true, Db::INSERT_IGNORE);
         }
         Db::getInstance()->execute(sprintf(
-            "INSERT INTO `%smodule` (`name`, `active`, `version`) VALUES ('%s', 0, '1.0.0')",
+            "INSERT INTO %smodule (name, active, version) VALUES ('%s', 0, '1.0.0')",
             _DB_PREFIX_,
             self::ORPHAN_MODULE
         ));
@@ -144,12 +142,13 @@ class ExtraPropertyDefinitionShopAssociationTest extends KernelTestCase
         // every storage id with every shop so only the definition restriction filters.
         foreach ([self::RESTRICTED_PRODUCT_ID, self::LANG_PRODUCT_ID, self::REPRESENTATIVE_PRODUCT_ID] as $productId) {
             foreach ([self::DEFAULT_SHOP_ID, self::$secondShopId, self::$thirdShopId] as $shopId) {
-                Db::getInstance()->execute(sprintf(
-                    'INSERT IGNORE INTO `%sproduct_shop` (`id_product`, `id_shop`, `id_tax_rules_group`, `date_add`, `date_upd`) VALUES (%d, %d, 0, NOW(), NOW())',
-                    _DB_PREFIX_,
-                    $productId,
-                    $shopId
-                ));
+                Db::getInstance()->insert('product_shop', [
+                    'id_product' => $productId,
+                    'id_shop' => $shopId,
+                    'id_tax_rules_group' => 0,
+                    'date_add' => ['type' => 'sql', 'value' => 'NOW()'],
+                    'date_upd' => ['type' => 'sql', 'value' => 'NOW()'],
+                ], false, true, Db::INSERT_IGNORE);
             }
         }
     }
@@ -160,7 +159,7 @@ class ExtraPropertyDefinitionShopAssociationTest extends KernelTestCase
         // definition cache all go back to the dump in one call.
         ExtraPropertyResetter::resetExtraProperties();
         Db::getInstance()->execute(sprintf(
-            "DELETE FROM `%smodule` WHERE `name` IN ('%s', '%s')",
+            "DELETE FROM %smodule WHERE name IN ('%s', '%s')",
             _DB_PREFIX_,
             self::MODULE,
             self::ORPHAN_MODULE
@@ -181,12 +180,12 @@ class ExtraPropertyDefinitionShopAssociationTest extends KernelTestCase
         self::initServices();
 
         foreach (['product_extra_lang', 'product_extra_shop'] as $table) {
-            Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . $table . '`');
+            Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . $table);
         }
         // Reset every explicit association between tests (fallback state), and drop the
         // shared filesystem cache so per-shop module entries and cached definitions are
         // rebuilt from the current DB state.
-        Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'extra_property_definition_shop`');
+        Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'extra_property_definition_shop');
         $this->clearExtraPropertyCache();
     }
 
@@ -261,12 +260,10 @@ class ExtraPropertyDefinitionShopAssociationTest extends KernelTestCase
 
         // Enable the module on the second shop (module actions wipe var/cache in production —
         // simulated here by clearing the shared pool) → the definition follows.
-        Db::getInstance()->execute(sprintf(
-            'INSERT IGNORE INTO `%smodule_shop` (`id_module`, `id_shop`) VALUES (%d, %d)',
-            _DB_PREFIX_,
-            self::$moduleId,
-            self::$secondShopId
-        ));
+        Db::getInstance()->insert('module_shop', [
+            'id_module' => self::$moduleId,
+            'id_shop' => self::$secondShopId,
+        ], false, true, Db::INSERT_IGNORE);
         $this->clearExtraPropertyCache();
         self::bootKernel();
         global $kernel;
@@ -282,7 +279,7 @@ class ExtraPropertyDefinitionShopAssociationTest extends KernelTestCase
         $this->assertArrayNotHasKey('sa_shop', $values[self::MODULE] ?? []);
 
         Db::getInstance()->execute(sprintf(
-            'DELETE FROM `%smodule_shop` WHERE `id_module` = %d AND `id_shop` = %d',
+            'DELETE FROM %smodule_shop WHERE id_module = %d AND id_shop = %d',
             _DB_PREFIX_,
             self::$moduleId,
             self::$secondShopId
@@ -343,7 +340,7 @@ class ExtraPropertyDefinitionShopAssociationTest extends KernelTestCase
     public function testModuleOwnedDefinitionsAcceptOnlyShopAssociationEdits(): void
     {
         $moduleDefinitionId = (int) Db::getInstance()->getValue(sprintf(
-            "SELECT id_extra_property_definition FROM `%sextra_property_definition` WHERE module_name = '%s' AND property_name = 'sa_shop'",
+            "SELECT id_extra_property_definition FROM %sextra_property_definition WHERE module_name = '%s' AND property_name = 'sa_shop'",
             _DB_PREFIX_,
             self::MODULE
         ));
@@ -394,10 +391,10 @@ class ExtraPropertyDefinitionShopAssociationTest extends KernelTestCase
         Shop::setContext(Shop::CONTEXT_ALL);
 
         $remainingShopIds = Db::getInstance()->executeS(sprintf(
-            'SELECT epds.id_shop FROM `%sextra_property_definition_shop` epds
-             INNER JOIN `%sextra_property_definition` epd
+            'SELECT epds.id_shop FROM %sextra_property_definition_shop epds
+             INNER JOIN %sextra_property_definition epd
                 ON epd.id_extra_property_definition = epds.id_extra_property_definition
-             WHERE epd.property_name = "sa_shop"',
+             WHERE epd.property_name = \'sa_shop\'',
             _DB_PREFIX_,
             _DB_PREFIX_
         ));
@@ -448,7 +445,7 @@ class ExtraPropertyDefinitionShopAssociationTest extends KernelTestCase
     private function restrictDefinition(string $propertyName, array $shopIds): void
     {
         $definitionId = (int) Db::getInstance()->getValue(sprintf(
-            "SELECT id_extra_property_definition FROM `%sextra_property_definition` WHERE property_name = '%s'",
+            "SELECT id_extra_property_definition FROM %sextra_property_definition WHERE property_name = '%s'",
             _DB_PREFIX_,
             $propertyName
         ));
@@ -501,7 +498,7 @@ class ExtraPropertyDefinitionShopAssociationTest extends KernelTestCase
     private function countRows(string $table, int $productId): int
     {
         return (int) Db::getInstance()->getValue(
-            'SELECT COUNT(*) FROM `' . _DB_PREFIX_ . $table . '` WHERE `id_product` = ' . $productId
+            'SELECT COUNT(*) FROM ' . _DB_PREFIX_ . $table . ' WHERE id_product = ' . $productId
         );
     }
 

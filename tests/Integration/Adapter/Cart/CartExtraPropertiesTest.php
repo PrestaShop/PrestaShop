@@ -87,7 +87,7 @@ class CartExtraPropertiesTest extends KernelTestCase
 
         // The value row landed in the mirrored storage table.
         $stored = Db::getInstance()->getValue(sprintf(
-            'SELECT `%s_delivery_note` FROM `%scart_extra` WHERE `id_cart` = %d',
+            'SELECT %s_delivery_note FROM %scart_extra WHERE id_cart = %d',
             self::MODULE,
             _DB_PREFIX_,
             (int) $cart->id

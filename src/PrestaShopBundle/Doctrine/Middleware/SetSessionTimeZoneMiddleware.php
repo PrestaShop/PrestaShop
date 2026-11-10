@@ -42,7 +42,8 @@ final class SetSessionTimeZoneMiddleware implements Middleware
                 if (preg_match('/^[+-]\d{2}:\d{2}$/', $offset)) {
                     /* @phpstan-ignore-next-line */
                     if (defined('_DB_TYPE_') && _DB_TYPE_ == 'pgsql') {
-                        $connection->exec("SET TIME ZONE '" . $offset . "'");
+                        // The interval form keeps the ISO sign, a bare string follows the POSIX one (west positive)
+                        $connection->exec("SET TIME ZONE INTERVAL '" . $offset . "' HOUR TO MINUTE");
                     } else {
                         $connection->exec("SET SESSION time_zone = '" . $offset . "'");
                     }

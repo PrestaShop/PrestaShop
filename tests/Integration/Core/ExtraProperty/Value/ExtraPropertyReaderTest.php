@@ -81,8 +81,8 @@ class ExtraPropertyReaderTest extends KernelTestCase
         parent::setUp();
 
         // Start from an empty state so each test controls exactly the rows it reads.
-        Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'product_extra`');
-        Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'product_extra_lang`');
+        Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'product_extra');
+        Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'product_extra_lang');
     }
 
     public function testGetExtraPropertiesReturnsTheValuesOfOneEntity(): void

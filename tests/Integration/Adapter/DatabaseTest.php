@@ -16,10 +16,20 @@ class DatabaseTest extends TestCase
     public function providerEscape(): iterable
     {
         yield ['hello', 'hello'];
-        yield ['\\\'inject', '\'inject'];
-        yield ['\\"inject', '"inject'];
         yield [42, 42];
         yield [4.2, 4.2];
+
+        // PostgreSQL's standard-conforming strings only double the single quote
+        if (_DB_TYPE_ == 'pgsql') {
+            yield ['\'\'inject', '\'inject'];
+            yield ['"inject', '"inject'];
+            yield ['4\'\'200', '4\'200'];
+
+            return;
+        }
+
+        yield ['\\\'inject', '\'inject'];
+        yield ['\\"inject', '"inject'];
         yield ['4\\\'200', '4\'200'];
     }
 

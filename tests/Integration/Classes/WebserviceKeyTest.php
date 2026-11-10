@@ -105,10 +105,10 @@ class WebserviceKeyTest extends TestCase
     private function getLastLoggedEmployeeId(): int
     {
         return (int) Db::getInstance()->getValue('
-            SELECT `id_employee`
-            FROM `' . _DB_PREFIX_ . 'log`
-            WHERE `object_type` = "WebserviceKey" AND `object_id` = ' . (int) $this->webserviceKey->id . '
-            ORDER BY `id_log` DESC
+            SELECT id_employee
+            FROM ' . _DB_PREFIX_ . 'log
+            WHERE object_type = \'WebserviceKey\' AND object_id = ' . (int) $this->webserviceKey->id . '
+            ORDER BY id_log DESC
         ');
     }
 }

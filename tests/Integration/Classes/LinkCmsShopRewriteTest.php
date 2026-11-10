@@ -70,7 +70,7 @@ class LinkCmsShopRewriteTest extends KernelTestCase
 
         // CMS page 1 exists for shop 1; give it a distinct link_rewrite in the second shop.
         Db::getInstance()->insert('cms_shop', ['id_cms' => 1, 'id_shop' => self::$secondShopId]);
-        $langRows = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'cms_lang` WHERE id_cms = 1 AND id_shop = 1');
+        $langRows = Db::getInstance()->executeS('SELECT * FROM ' . _DB_PREFIX_ . 'cms_lang WHERE id_cms = 1 AND id_shop = 1');
         foreach ($langRows as $row) {
             $row['id_shop'] = self::$secondShopId;
             $row['link_rewrite'] = self::SHOP2_REWRITE;

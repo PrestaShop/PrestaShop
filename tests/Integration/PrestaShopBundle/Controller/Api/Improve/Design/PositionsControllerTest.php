@@ -65,7 +65,7 @@ class PositionsControllerTest extends TestCase
 
         // Unregister all modules hooked on displayHome
         Db::getInstance()->execute(sprintf(
-            'DELETE FROM `%shook_module` WHERE `id_hook` = %d',
+            'DELETE FROM %shook_module WHERE id_hook = %d',
             _DB_PREFIX_,
             (int) Hook::getIdByName('displayHome')
         ));

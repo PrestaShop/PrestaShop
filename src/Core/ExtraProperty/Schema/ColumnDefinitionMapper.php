@@ -28,27 +28,81 @@ class ColumnDefinitionMapper
      *
      * @return string e.g. "VARCHAR(255) NULL" or "ENUM('a','b') NOT NULL DEFAULT 'a'"
      */
-    public static function getSqlDefinition(ExtraPropertyDefinition $options): string
+    public static function getSqlDefinition(ExtraPropertyDefinition $options, bool $postgreSql = false): string
     {
-        $rawEnumValues = $options->getEnumValues();
-        $enumValues = null !== $rawEnumValues
-            ? array_values(array_filter($rawEnumValues, 'is_string'))
-            : [];
+        $parts = [
+            $postgreSql ? self::getPostgreSqlBaseDefinition($options) : self::buildBaseDefinition($options->getType(), self::getEnumValues($options), $options->getSize()),
+            $options->isNullable() ? 'NULL' : 'NOT NULL',
+        ];
 
-        $baseDefinition = self::buildBaseDefinition($options->getType(), $enumValues, $options->getSize());
-        $nullClause = $options->isNullable() ? 'NULL' : 'NOT NULL';
-
-        $parts = [$baseDefinition, $nullClause];
-
-        // TEXT-backed columns (HTML → TEXT, JSON → LONGTEXT) cannot carry a DDL DEFAULT
-        // clause in MySQL: their declared default lives in the registry only and is served
-        // at read time by the reader's default injection.
-        $defaultValue = $options->getDefaultValue();
-        if (null !== $defaultValue && !in_array($options->getType(), [ExtraPropertyType::HTML, ExtraPropertyType::JSON], true)) {
-            $parts[] = 'DEFAULT ' . self::quoteDefaultValue($options->getType(), $defaultValue);
+        $defaultClauseValue = self::getDefaultClauseValue($options, $postgreSql);
+        if (null !== $defaultClauseValue) {
+            $parts[] = 'DEFAULT ' . $defaultClauseValue;
         }
 
         return implode(' ', $parts);
+    }
+
+    /**
+     * PostgreSQL has no unsigned, TINYINT, DATETIME, LONGTEXT nor inline ENUM type: a CHOICE
+     * column is a VARCHAR whose literals are enforced by the CHECK of getPostgreSqlEnumCheck().
+     */
+    public static function getPostgreSqlBaseDefinition(ExtraPropertyDefinition $options): string
+    {
+        return match ($options->getType()) {
+            ExtraPropertyType::INT => 'INTEGER',
+            ExtraPropertyType::BOOL => 'SMALLINT',
+            ExtraPropertyType::STRING => 'VARCHAR(' . (null !== $options->getSize() && $options->getSize() > 0 ? $options->getSize() : 255) . ')',
+            ExtraPropertyType::FLOAT => 'DECIMAL(20,6)',
+            ExtraPropertyType::DATE => 'TIMESTAMP',
+            ExtraPropertyType::HTML, ExtraPropertyType::JSON => 'TEXT',
+            ExtraPropertyType::CHOICE => !empty(self::getEnumValues($options)) ? 'VARCHAR(255)' : 'VARCHAR(64)',
+        };
+    }
+
+    /**
+     * Returns the CHECK expression restricting a PostgreSQL CHOICE column to its literals,
+     * or null when the column has no literal list.
+     */
+    public static function getPostgreSqlEnumCheck(ExtraPropertyDefinition $options, string $quotedColumnName): ?string
+    {
+        $enumValues = self::getEnumValues($options);
+        if (ExtraPropertyType::CHOICE !== $options->getType() || empty($enumValues)) {
+            return null;
+        }
+
+        return sprintf(
+            '%s IN (%s)',
+            $quotedColumnName,
+            implode(',', array_map(static fn (string $value): string => "'" . str_replace("'", "''", $value) . "'", $enumValues))
+        );
+    }
+
+    /**
+     * Returns the SQL literal of the DDL DEFAULT clause, or null when the column carries none.
+     *
+     * TEXT-backed columns (HTML → TEXT, JSON → LONGTEXT) cannot carry a DDL DEFAULT
+     * clause in MySQL: their declared default lives in the registry only and is served
+     * at read time by the reader's default injection.
+     */
+    public static function getDefaultClauseValue(ExtraPropertyDefinition $options, bool $postgreSql = false): ?string
+    {
+        $defaultValue = $options->getDefaultValue();
+        if (null === $defaultValue || in_array($options->getType(), [ExtraPropertyType::HTML, ExtraPropertyType::JSON], true)) {
+            return null;
+        }
+
+        return self::quoteDefaultValue($options->getType(), $defaultValue, $postgreSql);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private static function getEnumValues(ExtraPropertyDefinition $options): array
+    {
+        $rawEnumValues = $options->getEnumValues();
+
+        return null !== $rawEnumValues ? array_values(array_filter($rawEnumValues, 'is_string')) : [];
     }
 
     /**
@@ -138,12 +192,15 @@ class ColumnDefinitionMapper
      *
      * Numeric types are unquoted; string-like types are single-quoted with escaping.
      *
+     * PostgreSQL's standard-conforming strings give the backslash no special meaning:
+     * only the quote is doubled there.
+     *
      * @param ExtraPropertyType $type
      * @param scalar $defaultValue
      *
      * @return string
      */
-    private static function quoteDefaultValue(ExtraPropertyType $type, mixed $defaultValue): string
+    private static function quoteDefaultValue(ExtraPropertyType $type, mixed $defaultValue, bool $postgreSql = false): string
     {
         // The canonical stringification is shared with the registry row write and the
         // live-schema comparison; only the SQL quoting is added here.
@@ -157,7 +214,7 @@ class ColumnDefinitionMapper
             ExtraPropertyType::DATE,
             ExtraPropertyType::HTML,
             ExtraPropertyType::JSON,
-            ExtraPropertyType::CHOICE => "'" . self::escapeStringLiteral($stringValue) . "'",
+            ExtraPropertyType::CHOICE => "'" . ($postgreSql ? str_replace("'", "''", $stringValue) : self::escapeStringLiteral($stringValue)) . "'",
         };
     }
 }

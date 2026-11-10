@@ -75,15 +75,15 @@ class SqlTranslationLoaderTest extends TestCase
         parent::setUpBeforeClass();
 
         $lang = Db::getInstance()->getRow(
-            'SELECT `id_lang`, `locale` FROM `' . _DB_PREFIX_ . 'lang` WHERE `active` = 1'
+            'SELECT id_lang, locale FROM ' . _DB_PREFIX_ . 'lang WHERE active = 1'
         );
         self::$langId = (int) $lang['id_lang'];
         self::$locale = $lang['locale'];
 
         $shop = Db::getInstance()->getRow(
-            'SELECT `theme_name`, `id_shop_group`, `id_category`
-             FROM `' . _DB_PREFIX_ . 'shop`
-             WHERE `active` = 1'
+            'SELECT theme_name, id_shop_group, id_category
+             FROM ' . _DB_PREFIX_ . 'shop
+             WHERE active = 1'
         );
         self::$themeNameA = $shop['theme_name'];
 
@@ -317,15 +317,15 @@ class SqlTranslationLoaderTest extends TestCase
         $prefix = _DB_PREFIX_;
 
         foreach ($rows as [$key, $translation, $domain, $theme]) {
-            $themeSQL = $theme !== null ? '"' . $db->escape($theme) . '"' : 'NULL';
+            $themeSQL = $theme !== null ? '\'' . $db->escape($theme) . '\'' : 'NULL';
             $db->execute(
-                'INSERT INTO `' . $prefix . 'translation`
-                    (`id_lang`, `key`, `translation`, `domain`, `theme`)
+                'INSERT INTO ' . $prefix . 'translation
+                    (id_lang, ' . Db::quoteIdentifier('key') . ', translation, domain, theme)
                  VALUES
                     (' . self::$langId . ',
-                     "' . $db->escape($key) . '",
-                     "' . $db->escape($translation) . '",
-                     "' . $db->escape($domain) . '",
+                     \'' . $db->escape($key) . '\',
+                     \'' . $db->escape($translation) . '\',
+                     \'' . $db->escape($domain) . '\',
                      ' . $themeSQL . ')'
             );
         }

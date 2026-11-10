@@ -83,7 +83,7 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 				AND tr.id_tax_rules_group = ' . (int) $this->type . '
 				AND tr.id_state IN (0, ' . (int) $this->address->id_state . ')
 				AND (\'' . pSQL($postcode) . '\' BETWEEN tr.zipcode_from AND tr.zipcode_to
-					OR (tr.zipcode_to = 0 AND tr.zipcode_from IN(0, \'' . pSQL($postcode) . '\')))
+					OR (tr.zipcode_to = \'0\' AND tr.zipcode_from IN(\'0\', \'' . pSQL($postcode) . '\')))
 				ORDER BY tr.zipcode_from DESC, tr.zipcode_to DESC, tr.id_state DESC, tr.id_country DESC');
 
             $behavior = 0;

@@ -982,8 +982,9 @@ abstract class DbCore
             return;
         }
 
+        // A bare '+01:00' string follows the POSIX sign convention on PostgreSQL (west positive): the interval form keeps the ISO sign
         /* @phpstan-ignore-next-line */
-        $sql = _DB_TYPE_ == 'pgsql' ? "SET TIME ZONE '" . $offset . "'" : "SET SESSION time_zone = '" . $offset . "'";
+        $sql = _DB_TYPE_ == 'pgsql' ? "SET TIME ZONE INTERVAL '" . $offset . "' HOUR TO MINUTE" : "SET SESSION time_zone = '" . $offset . "'";
         $this->_query($sql);
     }
 }

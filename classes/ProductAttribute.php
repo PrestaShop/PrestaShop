@@ -162,7 +162,7 @@ class ProductAttributeCore extends ObjectModel
         }
 
         return Db::getInstance()->executeS('
-			SELECT DISTINCT ag.*, agl.*, a.id_attribute, al.name, agl.name AS attribute_group
+			SELECT DISTINCT ag.*, agl.*, a.id_attribute, al.name, agl.name AS attribute_group, a.position AS attribute_position
 			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute_group') . ' ag
 			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute_group_lang') . ' agl
 				ON (ag.id_attribute_group = agl.id_attribute_group AND agl.id_lang = ' . (int) $idLang . ')

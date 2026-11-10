@@ -183,10 +183,10 @@ class BusinessEntityQueryBuilderTest extends TestCase
     public function provideSortableColumns(): iterable
     {
         yield 'id' => ['id_business_entity', 'be.id_business_entity'];
-        yield 'name' => ['name', 'be.`name`'];
-        yield 'legal_name' => ['legal_name', 'be.`legal_name`'];
-        yield 'status' => ['status', 'be.`status`'];
-        yield 'shop_name' => ['shop_name', 's.`name`'];
+        yield 'name' => ['name', 'be.name'];
+        yield 'legal_name' => ['legal_name', 'be.legal_name'];
+        yield 'status' => ['status', 'be.status'];
+        yield 'shop_name' => ['shop_name', 's.name'];
         yield 'customers_count aggregate alias' => ['customers_count', 'customers_count'];
     }
 

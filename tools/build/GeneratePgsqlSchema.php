@@ -22,6 +22,8 @@ declare(strict_types=1);
  *    native PostgreSQL boolean type, so the column keeps returning 0/1 instead
  *    of PDO pgsql's 't'/'f', which legacy code reading these columns expects.
  *  - MySQL-only clauses (ENGINE=, DEFAULT CHARSET=, COLLATE=) are dropped.
+ *  - A NOT NULL string or number column without DEFAULT gets MySQL's implicit
+ *    default ('' or 0), which legacy inserts omitting the column rely on.
  *  - Non-unique `KEY`/`INDEX` clauses are not supported inline by PostgreSQL and
  *    are emitted as separate `CREATE INDEX` statements after their table.
  *  - `UNIQUE KEY`/`UNIQUE INDEX` clauses become inline named `CONSTRAINT ...
@@ -156,13 +158,25 @@ final class PgsqlSchemaGenerator
         $isAutoIncrement = (bool) preg_match('/\bauto_increment\b/i', $modifiers);
         $modifiers = preg_replace('/\bauto_increment\b/i', '', $modifiers) ?? '';
         // Character set/collation are database-wide in PostgreSQL, not per-column.
-        $modifiers = preg_replace('/\bcharacter\s+set\s+\w+\b/i', '', $modifiers) ?? '';
+        // PostgreSQL's default collation already compares case-sensitively, like utf8mb4_bin.
+        $modifiers = preg_replace('/\b(?:character\s+set|collate)\s+\w+\b/i', '', $modifiers) ?? '';
         // MySQL's all-zero "unset" date/datetime sentinel isn't a valid PostgreSQL
         // date. '-infinity' preserves the "always earlier than a real date" semantics.
         $modifiers = preg_replace("/'0000-00-00(?:\s+00:00:00)?'/", "'-infinity'", $modifiers) ?? '';
         $modifiers = trim(preg_replace('/\s+/', ' ', $modifiers) ?? '');
 
         [$pgType, $isEnum, $enumValues] = $this->mapType($rawType, $args, $unsigned);
+
+        // Legacy inserts omit NOT NULL columns MySQL fills with its implicit default ('' or 0):
+        // PostgreSQL would reject the row, so the implicit default is spelled out.
+        if (!$isAutoIncrement && !$isEnum
+            && preg_match('/\bNOT NULL\b/i', $modifiers) && !preg_match('/\bDEFAULT\b/i', $modifiers)
+        ) {
+            $implicitDefault = $this->getMysqlImplicitDefault($pgType);
+            if (null !== $implicitDefault) {
+                $modifiers .= ' DEFAULT ' . $implicitDefault;
+            }
+        }
 
         $parts = ['"' . $colName . '"', $pgType];
         if ($modifiers !== '') {
@@ -233,6 +247,18 @@ final class PgsqlSchemaGenerator
             default:
                 throw new RuntimeException("Unmapped MySQL type: $rawType");
         }
+    }
+
+    private function getMysqlImplicitDefault(string $pgType): ?string
+    {
+        if (preg_match('/^(VARCHAR|CHAR|TEXT)\b/', $pgType)) {
+            return "''";
+        }
+        if (preg_match('/^(SMALLINT|INTEGER|BIGINT|NUMERIC|REAL|DOUBLE PRECISION)\b/', $pgType)) {
+            return '0';
+        }
+
+        return null;
     }
 
     private function convertKeyColumnList(string $colList): string

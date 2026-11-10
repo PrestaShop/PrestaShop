@@ -108,7 +108,7 @@ final class ExtraPropertyMultiShopEndpointTest extends ApiTestCase
         parent::setUp();
 
         foreach (['product_extra', 'product_extra_lang', 'product_extra_shop'] as $table) {
-            Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . $table . '`');
+            Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . $table);
         }
     }
 
@@ -223,7 +223,7 @@ final class ExtraPropertyMultiShopEndpointTest extends ApiTestCase
         // Restrict the core SHOP-scoped definition to the third shop (definition-level shop
         // association): outside that shop the property is neither exposed nor writable.
         $definitionId = (int) Db::getInstance()->getValue(sprintf(
-            "SELECT id_extra_property_definition FROM `%sextra_property_definition` WHERE property_name = 'api_shop_note'",
+            "SELECT id_extra_property_definition FROM %sextra_property_definition WHERE property_name = 'api_shop_note'",
             _DB_PREFIX_
         ));
         $registry = self::getContainer()->get(ExtraPropertyRegistryInterface::class);
@@ -243,7 +243,7 @@ final class ExtraPropertyMultiShopEndpointTest extends ApiTestCase
             );
             $this->assertArrayNotHasKey('api_shop_note', $patched['extraProperties']['_core'] ?? []);
             $this->assertSame(0, (int) Db::getInstance()->getValue(
-                'SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'product_extra_shop`'
+                'SELECT COUNT(*) FROM ' . _DB_PREFIX_ . 'product_extra_shop'
             ));
 
             // On the associated shop the property is exposed and writable as usual.

@@ -277,7 +277,7 @@ class CombinationCore extends ObjectModel
         );
         $result = $result && Db::getInstance()->delete(
             'feature_product_attribute',
-            '`id_product_attribute` = ' . (int) $this->id
+            'id_product_attribute = ' . (int) $this->id
         );
 
         if ($result) {

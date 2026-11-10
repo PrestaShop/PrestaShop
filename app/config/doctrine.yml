@@ -2,6 +2,8 @@
 doctrine:
   dbal:
     default_connection: default
+    types:
+      boolean: PrestaShopBundle\Doctrine\Type\IntegerBooleanType
 
     connections:
       default:

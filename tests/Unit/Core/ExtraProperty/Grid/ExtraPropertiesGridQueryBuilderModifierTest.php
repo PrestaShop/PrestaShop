@@ -146,8 +146,8 @@ class ExtraPropertiesGridQueryBuilderModifierTest extends TestCase
         foreach ([$searchQb, $countQb] as $qb) {
             $sql = $qb->getSQL();
             $this->assertStringContainsString('extra_lang.`id_contact` = cl.`id_contact`', $sql);
-            $this->assertStringContainsString('extra_lang.`id_lang` = cl.`id_lang`', $sql);
-            $this->assertStringNotContainsString('extra_lang.`id_shop`', $sql);
+            $this->assertStringContainsString('extra_lang.id_lang = cl.id_lang', $sql);
+            $this->assertStringNotContainsString('extra_lang.id_shop', $sql);
             $this->assertArrayNotHasKey('extraLangShopId', $qb->getParameters());
         }
     }
@@ -162,8 +162,8 @@ class ExtraPropertiesGridQueryBuilderModifierTest extends TestCase
         foreach ([$searchQb, $countQb] as $qb) {
             $sql = $qb->getSQL();
             $this->assertStringContainsString('extra_lang.`id_contact` = c.`id_contact`', $sql);
-            $this->assertStringContainsString('extra_lang.`id_lang` = :extraLangId', $sql);
-            $this->assertStringNotContainsString('extra_lang.`id_shop`', $sql);
+            $this->assertStringContainsString('extra_lang.id_lang = :extraLangId', $sql);
+            $this->assertStringNotContainsString('extra_lang.id_shop', $sql);
             $this->assertArrayNotHasKey('extraLangShopId', $qb->getParameters());
         }
     }

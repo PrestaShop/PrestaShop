@@ -725,7 +725,7 @@ class CartCore extends ObjectModel
                         product_shop.available_for_order, product_shop.show_price, product_shop.price, product_shop.active, product_shop.unity, product_shop.unit_price,
                         stock.quantity AS quantity_available, p.width, p.height, p.depth, stock.out_of_stock, p.weight,
                         p.available_date, p.date_add, p.date_upd, COALESCE(stock.quantity, 0) as quantity, pl.link_rewrite, cl.link_rewrite AS category,
-                        CONCAT(LPAD(cp.id_product, 10, 0), LPAD(COALESCE(cp.id_product_attribute, 0), 10, 0), COALESCE(cp.id_customization, 0)) AS unique_id,
+                        CONCAT(LPAD(CAST(cp.id_product AS CHAR(10)), 10, \'0\'), LPAD(CAST(COALESCE(cp.id_product_attribute, 0) AS CHAR(10)), 10, \'0\'), COALESCE(cp.id_customization, 0)) AS unique_id,
                         ps.product_supplier_reference supplier_reference');
 
         // Build FROM

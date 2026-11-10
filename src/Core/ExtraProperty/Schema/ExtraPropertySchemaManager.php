@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\ExtraProperty\Schema;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use ObjectModelCore;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
@@ -49,7 +50,7 @@ class ExtraPropertySchemaManager implements ExtraPropertySchemaManagerInterface
         $baseTableName = $this->prefix . $definition->getBaseTableName();
         $extraTableName = $this->prefix . $definition->getExtraTableName();
         $columnName = $definition->getStorageColumnName();
-        $sqlColumnDefinition = ColumnDefinitionMapper::getSqlDefinition($definition);
+        $sqlColumnDefinition = ColumnDefinitionMapper::getSqlDefinition($definition, $this->isPostgreSql());
         $sqlIndex = $definition->getSqlIndex();
 
         if (!$this->tableExists($baseTableName)) {
@@ -71,6 +72,9 @@ class ExtraPropertySchemaManager implements ExtraPropertySchemaManagerInterface
         $columnAdded = false;
         if (!$this->columnExists($extraTableName, $columnName)) {
             $this->createExtraColumn($extraTableName, $columnName, $sqlColumnDefinition);
+            if ($this->isPostgreSql()) {
+                $this->syncPostgreSqlEnumCheck($extraTableName, $columnName, $definition);
+            }
             $this->logger->info('Extra column created: {table}.{column}', ['table' => $extraTableName, 'column' => $columnName]);
             $columnAdded = true;
         } else {
@@ -153,13 +157,23 @@ class ExtraPropertySchemaManager implements ExtraPropertySchemaManagerInterface
             return;
         }
 
-        $sql = sprintf(
-            'ALTER TABLE %s ADD %s %s (%s)',
-            $this->connection->quoteIdentifier($extraTableName),
-            ExtraPropertySqlIndex::UNIQUE === $sqlIndex ? 'UNIQUE INDEX' : 'INDEX',
-            $this->connection->quoteIdentifier($indexName),
-            $this->connection->quoteIdentifier($columnName)
-        );
+        if ($this->isPostgreSql()) {
+            $sql = sprintf(
+                'CREATE %s %s ON %s (%s)',
+                ExtraPropertySqlIndex::UNIQUE === $sqlIndex ? 'UNIQUE INDEX' : 'INDEX',
+                $this->connection->quoteIdentifier($indexName),
+                $this->connection->quoteIdentifier($extraTableName),
+                $this->connection->quoteIdentifier($columnName)
+            );
+        } else {
+            $sql = sprintf(
+                'ALTER TABLE %s ADD %s %s (%s)',
+                $this->connection->quoteIdentifier($extraTableName),
+                ExtraPropertySqlIndex::UNIQUE === $sqlIndex ? 'UNIQUE INDEX' : 'INDEX',
+                $this->connection->quoteIdentifier($indexName),
+                $this->connection->quoteIdentifier($columnName)
+            );
+        }
         $this->connection->executeStatement($sql);
     }
 
@@ -182,13 +196,17 @@ class ExtraPropertySchemaManager implements ExtraPropertySchemaManagerInterface
             return;
         }
 
-        $sql = sprintf(
-            'ALTER TABLE %s MODIFY COLUMN %s %s',
-            $this->connection->quoteIdentifier($extraTableName),
-            $this->connection->quoteIdentifier($columnName),
-            ColumnDefinitionMapper::getSqlDefinition($definition)
-        );
-        $this->connection->executeStatement($sql);
+        if ($this->isPostgreSql()) {
+            $this->modifyPostgreSqlColumn($extraTableName, $columnName, $definition);
+        } else {
+            $sql = sprintf(
+                'ALTER TABLE %s MODIFY COLUMN %s %s',
+                $this->connection->quoteIdentifier($extraTableName),
+                $this->connection->quoteIdentifier($columnName),
+                ColumnDefinitionMapper::getSqlDefinition($definition)
+            );
+            $this->connection->executeStatement($sql);
+        }
         $this->logger->info('Extra column definition synced: {table}.{column}', ['table' => $extraTableName, 'column' => $columnName]);
     }
 
@@ -203,9 +221,7 @@ class ExtraPropertySchemaManager implements ExtraPropertySchemaManagerInterface
     protected function fetchLiveColumn(string $extraTableName, string $columnName): ?array
     {
         try {
-            $rows = $this->connection->fetchAllAssociative(
-                'SHOW COLUMNS FROM ' . $this->connection->quoteIdentifier($extraTableName)
-            );
+            $rows = LiveColumnReader::fetchColumns($this->connection, $extraTableName);
         } catch (Throwable) {
             return null;
         }
@@ -482,12 +498,67 @@ class ExtraPropertySchemaManager implements ExtraPropertySchemaManagerInterface
             return;
         }
 
-        $sql = sprintf(
-            'ALTER TABLE %s DROP INDEX %s',
-            $this->connection->quoteIdentifier($tableName),
-            $this->connection->quoteIdentifier($indexName)
-        );
+        $sql = $this->isPostgreSql()
+            ? sprintf('DROP INDEX %s', $this->connection->quoteIdentifier($indexName))
+            : sprintf(
+                'ALTER TABLE %s DROP INDEX %s',
+                $this->connection->quoteIdentifier($tableName),
+                $this->connection->quoteIdentifier($indexName)
+            );
         $this->connection->executeStatement($sql);
+    }
+
+    protected function isPostgreSql(): bool
+    {
+        return $this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform;
+    }
+
+    /**
+     * PostgreSQL has no MODIFY COLUMN: type, nullability and default are altered one by one,
+     * and the CHOICE literals live in a CHECK constraint replaced alongside.
+     *
+     * @param string $extraTableName Full table name (with prefix)
+     */
+    protected function modifyPostgreSqlColumn(string $extraTableName, string $columnName, ExtraPropertyDefinition $definition): void
+    {
+        $quotedColumn = $this->connection->quoteIdentifier($columnName);
+        $defaultClauseValue = ColumnDefinitionMapper::getDefaultClauseValue($definition, true);
+
+        $this->connection->executeStatement(sprintf(
+            'ALTER TABLE %s DROP CONSTRAINT IF EXISTS %s, ALTER COLUMN %s TYPE %s, ALTER COLUMN %s %s, ALTER COLUMN %s %s',
+            $this->connection->quoteIdentifier($extraTableName),
+            $this->connection->quoteIdentifier($this->buildEnumCheckName($extraTableName, $columnName)),
+            $quotedColumn,
+            ColumnDefinitionMapper::getPostgreSqlBaseDefinition($definition),
+            $quotedColumn,
+            $definition->isNullable() ? 'DROP NOT NULL' : 'SET NOT NULL',
+            $quotedColumn,
+            null !== $defaultClauseValue ? 'SET DEFAULT ' . $defaultClauseValue : 'DROP DEFAULT'
+        ));
+        $this->syncPostgreSqlEnumCheck($extraTableName, $columnName, $definition);
+    }
+
+    /**
+     * @param string $extraTableName Full table name (with prefix)
+     */
+    protected function syncPostgreSqlEnumCheck(string $extraTableName, string $columnName, ExtraPropertyDefinition $definition): void
+    {
+        $check = ColumnDefinitionMapper::getPostgreSqlEnumCheck($definition, $this->connection->quoteIdentifier($columnName));
+        if (null === $check) {
+            return;
+        }
+
+        $this->connection->executeStatement(sprintf(
+            'ALTER TABLE %s ADD CONSTRAINT %s CHECK (%s)',
+            $this->connection->quoteIdentifier($extraTableName),
+            $this->connection->quoteIdentifier($this->buildEnumCheckName($extraTableName, $columnName)),
+            $check
+        ));
+    }
+
+    protected function buildEnumCheckName(string $tableName, string $columnName): string
+    {
+        return 'chk_extra_' . substr(sha1($tableName . '|' . $columnName), 0, 16);
     }
 
     /**

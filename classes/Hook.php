@@ -481,13 +481,16 @@ class HookCore extends ObjectModel
             return Cache::retrieve($cache_id);
         }
 
+        // STRAIGHT_JOIN is a MySQL join-order hint, a plain inner join for PostgreSQL
+        /* @phpstan-ignore-next-line */
+        $straightJoin = _DB_TYPE_ == 'pgsql' ? 'INNER JOIN' : 'STRAIGHT_JOIN';
         $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             'SELECT h.id_hook, h.name as h_name, title, description, h.position, hm.position as hm_position, m.id_module, m.name, m.active
             FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'hook_module') . ' hm
-            STRAIGHT_JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'hook') . ' h ON (h.id_hook = hm.id_hook AND hm.id_shop = ' .
+            ' . $straightJoin . ' ' . Db::quoteIdentifier(_DB_PREFIX_ . 'hook') . ' h ON (h.id_hook = hm.id_hook AND hm.id_shop = ' .
                 (int) Context::getContext()->shop->id .
                 ')
-            STRAIGHT_JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module') . ' as m ON (m.id_module = hm.id_module)
+            ' . $straightJoin . ' ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module') . ' as m ON (m.id_module = hm.id_module)
             ORDER BY hm.position'
         );
         $list = [];
@@ -1452,8 +1455,9 @@ class HookCore extends ObjectModel
             );
         }
 
-        $sql->groupBy('hm.id_hook, hm.id_module');
-        $sql->orderBy('hm.position');
+        // Grouped on the hook and module PKs so PostgreSQL accepts the selected names (functional dependency)
+        $sql->groupBy('h.id_hook, m.id_module');
+        $sql->orderBy('MIN(hm.position)');
 
         $allHookRegistrations = [];
         if ($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql)) {

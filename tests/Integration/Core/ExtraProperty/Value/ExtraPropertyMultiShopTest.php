@@ -130,12 +130,13 @@ class ExtraPropertyMultiShopTest extends KernelTestCase
 
     private static function associateProductToShop(int $productId, int $shopId): void
     {
-        Db::getInstance()->execute(sprintf(
-            'INSERT IGNORE INTO `%sproduct_shop` (`id_product`, `id_shop`, `id_tax_rules_group`, `date_add`, `date_upd`) VALUES (%d, %d, 0, NOW(), NOW())',
-            _DB_PREFIX_,
-            $productId,
-            $shopId
-        ));
+        Db::getInstance()->insert('product_shop', [
+            'id_product' => $productId,
+            'id_shop' => $shopId,
+            'id_tax_rules_group' => 0,
+            'date_add' => ['type' => 'sql', 'value' => 'NOW()'],
+            'date_upd' => ['type' => 'sql', 'value' => 'NOW()'],
+        ], false, true, Db::INSERT_IGNORE);
     }
 
     public static function tearDownAfterClass(): void
@@ -160,7 +161,7 @@ class ExtraPropertyMultiShopTest extends KernelTestCase
 
         // Only the tables of the registered scopes exist (no COMMON definition → no {e}_extra).
         foreach (['product_extra_lang', 'product_extra_shop', 'contact_extra_lang', 'contact_extra_shop'] as $table) {
-            Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . $table . '`');
+            Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . $table);
         }
     }
 
@@ -252,8 +253,8 @@ class ExtraPropertyMultiShopTest extends KernelTestCase
     {
         // contact_lang has no id_shop: the mirrored extra table must not have one either,
         // writes must not fan out per shop, and reads must work from any shop context.
-        $columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `' . _DB_PREFIX_ . 'contact_extra_lang`');
-        $this->assertNotContains('id_shop', array_column($columns, 'Field'));
+        $table = self::getContainer()->get('doctrine.dbal.default_connection')->createSchemaManager()->introspectTable(_DB_PREFIX_ . 'contact_extra_lang');
+        $this->assertFalse($table->hasColumn('id_shop'));
 
         self::$writer->writeAll('contact', 'id_contact', self::SHARED_LANG_CONTACT_ID, [self::MODULE => [
             'ms_contact_lang' => [self::DEFAULT_LANG_ID => 'Shared title'],
@@ -329,7 +330,7 @@ class ExtraPropertyMultiShopTest extends KernelTestCase
     private function countRows(string $table, string $primaryKey, int $entityId): int
     {
         return (int) Db::getInstance()->getValue(
-            'SELECT COUNT(*) FROM `' . _DB_PREFIX_ . $table . '` WHERE `' . $primaryKey . '` = ' . $entityId
+            'SELECT COUNT(*) FROM ' . _DB_PREFIX_ . $table . ' WHERE ' . $primaryKey . ' = ' . $entityId
         );
     }
 }

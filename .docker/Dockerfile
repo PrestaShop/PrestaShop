@@ -25,6 +25,10 @@ RUN groupmod -g $GROUP_ID www-data \
 # Install tzdata to define the timezone
 RUN apt update && apt install -y mailutils tzdata
 
+# PostgreSQL support: PDO driver plus the client used to wait for the server and recreate the database
+RUN apt install -y libpq-dev postgresql-client \
+  && docker-php-ext-install pdo_pgsql
+
 ## Define timezone
 RUN ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime \
   && echo $TZ > /etc/timezone

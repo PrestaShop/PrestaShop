@@ -129,7 +129,7 @@ class CountryCore extends ObjectModel
 		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'country') . ' c ' . Shop::addSqlAssociation('country', 'c') . '
 		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'country_lang') . ' cl ON (c.id_country = cl.id_country AND cl.id_lang = ' . (int) $idLang . ')
 		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'zone') . ' z ON (z.id_zone = c.id_zone)
-		WHERE 1' . ($active ? ' AND c.active = 1' : '') . ($containStates ? ' AND c.contains_states = ' . (int) $containStates : '') . '
+		WHERE 1 = 1' . ($active ? ' AND c.active = 1' : '') . ($containStates ? ' AND c.contains_states = ' . (int) $containStates : '') . '
 		ORDER BY cl.name ASC');
         foreach ($result as $row) {
             $countries[$row['id_country']] = $row;

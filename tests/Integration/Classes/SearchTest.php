@@ -143,8 +143,10 @@ class SearchTest extends TestCase
         yield ['dres', 'dres%', false, true];
         yield ['dress', '%dress%', true, true];
         yield ['dress', 'dress', false, false];
-        yield ['dre%ss', 'dre\\\\%ss', false, false];
-        yield ['dre%ss', '%dre\\\\%ss', true, false];
+        // The LIKE escape backslash is itself escaped by pSQL() on MySQL only
+        $escapedPercent = _DB_TYPE_ == 'pgsql' ? '\\%' : '\\\\%';
+        yield ['dre%ss', 'dre' . $escapedPercent . 'ss', false, false];
+        yield ['dre%ss', '%dre' . $escapedPercent . 'ss', true, false];
         yield ['-dress', 'dress%', false, true];
     }
 }

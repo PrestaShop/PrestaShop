@@ -225,28 +225,27 @@ class SearchCore
              * Our string looks something like "prestashop test a-1000".
              * Aliases must be searched for in a raw form, with no special characters.
              */
-            // NOTE: the REGEXP-based alias matching below (including the ICU-support probe against
-            // MySQL's fake "DUAL" table) is MySQL-specific regex-engine detection with no PostgreSQL
-            // equivalent (Postgres always uses its own POSIX regex engine, with different boundary
-            // syntax: `\y` instead of `\b`, no `[[:<:]]`/`[[:>:]]`, and no FROM DUAL). This is a known,
-            // larger architectural gap left untouched here — flagged for a dedicated follow-up task.
             $query = '
 				SELECT a.alias, a.search
 				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'alias') . ' a
 				WHERE \'TERM\' %s AND active = 1
             ';
 
-            // Check if we can we use '\b' (faster)
-            $useICU = (bool) Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->getValue(
-                'SELECT 1 FROM DUAL WHERE \'icu regex\' REGEXP \'\\\\bregex\''
-            );
-
-            $query = sprintf(
-                $query,
-                $useICU
+            /* @phpstan-ignore-next-line */
+            if (_DB_TYPE_ == 'pgsql') {
+                // PostgreSQL's POSIX regex engine spells the word boundary \y
+                $aliasCondition = '~ (\'\\y\' || alias || \'\\y\')';
+            } else {
+                // Check if we can we use '\b' (faster)
+                $useICU = (bool) Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->getValue(
+                    'SELECT 1 FROM DUAL WHERE \'icu regex\' REGEXP \'\\\\bregex\''
+                );
+                $aliasCondition = $useICU
                     ? 'REGEXP CONCAT(\'\\\\b\', alias, \'\\\\b\')'
-                    : 'REGEXP CONCAT(\'(^|[[:space:]]|[[:<:]])\', alias, \'([[:space:]]|[[:>:]]|$)\')'
-            );
+                    : 'REGEXP CONCAT(\'(^|[[:space:]]|[[:<:]])\', alias, \'([[:space:]]|[[:>:]]|$)\')';
+            }
+
+            $query = sprintf($query, $aliasCondition);
             $query = str_replace('/TERM/', pSQL($string), $query);
             $aliases = Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->executeS($query);
             $words = explode(' ', $string);
@@ -1050,7 +1049,7 @@ class SearchCore
                         }
                     }
 
-                    if (is_array($query_array) && !empty($query_array)) {
+                    if (!empty($query_array)) {
                         // PostgreSQL has no INSERT IGNORE: ON CONFLICT DO NOTHING is the equivalent
                         // (no conflict target needed, it applies to any constraint violation on the row).
                         /* @phpstan-ignore-next-line */

@@ -168,6 +168,11 @@ class DbPDOCore extends Db
      */
     protected function _query($sql)
     {
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'pgsql') {
+            $sql = str_replace(["'0000-00-00 00:00:00'", "'0000-00-00'"], "'-infinity'", $sql);
+        }
+
         try {
             return $this->link->query($sql);
         } catch (PDOException $exception) {
@@ -194,7 +199,13 @@ class DbPDOCore extends Db
             return false;
         }
 
-        return $result->fetch(PDO::FETCH_ASSOC);
+        $row = $result->fetch(PDO::FETCH_ASSOC);
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'pgsql' && is_array($row)) {
+            $row = $this->restoreZeroDates($row, $result);
+        }
+
+        return $row;
     }
 
     /**
@@ -216,7 +227,37 @@ class DbPDOCore extends Db
             return false;
         }
 
-        return $result->fetchAll(PDO::FETCH_ASSOC);
+        $rows = $result->fetchAll(PDO::FETCH_ASSOC);
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'pgsql' && is_array($rows)) {
+            foreach ($rows as $key => $row) {
+                $rows[$key] = $this->restoreZeroDates($row, $result);
+            }
+        }
+
+        return $rows;
+    }
+
+    /**
+     * PostgreSQL has no zero date: the MySQL '0000-00-00' sentinel legacy code writes and compares
+     * is stored as -infinity (see _query()), and given back in its MySQL form.
+     *
+     * @param array<string, mixed> $row
+     *
+     * @return array<string, mixed>
+     */
+    private function restoreZeroDates(array $row, PDOStatement $result): array
+    {
+        $columnIndex = 0;
+        foreach ($row as $column => $value) {
+            if ('-infinity' === $value) {
+                $meta = $result->getColumnMeta($columnIndex);
+                $row[$column] = 'date' === ($meta['native_type'] ?? null) ? '0000-00-00' : '0000-00-00 00:00:00';
+            }
+            ++$columnIndex;
+        }
+
+        return $row;
     }
 
     /**

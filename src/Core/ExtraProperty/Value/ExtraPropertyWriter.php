@@ -11,6 +11,7 @@ namespace PrestaShop\PrestaShop\Core\ExtraProperty\Value;
 
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -491,7 +492,7 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
     }
 
     /**
-     * Builds a (multi-row) INSERT … ON DUPLICATE KEY UPDATE statement.
+     * Builds a (multi-row) upsert statement (ON DUPLICATE KEY UPDATE, or ON CONFLICT on PostgreSQL).
      *
      * $systemColumns are fixed keys inserted before the data columns (e.g. id_shop, id_lang).
      * Callers must pass parameters row by row, each row in order: entityId, systemColumn
@@ -515,17 +516,33 @@ class ExtraPropertyWriter implements ExtraPropertyWriterInterface
 
         $allColsList = implode(', ', [$quotedPk, ...($quotedSystemCols ?: []), ...$quotedDataCols]);
         $rowPlaceholders = '(' . implode(', ', array_fill(0, 1 + count($systemColumns) + count($dataColumns), '?')) . ')';
-        $updateParts = implode(', ', array_map(
-            fn (string $quotedCol): string => $quotedCol . ' = VALUES(' . $quotedCol . ')',
-            $quotedDataCols
-        ));
-
-        return sprintf(
-            'INSERT INTO %s (%s) VALUES %s ON DUPLICATE KEY UPDATE %s',
+        $insertSql = sprintf(
+            'INSERT INTO %s (%s) VALUES %s',
             $this->connection->quoteIdentifier($fullTableName),
             $allColsList,
-            implode(', ', array_fill(0, $rowCount, $rowPlaceholders)),
-            $updateParts
+            implode(', ', array_fill(0, $rowCount, $rowPlaceholders))
+        );
+
+        if ($this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform) {
+            // The extra table PK is the entity PK plus the system columns, the only conflict target
+            return sprintf(
+                '%s ON CONFLICT (%s) DO UPDATE SET %s',
+                $insertSql,
+                implode(', ', [$quotedPk, ...$quotedSystemCols]),
+                implode(', ', array_map(
+                    fn (string $quotedCol): string => $quotedCol . ' = EXCLUDED.' . $quotedCol,
+                    $quotedDataCols
+                ))
+            );
+        }
+
+        return sprintf(
+            '%s ON DUPLICATE KEY UPDATE %s',
+            $insertSql,
+            implode(', ', array_map(
+                fn (string $quotedCol): string => $quotedCol . ' = VALUES(' . $quotedCol . ')',
+                $quotedDataCols
+            ))
         );
     }
 }

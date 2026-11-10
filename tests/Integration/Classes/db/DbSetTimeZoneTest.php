@@ -34,7 +34,7 @@ class DbSetTimeZoneTest extends KernelTestCase
 
         $this->assertSame(
             (new DateTime())->format('P'),
-            $db->getValue('SELECT @@session.time_zone')
+            $db->getValue(self::sessionOffsetQuery())
         );
     }
 
@@ -46,7 +46,7 @@ class DbSetTimeZoneTest extends KernelTestCase
         $this->assertLessThanOrEqual(
             2,
             abs(strtotime((string) $db->getValue('SELECT NOW()')) - time()),
-            'MySQL NOW() should match the PHP wall-clock time within 2 seconds'
+            'NOW() should match the PHP wall-clock time within 2 seconds'
         );
     }
 
@@ -57,7 +57,12 @@ class DbSetTimeZoneTest extends KernelTestCase
 
         $this->assertSame(
             (new DateTime())->format('P'),
-            $connection->fetchOne('SELECT @@session.time_zone')
+            $connection->fetchOne(self::sessionOffsetQuery())
         );
+    }
+
+    private static function sessionOffsetQuery(): string
+    {
+        return _DB_TYPE_ == 'pgsql' ? "SELECT to_char(NOW(), 'TZH:TZM')" : 'SELECT @@session.time_zone';
     }
 }
