@@ -146,6 +146,30 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Given /^Shop group "(.+)" does not share its stock$/
+     */
+    public function unsetStockShareForGroup(string $reference): void
+    {
+        $shopGroup = new ShopGroup((int) $this->getSharedStorage()->get($reference));
+        $shopGroup->share_stock = false;
+        $shopGroup->update();
+        Shop::resetStaticCache();
+    }
+
+    /**
+     * @Given /^Shop group "(.+)" (shares|does not share) its (customers|orders)$/
+     */
+    public function setDataShareForGroup(string $reference, string $sharing, string $data): void
+    {
+        $shopGroup = new ShopGroup((int) $this->getSharedStorage()->get($reference));
+        // ShopGroup::getFields() only keeps share_order when customers and stock are shared too
+        $shopGroup->{$data === 'customers' ? 'share_customer' : 'share_order'} = $sharing === 'shares';
+        $shopGroup->update();
+        // Shop::getSharedShops() reads the sharing flags from a static cache
+        Shop::resetStaticCache();
+    }
+
+    /**
      * @Given /^I copy "(.+)" shop data from "(.+)" to "(.+)"$/
      *
      * @param string $what

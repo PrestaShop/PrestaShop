@@ -21,6 +21,11 @@ services:
       - "%mail_themes_uri%"
       - '@PrestaShop\PrestaShop\Adapter\Tools'
 
+  PrestaShop\PrestaShop\Adapter\CartRule\CartRuleQuantityReserver:
+    arguments:
+      $connection: '@doctrine.dbal.default_connection'
+      $dbPrefix: '%database_prefix%'
+
   PrestaShop\PrestaShop\Adapter\Shipment\OrderShipmentCreator:
     arguments:
       - '@PrestaShopBundle\Entity\Repository\ShipmentRepository'
@@ -70,6 +75,13 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Bundle\AssetsInstaller
 
   PrestaShop\PrestaShop\Adapter\Address\Repository\AddressRepository:
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+
+  # Defined here rather than in adapter/order.yml: PaymentModule::validateOrder() runs in the
+  # hand-built front-office container, which imports this file, not adapter/order.yml.
+  PrestaShop\PrestaShop\Adapter\Order\OrderCreationLock:
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
