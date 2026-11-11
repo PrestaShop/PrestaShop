@@ -18,7 +18,7 @@ use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\CannotDeleteAliasException
 use PrestaShop\PrestaShop\Core\Domain\Alias\Query\GetAliasesBySearchTermForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult\AliasForEditing;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface as IdentifiableFormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\AliasFilters;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
@@ -61,7 +61,7 @@ class SearchAliasController extends PrestaShopAdminController
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.alias_search_term_form_builder')]
         FormBuilderInterface $formBuilder,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.alias_search_term_form_handler')]
-        IdentifiableFormHandlerInterface $formHandler,
+        FormHandlerInterface $formHandler,
     ): Response {
         $form = $formBuilder->getForm();
         $form->handleRequest($request);
@@ -93,7 +93,7 @@ class SearchAliasController extends PrestaShopAdminController
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.alias_search_term_form_builder')]
         FormBuilderInterface $formBuilder,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.alias_search_term_form_handler')]
-        IdentifiableFormHandlerInterface $formHandler,
+        FormHandlerInterface $formHandler,
     ): Response {
         try {
             /**

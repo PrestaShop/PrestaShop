@@ -180,6 +180,7 @@ module.exports = {
     reset_password: './js/pages/login/reset-password',
     rtl: './scss/rtl.scss',
     search: './js/pages/search',
+    search_preferences: './js/pages/search/preferences',
     search_engine: './js/pages/search-engine',
     security: './js/pages/security',
     shipping_preferences: './js/pages/shipping-preferences',

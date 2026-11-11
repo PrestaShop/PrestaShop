@@ -8,12 +8,14 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\Search;
 
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\Extension\MultistoreConfigurationTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class IndexationType extends TranslatorAwareType
+final class IndexationType extends TranslatorAwareType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -24,6 +26,7 @@ class IndexationType extends TranslatorAwareType
                 'Admin.Shopparameters.Help'
             ),
             'required' => false,
+            'multistore_configuration_key' => 'PS_SEARCH_INDEXATION',
         ]);
     }
 
@@ -32,6 +35,16 @@ class IndexationType extends TranslatorAwareType
         $resolver->setDefaults([
             'translation_domain' => 'Admin.Shopparameters.Feature',
         ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 
     public function getBlockPrefix(): string

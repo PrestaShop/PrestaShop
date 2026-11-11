@@ -15,14 +15,6 @@ admin_search_alias_index:
     _legacy_controller: AdminAliases
     _legacy_link: AdminAliases
 
-admin_search_alias_index_aliases:
-  path: /aliases/
-  methods: [ GET ]
-  defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchAliasController::indexAction
-    _legacy_controller: AdminAliases
-    _legacy_link: AdminAliases
-
 admin_search_alias_search:
   path: /
   methods: [ POST ]
@@ -73,7 +65,7 @@ admin_search_alias_edit:
 
 admin_search_indexation_save:
   path: /indexation/save
-  methods: [ POST ]
+  methods: [ PATCH, POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchConfigurationController::processIndexationFormAction
     _legacy_controller: AdminSearchConf
@@ -86,7 +78,7 @@ admin_search_indexation_add_missing:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchConfigurationController::addMissingToIndexAction
     _legacy_controller: AdminSearchConf
-    _legacy_link: AdminSearch:searchCron
+    _legacy_link: AdminSearchConf:addMissingToIndex
     _legacy_feature_flag: search_page
 
 admin_search_indexation_rebuild:
@@ -95,22 +87,21 @@ admin_search_indexation_rebuild:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchConfigurationController::rebuildIndexAction
     _legacy_controller: AdminSearchConf
-    _legacy_link: AdminSearch:searchCron
+    _legacy_link: AdminSearchConf:rebuildIndex
     _legacy_feature_flag: search_page
 
 admin_search_indexation_cron:
   path: /indexation/cron
-  methods: [ GET, POST ] # Should be exclusively POST, but GET allows the redirection from the legacy
+  methods: [ GET, POST ] # GET because cron jobs usually call the URL with a plain GET
   defaults:
+    # No _legacy_link on purpose: cron jobs already configured with the legacy AdminSearch URL keep being served by the
+    # legacy controller directly, a redirection would silently break crontabs whose HTTP client does not follow it.
     _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchConfigurationController::cronIndexationAction
     _anonymous_controller: true
-    _legacy_controller: AdminSearch
-    _legacy_link: AdminSearch:searchCron
-    _legacy_feature_flag: search_page
 
 admin_search_options_save:
   path: /options/save
-  methods: [ POST ]
+  methods: [ PATCH, POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchConfigurationController::processSearchOptionsFormAction
     _legacy_controller: AdminSearchConf
@@ -119,7 +110,7 @@ admin_search_options_save:
 
 admin_search_weight_save:
   path: /weight/save
-  methods: [ POST ]
+  methods: [ PATCH, POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchConfigurationController::processWeightFormAction
     _legacy_controller: AdminSearchConf
