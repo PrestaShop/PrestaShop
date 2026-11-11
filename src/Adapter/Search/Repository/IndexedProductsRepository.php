@@ -11,7 +11,7 @@ namespace PrestaShop\PrestaShop\Adapter\Search\Repository;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception as DBALException;
 
-class IndexedProductsRepository
+final class IndexedProductsRepository
 {
     public function __construct(
         private readonly Connection $connection,
@@ -20,26 +20,34 @@ class IndexedProductsRepository
     }
 
     /**
-     * Counts searchable products and how many of them are already indexed, scoped to the given shops.
+     * Counts searchable products and how many of them are already indexed.
      *
-     * @param int[] $shopIds
+     * With a shop id, the product's settings of that shop are used. Without (all shops or group context), each product
+     * is counted once, with the settings of its default shop — same as the legacy Shop::addSqlAssociation() behaviour.
      *
      * @return array{indexed: int, total: int}
      *
      * @throws DBALException
      */
-    public function getIndexedProductsCount(array $shopIds): array
+    public function getIndexedProductsCount(?int $shopId): array
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
             ->select('COUNT(*) AS total', 'SUM(ps.indexed) AS indexed')
             ->from($this->dbPrefix . 'product', 'p')
-            ->innerJoin('p', $this->dbPrefix . 'product_shop', 'ps', 'ps.id_product = p.id_product')
+            ->innerJoin(
+                'p',
+                $this->dbPrefix . 'product_shop',
+                'ps',
+                null !== $shopId ? 'ps.id_product = p.id_product AND ps.id_shop = :shopId' : 'ps.id_product = p.id_product AND ps.id_shop = p.id_shop_default'
+            )
             ->where($qb->expr()->in('ps.visibility', ':visibilities'))
             ->andWhere('ps.active = 1')
-            ->andWhere($qb->expr()->in('ps.id_shop', ':shopIds'))
-            ->setParameter('visibilities', ['both', 'search'], Connection::PARAM_STR_ARRAY)
-            ->setParameter('shopIds', $shopIds, Connection::PARAM_INT_ARRAY);
+            ->setParameter('visibilities', ['both', 'search'], Connection::PARAM_STR_ARRAY);
+
+        if (null !== $shopId) {
+            $qb->setParameter('shopId', $shopId);
+        }
 
         $row = $qb->executeQuery()->fetchAssociative() ?: [];
 

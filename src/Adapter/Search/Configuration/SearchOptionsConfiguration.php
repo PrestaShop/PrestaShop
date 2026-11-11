@@ -12,7 +12,7 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class SearchOptionsConfiguration extends AbstractMultistoreConfiguration
+final class SearchOptionsConfiguration extends AbstractMultistoreConfiguration
 {
     /**
      * @var array<int, string>
