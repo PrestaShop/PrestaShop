@@ -441,6 +441,10 @@ services:
     arguments:
       $shortDescriptionMaxLength: '@=service("prestashop.adapter.legacy.configuration").get("PS_PRODUCT_SHORT_DESC_LIMIT")'
 
+  PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationContentType:
+    arguments:
+      $shortDescriptionMaxLength: '@=service("prestashop.adapter.legacy.configuration").get("PS_PRODUCT_SHORT_DESC_LIMIT")'
+
   PrestaShopBundle\Form\Admin\Sell\Product\Description\ManufacturerType:
     arguments:
       $manufacturerChoiceProvider: '@prestashop.adapter.form.choice_provider.manufacturer_name_by_id'

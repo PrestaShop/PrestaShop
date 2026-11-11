@@ -209,6 +209,7 @@ final class ImportEntityDeleter implements ImportEntityDeleterInterface
             'product_attribute',
             'product_attribute_shop',
             'product_attribute_combination',
+            'product_attribute_content',
             'product_attribute_image',
             'product_attribute_lang',
             'pack',
@@ -241,6 +242,7 @@ final class ImportEntityDeleter implements ImportEntityDeleterInterface
             'product_attribute',
             'product_attribute_shop',
             'product_attribute_combination',
+            'product_attribute_content',
             'product_attribute_image',
             'product_attribute_lang',
         ];

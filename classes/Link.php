@@ -3,9 +3,16 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+use PrestaShop\PrestaShop\Adapter\ContainerFinder;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Content\Repository\CombinationContentRepository;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
@@ -27,6 +34,8 @@ class LinkCore
 
     // Categories that will not be used for URL rewriting
     protected static $category_disable_rewrite = null;
+
+    protected static ?bool $isCombinationSeoEnabled = null;
 
     /**
      * Constructor (initialization only).
@@ -181,10 +190,13 @@ class LinkCore
             $params['id_product_attribute'] = $idProductAttribute;
         }
 
-        if (!$alias) {
-            $product = $this->getProductObject($product, $idLang, $idShop);
+        $params['rewrite'] = isset($params['id_product_attribute']) ? $this->getCombinationLinkRewrite((int) $params['id_product_attribute'], (int) $idLang, $idShop) : null;
+        if (null === $params['rewrite']) {
+            if (!$alias) {
+                $product = $this->getProductObject($product, $idLang, $idShop);
+            }
+            $params['rewrite'] = (!$alias) ? $product->getFieldByLang('link_rewrite') : $alias;
         }
-        $params['rewrite'] = (!$alias) ? $product->getFieldByLang('link_rewrite') : $alias;
 
         // Only pass the ean13 parameter when the active route uses it
         if ($dispatcher->hasKeyword('product_rule', $idLang, 'ean13', $idShop)) {
@@ -420,6 +432,41 @@ class LinkCore
         }
 
         return $category;
+    }
+
+    /**
+     * Combinations having their own link rewrite get their own URL, when the combination SEO feature is enabled
+     */
+    public function getCombinationLinkRewrite(int $idProductAttribute, ?int $idLang = null, ?int $idShop = null): ?string
+    {
+        if (!$idProductAttribute || !$this->isCombinationSeoEnabled()) {
+            return null;
+        }
+
+        $idShop = (int) ($idShop ?: Context::getContext()->shop->id);
+        $cacheKey = 'Link::getCombinationLinkRewrite_' . $idShop . '_' . $idProductAttribute;
+        if (!Cache::isStored($cacheKey)) {
+            Cache::store($cacheKey, (new ContainerFinder(Context::getContext()))->getContainer()
+                ->get(CombinationContentRepository::class)
+                ->getLinkRewrites(new CombinationId($idProductAttribute), new ShopId($idShop)));
+        }
+
+        return Cache::retrieve($cacheKey)[$idLang ?: Context::getContext()->language->id] ?? null;
+    }
+
+    private function isCombinationSeoEnabled(): bool
+    {
+        if (null === static::$isCombinationSeoEnabled) {
+            try {
+                static::$isCombinationSeoEnabled = (new ContainerFinder(Context::getContext()))->getContainer()
+                    ->get(FeatureFlagStateCheckerInterface::class)
+                    ->isEnabled(FeatureFlagSettings::FEATURE_FLAG_COMBINATION_SEO);
+            } catch (ContainerNotFoundException) {
+                static::$isCombinationSeoEnabled = false;
+            }
+        }
+
+        return static::$isCombinationSeoEnabled;
     }
 
     /**
@@ -1240,7 +1287,14 @@ class LinkCore
         }
 
         if ($controller == 'product' && isset($params['id_product'])) {
-            return $this->getProductLink((int) $params['id_product'], null, null, null, (int) $idLang);
+            $idProductAttribute = (int) ($params['id_product_attribute'] ?? 0);
+
+            return $this->getProductLink(
+                (int) $params['id_product'],
+                idLang: (int) $idLang,
+                idProductAttribute: $this->getCombinationLinkRewrite($idProductAttribute, (int) $idLang) ? $idProductAttribute : null,
+                addAnchor: false
+            );
         } elseif ($controller == 'category' && isset($params['id_category'])) {
             return $this->getCategoryLink((int) $params['id_category'], null, (int) $idLang);
         } elseif ($controller == 'supplier' && isset($params['id_supplier'])) {
