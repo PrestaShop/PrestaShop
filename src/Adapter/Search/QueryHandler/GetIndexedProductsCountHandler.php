@@ -14,7 +14,6 @@ use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Search\Query\GetIndexedProductsCount;
 use PrestaShop\PrestaShop\Core\Domain\Search\QueryHandler\GetIndexedProductsCountHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Search\QueryResult\IndexedProductsCount;
-use Shop;
 
 #[AsQueryHandler]
 final class GetIndexedProductsCountHandler implements GetIndexedProductsCountHandlerInterface
@@ -29,7 +28,9 @@ final class GetIndexedProductsCountHandler implements GetIndexedProductsCountHan
      */
     public function handle(GetIndexedProductsCount $query): IndexedProductsCount
     {
-        $counts = $this->indexedProductsRepository->getIndexedProductsCount(Shop::getContextListShopID());
+        $counts = $this->indexedProductsRepository->getIndexedProductsCount(
+            $query->getShopConstraint()->getShopId()?->getValue()
+        );
 
         return new IndexedProductsCount(
             $counts['indexed'],

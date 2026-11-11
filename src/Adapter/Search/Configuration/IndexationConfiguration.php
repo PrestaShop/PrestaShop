@@ -12,7 +12,7 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class IndexationConfiguration extends AbstractMultistoreConfiguration
+final class IndexationConfiguration extends AbstractMultistoreConfiguration
 {
     /**
      * @var array<int, string>

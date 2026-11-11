@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Search\QueryResult;
 
-class IndexedProductsCount
+final class IndexedProductsCount
 {
     public function __construct(
         private readonly int $indexed,

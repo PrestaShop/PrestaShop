@@ -8,8 +8,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
-use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Search\Command\SearchIndexationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Search\Exception\SearchIndexationException;
+use PrestaShop\PrestaShop\Core\Domain\Search\Exception\SearchIndexationInvalidContextException;
 use PrestaShop\PrestaShop\Core\Domain\Search\Query\GetIndexedProductsCount;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
@@ -28,6 +29,13 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class SearchConfigurationController extends PrestaShopAdminController
 {
+    /**
+     * The cron token is a slice of the cookie key, same as the legacy AdminSearchController::TOKEN_CHECK_* constants,
+     * so cron URLs already configured by merchants keep working.
+     */
+    private const CRON_TOKEN_START_POS = 34;
+    private const CRON_TOKEN_LENGTH = 8;
+
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function preferencesIndexAction(
         #[Autowire(service: 'prestashop.admin.search_preferences.indexation.form_handler')]
@@ -129,9 +137,9 @@ class SearchConfigurationController extends PrestaShopAdminController
     public function addMissingToIndexAction(): RedirectResponse
     {
         try {
-            $this->dispatchCommand(new SearchIndexationCommand(false));
+            $this->dispatchCommand(new SearchIndexationCommand(false, $this->getShopContext()->getShopConstraint()));
             $this->addFlash('success', $this->trans('The index was successfully updated.', [], 'Admin.Shopparameters.Notification'));
-        } catch (Exception) {
+        } catch (SearchIndexationException) {
             $this->addFlash('error', $this->trans('An error occurred while indexing products.', [], 'Admin.Shopparameters.Notification'));
         }
 
@@ -142,9 +150,9 @@ class SearchConfigurationController extends PrestaShopAdminController
     public function rebuildIndexAction(): RedirectResponse
     {
         try {
-            $this->dispatchCommand(new SearchIndexationCommand(true));
+            $this->dispatchCommand(new SearchIndexationCommand(true, $this->getShopContext()->getShopConstraint()));
             $this->addFlash('success', $this->trans('The index was successfully rebuilt.', [], 'Admin.Shopparameters.Notification'));
-        } catch (Exception) {
+        } catch (SearchIndexationException) {
             $this->addFlash('error', $this->trans('An error occurred while rebuilding the index.', [], 'Admin.Shopparameters.Notification'));
         }
 
@@ -156,8 +164,7 @@ class SearchConfigurationController extends PrestaShopAdminController
         #[Autowire(param: 'cookie_key')]
         string $cookieKey,
     ): Response {
-        $expectedToken = substr($cookieKey, 34, 8);
-        if ($request->query->get('token') !== $expectedToken) {
+        if (!hash_equals($this->getCronToken($cookieKey), (string) $request->query->get('token'))) {
             return new Response('Forbidden', Response::HTTP_FORBIDDEN);
         }
 
@@ -169,8 +176,10 @@ class SearchConfigurationController extends PrestaShopAdminController
 
         try {
             $this->dispatchCommand(new SearchIndexationCommand($full, $shopConstraint));
-        } catch (Exception $e) {
-            return new Response('Indexation failed: ' . $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+        } catch (SearchIndexationInvalidContextException) {
+            return new Response('Unknown shop', Response::HTTP_BAD_REQUEST);
+        } catch (SearchIndexationException) {
+            return new Response('Indexation failed', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return new Response('OK');
@@ -209,10 +218,15 @@ class SearchConfigurationController extends PrestaShopAdminController
         FormInterface $searchOptionsForm,
         FormInterface $weightForm,
     ): Response {
-        $indexedCount = $this->dispatchQuery(new GetIndexedProductsCount());
-        $cronToken = substr($cookieKey, 34, 8);
+        $shopContext = $this->getShopContext();
+        $indexedCount = $this->dispatchQuery(new GetIndexedProductsCount($shopContext->getShopConstraint()));
+
+        $cronParameters = ['token' => $this->getCronToken($cookieKey), 'full' => 1];
+        if ($shopContext->isSingleShopContext()) {
+            $cronParameters['id_shop'] = $shopContext->getId();
+        }
         $cronUrl = UrlCleaner::cleanUrl(
-            $this->generateUrl('admin_search_indexation_cron', ['token' => $cronToken], UrlGeneratorInterface::ABSOLUTE_URL),
+            $this->generateUrl('admin_search_indexation_cron', $cronParameters, UrlGeneratorInterface::ABSOLUTE_URL),
             ['_token']
         );
 
@@ -225,5 +239,10 @@ class SearchConfigurationController extends PrestaShopAdminController
             'totalProductsCount' => $indexedCount->getTotal(),
             'cronUrl' => $cronUrl,
         ]);
+    }
+
+    private function getCronToken(string $cookieKey): string
+    {
+        return substr($cookieKey, self::CRON_TOKEN_START_POS, self::CRON_TOKEN_LENGTH);
     }
 }

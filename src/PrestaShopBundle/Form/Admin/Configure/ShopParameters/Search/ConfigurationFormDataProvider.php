@@ -15,7 +15,7 @@ use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
  * Generic form data provider for the Search preferences settings blocks (indexation, search options, weight).
  * Each block wires this provider with its own DataConfiguration.
  */
-class ConfigurationFormDataProvider implements FormDataProviderInterface
+final class ConfigurationFormDataProvider implements FormDataProviderInterface
 {
     public function __construct(private readonly DataConfigurationInterface $configuration)
     {

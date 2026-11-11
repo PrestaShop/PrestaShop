@@ -12,7 +12,7 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class WeightConfiguration extends AbstractMultistoreConfiguration
+final class WeightConfiguration extends AbstractMultistoreConfiguration
 {
     /**
      * @var array<int, string>
