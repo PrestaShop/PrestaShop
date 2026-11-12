@@ -4,7 +4,7 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
-use PrestaShopBundle\Translation\TranslatorComponent;
+use PrestaShopBundle\Translation\TranslatorInterface;
 
 class TreeCore
 {
@@ -33,7 +33,7 @@ class TreeCore
     /** @var TreeToolbar|ITreeToolbarCore|null */
     private $_toolbar;
 
-    /** @var TranslatorComponent */
+    /** @var TranslatorInterface */
     public $translator;
 
     public function __construct($id, $data = null)
