@@ -34,7 +34,9 @@ body {
 }
 
 #content.bootstrap {
-  padding: var(--#{$cdk}page-head-height) var(--#{$cdk}size-16) 0 calc(var(--#{$cdk}sidebar-width) + var(--#{$cdk}size-16));
+  // Avoid `var(...)` for four-part shorthands to prevent CSSJanus RTL bugs.
+  padding-block: var(--#{$cdk}page-head-height) 0;
+  padding-inline: calc(var(--#{$cdk}sidebar-width) + var(--#{$cdk}size-16)) var(--#{$cdk}size-16);
 
   &.with-tabs {
     padding-top: var(--#{$cdk}page-head-with-tabs-height);
