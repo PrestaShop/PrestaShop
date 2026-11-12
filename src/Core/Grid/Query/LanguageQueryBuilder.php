@@ -102,7 +102,7 @@ final class LanguageQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            $builder->andWhere($filterName . ' LIKE :' . $filterName);
+            $builder->andWhere('LOWER(' . $filterName . ') LIKE LOWER(:' . $filterName . ')');
             $builder->setParameter($filterName, '%' . $filterValue . '%');
         }
     }

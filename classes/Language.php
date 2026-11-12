@@ -918,8 +918,8 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             $idLang = Db::getInstance()
                 ->getValue(
                     'SELECT id_lang FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'lang') . '
-                    WHERE locale = \'' . pSQL(strtolower($locale)) . '\'
-                    OR language_code = \'' . pSQL(strtolower($locale)) . '\''
+                    WHERE LOWER(locale) = \'' . pSQL(strtolower($locale)) . '\'
+                    OR LOWER(language_code) = \'' . pSQL(strtolower($locale)) . '\''
                 );
 
             Cache::store($key, $idLang);
