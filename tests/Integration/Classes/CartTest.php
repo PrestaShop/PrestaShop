@@ -391,14 +391,11 @@ class CartTest extends KernelTestCase
         );
 
         /*
-        * Change the delivery address in the same PHP process.
-        *
-        * Cart::update() does not reset the delivery option cache, so the next
-        * call must use a cache entry scoped by the new delivery address.
+        * Change the delivery address in the same PHP process, without saving the
+        * cart (saving resets its delivery option cache): the next call must use
+        * a cache entry scoped by the new delivery address.
         */
         $cart->id_address_delivery = (int) $secondAddress->id;
-
-        $this->assertTrue($cart->update());
 
         /*
         * Do not use $flush = true here: forcing a recalculation would hide
