@@ -115,9 +115,8 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         if ($command->getCartRuleType() === OrderDiscountType::DISCOUNT_PERCENT) {
             $cartRuleObj->reduction_percent = (float) (string) $command->getDiscountValue();
         } elseif ($command->getCartRuleType() === OrderDiscountType::DISCOUNT_AMOUNT) {
-            $discountValueTaxIncluded = (float) (string) $command->getDiscountValue();
-            $cartRuleObj->reduction_amount = $discountValueTaxIncluded;
-            $cartRuleObj->reduction_tax = true;
+            $cartRuleObj->reduction_amount = (float) (string) $command->getDiscountValue();
+            $cartRuleObj->reduction_tax = $command->isValueTaxIncluded();
         } elseif ($command->getCartRuleType() === OrderDiscountType::FREE_SHIPPING) {
             $cartRuleObj->free_shipping = true;
         }
@@ -188,6 +187,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         }
 
         $discountValue = (float) (string) $command->getDiscountValue();
+        $totalField = $command->isValueTaxIncluded() ? 'total_paid_tax_incl' : 'total_paid_tax_excl';
         if (null !== $orderInvoice) {
             $orderInvoices = [$orderInvoice];
         } elseif ($order->hasInvoice()) {
@@ -195,7 +195,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         }
         if (!empty($orderInvoices)) {
             foreach ($orderInvoices as $invoice) {
-                if ($discountValue > $invoice->total_paid_tax_incl) {
+                if ($discountValue > $invoice->{$totalField}) {
                     throw new InvalidCartRuleDiscountValueException(
                         'Discount amount specified is too high',
                         InvalidCartRuleDiscountValueException::INVALID_MAX_AMOUNT
@@ -203,7 +203,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
                 }
             }
         } else {
-            if ($discountValue > $order->total_paid_tax_incl) {
+            if ($discountValue > $order->{$totalField}) {
                 throw new InvalidCartRuleDiscountValueException(
                     'Discount amount specified is too high',
                     InvalidCartRuleDiscountValueException::INVALID_MAX_AMOUNT
