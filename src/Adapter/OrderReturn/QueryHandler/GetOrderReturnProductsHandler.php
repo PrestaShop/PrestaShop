@@ -12,6 +12,7 @@ use PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnProducts;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryHandler\GetOrderReturnProductsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\OrderReturnCustomizationFieldForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\OrderReturnProductForEditing;
 
 #[AsQueryHandler]
@@ -32,33 +33,21 @@ class GetOrderReturnProductsHandler implements GetOrderReturnProductsHandlerInte
      */
     public function handle(GetOrderReturnProducts $query): array
     {
-        $orderReturnId = $query->getOrderReturnId();
-        $rows = [];
-
-        // Customizations: surfaced first so customers' personalized lines are visually grouped
-        // ahead of the regular product rows (mirrors the legacy template ordering).
-        foreach ($this->orderReturnRepository->getCustomizedProductsForReturn($orderReturnId) as $customization) {
-            $rows[] = new OrderReturnProductForEditing(
-                (int) $customization['id_order_detail'],
-                (int) $customization['id_customization'],
-                (string) ($customization['reference'] ?? ''),
-                (string) ($customization['name'] ?? ''),
-                (int) ($customization['product_quantity'] ?? 0),
-                true
-            );
-        }
-
-        foreach ($this->orderReturnRepository->getProductsForReturn($orderReturnId) as $product) {
-            $rows[] = new OrderReturnProductForEditing(
-                (int) $product['id_order_detail'],
-                (int) ($product['customizations'] ?? 0),
-                (string) ($product['product_reference'] ?? ''),
-                (string) ($product['product_name'] ?? ''),
-                (int) ($product['product_quantity'] ?? 0),
-                false
-            );
-        }
-
-        return $rows;
+        // Customized lines come first (mirrors the legacy template ordering)
+        return array_map(
+            static fn (array $line): OrderReturnProductForEditing => new OrderReturnProductForEditing(
+                $line['id_order_detail'],
+                $line['id_customization'],
+                $line['product_reference'],
+                $line['product_name'],
+                $line['product_quantity'],
+                $line['id_customization'] !== 0,
+                array_map(
+                    static fn (array $field): OrderReturnCustomizationFieldForEditing => new OrderReturnCustomizationFieldForEditing($field['type'], $field['value']),
+                    $line['customized_data']
+                )
+            ),
+            $this->orderReturnRepository->getProductLines($query->getOrderReturnId())
+        );
     }
 }
