@@ -29,7 +29,17 @@ class ModuleRepositoryTest extends TestCase
 
     protected function setUp(): void
     {
+        $this->moduleRepository = $this->buildModuleRepository(false);
+    }
+
+    /**
+     * @param bool $mainClassIsValid whether the module main classes can be instantiated, which is
+     *                               what decides if the repository reads the modules' own attributes
+     */
+    private function buildModuleRepository(bool $mainClassIsValid): ModuleRepository
+    {
         $mockModuleDataProvider = $this->createMock(ModuleDataProvider::class);
+        $mockModuleDataProvider->method('isModuleMainClassValid')->willReturn($mainClassIsValid);
         $mockModuleDataProvider->method('findByName')->willReturn([
             'installed' => 0,
             'active' => true,
@@ -76,7 +86,7 @@ class ModuleRepositoryTest extends TestCase
         /** @var CacheProvider $cacheProvider */
         $cacheProvider = DoctrineProvider::wrap(new ArrayAdapter());
 
-        $this->moduleRepository = new ModuleRepository(
+        return new ModuleRepository(
             $mockModuleDataProvider,
             $this->createMock(AdminModuleDataProvider::class),
             $cacheProvider,
@@ -116,5 +126,22 @@ class ModuleRepositoryTest extends TestCase
 
         $this->assertEquals('overridden full description', $dummy_module->get('fullDescription'));
         $this->assertEquals('added value', $dummy_module->get('testAttribute'));
+    }
+
+    public function testModuleAttributesCarryTheUpdateConfirmationMessage(): void
+    {
+        $moduleRepository = $this->buildModuleRepository(true);
+
+        $this->assertEquals(
+            'Your dummy payment settings will be reset by this update.',
+            $moduleRepository->getModule('dummy_payment')->get('confirmUpgrade')
+        );
+    }
+
+    public function testUpdateConfirmationMessageIsEmptyForAModuleThatSetsNone(): void
+    {
+        $moduleRepository = $this->buildModuleRepository(true);
+
+        $this->assertSame('', $moduleRepository->getModule('bankwire')->get('confirmUpgrade'));
     }
 }
