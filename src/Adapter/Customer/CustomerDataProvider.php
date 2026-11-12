@@ -91,7 +91,8 @@ class CustomerDataProvider
             $mainSql .= ' AND ct.id_order = ' . $orderId;
         }
 
-        $mainSql .= ' GROUP BY cm.id_customer_message
+        // The keys of the one-to-one joins let PostgreSQL accept their selected columns
+        $mainSql .= ' GROUP BY cm.id_customer_message, c.id_customer, e.id_employee
             ORDER BY cm.date_add DESC, cm.id_customer_message DESC';
 
         $count = Db::getInstance()->executeS("SELECT COUNT(*) AS total FROM ($mainSql) AS messages");

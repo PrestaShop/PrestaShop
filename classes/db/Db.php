@@ -555,11 +555,6 @@ abstract class DbCore
             return true;
         }
 
-        /* @phpstan-ignore-next-line */
-        if ($limit && _DB_TYPE_ == 'pgsql') {
-            throw new PrestaShopDatabaseException('PostgreSQL does not support LIMIT on UPDATE queries');
-        }
-
         if ($add_prefix) {
             $table = _DB_PREFIX_ . $table;
         }
@@ -576,15 +571,27 @@ abstract class DbCore
             }
         }
 
-        $sql = rtrim($sql, ',');
-        if ($where) {
-            $sql .= ' WHERE ' . $where;
-        }
-        if ($limit) {
-            $sql .= ' LIMIT ' . (int) $limit;
-        }
+        $sql = rtrim($sql, ',') . $this->buildLimitedWhere($table, $where, (int) $limit);
 
         return (bool) $this->q($sql, $use_cache);
+    }
+
+    /**
+     * Builds the WHERE and LIMIT clauses of an UPDATE or DELETE query. PostgreSQL has no LIMIT
+     * on these queries: the limit applies to a subquery on the physical row identifier instead.
+     */
+    protected function buildLimitedWhere(string $table, string $where, int $limit): string
+    {
+        $whereClause = $where ? ' WHERE ' . $where : '';
+        if (!$limit) {
+            return $whereClause;
+        }
+
+        if (_DB_TYPE_ == 'pgsql') {
+            return ' WHERE ctid IN (SELECT ctid FROM ' . static::quoteIdentifier($table) . $whereClause . ' LIMIT ' . $limit . ')';
+        }
+
+        return $whereClause . ' LIMIT ' . $limit;
     }
 
     /**
@@ -600,17 +607,12 @@ abstract class DbCore
      */
     public function delete($table, $where = '', $limit = 0, $use_cache = true, $add_prefix = true)
     {
-        /* @phpstan-ignore-next-line */
-        if ($limit && _DB_TYPE_ == 'pgsql') {
-            throw new PrestaShopDatabaseException('PostgreSQL does not support LIMIT on DELETE queries');
-        }
-
         if ($add_prefix) {
             $table = _DB_PREFIX_ . $table;
         }
 
         $this->result = false;
-        $sql = 'DELETE FROM ' . static::quoteIdentifier($table) . ($where ? ' WHERE ' . $where : '') . ($limit ? ' LIMIT ' . (int) $limit : '');
+        $sql = 'DELETE FROM ' . static::quoteIdentifier($table) . $this->buildLimitedWhere($table, $where, (int) $limit);
         $res = $this->query($sql);
         if ($use_cache && $this->is_cache_enabled) {
             Cache::getInstance()->deleteQuery($sql);

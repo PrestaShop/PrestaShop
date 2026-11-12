@@ -1799,14 +1799,15 @@ class CartCore extends ObjectModel
                 return false;
             }
 
-            Db::getInstance()->execute(
-                'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_product') . '
-                    SET quantity = quantity ' . $updateQuantity . '
-                    WHERE id_product = ' . (int) $id_product .
+            // Db::update() handles the LIMIT, which PostgreSQL has no syntax for
+            Db::getInstance()->update(
+                'cart_product',
+                ['quantity' => ['type' => 'sql', 'value' => 'quantity ' . $updateQuantity]],
+                'id_product = ' . (int) $id_product .
                 ' AND id_customization = ' . (int) $id_customization .
-                (!empty($id_product_attribute) ? ' AND id_product_attribute = ' . (int) $id_product_attribute : '') . '
-                    AND id_cart = ' . (int) $this->id . '
-                    LIMIT 1'
+                (!empty($id_product_attribute) ? ' AND id_product_attribute = ' . (int) $id_product_attribute : '') .
+                ' AND id_cart = ' . (int) $this->id,
+                1
             );
         } elseif ($operator == 'up') {
             /* Add product to the cart */
@@ -2019,7 +2020,7 @@ class CartCore extends ObjectModel
 
         /* Get customization quantity */
         $result = Db::getInstance()->getRow('
-            SELECT SUM(quantity) AS \'quantity\'
+            SELECT SUM(quantity) AS quantity
             FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization') . '
             WHERE id_cart = ' . (int) $this->id . '
             AND id_product = ' . (int) $id_product . '

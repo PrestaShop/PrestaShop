@@ -211,11 +211,11 @@ class RequestSqlCore extends ObjectModel
     public function getAttributesByTable($table)
     {
         // MySQL's "DESCRIBE table" has no PostgreSQL equivalent; querying information_schema
-        // instead, reshaped to expose the same "Field" key MySQL returns.
+        // instead, reshaped to expose the same "Field" and "Type" keys MySQL returns.
         /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'pgsql') {
             return Db::getInstance()->executeS(
-                'SELECT column_name AS "Field" FROM information_schema.columns
+                'SELECT column_name AS "Field", data_type AS "Type" FROM information_schema.columns
                 WHERE table_schema = current_schema() AND table_name = \'' . pSQL(str_replace('`', '', $table)) . '\'
                 ORDER BY ordinal_position'
             );

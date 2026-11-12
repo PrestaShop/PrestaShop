@@ -96,6 +96,7 @@ class ProductPackRepository extends AbstractObjectModelRepository
                 )
                 ->where('pack.id_product_pack = :idProduct')
                 ->orderBy('pack.id_product_item', 'ASC')
+                ->addOrderBy('pack.id_product_attribute_item', 'ASC')
                 ->setParameter('idProduct', $productId->getValue())
                 ->setParameter('idLanguage', $languageId->getValue())
                 ->setParameter('idShop', $shopConstraint->getShopId()->getValue())

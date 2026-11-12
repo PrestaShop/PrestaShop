@@ -345,7 +345,7 @@ class SupplierCore extends ObjectModel
 					m.name AS manufacturer_name' . (Combination::isFeatureActive() ? ', product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, COALESCE(product_attribute_shop.id_product_attribute,0) id_product_attribute' : '') . '
 				 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p
 				' . Shop::addSqlAssociation('product', 'p') . '
-				JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_supplier') . ' ps ON (ps.id_product = p.id_product) ' .
+				' .
                 (Combination::isFeatureActive() ? 'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute_shop') . ' product_attribute_shop
 				ON (p.id_product = product_attribute_shop.id_product AND product_attribute_shop.default_on = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id . ')' : '') . '
 				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_lang') . ' pl ON (p.id_product = pl.id_product
@@ -358,21 +358,26 @@ class SupplierCore extends ObjectModel
 				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'manufacturer') . ' m ON m.id_manufacturer = p.id_manufacturer
 				' . Product::sqlStock('p', 0);
 
+        // The one-to-many filters are subqueries, so that every product is returned once without grouping
+        $sql .= '
+				WHERE EXISTS (
+					SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_supplier') . ' ps
+					WHERE ps.id_product = p.id_product AND ps.id_supplier = ' . (int) $idSupplier . '
+				)
+					' . ($active ? ' AND product_shop.active = 1' : '') . '
+					' . ($front ? " AND product_shop.visibility IN ('both', 'catalog')" : '');
+
         if (Group::isFeatureActive() || $activeCategory) {
-            $sql .= 'JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_product') . ' cp ON (p.id_product = cp.id_product)';
+            $sql .= ' AND EXISTS (
+				SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_product') . ' cp';
             if (Group::isFeatureActive()) {
-                $sql .= 'JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_group') . ' cg ON (cp.id_category = cg.id_category AND cg.id_group ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '= 1') . ')';
+                $sql .= ' JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_group') . ' cg ON (cp.id_category = cg.id_category AND cg.id_group ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '= 1') . ')';
             }
             if ($activeCategory) {
-                $sql .= 'JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' ca ON cp.id_category = ca.id_category AND ca.active = 1';
+                $sql .= ' JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' ca ON cp.id_category = ca.id_category AND ca.active = 1';
             }
+            $sql .= ' WHERE cp.id_product = p.id_product)';
         }
-
-        $sql .= '
-				WHERE ps.id_supplier = ' . (int) $idSupplier . '
-					' . ($active ? ' AND product_shop.active = 1' : '') . '
-					' . ($front ? " AND product_shop.visibility IN ('both', 'catalog')" : '') . '
-				GROUP BY ps.id_product';
 
         if ($orderBy !== 'price') {
             $sql .= '
@@ -416,14 +421,14 @@ class SupplierCore extends ObjectModel
 			' . Shop::addSqlAssociation('product', 'p') . '
 			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_lang') . ' pl ON (
 				p.id_product = pl.id_product
-				AND pl.id_lang = ' . (int) $idLang . '
+				AND pl.id_lang = ' . (int) $idLang . Shop::addSqlRestrictionOnLang('pl') . '
 			)
-			INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_supplier') . ' ps ON (
-				ps.id_product = p.id_product
+			WHERE EXISTS (
+				SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_supplier') . ' ps
+				WHERE ps.id_product = p.id_product
 				AND ps.id_supplier = ' . (int) $this->id . '
 			)
-			' . ($front ? " WHERE product_shop.visibility IN ('both', 'catalog')" : '') . '
-			GROUP BY p.id_product';
+			' . ($front ? " AND product_shop.visibility IN ('both', 'catalog')" : '');
 
         $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 

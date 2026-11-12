@@ -47,6 +47,11 @@ final class DateTime
     public const NULL_DATE = '0000-00-00';
 
     /**
+     * Value PostgreSQL stores in place of the MySQL zero date, read as is by Doctrine
+     */
+    public const POSTGRESQL_NULL_DATE = '-infinity';
+
+    /**
      * This class only defines constants and has no reason to be initialized
      */
     public function __construct()
@@ -61,7 +66,7 @@ final class DateTime
      */
     public static function isNull($value): bool
     {
-        return $value instanceof NullDateTime || empty($value) || $value === self::NULL_DATE || $value === self::NULL_DATETIME;
+        return $value instanceof NullDateTime || empty($value) || $value === self::NULL_DATE || $value === self::NULL_DATETIME || $value === self::POSTGRESQL_NULL_DATE;
     }
 
     /**
@@ -73,7 +78,7 @@ final class DateTime
      */
     public static function buildNullableDateTime(?string $value): DateTimeImmutable
     {
-        return empty($value) || $value === self::NULL_DATETIME || $value === self::NULL_DATE ? new NullDateTime() : new DateTimeImmutable($value);
+        return self::isNull($value) ? new NullDateTime() : new DateTimeImmutable($value);
     }
 
     /**
@@ -85,6 +90,6 @@ final class DateTime
      */
     public static function buildDateTimeOrNull(?string $value): ?DateTimeImmutable
     {
-        return empty($value) || $value === self::NULL_DATETIME || $value === self::NULL_DATE ? null : new DateTimeImmutable($value);
+        return self::isNull($value) ? null : new DateTimeImmutable($value);
     }
 }

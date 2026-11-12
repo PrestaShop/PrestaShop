@@ -352,6 +352,7 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
                 ->from($this->dbPrefix . 'image_shop')
                 ->where('id_image = :imageId')
                 ->setParameter('imageId', $imageId->getValue())
+                ->orderBy('id_shop', 'ASC')
                 ->executeQuery()
                 ->fetchAllAssociative()
         );
@@ -370,6 +371,7 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
             ->from($this->dbPrefix . 'image_shop', 'ish')
             ->where('ish.id_image = :imageId')
             ->setParameter('imageId', $imageId->getValue())
+            ->orderBy('ish.id_shop', 'ASC')
         ;
 
         if ($shopConstraint->getShopGroupId()) {

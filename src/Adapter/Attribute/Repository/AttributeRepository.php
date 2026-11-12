@@ -297,6 +297,9 @@ class AttributeRepository extends AbstractMultiShopObjectModelRepository
             ->from($this->dbPrefix . 'product_attribute_combination', 'pac')
             ->where($qb->expr()->in('pac.id_product_attribute', ':combinationIds'))
             ->setParameter('combinationIds', $combinationIds, Connection::PARAM_INT_ARRAY)
+            // The order MySQL reads from the primary key, that combination names follow
+            ->orderBy('pac.id_product_attribute', 'ASC')
+            ->addOrderBy('pac.id_attribute', 'ASC')
         ;
 
         return $qb->executeQuery()->fetchAllAssociative();

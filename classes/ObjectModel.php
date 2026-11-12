@@ -432,19 +432,10 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
                 return (float) str_replace(',', '.', $value ?? '');
 
             case self::TYPE_DATE:
-                // MySQL's zero-date sentinel ('0000-00-00'[ 00:00:00]) has no PostgreSQL
-                // equivalent (not a valid date in any calendar). Covers both an empty/unset
-                // value and an explicit zero-date assignment (e.g. Product::available_date).
-                /* @phpstan-ignore-next-line */
-                if ((!$value || str_starts_with((string) $value, '0000-00-00')) && _DB_TYPE_ == 'pgsql') {
-                    // Nullable columns get real NULL; NOT NULL columns (no PHP-side
-                    // allow_null flag) get the Unix epoch as a storable "unset" placeholder,
-                    // valid for both DATE and TIMESTAMP columns.
-                    if ($allow_null) {
-                        return ['type' => 'sql', 'value' => 'NULL'];
-                    }
-
-                    return $with_quotes ? '\'1970-01-01\'' : '1970-01-01';
+                // PostgreSQL has no zero date: a nullable column stores NULL, the others keep the
+                // MySQL sentinel that DbPDO stores as -infinity and gives back unchanged
+                if ($allow_null && _DB_TYPE_ == 'pgsql' && (!$value || str_starts_with((string) $value, '0000-00-00'))) {
+                    return ['type' => 'sql', 'value' => 'NULL'];
                 }
                 if (!$value) {
                     /* @phpstan-ignore-next-line */

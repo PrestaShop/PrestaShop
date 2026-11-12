@@ -921,7 +921,8 @@ class CustomerCore extends ObjectModel
         $items = [];
         foreach ($research_fields as $field) {
             foreach ($search_items as $item) {
-                $items[$item][] = $field . ' LIKE \'%' . pSQL($item) . '%\' ';
+                // LOWER() keeps the search case-insensitive on PostgreSQL, whose LIKE is not
+                $items[$item][] = 'LOWER(' . $field . ') LIKE LOWER(\'%' . pSQL($item) . '%\') ';
             }
         }
 
@@ -979,11 +980,10 @@ class CustomerCore extends ObjectModel
         LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'guest') . ' g USING (id_guest)
         WHERE g.id_customer = ' . (int) $this->id . ' ORDER BY c.date_add DESC ');
 
-        // MySQL's YEAR()/RIGHT()-based age calculation has no direct PostgreSQL equivalent;
-        // PostgreSQL's AGE() already computes a birthday-aware year difference natively.
+        // PostgreSQL's AGE() computes the birthday-aware year difference, an unset birthday is stored as -infinity
         /* @phpstan-ignore-next-line */
         $ageExpr = _DB_TYPE_ == 'pgsql'
-            ? 'EXTRACT(YEAR FROM AGE(CURRENT_DATE, c.birthday))'
+            ? 'CASE WHEN ISFINITE(c.birthday) THEN EXTRACT(YEAR FROM AGE(CURRENT_DATE, c.birthday)) END'
             : '(YEAR(CURRENT_DATE)-YEAR(c.birthday)) - (RIGHT(CURRENT_DATE, 5)<RIGHT(c.birthday, 5))';
         $result3 = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
         SELECT ' . $ageExpr . ' AS age

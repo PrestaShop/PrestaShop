@@ -140,11 +140,15 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
      */
     public function findCombinationIdByAttributes(ProductId $productId, array $attributeIds): ?CombinationId
     {
-        sort($attributeIds);
+        $attributeIds = array_values(array_unique(array_map('intval', $attributeIds)));
+        if (empty($attributeIds)) {
+            return null;
+        }
+
+        // The combination has exactly these attributes: as many attributes as requested, all of them in the list
         $qb = $this->connection->createQueryBuilder();
         $qb
-            ->addSelect('pa.id_product_attribute')
-            ->addSelect('GROUP_CONCAT(pac.id_attribute ORDER BY pac.id_attribute ASC SEPARATOR "-") AS attribute_ids')
+            ->select('pa.id_product_attribute')
             ->from($this->dbPrefix . 'product_attribute', 'pa')
             ->innerJoin(
                 'pa',
@@ -153,10 +157,14 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
                 'pac.id_product_attribute = pa.id_product_attribute'
             )
             ->andWhere('pa.id_product = :productId')
-            ->andHaving('attribute_ids = :attributeIds')
+            ->groupBy('pa.id_product_attribute')
+            ->having('COUNT(pac.id_attribute) = :attributesCount')
+            ->andHaving('SUM(CASE WHEN pac.id_attribute IN (:attributeIds) THEN 1 ELSE 0 END) = :attributesCount')
+            ->orderBy('pa.id_product_attribute', 'ASC')
+            ->setMaxResults(1)
             ->setParameter('productId', $productId->getValue())
-            ->setParameter('attributeIds', implode('-', $attributeIds))
-            ->addGroupBy('pa.id_product_attribute')
+            ->setParameter('attributesCount', count($attributeIds), ParameterType::INTEGER)
+            ->setParameter('attributeIds', $attributeIds, ArrayParameterType::INTEGER)
         ;
         $result = $qb->executeQuery()->fetchAssociative();
 
@@ -835,7 +843,7 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
         }
 
         $qb = $this->connection->createQueryBuilder()
-            ->select('pac.id_product_attribute, pac.id_attribute')
+            ->select('pac.id_product_attribute')
             ->from($this->dbPrefix . 'product_attribute_combination', 'pac')
         ;
 
@@ -877,6 +885,7 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
             ->setParameter('attributes', $attributeIds, Connection::PARAM_INT_ARRAY)
             ->setParameter('productId', $productId->getValue())
             ->groupBy('pac.id_product_attribute')
+            ->orderBy('pac.id_product_attribute', 'ASC')
         ;
 
         if ($limit) {
@@ -922,10 +931,11 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
                 'agl',
                 'a.id_attribute_group = agl.id_attribute_group and agl.id_lang = :languageId'
             )
-            ->where('al.name LIKE :searchPhrase')
-            ->orWhere('agl.name LIKE :searchPhrase')
-            ->orWhere('agl.public_name LIKE :searchPhrase')
-            ->setParameter('searchPhrase', '%' . $searchPhrase . '%')
+            // Lower cased on both sides, PostgreSQL's LIKE being case-sensitive
+            ->where('LOWER(al.name) LIKE :searchPhrase')
+            ->orWhere('LOWER(agl.name) LIKE :searchPhrase')
+            ->orWhere('LOWER(agl.public_name) LIKE :searchPhrase')
+            ->setParameter('searchPhrase', '%' . mb_strtolower($searchPhrase) . '%')
             ->setParameter('languageId', $languageId->getValue())
         ;
 

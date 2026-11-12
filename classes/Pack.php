@@ -362,8 +362,7 @@ class PackCore extends Product
 					ON product_shop.id_category_default = cl.id_category
 					AND cl.id_lang = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('cl') . '
 				WHERE product_shop.id_shop = ' . (int) $context->shop->id . '
-				AND a.id_product_pack = ' . (int) $id_product . '
-				GROUP BY a.id_product_item, a.id_product_attribute_item';
+				AND a.id_product_pack = ' . (int) $id_product;
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
@@ -443,8 +442,7 @@ class PackCore extends Product
 		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image_lang') . ' il ON (image_shop.id_image = il.id_image AND il.id_lang = ' . (int) $id_lang . ')
 		WHERE pl.id_lang = ' . (int) $id_lang . '
 			' . Shop::addSqlRestrictionOnLang('pl') . '
-			AND p.id_product IN (' . $packs . ')
-		GROUP BY p.id_product';
+			AND p.id_product IN (' . $packs . ')';
         if ($limit) {
             $sql .= ' LIMIT ' . (int) $limit;
         }

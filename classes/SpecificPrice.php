@@ -294,9 +294,14 @@ class SpecificPriceCore extends ObjectModel
                 return $query_extra;
             }
             // Fetch the approximate count of specific price. explain can be 100x faster than count.
-            $query_count = 'EXPLAIN SELECT COUNT(DISTINCT ' . Db::quoteIdentifier($name) . ') FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price') . ' WHERE ' . Db::quoteIdentifier($name) . ' != 0';
-            $specific_count_result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query_count);
-            $specific_count = $specific_count_result['rows'];
+            $query_count = 'SELECT COUNT(DISTINCT ' . Db::quoteIdentifier($name) . ') FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price') . ' WHERE ' . Db::quoteIdentifier($name) . ' != 0';
+            if (_DB_TYPE_ == 'pgsql') {
+                // PostgreSQL EXPLAIN returns a text plan, not a row estimate
+                $specific_count = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query_count);
+            } else {
+                $specific_count_result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('EXPLAIN ' . $query_count);
+                $specific_count = $specific_count_result['rows'];
+            }
 
             if ($specific_count < $threshold) {
                 $query = 'SELECT DISTINCT ' . Db::quoteIdentifier($name) . ' FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price') . ' WHERE ' . Db::quoteIdentifier($name) . ' != 0';

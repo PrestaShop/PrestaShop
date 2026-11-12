@@ -1398,12 +1398,12 @@ class ProductCore extends ObjectModel
 
         // for new categ, put product at last position
         $res_categ_new_pos = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-            SELECT id_category, MAX(position)+1 newPos
+            SELECT id_category, MAX(position)+1 AS new_pos
             FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_product') . '
             WHERE id_category IN(' . implode(',', $categories) . ')
             GROUP BY id_category');
         foreach ($res_categ_new_pos as $array) {
-            $new_categories[(int) $array['id_category']] = (int) $array['newPos'];
+            $new_categories[(int) $array['id_category']] = (int) $array['new_pos'];
         }
 
         $new_categ_pos = [];
@@ -4544,7 +4544,8 @@ class ProductCore extends ObjectModel
                 p.id_product = pl.id_product
                 AND pl.id_lang = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('pl') . '
             )
-            WHERE id_product_1 = ' . (int) $id_product
+            WHERE id_product_1 = ' . (int) $id_product . '
+            ORDER BY id_product_2'
         );
     }
 
@@ -4588,7 +4589,6 @@ class ProductCore extends ObjectModel
                 ' . Product::sqlStock('p', 0) . '
                 WHERE id_product_1 = ' . (int) $this->id .
                 ($active ? ' AND product_shop.active = 1 AND product_shop.visibility != \'none\'' : '') . '
-                GROUP BY product_shop.id_product
                 ORDER BY pl.name';
 
         if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql)) {

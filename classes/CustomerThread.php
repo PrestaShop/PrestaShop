@@ -272,7 +272,7 @@ class CustomerThreadCore extends ObjectModel
                 ON e.id_employee = cm.id_employee
 			WHERE ct.id_customer = ' . (int) $id_customer .
                 ' AND ct.id_order = ' . (int) $id_order . '
-            GROUP BY cm.id_customer_message
+            GROUP BY cm.id_customer_message, c.id_customer, e.id_employee
 		 	ORDER BY cm.date_add DESC, cm.id_customer_message DESC
             LIMIT 2';
 

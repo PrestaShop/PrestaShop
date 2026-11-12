@@ -59,7 +59,7 @@ class ShipmentRepository extends EntityRepository
         $qb
             ->select(
                 'sp.id_shipment',
-                'sp.quantity AS quantity'
+                'SUM(sp.quantity) AS quantity'
             )
             ->from($this->tablePrefix . 'shipment_product', 'sp')
             ->innerJoin(
