@@ -7,7 +7,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Shop\Repository;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\CannotAddShopGroupException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\CannotDeleteShopGroupException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\CannotUpdateShopGroupException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopGroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupId;
@@ -55,6 +59,24 @@ class ShopGroupRepository extends AbstractObjectModelRepository
         );
 
         return $shop;
+    }
+
+    public function add(ShopGroup $shopGroup): ShopGroupId
+    {
+        return new ShopGroupId($this->addObjectModel($shopGroup, CannotAddShopGroupException::class));
+    }
+
+    /**
+     * @param string[] $propertiesToUpdate
+     */
+    public function partialUpdate(ShopGroup $shopGroup, array $propertiesToUpdate): void
+    {
+        $this->partiallyUpdateObjectModel($shopGroup, $propertiesToUpdate, CannotUpdateShopGroupException::class);
+    }
+
+    public function delete(ShopGroup $shopGroup): void
+    {
+        $this->deleteObjectModel($shopGroup, CannotDeleteShopGroupException::class);
     }
 
     /**
@@ -127,5 +149,106 @@ class ShopGroupRepository extends AbstractObjectModelRepository
             ->executeQuery()
             ->fetchAllAssociative()
         );
+    }
+
+    public function hasCustomersOrOrders(ShopGroupId $shopGroupId): bool
+    {
+        foreach (['customer', 'orders'] as $table) {
+            $row = $this->connection->createQueryBuilder()
+                ->select('t.id_shop')
+                ->from($this->dbPrefix . $table, 't')
+                ->innerJoin('t', $this->dbPrefix . 'shop', 's', 's.id_shop = t.id_shop')
+                ->where('s.id_shop_group = :shopGroupId')
+                ->setParameter('shopGroupId', $shopGroupId->getValue())
+                ->setMaxResults(1)
+                ->executeQuery()
+                ->fetchOne()
+            ;
+
+            if (false !== $row) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function isSharingData(ShopGroupId $shopGroupId): bool
+    {
+        $shopGroup = $this->get($shopGroupId);
+
+        return $shopGroup->share_customer || $shopGroup->share_order || $shopGroup->share_stock;
+    }
+
+    /**
+     * @return list<array{id_shop_group: int, name: string, sharing_data: bool}>
+     */
+    public function getActiveShopGroups(): array
+    {
+        return array_map(
+            static fn (array $row): array => [
+                'id_shop_group' => (int) $row['id_shop_group'],
+                'name' => $row['name'],
+                'sharing_data' => (bool) $row['sharing_data'],
+            ],
+            $this->connection->createQueryBuilder()
+                ->select('sg.id_shop_group, sg.name, (sg.share_customer OR sg.share_order OR sg.share_stock) AS sharing_data')
+                ->from($this->dbPrefix . 'shop_group', 'sg')
+                ->where('sg.active = 1')
+                ->andWhere('sg.deleted = 0')
+                ->orderBy('sg.id_shop_group', 'ASC')
+                ->executeQuery()
+                ->fetchAllAssociative()
+        );
+    }
+
+    /**
+     * @param int[]|null $shopIds limits the tree to these shops and to the groups containing them
+     *
+     * @return array<int, array{id: int, name: string, shops: array<int, array{id: int, name: string, root_category_id: int, urls: list<array{id: int, url: string}>}>}>
+     */
+    public function getShopTree(?array $shopIds = null): array
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->select('sg.id_shop_group, sg.name AS group_name, s.id_shop, s.name AS shop_name, s.id_category, su.id_shop_url')
+            ->addSelect('CONCAT(su.domain, su.physical_uri, su.virtual_uri) AS url')
+            ->from($this->dbPrefix . 'shop_group', 'sg')
+            ->leftJoin('sg', $this->dbPrefix . 'shop', 's', 's.id_shop_group = sg.id_shop_group AND s.deleted = 0')
+            ->leftJoin('s', $this->dbPrefix . 'shop_url', 'su', 'su.id_shop = s.id_shop')
+            ->where('sg.deleted = 0')
+            ->orderBy('sg.id_shop_group')
+            ->addOrderBy('s.id_shop')
+            ->addOrderBy('su.id_shop_url')
+        ;
+
+        if (null !== $shopIds) {
+            $qb
+                ->andWhere('s.id_shop IN (:shopIds)')
+                ->setParameter('shopIds', $shopIds, ArrayParameterType::INTEGER)
+            ;
+        }
+
+        $tree = [];
+        foreach ($qb->executeQuery()->fetchAllAssociative() as $row) {
+            $groupId = (int) $row['id_shop_group'];
+            $tree[$groupId] ??= ['id' => $groupId, 'name' => $row['group_name'], 'shops' => []];
+
+            if (null === $row['id_shop']) {
+                continue;
+            }
+            $shopId = (int) $row['id_shop'];
+            $tree[$groupId]['shops'][$shopId] ??= [
+                'id' => $shopId,
+                'name' => $row['shop_name'],
+                'root_category_id' => (int) $row['id_category'],
+                'urls' => [],
+            ];
+
+            if (null !== $row['id_shop_url']) {
+                $tree[$groupId]['shops'][$shopId]['urls'][] = ['id' => (int) $row['id_shop_url'], 'url' => $row['url']];
+            }
+        }
+
+        return $tree;
     }
 }

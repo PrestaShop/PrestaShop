@@ -1,3 +1,60 @@
+admin_shops_index:
+  path: /
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ShopController::indexAction'
+    _legacy_controller: AdminShopGroup
+    _legacy_link: AdminShop
+    _legacy_feature_flag: multishop
+
+admin_shops_filter:
+  path: /
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    gridDefinitionFactoryServiceId: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ShopGridDefinitionFactory'
+    redirectRoute: admin_shops_index
+    _legacy_controller: AdminShopGroup
+    _legacy_link: AdminShop:submitFiltershop
+    _legacy_feature_flag: multishop
+
+admin_shops_create:
+  path: /new
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ShopController::createAction'
+    _legacy_controller: AdminShopGroup
+    _legacy_link: AdminShop:addshop
+    _legacy_feature_flag: multishop
+    _legacy_parameters:
+      id_shop_group: shopGroupId
+
+admin_shops_edit:
+  path: /{shopId}/edit
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ShopController::editAction'
+    _legacy_controller: AdminShopGroup
+    _legacy_link: AdminShop:updateshop
+    _legacy_feature_flag: multishop
+    _legacy_parameters:
+      shop_id: shopId
+  requirements:
+    shopId: \d+
+
+admin_shops_delete:
+  path: /{shopId}/delete
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ShopController::deleteAction'
+    _legacy_controller: AdminShopGroup
+    _legacy_link: AdminShop:deleteshop
+    _legacy_feature_flag: multishop
+    _legacy_parameters:
+      id_shop: shopId
+  requirements:
+    shopId: \d+
+
 admin_shops_search:
   path: /search/{searchTerm}
   methods: [ GET ]

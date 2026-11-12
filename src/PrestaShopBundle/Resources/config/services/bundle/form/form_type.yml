@@ -290,6 +290,24 @@ services:
     arguments:
       $statesChoiceProvider: '@prestashop.adapter.form.choice_provider.country_state_by_id'
 
+  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Shop\ShopType:
+    arguments:
+      $shopGroupChoiceProvider: '@PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ShopGroupChoiceProvider'
+      $rootCategoryChoiceProvider: '@PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\RootCategoryChoiceProvider'
+      $categoryTreeChoiceProvider: '@prestashop.adapter.form.choice_provider.all_categories_tree_choice_provider'
+      $themeChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeByNameChoiceProvider'
+      $shopChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ShopByGroupChoiceProvider'
+      $importDataChoiceProvider: '@PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ShopDataImportChoiceProvider'
+      $legacyContext: '@prestashop.adapter.legacy.context'
+
+  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ShopGroup\MultistoreOptionsType:
+    arguments:
+      $shopChoiceProvider: '@prestashop.adapter.form.choice_provider.shop_name_by_id'
+
+  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ShopUrl\ShopUrlType:
+    arguments:
+      $shopChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ShopByGroupChoiceProvider'
+
   PrestaShopBundle\Form\Admin\Improve\Design\Pages\CmsPageCategoryType:
     arguments:
       $allCmsCategories: '@=service("prestashop.core.form.choice_provider.cms_categories").getChoices()'
