@@ -2405,13 +2405,14 @@ class ProductCore extends ObjectModel
     {
         return
             Db::getInstance()->execute(
-                'DELETE FROM `' . _DB_PREFIX_ . 'search_index`
-                WHERE `id_product` = ' . (int) $this->id
+                'DELETE sw FROM `' . _DB_PREFIX_ . 'search_word` sw
+                INNER JOIN `' . _DB_PREFIX_ . 'search_index` si ON (sw.id_word=si.id_word AND si.id_product = ' . (int) $this->id . ')
+                LEFT JOIN `' . _DB_PREFIX_ . 'search_index` si2 ON (sw.id_word=si2.id_word AND si2.id_product != ' . (int) $this->id . ')
+                WHERE si2.id_word IS NULL;'
             )
             && Db::getInstance()->execute(
-                'DELETE sw FROM `' . _DB_PREFIX_ . 'search_word` sw
-                LEFT JOIN `' . _DB_PREFIX_ . 'search_index` si ON (sw.id_word=si.id_word)
-                WHERE si.id_word IS NULL;'
+                'DELETE FROM `' . _DB_PREFIX_ . 'search_index`
+                WHERE `id_product` = ' . (int) $this->id
             );
     }
 
