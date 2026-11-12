@@ -421,6 +421,10 @@ class CartControllerCore extends FrontController
             }
         }
 
+        $minimalQuantity = $this->id_product_attribute
+            ? (int) (new Combination($this->id_product_attribute))->minimal_quantity
+            : (int) $product->minimal_quantity;
+
         // Check product quantity availability
         if ('update' !== $mode && $this->shouldAvailabilityErrorBeRaised($product, $qty_to_check)) {
             /*
@@ -431,7 +435,7 @@ class CartControllerCore extends FrontController
             $availableProductQuantity = Product::getQuantity($this->id_product, $this->id_product_attribute);
             $productName = Product::getProductName($this->id_product, $this->id_product_attribute);
 
-            if ($availableProductQuantity > 0) {
+            if ($availableProductQuantity > 0 && $this->isMinimalQuantityReachable($availableProductQuantity, $minimalQuantity, (int) $product->out_of_stock)) {
                 $this->errors[] = $this->trans(
                     'You can only buy %quantity% "%product%". Please adjust the quantity in your cart to continue.',
                     [
@@ -452,27 +456,24 @@ class CartControllerCore extends FrontController
         }
 
         // Check minimal_quantity
-        if (!$this->id_product_attribute) {
-            if ($qty_to_check < $product->minimal_quantity) {
+        if ($qty_to_check < $minimalQuantity) {
+            if (!$this->isMinimalQuantityReachable(Product::getQuantity($this->id_product, $this->id_product_attribute), $minimalQuantity, (int) $product->out_of_stock)) {
                 $this->errors[] = $this->trans(
-                    'The minimum purchase order quantity for the product %product% is %quantity%.',
-                    ['%product%' => $product->name, '%quantity%' => $product->minimal_quantity],
+                    'This product (%product%) is no longer available.',
+                    ['%product%' => $product->name],
                     'Shop.Notifications.Error'
                 );
 
                 return;
             }
-        } else {
-            $combination = new Combination($this->id_product_attribute);
-            if ($qty_to_check < $combination->minimal_quantity) {
-                $this->errors[] = $this->trans(
-                    'The minimum purchase order quantity for the product %product% is %quantity%.',
-                    ['%product%' => $product->name, '%quantity%' => $combination->minimal_quantity],
-                    'Shop.Notifications.Error'
-                );
 
-                return;
-            }
+            $this->errors[] = $this->trans(
+                'The minimum purchase order quantity for the product %product% is %quantity%.',
+                ['%product%' => $product->name, '%quantity%' => $minimalQuantity],
+                'Shop.Notifications.Error'
+            );
+
+            return;
         }
 
         // If no errors, process product addition
@@ -530,7 +531,7 @@ class CartControllerCore extends FrontController
                 $availableProductQuantity = Product::getQuantity($this->id_product, $this->id_product_attribute);
                 $productName = Product::getProductName($this->id_product, $this->id_product_attribute);
 
-                if ($availableProductQuantity > 0) {
+                if ($availableProductQuantity > 0 && $this->isMinimalQuantityReachable($availableProductQuantity, $minimalQuantity, (int) $product->out_of_stock)) {
                     $this->{$ErrorKey}[] = $this->trans(
                         'You can only buy %quantity% "%product%". Please adjust the quantity in your cart to continue.',
                         [
@@ -671,7 +672,8 @@ class CartControllerCore extends FrontController
 
         $productName = !empty($product['attributes']) ? $product['name'] . ' ' . $product['attributes'] : $product['name'];
 
-        if ($product['active'] && $product['quantity_available'] > 0) {
+        if ($product['active'] && $product['quantity_available'] > 0
+            && $this->isMinimalQuantityReachable((int) $product['quantity_available'], (int) $product['minimal_quantity'], (int) $product['out_of_stock'])) {
             return $this->trans(
                 'You can only buy %quantity% "%product%". Please adjust the quantity in your cart to continue.',
                 [
@@ -687,6 +689,14 @@ class CartControllerCore extends FrontController
             ['%product%' => $productName],
             'Shop.Notifications.Error'
         );
+    }
+
+    /**
+     * Stock below the minimal quantity means no quantity can be accepted, unless ordering out of stock is allowed.
+     */
+    private function isMinimalQuantityReachable(int $availableQuantity, int $minimalQuantity, int $outOfStock): bool
+    {
+        return Product::isAvailableWhenOutOfStock($outOfStock) || $availableQuantity >= $minimalQuantity;
     }
 
     /**
