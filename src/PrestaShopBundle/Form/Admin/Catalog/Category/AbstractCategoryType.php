@@ -257,6 +257,11 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 'isRootCategory' => $this instanceof RootCategoryType,
                 'alert_message' => $this->getRedirectionAlertMessages(),
             ])
+            ->add('indexation', SwitchType::class, [
+                'label' => $this->trans('Indexation by search engines', 'Admin.Catalog.Feature'),
+                'help' => $this->trans('Uncheck to ask search engines not to index this category.', 'Admin.Catalog.Help'),
+                'required' => false,
+            ])
             ->add('group_association', MaterialChoiceTableType::class, [
                 'label' => $this->trans('Group access', 'Admin.Catalog.Feature'),
                 'help' => $this->trans('Select the customer groups which will have access to this category.', 'Admin.Catalog.Help'),

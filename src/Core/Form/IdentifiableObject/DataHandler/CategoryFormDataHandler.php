@@ -75,6 +75,9 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
             (int) $data['id_parent']
         );
 
+        if (isset($data['indexation'])) {
+            $command->setIndexation((bool) $data['indexation']);
+        }
         $command->setLocalizedDescriptions($data['description']);
         $command->setLocalizedAdditionalDescriptions($data['additional_description']);
         $command->setLocalizedMetaTitles($data['meta_title']);
@@ -110,6 +113,9 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
     {
         $command = new EditCategoryCommand($categoryId);
         $command->setIsActive($data['active']);
+        if (isset($data['indexation'])) {
+            $command->setIndexation((bool) $data['indexation']);
+        }
         $command->setLocalizedLinkRewrites($data['link_rewrite']);
         $command->setLocalizedNames($data['name']);
         $command->setParentCategoryId($data['id_parent']);
