@@ -292,7 +292,7 @@ class DatabaseDump
         exec($command, $output, $ret);
 
         if ($ret !== 0) {
-            throw new Exception(sprintf('Unable to exec command: `%s`, output : %s', $command, implode($output)));
+            throw new Exception(sprintf('Unable to exec command: `%s`, output : %s', $command, implode(PHP_EOL, $output)));
         }
 
         return $output;
@@ -306,6 +306,21 @@ class DatabaseDump
         $dumpCommand = $this->buildDumpCommand($this->dumpFile);
         $dumpCommand .= ' 2>&1';
         $this->exec($dumpCommand);
+        $this->removeUnsupportedSettings($this->dumpFile);
+    }
+
+    /**
+     * pg_dump 17+ writes "SET transaction_timeout", which an older server refuses when the dump is restored.
+     */
+    private function removeUnsupportedSettings(string $dumpFile): void
+    {
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ != 'pgsql') {
+            return;
+        }
+
+        $dump = (string) file_get_contents($dumpFile);
+        file_put_contents($dumpFile, preg_replace('/^SET transaction_timeout = .*;\R/m', '', $dump));
     }
 
     private function dumpAllTables(): void
@@ -336,6 +351,7 @@ class DatabaseDump
         $dumpCommand = $this->buildDumpCommand($tableDumpFile, $table);
         $dumpCommand .= ' 2>&1';
         $this->exec($dumpCommand);
+        $this->removeUnsupportedSettings($tableDumpFile);
 
         $checksum = $this->getTableChecksum($table);
         $checksumFile = $this->getTableChecksumPath($table);

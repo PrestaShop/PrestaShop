@@ -45,6 +45,9 @@ class DbPDOCore extends Db
         }
         if ($dbname) {
             $dsn .= ';dbname=' . $dbname;
+        } elseif (_DB_TYPE_ == 'pgsql') {
+            // PostgreSQL always connects to a database, by default the one named after the user: use the maintenance one
+            $dsn .= ';dbname=postgres';
         }
         /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'mysql') {
