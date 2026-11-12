@@ -16,11 +16,11 @@ use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridFactory;
 use PrestaShop\PrestaShop\Core\PDF\Exception\MissingDataException;
 use PrestaShop\PrestaShop\Core\Search\Filters\CreditSlipFilters;
+use PrestaShopBundle\Component\PdfResponse;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\GeneratePdfByDateType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -89,18 +89,7 @@ class CreditSlipController extends PrestaShopAdminController
         #[Autowire(service: 'prestashop.adapter.pdf.credit_slip_pdf_generator')] CreditSlipPdfGenerator $creditSlipPdfGenerator,
     ) {
         try {
-            $creditSlipId = new CreditSlipId($creditSlipId);
-            $generatedPdf = $creditSlipPdfGenerator->generatePDFForResponse([$creditSlipId]);
-
-            $response = new Response($generatedPdf->getContent());
-            $disposition = HeaderUtils::makeDisposition(
-                HeaderUtils::DISPOSITION_ATTACHMENT,
-                $generatedPdf->getFileName()
-            );
-            $response->headers->set('Content-Type', 'application/pdf');
-            $response->headers->set('Content-Disposition', $disposition);
-
-            return $response;
+            return new PdfResponse($creditSlipPdfGenerator->generatePDFForResponse([new CreditSlipId($creditSlipId)]));
         } catch (CoreException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
@@ -130,17 +119,8 @@ class CreditSlipController extends PrestaShopAdminController
                     new DateTime($dateRange['from']),
                     new DateTime($dateRange['to'])
                 ));
-                $generatedPdf = $creditSlipPdfGenerator->generatePDFForResponse($slipIds);
 
-                $response = new Response($generatedPdf->getContent());
-                $disposition = HeaderUtils::makeDisposition(
-                    HeaderUtils::DISPOSITION_ATTACHMENT,
-                    $generatedPdf->getFileName()
-                );
-                $response->headers->set('Content-Type', 'application/pdf');
-                $response->headers->set('Content-Disposition', $disposition);
-
-                return $response;
+                return new PdfResponse($creditSlipPdfGenerator->generatePDFForResponse($slipIds));
             } catch (CoreException $e) {
                 $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
             }

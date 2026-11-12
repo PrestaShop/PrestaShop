@@ -7,3 +7,6 @@ services:
 
   prestashop.adapter.pdf.type_provider.credit_slip:
     class: PrestaShop\PrestaShop\Adapter\CreditSlip\CreditSlipTemplateTypeProvider
+
+  prestashop.adapter.pdf.type_provider.delivery_slip:
+    class: PrestaShop\PrestaShop\Adapter\Order\Delivery\DeliverySlipTemplateTypeProvider

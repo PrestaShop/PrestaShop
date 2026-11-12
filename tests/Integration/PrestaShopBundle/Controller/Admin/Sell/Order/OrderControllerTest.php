@@ -18,11 +18,15 @@ use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Tests\Integration\Utility\ContextMockerTrait;
 use Tests\Integration\Utility\LoginTrait;
+use Tests\Resources\DatabaseDump;
 
 class OrderControllerTest extends WebTestCase
 {
     use ContextMockerTrait;
     use LoginTrait;
+    use PdfDownloadTrait;
+
+    private static int $orderSlipId;
 
     /**
      * @var KernelBrowser
@@ -36,6 +40,18 @@ class OrderControllerTest extends WebTestCase
      * @var CsrfTokenManager
      */
     protected $tokenManager;
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        self::$orderSlipId = self::addOrderSlip();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+        DatabaseDump::restoreTables(['order_slip']);
+    }
 
     protected function setUp(): void
     {
@@ -109,5 +125,12 @@ class OrderControllerTest extends WebTestCase
         $this->assertIsArray($content);
         $this->assertArrayHasKey('message', $content);
         $this->assertEquals('Product search phrase must not be an empty string.', $content['message']);
+    }
+
+    public function testGenerateCreditSlipPdf(): void
+    {
+        $this->assertPdfResponse('admin_orders_generate_credit_slip_pdf', ['creditSlipId' => self::$orderSlipId]);
+        $this->assertErrorRedirect('admin_orders_generate_credit_slip_pdf', ['creditSlipId' => 999999], 'admin_orders_index');
+        $this->assertErrorRedirect('admin_orders_generate_credit_slip_pdf', ['creditSlipId' => 0], 'admin_orders_index');
     }
 }
