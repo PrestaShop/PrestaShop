@@ -85,16 +85,21 @@ abstract class PaymentModuleCore extends Module
         return $return;
     }
 
-    public function uninstall()
+    /**
+     * A payment module's install() registers it against countries, currencies and carriers on top of
+     * the core registration; remove those here so the module-level rollback (which calls this without
+     * the full uninstall()) does not leave them behind. The group restrictions and everything else go
+     * through parent::uninstallCoreRegistration().
+     */
+    public function uninstallCoreRegistration(): bool
     {
         if (!Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_country` WHERE id_module = ' . (int) $this->id)
             || !Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_currency` WHERE id_module = ' . (int) $this->id)
-            || !Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_group` WHERE id_module = ' . (int) $this->id)
             || !Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_carrier` WHERE id_module = ' . (int) $this->id)) {
             return false;
         }
 
-        return parent::uninstall();
+        return parent::uninstallCoreRegistration();
     }
 
     /**

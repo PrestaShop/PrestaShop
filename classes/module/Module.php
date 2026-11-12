@@ -14,6 +14,7 @@ use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
 use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyRegistryInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyException;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
@@ -916,6 +917,40 @@ abstract class ModuleCore implements ModuleInterface
             return false;
         }
 
+        if ($this->uninstallCoreRegistration()) {
+            PrestaShopLogger::addLog(
+                Context::getContext()->getTranslator()->trans(
+                    'Module uninstalled successfully: %s v%s',
+                    [$this->name, $this->version],
+                    'Admin.Modules.Notification'
+                ),
+                PrestaShopLogger::LOG_SEVERITY_LEVEL_INFORMATIVE,
+                null,
+                'Module',
+                null,
+                true
+            );
+            Hook::exec('actionModuleUninstallAfter', ['object' => $this]);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Removes everything the core registered for this module: its hooks and hook exceptions, the meta
+     * of its front controllers, its association to every shop, its permissions, its customer group
+     * restrictions, and the module row itself. It does not touch anything the module created for
+     * itself, and it does not emit the uninstall log or hooks - uninstall() does that around it.
+     *
+     * Every step removes rows if they are there and is a no-op if they are not, so this can be called
+     * on a module that is only partially registered.
+     *
+     * @return bool whether the module row could be deleted
+     */
+    public function uninstallCoreRegistration(): bool
+    {
         // Retrieve hooks used by the module
         $sql = 'SELECT DISTINCT(`id_hook`) FROM `' . _DB_PREFIX_ . 'hook_module` WHERE `id_module` = ' . (int) $this->id;
         $result = Db::getInstance()->executeS($sql);
@@ -960,19 +995,6 @@ abstract class ModuleCore implements ModuleInterface
         if (Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module` WHERE `id_module` = ' . (int) $this->id)) {
             Cache::clean('Module::isInstalled' . $this->name);
             Cache::clean('Module::getModuleIdByName_' . pSQL($this->name));
-            PrestaShopLogger::addLog(
-                Context::getContext()->getTranslator()->trans(
-                    'Module uninstalled successfully: %s v%s',
-                    [$this->name, $this->version],
-                    'Admin.Modules.Notification'
-                ),
-                PrestaShopLogger::LOG_SEVERITY_LEVEL_INFORMATIVE,
-                null,
-                'Module',
-                null,
-                true
-            );
-            Hook::exec('actionModuleUninstallAfter', ['object' => $this]);
 
             return true;
         }
@@ -1302,6 +1324,44 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         return true;
+    }
+
+    /**
+     * Unregister every extra-property definition this module registered, keeping the stored values.
+     *
+     * WHY: called from the failed-install rollback. The module is no longer installed, so it can no
+     * longer be uninstalled to run its own cleanup, yet a module-owned definition left behind is still
+     * served to the product grid, the API and the front office and cannot be deleted from the BO
+     * registry - worse than an orphaned module table. dropData stays false so values kept from an
+     * earlier installation are not destroyed.
+     *
+     * @return bool false if a definition could not be unregistered, the reasons being added to the
+     *              module errors
+     */
+    public function uninstallExtraProperties(): bool
+    {
+        // No context means no reachable container (for example during installation, where
+        // getContainer() would call ContainerFinder with a null context and throw a TypeError that
+        // Module::get() does not catch). Extra properties can only have been registered through the
+        // container, so none exist to clean up.
+        if (empty($this->name) || $this->context === null) {
+            return true;
+        }
+
+        /** @var ExtraPropertyDefinitionRepositoryInterface|null $repository */
+        $repository = $this->get(ExtraPropertyDefinitionRepositoryInterface::class);
+        if ($repository === null) {
+            return true;
+        }
+
+        $success = true;
+        foreach ($repository->getAllDefinitions() as $definition) {
+            if ($definition->getModuleName() === $this->name) {
+                $success = $this->unregisterExtraProperty($definition, false) && $success;
+            }
+        }
+
+        return $success;
     }
 
     /**
