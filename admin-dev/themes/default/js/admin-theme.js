@@ -602,7 +602,7 @@ $(() => {
       .parent();
     parentZone.find('.status').addClass('hide');
 
-    if ($(this).attr('checked') === 'checked') {
+    if ($(this).prop('checked')) {
       parentZone.find('.enabled').removeClass('hide');
       $('#currency_form #active').val(1);
     } else {
@@ -620,7 +620,7 @@ $(() => {
       .parent();
     parentZone.find('.status').addClass('hide');
 
-    if ($(this).attr('checked') === 'checked') {
+    if ($(this).prop('checked')) {
       enable = 1;
       parentZone.find('.enabled').removeClass('hide');
     } else {
