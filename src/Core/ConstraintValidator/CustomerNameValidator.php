@@ -16,7 +16,12 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  */
 class CustomerNameValidator extends ConstraintValidator
 {
-    public const PATTERN_NAME = '/^(?!\s*$)(?:[^0-9!<>,;?=+()\/\\\\@#"°*`{}_^$%:¤\[\]|\.。]|[。\.](?:\s|$))*$/u';
+    /**
+     * The leading lookahead requires one letter, in any script, so a name made only of punctuation is
+     * rejected while a one or two letter name is not. It also covers the blank case it replaced: a
+     * string of spaces carries no letter either.
+     */
+    public const PATTERN_NAME = '/^(?=\P{L}*\p{L})(?:[^0-9!<>,;?=+()\/\\\\@#"°*`{}_^$%:¤\[\]|\.。]|[。\.](?:\s|$))*$/u';
     public const PATTERN_DOT_SPACED = '/[\.。](\s{1}[^\ ]|$)/';
 
     /**
