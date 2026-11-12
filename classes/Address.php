@@ -234,7 +234,7 @@ class AddressCore extends ObjectModel
          * 2) If it's not used, we can safely delete the address.
          */
 
-        // First step is to unlink this address from all NON-ORDERED carts.
+        // First step is to unlink this address from the carts using it (ordered carts follow their order address).
         $this->deleteCartAddress();
 
         // Second step - check if the address has been used in some order.
@@ -252,24 +252,30 @@ class AddressCore extends ObjectModel
     }
 
     /**
-     * Removes the address from all non ordered carts using it,
-     * to avoid errors on not existing address.
+     * Removes the address from the carts using it, to avoid errors on not existing address.
+     *
+     * Carts without order are reset to 0. Carts that already have an order follow the
+     * address of their order: it can differ from the cart address (e.g. a pickup point
+     * address created by a carrier module when the order was placed) and, unlike the
+     * cart address, it is never hard deleted while the order exists.
      */
     protected function deleteCartAddress()
     {
-        // Reset it from all delivery addresses
-        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart c
-            LEFT JOIN ' . _DB_PREFIX_ . 'orders o ON c.id_cart = o.id_cart
-            SET c.id_address_delivery = 0
-            WHERE c.id_address_delivery = ' . $this->id . ' AND o.id_order IS NULL';
-        Db::getInstance()->execute($sql);
+        foreach (['id_address_delivery', 'id_address_invoice'] as $field) {
+            // Ordered carts: follow the address of the order
+            $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart c
+                INNER JOIN ' . _DB_PREFIX_ . 'orders o ON c.id_cart = o.id_cart
+                SET c.' . $field . ' = o.' . $field . '
+                WHERE c.' . $field . ' = ' . (int) $this->id . ' AND o.' . $field . ' != ' . (int) $this->id;
+            Db::getInstance()->execute($sql);
 
-        // Reset it from all invoice addresses
-        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart c
-            LEFT JOIN ' . _DB_PREFIX_ . 'orders o ON c.id_cart = o.id_cart
-            SET c.id_address_invoice = 0
-            WHERE c.id_address_invoice = ' . $this->id . ' AND o.id_order IS NULL';
-        Db::getInstance()->execute($sql);
+            // Non ordered carts: reset
+            $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart c
+                LEFT JOIN ' . _DB_PREFIX_ . 'orders o ON c.id_cart = o.id_cart
+                SET c.' . $field . ' = 0
+                WHERE c.' . $field . ' = ' . (int) $this->id . ' AND o.id_order IS NULL';
+            Db::getInstance()->execute($sql);
+        }
     }
 
     /**
