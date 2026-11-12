@@ -56,6 +56,13 @@ class Module implements ModuleInterface
     public $database;
 
     /**
+     * Files customizing this module in the shop `override/modules/` folder.
+     *
+     * @var ParameterBag
+     */
+    public $overrides;
+
+    /**
      * Default values for ParameterBag attributes.
      *
      * @var array
@@ -125,19 +132,32 @@ class Module implements ModuleInterface
     ];
 
     /**
+     * Default values for ParameterBag overrides.
+     *
+     * @var array
+     */
+    private $overrides_default = [
+        'is_overridden' => false,
+        'files' => [],
+    ];
+
+    /**
      * @param array $attributes
      * @param array $disk
      * @param array $database
+     * @param array $overrides
      */
-    public function __construct(array $attributes = [], array $disk = [], array $database = [])
+    public function __construct(array $attributes = [], array $disk = [], array $database = [], array $overrides = [])
     {
         $this->attributes = new ParameterBag($this->attributes_default);
         $this->disk = new ParameterBag($this->disk_default);
         $this->database = new ParameterBag($this->database_default);
+        $this->overrides = new ParameterBag($this->overrides_default);
         // Set all attributes
         $this->attributes->add($attributes);
         $this->disk->add($disk);
         $this->database->add($database);
+        $this->overrides->add($overrides);
 
         if ($this->isInstalled()) {
             $version = $this->database->get('version');
@@ -342,6 +362,22 @@ class Module implements ModuleInterface
     public function getDatabaseAttributes(): ParameterBag
     {
         return $this->database;
+    }
+
+    public function getOverrides(): ParameterBag
+    {
+        return $this->overrides;
+    }
+
+    /**
+     * @param string[] $files Paths of the files overriding this module, relative to the shop root
+     */
+    public function setOverrides(array $files): void
+    {
+        $this->overrides = new ParameterBag([
+            'is_overridden' => [] !== $files,
+            'files' => $files,
+        ]);
     }
 
     /**
