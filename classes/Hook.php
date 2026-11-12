@@ -872,7 +872,8 @@ class HookCore extends ObjectModel
      *
      * @param string $hook_name Hook Name
      * @param array $hook_args Parameters for the functions
-     * @param string|int|null $id_module Execute hook for this module only
+     * @param int|null $id_module Execute hook for this module only. This is a module ID, not a module
+     *                            name - resolve a name with Module::getModuleIdByName() first
      * @param bool $array_return If specified, the result will be provided in an array [module_name => module_output]
      * @param bool $check_exceptions Check if this function should respect hook controller exceptions configured in backoffice
      * @param bool $use_push Force change to be refreshed on Dashboard widgets (unused)
