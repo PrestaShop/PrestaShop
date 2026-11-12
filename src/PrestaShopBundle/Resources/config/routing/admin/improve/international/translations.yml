@@ -44,3 +44,11 @@ admin_international_translations_copy_language:
     _controller: PrestaShopBundle\Controller\Admin\Improve\International\TranslationsController::copyLanguageAction
     _legacy_controller: AdminTranslations
     _legacy_link: AdminTranslations:submitCopyLang
+
+admin_international_translations_import_language_pack:
+  path: /import-language-pack
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Improve\International\TranslationsController::importLanguagePackAction
+    _legacy_controller: AdminTranslations
+    _legacy_link: AdminTranslations:submitImport
