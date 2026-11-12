@@ -5491,15 +5491,6 @@ class ProductCore extends ObjectModel
         // Tax
         $usetax = Configuration::get('PS_TAX');
 
-        $cache_key = $row['id_product'] . '-' . $id_product_attribute . '-' . $id_lang . '-' . (int) $usetax;
-        if (isset($row['id_product_pack'])) {
-            $cache_key .= '-pack' . $row['id_product_pack'];
-        }
-
-        if (isset(self::$productPropertiesCache[$cache_key])) {
-            return array_merge($row, self::$productPropertiesCache[$cache_key]);
-        }
-
         /*
          * Now, to get proper prices, we need to calculate them for a specific quantity, because
          * there can be quantity discount. The variable to use is different for different contexts.
@@ -5513,6 +5504,16 @@ class ProductCore extends ObjectModel
             $quantityToUseForPriceCalculations = max((int) $row['minimal_quantity'], (int) $row['cart_quantity']);
         } else {
             $quantityToUseForPriceCalculations = (int) $row['minimal_quantity'];
+        }
+
+        // The prices below depend on the quantity, so two cart lines of one combination can differ
+        $cache_key = $row['id_product'] . '-' . $id_product_attribute . '-' . $id_lang . '-' . (int) $usetax . '-' . $quantityToUseForPriceCalculations;
+        if (isset($row['id_product_pack'])) {
+            $cache_key .= '-pack' . $row['id_product_pack'];
+        }
+
+        if (isset(self::$productPropertiesCache[$cache_key])) {
+            return array_merge($row, self::$productPropertiesCache[$cache_key]);
         }
 
         // New pricing engine (Phase 1): single compute() call replaces multiple getPriceStatic calls
