@@ -193,7 +193,7 @@ class AdminShopGroupControllerCore extends AdminController
                     'required' => true,
                     'class' => 't',
                     'is_bool' => true,
-                    'disabled' => ($this->id_object && $this->display == 'edit' && ShopGroup::hasDependency($this->id_object, 'customer')) ? true : false,
+                    'disabled' => ($this->id_object && $this->display == 'edit' && ShopGroup::isSharingLocked($this->id_object, 'customer')) ? true : false,
                     'values' => [
                         [
                             'id' => 'share_customer_on',
@@ -232,7 +232,7 @@ class AdminShopGroupControllerCore extends AdminController
                     'required' => true,
                     'class' => 't',
                     'is_bool' => true,
-                    'disabled' => ($this->id_object && $this->display == 'edit' && ShopGroup::hasDependency($this->id_object, 'order')) ? true : false,
+                    'disabled' => ($this->id_object && $this->display == 'edit' && ShopGroup::isSharingLocked($this->id_object, 'order')) ? true : false,
                     'values' => [
                         [
                             'id' => 'share_order_on',
