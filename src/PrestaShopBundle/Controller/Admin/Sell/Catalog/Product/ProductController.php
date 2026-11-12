@@ -1730,6 +1730,11 @@ class ProductController extends PrestaShopAdminController
                     [],
                     'Admin.Catalog.Notification'
                 ),
+                ProductConstraintException::UNSEARCHABLE_TAG => $this->trans(
+                    'A tag you added cannot be found by the search engine, which ignores it. Use tags containing a word.',
+                    [],
+                    'Admin.Catalog.Notification'
+                ),
                 ProductConstraintException::INVALID_TEXT_FIELDS_COUNT => $this->trans(
                     'Product text customization fields are invalid.',
                     [],

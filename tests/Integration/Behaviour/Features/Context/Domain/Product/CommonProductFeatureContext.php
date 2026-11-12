@@ -247,6 +247,7 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
             'wholesale_price' => ProductConstraintException::INVALID_WHOLESALE_PRICE,
             'unit_price' => ProductConstraintException::INVALID_UNIT_PRICE,
             'tag' => ProductConstraintException::INVALID_TAG,
+            'searchable_tag' => ProductConstraintException::UNSEARCHABLE_TAG,
             'width' => ProductConstraintException::INVALID_WIDTH,
             'height' => ProductConstraintException::INVALID_HEIGHT,
             'depth' => ProductConstraintException::INVALID_DEPTH,
