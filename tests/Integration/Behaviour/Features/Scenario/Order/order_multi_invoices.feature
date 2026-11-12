@@ -163,8 +163,8 @@ Feature: Order from Back Office (BO)
     Then the first invoice from order "bo_order1" should have following details:
       | total_products          | 23.800 |
       | total_products_wt       | 25.230 |
-#      | total_discount_tax_excl | 0.0    |
-#      | total_discount_tax_incl | 0.0    |
+      | total_discount_tax_excl | 0.0    |
+      | total_discount_tax_incl | 0.0    |
 #      | total_paid_tax_excl     | 30.800 |
 #      | total_paid_tax_incl     | 32.650 |
       | total_shipping_tax_excl | 7.0    |
@@ -269,8 +269,8 @@ Feature: Order from Back Office (BO)
     Then the first invoice from order "bo_order1" should have following details:
       | total_products          | 23.800 |
       | total_products_wt       | 25.230 |
-#      | total_discount_tax_excl | 0.0    |
-#      | total_discount_tax_incl | 0.0    |
+      | total_discount_tax_excl | 0.0    |
+      | total_discount_tax_incl | 0.0    |
 #      | total_paid_tax_excl     | 30.800 |
 #      | total_paid_tax_incl     | 32.650 |
       | total_shipping_tax_excl | 7.0    |
@@ -278,8 +278,8 @@ Feature: Order from Back Office (BO)
     And the second invoice from order "bo_order1" should have following details:
       | total_products    | 60.000 |
       | total_products_wt | 63.600 |
-#      | total_discount_tax_excl | 5.19   |
-#      | total_discount_tax_incl | 5.50   |
+      | total_discount_tax_excl | 5.19   |
+      | total_discount_tax_incl | 5.50   |
 #      | total_paid_tax_excl     | 61.81  |
 #      | total_paid_tax_incl     | 65.52  |
 #      | total_shipping_tax_excl | 7.0    |
@@ -287,20 +287,20 @@ Feature: Order from Back Office (BO)
     And the third invoice from order "bo_order1" should have following details:
       | total_products    | 50.000 |
       | total_products_wt | 53.000 |
-#      | total_discount_tax_excl | 25.00  |
-#      | total_discount_tax_incl | 26.50  |
-#      | total_paid_tax_excl     | 32.00  |
-#      | total_paid_tax_incl     | 33.92  |
+      | total_discount_tax_excl | 25.00  |
+      | total_discount_tax_incl | 26.50  |
+      | total_paid_tax_excl     | 25.00  |
+      | total_paid_tax_incl     | 26.50  |
 #      | total_shipping_tax_excl | 7.0    |
 #      | total_shipping_tax_incl | 7.42   |
     And order "bo_order1" should have following details:
       | total_products    | 133.80 |
       | total_products_wt | 141.83 |
-#      | total_discounts_tax_excl | 30.19  |
-#      | total_discounts_tax_incl | 32.00  |
-#      | total_paid_tax_excl      | 124.61 |
-#      | total_paid_tax_incl      | 132.09 |
-#      | total_paid               | 132.09 |
+      | total_discounts_tax_excl | 30.19  |
+      | total_discounts_tax_incl | 32.00  |
+      | total_paid_tax_excl      | 110.61 |
+      | total_paid_tax_incl      | 117.25 |
+      | total_paid               | 117.25 |
       | total_paid_real   | 0.0    |
 #      | total_shipping_tax_excl  | 21.0   |
 #      | total_shipping_tax_incl  | 22.26  |
@@ -701,3 +701,81 @@ Feature: Order from Back Office (BO)
 #      | weight                 | 0.000 |
 #      | shipping_cost_tax_excl | 28.00 |
 #      | shipping_cost_tax_incl | 29.68 |
+
+  Scenario: An order-wide discount and a discount on one invoice add up on the order as on the invoices
+    When I generate invoice for "bo_order1" order
+    And I add products to order "bo_order1" with new invoice and the following products details:
+      | name   | Test Product A |
+      | amount | 2              |
+      | price  | 15             |
+    And I add products to order "bo_order1" with new invoice and the following products details:
+      | name   | Test Product B |
+      | amount | 5              |
+      | price  | 10             |
+    Then order "bo_order1" should have 3 invoices
+    When I add discount to order "bo_order1" with following details:
+      | name  | discount ten |
+      | type  | percent      |
+      | value | 10           |
+    And I add discount to order "bo_order1" on third invoice and following details:
+      | name  | discount fifty-fifty |
+      | type  | percent              |
+      | value | 50                   |
+    Then the first invoice from order "bo_order1" should have following details:
+      | total_discount_tax_excl | 2.38 |
+    And the second invoice from order "bo_order1" should have following details:
+      | total_discount_tax_excl | 3.00 |
+    And the third invoice from order "bo_order1" should have following details:
+      | total_discount_tax_excl | 27.50 |
+    And order "bo_order1" should have following details:
+      | total_discounts_tax_excl | 32.88 |
+      | total_paid_tax_excl      | 77.92 |
+
+  Scenario: An order discount on one invoice stays there when that invoice loses its products
+    When I generate invoice for "bo_order1" order
+    And I add products to order "bo_order1" with new invoice and the following products details:
+      | name   | Test Product A |
+      | amount | 2              |
+      | price  | 15             |
+    And I add products to order "bo_order1" with new invoice and the following products details:
+      | name   | Test Product B |
+      | amount | 5              |
+      | price  | 10             |
+    Then order "bo_order1" should have 3 invoices
+    When I add discount to order "bo_order1" on third invoice and following details:
+      | name  | discount fifty-fifty |
+      | type  | percent              |
+      | value | 50                   |
+    And I remove product "Test Product B" from order "bo_order1"
+    Then the first invoice from order "bo_order1" should have following details:
+      | total_discount_tax_excl | 0.0 |
+    And the second invoice from order "bo_order1" should have following details:
+      | total_discount_tax_excl | 0.0 |
+    And order "bo_order1" should have following details:
+      | total_discounts_tax_excl | 0.0   |
+      | total_paid_tax_excl      | 60.80 |
+
+  Scenario: A free shipping discount on one invoice keeps the kept shipping when shipping is not recalculated
+    Given shop configuration for "PS_ORDER_RECALCULATE_SHIPPING" is set to 0
+    When I generate invoice for "bo_order1" order
+    And I add products to order "bo_order1" with new invoice and the following products details:
+      | name   | Test Product A |
+      | amount | 2              |
+      | price  | 15             |
+    When I add discount to order "bo_order1" on second invoice and following details:
+      | name | discount shipping |
+      | type | free_shipping     |
+    Then order "bo_order1" should have following details:
+      | total_shipping_tax_excl  | 7.0   |
+      | total_discounts_tax_excl | 7.00  |
+      | total_paid_tax_excl      | 53.80 |
+    # The computed shipping becomes 9.00 while the order keeps 7.00
+    Given shipping handling fees are set to 4.0
+    When I add products to order "bo_order1" to the second invoice and the following products details:
+      | name   | Test Product B |
+      | amount | 1              |
+      | price  | 10             |
+    Then order "bo_order1" should have following details:
+      | total_shipping_tax_excl  | 7.0   |
+      | total_discounts_tax_excl | 7.00  |
+      | total_paid_tax_excl      | 63.80 |
