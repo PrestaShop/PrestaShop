@@ -14,6 +14,7 @@ use OrderCarrier;
 use OrderCartRule;
 use OrderDetail;
 use OrderInvoice;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderCurrencyCommand;
@@ -30,6 +31,11 @@ use Validate;
 #[AsCommandHandler]
 final class ChangeOrderCurrencyHandler extends AbstractOrderHandler implements ChangeOrderCurrencyHandlerInterface
 {
+    public function __construct(
+        private readonly ContextStateManager $contextStateManager
+    ) {
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -49,12 +55,21 @@ final class ChangeOrderCurrencyHandler extends AbstractOrderHandler implements C
                 throw new OrderException('Can\'t load Currency object');
             }
 
-            $this->updateOrderDetail($order, $oldCurrency, $newCurrency);
-            $this->updateOrderCarrier((int) $order->getIdOrderCarrier(), $oldCurrency, $newCurrency);
-            $this->updateInvoices($order->getInvoicesCollection(), $oldCurrency, $newCurrency);
-            $this->updateCart($order->id_cart, $newCurrency);
-            $this->updateOrder($order, $oldCurrency, $newCurrency);
-            $this->updateOrderDiscounts($order->getCartRules(), $oldCurrency, $newCurrency);
+            // Converted amounts are rounded with the context computing precision, so the context
+            // currency must be the new currency, not the default one
+            $this->contextStateManager->saveCurrentContext();
+            $this->contextStateManager->setCurrency($newCurrency);
+
+            try {
+                $this->updateOrderDetail($order, $oldCurrency, $newCurrency);
+                $this->updateOrderCarrier((int) $order->getIdOrderCarrier(), $oldCurrency, $newCurrency);
+                $this->updateInvoices($order->getInvoicesCollection(), $oldCurrency, $newCurrency);
+                $this->updateCart($order->id_cart, $newCurrency);
+                $this->updateOrder($order, $oldCurrency, $newCurrency);
+                $this->updateOrderDiscounts($order->getCartRules(), $oldCurrency, $newCurrency);
+            } finally {
+                $this->contextStateManager->restorePreviousContext();
+            }
         } catch (PrestaShopException $e) {
             throw new OrderException(
                 sprintf(
