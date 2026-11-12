@@ -11,6 +11,7 @@ use Exception;
 use ImageManager;
 use PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider;
 use PrestaShop\PrestaShop\Adapter\Category\CategoryViewDataProvider;
+use PrestaShop\PrestaShop\Adapter\Shop\Url\CategoryProvider;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDisableCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkEnableCategoriesCommand;
@@ -149,9 +150,17 @@ class CategoryController extends PrestaShopAdminController
 
         try {
             $handlerResult = $categoryFormHandler->handle($categoryForm);
+            $categoryId = $handlerResult->getIdentifiableObjectId();
 
-            if (null !== $handlerResult->getIdentifiableObjectId()) {
+            if (null !== $categoryId) {
                 $this->addFlash('success', $this->trans('Successful creation', [], 'Admin.Notifications.Success'));
+
+                if ($request->request->has('save-and-preview')) {
+                    return $this->redirectToRoute('admin_categories_edit', [
+                        'categoryId' => $categoryId,
+                        'open_preview' => 1,
+                    ]);
+                }
 
                 return $this->redirectToRoute('admin_categories_index', [
                     'categoryId' => $categoryForm->getData()['id_parent'],
@@ -242,6 +251,8 @@ class CategoryController extends PrestaShopAdminController
         FormHandlerInterface $categoryFormHandler,
         #[Autowire(service: 'prestashop.adapter.group.provider.default_groups_provider')]
         DefaultGroupsProviderInterface $defaultGroupsProvider,
+        #[Autowire(service: 'prestashop.adapter.shop.url.category_provider')]
+        CategoryProvider $previewUrlProvider,
     ): Response {
         try {
             /** @var EditableCategory $editableCategory */
@@ -259,6 +270,7 @@ class CategoryController extends PrestaShopAdminController
         $categoryFormOptions = [
             'id_category' => (int) $categoryId,
             'subcategories' => $editableCategory->getSubCategories(),
+            'action' => $this->generateUrl('admin_categories_edit', ['categoryId' => $categoryId]),
         ];
 
         try {
@@ -275,6 +287,13 @@ class CategoryController extends PrestaShopAdminController
 
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
+
+                if ($request->request->has('save-and-preview')) {
+                    return $this->redirectToRoute('admin_categories_edit', [
+                        'categoryId' => $categoryId,
+                        'open_preview' => 1,
+                    ]);
+                }
 
                 return $this->redirectToRoute('admin_categories_index', [
                     'categoryId' => $categoryForm->getData()['id_parent'],
@@ -296,6 +315,10 @@ class CategoryController extends PrestaShopAdminController
                 'editCategoryForm' => $categoryForm->createView(),
                 'editableCategory' => $editableCategory,
                 'defaultGroups' => $defaultGroups,
+                'previewUrl' => $request->query->has('open_preview') ? $previewUrlProvider->getUrl(
+                    $categoryId,
+                    $editableCategory->getLinkRewrite()[$this->getLanguageContext()->getId()] ?? null
+                ) : null,
                 'layoutTitle' => $this->trans(
                     'Editing category %category_name%',
                     [
@@ -305,6 +328,15 @@ class CategoryController extends PrestaShopAdminController
                 ),
             ]
         );
+    }
+
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function previewAction(
+        int $categoryId,
+        #[Autowire(service: 'prestashop.adapter.shop.url.category_provider')]
+        CategoryProvider $previewUrlProvider,
+    ): RedirectResponse {
+        return $this->redirect($previewUrlProvider->getUrl($categoryId));
     }
 
     /**

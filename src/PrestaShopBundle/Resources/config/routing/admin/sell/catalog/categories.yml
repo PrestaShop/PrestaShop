@@ -104,6 +104,18 @@ admin_categories_edit:
   requirements:
     categoryId: \d+
 
+admin_categories_preview:
+  path: /{categoryId}/preview
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\CategoryController::previewAction'
+    _legacy_controller: AdminCategories
+    _legacy_link: AdminCategories:preview
+    _legacy_parameters:
+      id_category: categoryId
+  requirements:
+    categoryId: \d+
+
 admin_categories_edit_root:
   path: /{categoryId}/edit-root
   methods: [ GET, POST ]

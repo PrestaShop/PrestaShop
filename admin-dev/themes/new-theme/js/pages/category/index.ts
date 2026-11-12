@@ -76,6 +76,8 @@ $(() => {
 
   new FormSubmitButton();
 
+  new window.prestashop.component.PreviewOpener('.js-preview-url');
+
   new window.prestashop.component.TaggableField({
     tokenFieldSelector: 'input.js-taggable-field',
     options: {
