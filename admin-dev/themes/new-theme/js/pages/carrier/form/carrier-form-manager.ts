@@ -95,7 +95,7 @@ export default class CarrierFormManager {
       const $rangeNameHidden = $rangeRow.find(CarrierFormMap.rangeNameInput);
       const from = $rangeRow.find(CarrierFormMap.rangeFromInput).val();
       const to = $rangeRow.find(CarrierFormMap.rangeToInput).val();
-      const rangeName = `${from}${this.currentShippingSymbol} - ${to}${this.currentShippingSymbol}`;
+      const rangeName = this.formatRangeName(from, to);
       $rangeName.text(rangeName);
       $rangeNameHidden.val(rangeName);
     });
@@ -236,13 +236,21 @@ export default class CarrierFormManager {
     });
   }
 
+  /**
+   * A range covers its lower bound and stops before its upper one, so the operators are spelled out.
+   * Keep in sync with CarrierFormDataProvider, which renders the same label on first load.
+   */
+  private formatRangeName(from: unknown, to: unknown): string {
+    return `>= ${from}${this.currentShippingSymbol} - < ${to}${this.currentShippingSymbol}`;
+  }
+
   private prepareRangePrototype(rangePrototype: string, index: number, range: Range): JQuery {
     // We prepare the range prototype by replacing the range index, and setting the range values
     const $rPrototype = $(rangePrototype.replace(/__range__/g, index.toString()));
     $rPrototype.find(CarrierFormMap.rangeFromInput).val(range.from || '0');
     $rPrototype.find(CarrierFormMap.rangeToInput).val(range.to || '0');
     $rPrototype.find(CarrierFormMap.rangeNamePreview)
-      .text(`${range.from}${this.currentShippingSymbol} - ${range.to}${this.currentShippingSymbol}`);
+      .text(this.formatRangeName(range.from, range.to));
 
     // We return the prototype well formed
     return $rPrototype;
