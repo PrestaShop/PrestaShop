@@ -55,6 +55,10 @@ final class InvoiceByDateFormHandler extends Handler
 
     /**
      * {@inheritdoc}
+     *
+     * Provides direct PDF generation for backward compatibility with external callers.
+     * Core invoice download actions do not call this method; they use generic form handlers
+     * for validation and generatePDFForResponse() in the controller for PDF generation.
      */
     public function save(array $data)
     {

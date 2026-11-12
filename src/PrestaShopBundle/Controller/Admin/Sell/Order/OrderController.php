@@ -13,6 +13,7 @@ use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\PDF\DeliverySlipPdfGenerator;
 use PrestaShop\PrestaShop\Adapter\PDF\OrderInvoicePdfGenerator;
+use PrestaShop\PrestaShop\Adapter\PDF\ShipmentDeliverySlipPdfGenerator;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarriersForProduct;
@@ -89,7 +90,6 @@ use PrestaShop\PrestaShop\Core\Grid\GridFactory;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowFactoryInterface;
 use PrestaShop\PrestaShop\Core\Order\OrderSiblingProviderInterface;
-use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\ShipmentFilters;
 use PrestaShopBundle\Component\CsvResponse;
@@ -351,22 +351,29 @@ class OrderController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('read', 'AdminOrders')", message: 'You do not have permission to view this.', redirectRoute: 'admin_orders_index')]
     public function generateShipmentDeliverySlipPdfAction(
         int $shipmentId,
-        #[Autowire(service: 'prestashop.adapter.pdf.shipment_delivery_slip_pdf_generator')] PDFGeneratorInterface $shipmentDeliverySlipPdfGenerator,
-    ): BinaryFileResponse {
-        return new BinaryFileResponse($shipmentDeliverySlipPdfGenerator->generatePDF([$shipmentId]));
+        #[Autowire(service: 'prestashop.adapter.pdf.shipment_delivery_slip_pdf_generator')] ShipmentDeliverySlipPdfGenerator $shipmentDeliverySlipPdfGenerator,
+    ): Response {
+        // Return the shipment delivery slips as a PDF attachment
+        $generatedPdf = $shipmentDeliverySlipPdfGenerator->generatePDFForResponse([$shipmentId]);
+        $response = new Response($generatedPdf->getContent());
+        $disposition = HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $generatedPdf->getFileName());
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-Disposition', $disposition);
+
+        return $response;
     }
 
     /**
      * Generate delivery slip PDF for multiple shipments or all shipments of an order
      *
-     * @return BinaryFileResponse|RedirectResponse
+     * @return Response|RedirectResponse
      */
     #[AdminSecurity("is_granted('read', 'AdminOrders')", message: 'You do not have permission to view this.', redirectRoute: 'admin_orders_index')]
     public function generateShipmentsDeliverySlipPdfAction(
         Request $request,
         int $orderId,
-        #[Autowire(service: 'prestashop.adapter.pdf.shipment_delivery_slip_pdf_generator')] PDFGeneratorInterface $shipmentDeliverySlipPdfGenerator,
-    ) {
+        #[Autowire(service: 'prestashop.adapter.pdf.shipment_delivery_slip_pdf_generator')] ShipmentDeliverySlipPdfGenerator $shipmentDeliverySlipPdfGenerator,
+    ): Response {
         $shipmentIds = $request->isMethod('POST')
             ? $request->request->all('shipmentIds')
             : $request->query->all('shipmentIds');
@@ -391,7 +398,14 @@ class OrderController extends PrestaShopAdminController
             return $this->redirectToRoute('admin_orders_view');
         }
 
-        return new BinaryFileResponse($shipmentDeliverySlipPdfGenerator->generatePDF($shipmentIds));
+        // Return the shipment delivery slips as a PDF attachment
+        $generatedPdf = $shipmentDeliverySlipPdfGenerator->generatePDFForResponse($shipmentIds);
+        $response = new Response($generatedPdf->getContent());
+        $disposition = HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $generatedPdf->getFileName());
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-Disposition', $disposition);
+
+        return $response;
     }
 
     /**

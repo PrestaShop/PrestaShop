@@ -19,7 +19,10 @@ use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use PrestaShopException;
 
 /**
- * Responsible for generating CreditSlip PDF
+ * Generates credit slip PDFs documenting credited amounts for refunded orders.
+ *
+ * Accepts one or more CreditSlipId value objects for individual downloads or bulk exports.
+ * The matching credit slips are combined into a single PDF file.
  */
 final class CreditSlipPdfGenerator implements PDFGeneratorInterface
 {
@@ -46,11 +49,14 @@ final class CreditSlipPdfGenerator implements PDFGeneratorInterface
     }
 
     /**
-     * Generates PDF from given data using legacy object models
+     * Generates credit slips using legacy object models and sends their PDF directly to the browser.
      *
-     * @param CreditSlipId[] $creditSlipIds
+     * Available for backward compatibility with external callers; not called by core.
+     * Core PDF download controllers use generatePDFForResponse().
      *
-     * @throws PdfException
+     * @param CreditSlipId[] $creditSlipIds One or more credit slip identifiers
+     *
+     * @return string TCPDF return value after directly sending the document
      */
     public function generatePDF(array $creditSlipIds): string
     {
@@ -61,6 +67,13 @@ final class CreditSlipPdfGenerator implements PDFGeneratorInterface
         }
     }
 
+    /**
+     * Renders the selected credit slips and returns their content and download filename.
+     *
+     * @param CreditSlipId[] $creditSlipIds One or more credit slip identifiers
+     *
+     * @return GeneratedPdf PDF bytes and filename; no HTTP headers or content are sent
+     */
     public function generatePDFForResponse(array $creditSlipIds): GeneratedPdf
     {
         try {
@@ -75,16 +88,26 @@ final class CreditSlipPdfGenerator implements PDFGeneratorInterface
         }
     }
 
+    /**
+     * Loads credit slip records, hydrates their legacy objects and builds one PDF document.
+     *
+     * @param CreditSlipId[] $creditSlipIds One or more credit slip identifiers
+     *
+     * @return PDF The document ready for rendering
+     */
     private function createPdf(array $creditSlipIds): PDF
     {
+        // Extract the numeric identifiers for the credit slip query
         $ids = [];
         foreach ($creditSlipIds as $creditSlipId) {
             $ids[] = $creditSlipId->getValue();
         }
 
+        // Load and hydrate the credit slips for the PDF template
         $slipsList = $this->getCreditSlipsList($ids);
         $slipsCollection = ObjectModel::hydrateCollection('OrderSlip', $slipsList);
 
+        // Build one document containing the matching credit slips
         return new PDF($slipsCollection, PDF::TEMPLATE_ORDER_SLIP, Context::getContext()->smarty);
     }
 
@@ -94,8 +117,6 @@ final class CreditSlipPdfGenerator implements PDFGeneratorInterface
      * @param int[] $creditSlipIds
      *
      * @return OrderSlip[]
-     *
-     * @throws MissingDataException
      */
     private function getCreditSlipsList($creditSlipIds)
     {
