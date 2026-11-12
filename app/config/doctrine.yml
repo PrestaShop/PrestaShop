@@ -4,6 +4,8 @@ doctrine:
     default_connection: default
     types:
       boolean: PrestaShopBundle\Doctrine\Type\IntegerBooleanType
+      date: PrestaShopBundle\Doctrine\Type\ZeroDateAwareDateType
+      datetime: PrestaShopBundle\Doctrine\Type\ZeroDateAwareDateTimeType
 
     connections:
       default:

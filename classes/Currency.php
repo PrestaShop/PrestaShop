@@ -869,7 +869,8 @@ class CurrencyCore extends ObjectModel
         $cacheId = 'Currency::getIdByIsoCode_' . pSQL($isoCode) . '-' . (int) $idShop . ($includeDeleted ? '-deleted' : '');
         if ($forceRefreshCache || !Cache::isStored($cacheId)) {
             $query = Currency::getIdByQuery($idShop, $includeDeleted);
-            $query->where('iso_code = \'' . pSQL($isoCode) . '\'');
+            // ISO codes are stored uppercase, and PostgreSQL compares strings case-sensitively
+            $query->where('iso_code = \'' . pSQL(strtoupper($isoCode)) . '\'');
 
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
             if (empty($result)) {

@@ -74,9 +74,9 @@ class GroupReductionCore extends ObjectModel
         if (count($values)) {
             /* @phpstan-ignore-next-line */
             if (_DB_TYPE_ == 'pgsql') {
-                $query = 'INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_group_reduction_cache') . ' (id_product, id_group, reduction)
+                $query = 'INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_group_reduction_cache') . ' AS pgrc (id_product, id_group, reduction)
 				VALUES ' . implode(', ', $values) . ' ON CONFLICT (id_product, id_group) DO UPDATE SET
-				reduction = GREATEST(EXCLUDED.reduction, reduction)';
+				reduction = GREATEST(EXCLUDED.reduction, pgrc.reduction)';
 
                 return Db::getInstance()->execute($query);
             }

@@ -478,7 +478,7 @@ class OrderDetailCore extends ObjectModel
      */
     public static function getList($id_order)
     {
-        return Db::getInstance()->executeS('SELECT * FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_detail') . ' WHERE id_order = ' . (int) $id_order);
+        return Db::getInstance()->executeS('SELECT * FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_detail') . ' WHERE id_order = ' . (int) $id_order . ' ORDER BY id_order_detail');
     }
 
     public function getTaxList()

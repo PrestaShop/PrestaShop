@@ -132,7 +132,7 @@ class StockAvailableRepository extends AbstractMultiShopObjectModelRepository
      */
     public function getStockIdByProduct(ProductId $productId, ShopId $shopId): StockId
     {
-        $stockAvailableId = StockAvailable::getStockAvailableIdByProductId($productId->getValue(), null, $shopId->getValue());
+        $stockAvailableId = StockAvailable::getStockAvailableIdByProductId($productId->getValue(), NoCombinationId::NO_COMBINATION_ID, $shopId->getValue());
         if ($stockAvailableId <= 0) {
             throw new StockAvailableNotFoundException(sprintf(
                 'Cannot find StockAvailable for product #%d',

@@ -2005,6 +2005,7 @@ class OrderCore extends ObjectModel
     {
         $order_invoices = new PrestaShopCollection('OrderInvoice');
         $order_invoices->where('id_order', '=', $this->id);
+        $order_invoices->orderBy('id_order_invoice');
 
         return $order_invoices;
     }

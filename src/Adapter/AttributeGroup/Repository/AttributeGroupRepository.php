@@ -185,6 +185,7 @@ class AttributeGroupRepository extends AbstractMultiShopObjectModelRepository
             ->andWhere($qb->expr()->in('ag.id_attribute_group', ':attributeGroupIds'))
             ->setParameter('shopIds', $shopIdValues, Connection::PARAM_INT_ARRAY)
             ->setParameter('attributeGroupIds', $attributeGroupIdValues, Connection::PARAM_INT_ARRAY)
+            ->orderBy('ags.id_shop', 'ASC')
             ->executeQuery()
             ->fetchAllAssociative()
         ;
@@ -194,6 +195,8 @@ class AttributeGroupRepository extends AbstractMultiShopObjectModelRepository
             $attributeGroupShops[(int) $result['id_attribute_group']][] = (int) $result['id_shop'];
         }
 
+        // Shop lists are compared in the same order, the query returns them sorted
+        sort($shopIdValues);
         foreach ($attributeGroupIdValues as $attributeGroupIdValue) {
             if (!isset($attributeGroupShops[$attributeGroupIdValue]) || $attributeGroupShops[$attributeGroupIdValue] !== $shopIdValues) {
                 throw new ShopAssociationNotFound('Provided attribute groups does not exist in every shop');

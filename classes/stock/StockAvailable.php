@@ -105,6 +105,9 @@ class StockAvailableCore extends ObjectModel
 
         if ($id_product_attribute !== null) {
             $query->where('id_product_attribute = ' . (int) $id_product_attribute);
+        } else {
+            // Without a combination the product row comes first, whatever order the database reads rows in
+            $query->orderBy('id_product_attribute ASC');
         }
 
         $query = StockAvailable::addSqlShopRestriction($query, $id_shop);

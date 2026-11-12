@@ -4842,14 +4842,16 @@ class ProductCore extends ObjectModel
         );
         $sql->leftJoin('manufacturer', 'm', 'm.id_manufacturer = p.id_manufacturer');
 
-        $where = 'pl.name LIKE \'%' . pSQL($query) . '%\'
-        OR p.ean13 LIKE \'%' . pSQL($query) . '%\'
-        OR p.isbn LIKE \'%' . pSQL($query) . '%\'
-        OR p.upc LIKE \'%' . pSQL($query) . '%\'
-        OR p.mpn LIKE \'%' . pSQL($query) . '%\'
-        OR p.reference LIKE \'%' . pSQL($query) . '%\'
-        OR p.supplier_reference LIKE \'%' . pSQL($query) . '%\'
-        OR EXISTS(SELECT * FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_supplier') . ' sp WHERE sp.id_product = p.id_product AND product_supplier_reference LIKE \'%' . pSQL($query) . '%\')';
+        // Lower cased on both sides, PostgreSQL's LIKE being case-sensitive
+        $likeQuery = pSQL(mb_strtolower($query));
+        $where = 'LOWER(pl.name) LIKE \'%' . $likeQuery . '%\'
+        OR LOWER(p.ean13) LIKE \'%' . $likeQuery . '%\'
+        OR LOWER(p.isbn) LIKE \'%' . $likeQuery . '%\'
+        OR LOWER(p.upc) LIKE \'%' . $likeQuery . '%\'
+        OR LOWER(p.mpn) LIKE \'%' . $likeQuery . '%\'
+        OR LOWER(p.reference) LIKE \'%' . $likeQuery . '%\'
+        OR LOWER(p.supplier_reference) LIKE \'%' . $likeQuery . '%\'
+        OR EXISTS(SELECT * FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_supplier') . ' sp WHERE sp.id_product = p.id_product AND LOWER(product_supplier_reference) LIKE \'%' . $likeQuery . '%\')';
 
         $sql->orderBy('pl.name ASC');
 
@@ -4858,12 +4860,12 @@ class ProductCore extends ObjectModel
         }
 
         if (Combination::isFeatureActive()) {
-            $where .= ' OR EXISTS(SELECT * FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute') . ' pa WHERE pa.id_product = p.id_product AND (pa.reference LIKE \'%' . pSQL($query) . '%\'
-            OR pa.supplier_reference LIKE \'%' . pSQL($query) . '%\'
-            OR pa.ean13 LIKE \'%' . pSQL($query) . '%\'
-            OR pa.isbn LIKE \'%' . pSQL($query) . '%\'
-            OR pa.mpn LIKE \'%' . pSQL($query) . '%\'
-            OR pa.upc LIKE \'%' . pSQL($query) . '%\'))';
+            $where .= ' OR EXISTS(SELECT * FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute') . ' pa WHERE pa.id_product = p.id_product AND (LOWER(pa.reference) LIKE \'%' . $likeQuery . '%\'
+            OR LOWER(pa.supplier_reference) LIKE \'%' . $likeQuery . '%\'
+            OR LOWER(pa.ean13) LIKE \'%' . $likeQuery . '%\'
+            OR LOWER(pa.isbn) LIKE \'%' . $likeQuery . '%\'
+            OR LOWER(pa.mpn) LIKE \'%' . $likeQuery . '%\'
+            OR LOWER(pa.upc) LIKE \'%' . $likeQuery . '%\'))';
         }
         $sql->where($where);
         $sql->join(Product::sqlStock('p', 0));
