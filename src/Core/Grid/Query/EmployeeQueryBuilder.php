@@ -83,11 +83,33 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getEmployeeQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        $sub = $this->connection->createQueryBuilder()
+        // Check whether the employee is associated with one of the existing,
+        // non-deleted shops from the current shop context.
+        $contextShopAssociationSubquery = $this->connection->createQueryBuilder()
             ->select('1')
-            ->from($this->dbPrefix . 'employee_shop', 'es')
-            ->where('e.id_employee = es.id_employee')
-            ->andWhere('es.id_shop IN (:context_shop_ids)');
+            ->from($this->dbPrefix . 'employee_shop', 'es_context')
+            ->innerJoin(
+                'es_context',
+                $this->dbPrefix . 'shop',
+                's_context',
+                's_context.id_shop = es_context.id_shop AND s_context.deleted = 0'
+            )
+            ->where('e.id_employee = es_context.id_employee')
+            ->andWhere('es_context.id_shop IN (:context_shop_ids)');
+
+        // Only associations to existing, non-deleted shops are considered valid.
+        // This is important because employee_shop may contain orphaned associations
+        // pointing to missing or deleted shops.
+        $validShopAssociationSubquery = $this->connection->createQueryBuilder()
+            ->select('1')
+            ->from($this->dbPrefix . 'employee_shop', 'es_valid')
+            ->innerJoin(
+                'es_valid',
+                $this->dbPrefix . 'shop',
+                's_valid',
+                's_valid.id_shop = es_valid.id_shop AND s_valid.deleted = 0'
+            )
+            ->where('e.id_employee = es_valid.id_employee');
 
         $qb = $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'employee', 'e')
@@ -97,8 +119,23 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
                 'pl',
                 'e.id_profile = pl.id_profile AND pl.id_lang = ' . (int) $this->contextIdLang
             )
-            ->andWhere('EXISTS (' . $sub->getSQL() . ')')
-            ->setParameter('context_shop_ids', $this->contextShopIds, Connection::PARAM_INT_ARRAY);
+            // Keep employees belonging to the current shop context, as well as
+            // employees that are not associated with any valid shop. The latter
+            // covers missing, orphaned and deleted shop associations without
+            // weakening multistore scoping for employees assigned to another
+            // existing shop.
+            ->andWhere(
+                sprintf(
+                    '(EXISTS (%s) OR NOT EXISTS (%s))',
+                    $contextShopAssociationSubquery->getSQL(),
+                    $validShopAssociationSubquery->getSQL()
+                )
+            )
+            ->setParameter(
+                'context_shop_ids',
+                $this->contextShopIds,
+                Connection::PARAM_INT_ARRAY
+            );
 
         $this->applyFilters($qb, $searchCriteria->getFilters());
 
