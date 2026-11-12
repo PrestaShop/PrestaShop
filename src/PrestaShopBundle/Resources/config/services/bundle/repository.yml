@@ -192,3 +192,8 @@ services:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
     arguments:
       - PrestaShopBundle\Entity\B2B\B2bRole
+
+  PrestaShopBundle\Entity\Repository\CustomerB2bRepository:
+    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    arguments:
+      - PrestaShopBundle\Entity\B2B\CustomerB2b

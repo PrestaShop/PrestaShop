@@ -837,3 +837,11 @@ default:
       contexts:
         - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\BusinessEntityFeatureContext
+    customer_b2b:
+      paths:
+        - "%paths.base%/Features/Scenario/CustomerB2b"
+      contexts:
+        - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\Domain\BusinessEntityFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\Domain\CustomerB2bFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext

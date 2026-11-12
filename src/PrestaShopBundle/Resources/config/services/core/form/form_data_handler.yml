@@ -315,6 +315,12 @@ services:
     autowire: true
     public: false
 
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CustomerB2bFormDataHandler:
+    autowire: true
+    public: false
+    arguments:
+      $defaultGroupsProvider: '@prestashop.adapter.group.provider.default_groups_provider'
+
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\StoreFormDataHandler:
     autowire: true
     public: false

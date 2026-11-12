@@ -13,13 +13,18 @@ use Exception;
 use Group;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SendCustomerPasswordSetupLinkCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetPrivateNoteAboutCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetRequiredFieldsForCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CannotSendPasswordSetupLinkException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\SearchCustomers;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerDeleteMethod;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroupsProviderInterface;
 use PrestaShop\PrestaShop\Core\Security\OpenSsl\OpenSSL;
@@ -195,6 +200,112 @@ class CustomerFeatureContext extends AbstractDomainFeatureContext
     public function assertCustomerNotFound(): void
     {
         $this->assertLastErrorIs(CustomerNotFoundException::class);
+    }
+
+    /**
+     * @Given customer :customerReference has been deleted
+     */
+    public function deleteCustomer(string $customerReference): void
+    {
+        $this->getCommandBus()->handle(new DeleteCustomerCommand(
+            $this->referenceToId($customerReference),
+            CustomerDeleteMethod::DENY_CUSTOMER_REGISTRATION,
+        ));
+    }
+
+    /**
+     * @When I send the password setup link to customer :customerReference
+     */
+    public function sendPasswordSetupLink(string $customerReference): void
+    {
+        $this->getMailDevClient()->deleteAllEmails();
+
+        try {
+            $this->getCommandBus()->handle(new SendCustomerPasswordSetupLinkCommand($this->referenceToId($customerReference)));
+        } catch (CustomerException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Given customer :customerReference has the valid reset password token :token
+     */
+    public function setResetPasswordToken(string $customerReference, string $token): void
+    {
+        $customer = new Customer($this->referenceToId($customerReference));
+        $customer->reset_password_token = $token;
+        $customer->reset_password_validity = date('Y-m-d H:i:s', strtotime('+1 hour'));
+
+        Assert::assertTrue($customer->update());
+    }
+
+    /**
+     * @Then customer :customerReference should not have a reset password token
+     */
+    public function assertCustomerHasNoResetPasswordToken(string $customerReference): void
+    {
+        $customer = new Customer($this->referenceToId($customerReference));
+
+        Assert::assertEmpty($customer->reset_password_token);
+    }
+
+    /**
+     * @Then customer :customerReference should have a valid reset password token
+     */
+    public function assertCustomerHasValidResetPasswordToken(string $customerReference): void
+    {
+        $customer = new Customer($this->referenceToId($customerReference));
+
+        Assert::assertMatchesRegularExpression('/^[0-9a-f]{40}$/', (string) $customer->getValidResetPasswordToken());
+    }
+
+    /**
+     * @Then customer :customerReference should have the valid reset password token :token
+     */
+    public function assertCustomerResetPasswordToken(string $customerReference, string $token): void
+    {
+        $customer = new Customer($this->referenceToId($customerReference));
+
+        Assert::assertSame($token, $customer->getValidResetPasswordToken());
+    }
+
+    /**
+     * @Then customer :customerReference should receive the password setup email with their reset password token
+     */
+    public function assertPasswordSetupEmailReceived(string $customerReference): void
+    {
+        $customer = new Customer($this->referenceToId($customerReference));
+
+        $emails = $this->getMailDevClient()->waitForEmails(1);
+        Assert::assertCount(1, $emails);
+        $email = $emails[0];
+        Assert::assertStringContainsString('Set up your password', $email['subject']);
+        Assert::assertSame($customer->email, $email['to'][0]['address']);
+
+        if (!preg_match('#https?://\S+reset_token=\S+#', $email['text'], $matches)) {
+            throw new RuntimeException('Password setup URL not found in email body');
+        }
+        $url = $matches[0];
+        Assert::assertStringContainsString($url, $email['html']);
+
+        parse_str((string) parse_url($url, PHP_URL_QUERY), $query);
+        Assert::assertSame($customer->secure_key, $query['token'] ?? null);
+        Assert::assertSame((string) $customer->id, $query['id_customer'] ?? null);
+        Assert::assertSame($customer->getValidResetPasswordToken(), $query['reset_token'] ?? null);
+    }
+
+    /**
+     * @Then /^I should get an error that the password setup link cannot be sent to an? (guest|deleted|inactive) customer$/
+     */
+    public function assertLastErrorIsIneligibleForPasswordSetupLink(string $reason): void
+    {
+        $errorCodes = [
+            'guest' => CannotSendPasswordSetupLinkException::GUEST_CUSTOMER,
+            'deleted' => CannotSendPasswordSetupLinkException::DELETED_CUSTOMER,
+            'inactive' => CannotSendPasswordSetupLinkException::INACTIVE_CUSTOMER,
+        ];
+
+        $this->assertLastErrorIs(CannotSendPasswordSetupLinkException::class, $errorCodes[$reason]);
     }
 
     /**

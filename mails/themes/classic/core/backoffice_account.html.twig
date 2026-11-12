@@ -1,0 +1,59 @@
+{% extends '@MailThemes/classic/components/layout.html.twig' %}
+
+{% block content %}
+<tr>
+  <td align="center" class="titleblock">
+    <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+      <span class="title">{{ 'Hi {firstname} {lastname},'|trans({}, 'Emails.Body', locale) }}</span>
+    </font>
+  </td>
+</tr>
+<tr>
+  <td class="space_footer">&nbsp;</td>
+</tr>
+<tr>
+  <td class="box" style="border:1px solid #D6D4D4;">
+    <table class="table">
+      <tr>
+        <td width="10">&nbsp;</td>
+        <td>
+          <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+            {% if templateType == 'html' %}
+              <p style="border-bottom:1px solid #D6D4D4;">
+                {{ 'Your account has been created'|trans({}, 'Emails.Body', locale) }}
+              </p>
+            {% endif %}
+            <span>
+              {{ 'An account has been created on your behalf on [1]{shop_name}[/1].'|trans({'[1]': '<span><strong>', '[/1]': '</strong></span>'}, 'Emails.Body', locale)|raw_purified }} <br/><br/>
+              <span><strong>{{ 'Email address:'|trans({}, 'Emails.Body', locale) }}</strong></span> {email}<br/><br/>
+              {{ 'Click on the following link to set up your password:'|trans({}, 'Emails.Body', locale) }} <br/> <a href="{url}">{url}</a>
+            </span>
+          </font>
+        </td>
+        <td width="10">&nbsp;</td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+  <td class="space_footer">&nbsp;</td>
+</tr>
+<tr>
+  <td class="linkbelow">
+    <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+      <span>
+        {{ 'This link is valid for a limited time only. After it expires, you can get a new one with the "Forgot your password?" link on the login page.'|trans({}, 'Emails.Body', locale) }}
+      </span>
+    </font>
+  </td>
+</tr>
+<tr>
+  <td class="linkbelow">
+    <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+      <span>
+        {{ 'You can access your customer account on our store:'|trans({}, 'Emails.Body', locale) }} <strong>{shop_url}</strong>
+      </span>
+    </font>
+  </td>
+</tr>
+{% endblock %}

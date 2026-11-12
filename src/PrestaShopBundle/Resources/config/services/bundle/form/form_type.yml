@@ -48,6 +48,8 @@ services:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Sell/Product/*"
   PrestaShopBundle\Form\Admin\Sell\BusinessEntity\:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Sell/BusinessEntity/*"
+  PrestaShopBundle\Form\Admin\Sell\CustomerB2b\:
+    resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Sell/CustomerB2b/*"
   PrestaShopBundle\Form\Admin\Type\:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Type/*"
   PrestaShopBundle\Form\Admin\AdvancedParameters\:
@@ -249,6 +251,7 @@ services:
       $customerRequiredFieldsChoices: '@=service("prestashop.core.form.choice_provider.customer_required_fields").getChoices()'
 
   PrestaShopBundle\Form\Admin\Sell\Customer\TransferGuestAccountType:
+  PrestaShopBundle\Form\Admin\Sell\Customer\CustomerBasicDataType:
   PrestaShopBundle\Form\Admin\Sell\Customer\CustomerType:
     arguments:
       $riskChoices: '@=service("prestashop.adapter.form.choice_provider.risk_by_id_choice_provider").getChoices()'
