@@ -9,6 +9,7 @@ admin_extra_property_definitions_search:
   methods: POST
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    _legacy_controller: AdminExtraPropertyDefinitions
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.extra_property_definition
     redirectRoute: admin_extra_property_definitions_index
 
