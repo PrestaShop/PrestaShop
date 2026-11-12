@@ -8,6 +8,7 @@ namespace PrestaShop\PrestaShop\Core\Import\File;
 
 use PrestaShop\PrestaShop\Core\Import\Exception\UnreadableFileException;
 use PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRow;
+use PrestaShop\PrestaShop\Core\Util\File\Utf8Bom;
 use SplFileInfo;
 
 /**
@@ -72,6 +73,9 @@ final class CsvFileReader implements FileReaderInterface
 
         $convertToUtf8 = !mb_check_encoding(file_get_contents($file), 'UTF-8');
         $handle = $this->fileOpener->open($file);
+        // Excel's "CSV UTF-8" writes a BOM, and so do our own exports; without this the
+        // three bytes land in the first header cell and that column stops matching.
+        Utf8Bom::skip($handle);
 
         while ($row = fgetcsv($handle, $this->length, $this->delimiter, $this->enclosure, $this->escape)) {
             if ($convertToUtf8) {

@@ -1065,6 +1065,8 @@ class AdminControllerCore extends Controller
         header('Content-disposition: attachment; filename="' . $this->table . '_' . date('Y-m-d_His') . '.csv"');
 
         $fd = fopen('php://output', 'wb');
+        // Spreadsheets have no other way to know the stream is UTF-8, see Utf8Bom.
+        fwrite($fd, PrestaShop\PrestaShop\Core\Util\File\Utf8Bom::SEQUENCE);
         $headers = [];
         foreach ($this->fields_list as $key => $datas) {
             if ('PDF' === $datas['title']) {
