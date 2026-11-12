@@ -37,6 +37,8 @@ export default class CombinationFormModel {
     const pricesFields = [
       'impact.priceTaxExcluded',
       'impact.priceTaxIncluded',
+      'price.finalPriceTaxExcluded',
+      'price.finalPriceTaxIncluded',
       'impact.unitPriceTaxExcluded',
       'impact.unitPriceTaxIncluded',
       'price.ecotaxTaxExcluded',
@@ -89,6 +91,36 @@ export default class CombinationFormModel {
       case 'impact.priceTaxExcluded': {
         const priceTaxExcluded = this.mapper.getBigNumber('impact.priceTaxExcluded') ?? new BigNumber(0);
         this.mapper.set('impact.priceTaxIncluded', priceTaxExcluded.times(taxRatio).toFixed(this.precision));
+        break;
+      }
+
+      // Final retail price direct input
+      case 'price.finalPriceTaxExcluded': {
+        const finalPriceTaxExcluded = this.mapper.getBigNumber('price.finalPriceTaxExcluded') ?? new BigNumber(0);
+        let productPriceTaxExcluded = this.mapper.getBigNumber('product.priceTaxExcluded') ?? new BigNumber(0);
+        if (productPriceTaxExcluded.isNaN()) {
+          productPriceTaxExcluded = new BigNumber(0);
+        }
+        const combinationEcotaxTaxExcluded = this.getEcotaxTaxExcluded();
+        const impactTaxExcluded = finalPriceTaxExcluded.minus(productPriceTaxExcluded).minus(combinationEcotaxTaxExcluded);
+        this.mapper.set('impact.priceTaxExcluded', impactTaxExcluded.toFixed(this.precision));
+        this.mapper.set('impact.priceTaxIncluded', impactTaxExcluded.times(taxRatio).toFixed(this.precision));
+        break;
+      }
+      case 'price.finalPriceTaxIncluded': {
+        const finalPriceTaxIncluded = this.mapper.getBigNumber('price.finalPriceTaxIncluded') ?? new BigNumber(0);
+        let productPriceTaxExcluded = this.mapper.getBigNumber('product.priceTaxExcluded') ?? new BigNumber(0);
+        if (productPriceTaxExcluded.isNaN()) {
+          productPriceTaxExcluded = new BigNumber(0);
+        }
+        const ecoTaxRatio = this.getEcoTaxRatio();
+        const combinationEcotaxTaxExcluded = this.getEcotaxTaxExcluded();
+        const combinationEcotaxTaxIncluded = this.getEcotaxTaxIncluded(combinationEcotaxTaxExcluded.times(ecoTaxRatio));
+        const productPriceTaxIncluded = productPriceTaxExcluded.times(taxRatio);
+        const impactTaxIncluded = finalPriceTaxIncluded.minus(productPriceTaxIncluded).minus(combinationEcotaxTaxIncluded);
+        const impactTaxExcluded = impactTaxIncluded.dividedBy(taxRatio);
+        this.mapper.set('impact.priceTaxExcluded', impactTaxExcluded.toFixed(this.precision));
+        this.mapper.set('impact.priceTaxIncluded', impactTaxIncluded.toFixed(this.precision));
         break;
       }
 

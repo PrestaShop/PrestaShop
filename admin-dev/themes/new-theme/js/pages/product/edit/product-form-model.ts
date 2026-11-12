@@ -103,6 +103,10 @@ export default class ProductFormModel {
     return this.getTaxRatioFromInput($ecotaxTaxExcluded);
   }
 
+  getPrecision(): number {
+    return this.precision;
+  }
+
   getPriceTaxExcluded(): BigNumber {
     return this.mapper.getBigNumber('price.priceTaxExcluded') ?? new BigNumber(0);
   }

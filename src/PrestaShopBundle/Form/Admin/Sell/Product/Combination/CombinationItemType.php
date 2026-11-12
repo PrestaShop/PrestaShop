@@ -190,12 +190,14 @@ class CombinationItemType extends TranslatorAwareType
                     'class' => 'combination-eco-tax',
                 ],
             ])
-            ->add('final_price_te', TextPreviewType::class, [
+            ->add('final_price_te', MoneyType::class, [
                 'attr' => [
                     'class' => 'combination-final-price',
                     'data-order-by' => 'price',
                 ],
                 'label' => $this->trans('Final price (tax excl.)', 'Admin.Catalog.Feature'),
+                'currency' => $this->defaultCurrency->iso_code,
+                'required' => false,
             ])
             ->add('delta_quantity', DeltaQuantityType::class, [
                 'attr' => [
