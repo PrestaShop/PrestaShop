@@ -7,9 +7,14 @@
 namespace Tests\Unit\Classes;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Http\UntrustedUrl\PublicIpChecker;
+use PrestaShop\PrestaShop\Core\Http\UntrustedUrl\UntrustedUrlValidator;
+use ReflectionClass;
 use ReflectionMethod;
 use ReflectionParameter;
 use Tests\Resources\TestCase\ExtendedTestCaseMethodsTrait;
+use Tests\Unit\Core\Http\UntrustedUrl\PublicIpCheckerTest;
+use Tests\Unit\Core\Http\UntrustedUrl\UntrustedUrlValidatorTest;
 use Tools;
 
 class ToolsTest extends TestCase
@@ -1077,62 +1082,12 @@ class ToolsTest extends TestCase
         ];
     }
 
+    /**
+     * The vectors live with the Core implementation Tools::isPublicIp() delegates to.
+     */
     public function providerIsPublicIp(): array
     {
-        return [
-            // Routable addresses, the only ones that must be accepted.
-            'ipv4 public' => [true, '8.8.8.8'],
-            'ipv4 public 2' => [true, '1.1.1.1'],
-            'ipv6 public' => [true, '2606:4700::1111'],
-            'ipv4-mapped public' => [true, '::ffff:8.8.8.8'],
-            '6to4 wrapping public ipv4' => [true, '2002:0808:0808::'],
-
-            // Plain IPv4 private/reserved ranges.
-            'loopback' => [false, '127.0.0.1'],
-            'rfc1918 10/8' => [false, '10.0.0.1'],
-            'rfc1918 172.16/12' => [false, '172.16.0.1'],
-            'rfc1918 192.168/16' => [false, '192.168.1.1'],
-            'cloud metadata' => [false, '169.254.169.254'],
-            'unspecified' => [false, '0.0.0.0'],
-            'broadcast' => [false, '255.255.255.255'],
-
-            // Plain IPv6 private/reserved ranges.
-            'ipv6 loopback' => [false, '::1'],
-            'ipv6 unique local' => [false, 'fc00::1'],
-            'ipv6 link local' => [false, 'fe80::1'],
-
-            // IPv6 notations that tunnel an IPv4 address: the IPv4 range flags of
-            // filter_var() do not apply to them, so they must be unwrapped first.
-            'ipv4-mapped cloud metadata' => [false, '::ffff:169.254.169.254'],
-            'ipv4-mapped loopback' => [false, '::ffff:127.0.0.1'],
-            'ipv4-mapped rfc1918' => [false, '::ffff:10.0.0.1'],
-            'ipv4-mapped rfc1918 2' => [false, '::ffff:192.168.1.1'],
-            'ipv4-mapped loopback hex' => [false, '0:0:0:0:0:ffff:7f00:1'],
-            'ipv4-compatible loopback' => [false, '::127.0.0.1'],
-            'ipv4-compatible rfc1918' => [false, '::10.0.0.1'],
-            'nat64 loopback' => [false, '64:ff9b::7f00:1'],
-            'nat64 rfc1918' => [false, '64:ff9b::a00:1'],
-            '6to4 loopback' => [false, '2002:7f00:0001::'],
-
-            // Non-routable ranges that filter_var() alone lets through.
-            'shared address space' => [false, '100.64.0.1'],
-            'ietf protocol assignments' => [false, '192.0.0.1'],
-            'test-net-1' => [false, '192.0.2.1'],
-            'benchmarking' => [false, '198.18.0.1'],
-            'test-net-2' => [false, '198.51.100.1'],
-            'test-net-3' => [false, '203.0.113.1'],
-            'ipv4 multicast' => [false, '224.0.0.1'],
-            'ipv4 multicast top' => [false, '239.255.255.255'],
-            'ipv6 multicast' => [false, 'ff02::1'],
-            'ipv6 discard only' => [false, '100::1'],
-            'ipv6 site local' => [false, 'fec0::1'],
-            'teredo' => [false, '2001::1'],
-
-            // Not addresses at all.
-            'hostname' => [false, 'not-an-ip'],
-            'empty' => [false, ''],
-            'out of range octets' => [false, '999.999.999.999'],
-        ];
+        return PublicIpCheckerTest::providerIsPublicIp();
     }
 
     /**
@@ -1209,23 +1164,34 @@ class ToolsTest extends TestCase
 
     public function providerUntrustedUrlScheme(): array
     {
-        return [
-            'http' => [true, 'http'],
-            'https' => [true, 'https'],
-            'uppercase is normalised' => [true, 'HTTPS'],
-            'ftp' => [true, 'ftp'],
-            'ftps' => [true, 'ftps'],
-            // curl is not allowed to speak these, so they must not pass validation either.
-            'sftp' => [false, 'sftp'],
-            'scp' => [false, 'scp'],
-            // PHP stream wrappers, the whole point of the allow-list.
-            'file' => [false, 'file'],
-            'phar' => [false, 'phar'],
-            'data' => [false, 'data'],
-            'gopher' => [false, 'gopher'],
-            'zip' => [false, 'zip'],
-            'empty' => [false, ''],
-        ];
+        return UntrustedUrlValidatorTest::providerSchemes();
+    }
+
+    /**
+     * The curl download path still pins and refuses through getPinnedResolveEntry(),
+     * now backed by the Core UntrustedUrlValidator.
+     */
+    public function testGetPinnedResolveEntryStillGuardsTheCurlPath(): void
+    {
+        $method = new ReflectionMethod(Tools::class, 'getPinnedResolveEntry');
+
+        $this->assertNull($method->invoke(null, 'http://169.254.169.254/latest/meta-data/'));
+        $this->assertNull($method->invoke(null, 'http://[::ffff:127.0.0.1]/'));
+        $this->assertNull($method->invoke(null, 'file:///etc/passwd'));
+        $this->assertNotNull($method->invoke(null, 'https://8.8.8.8/logo.png'));
+    }
+
+    /**
+     * Overrides of Tools may still read these constants.
+     */
+    public function testUntrustedUrlConstantsKeepTheirValues(): void
+    {
+        $tools = new ReflectionClass(Tools::class);
+
+        $this->assertSame(UntrustedUrlValidator::ALLOWED_SCHEMES, Tools::UNTRUSTED_URL_ALLOWED_SCHEMES);
+        $this->assertSame(PublicIpChecker::BLOCKED_IPV4_RANGES, $tools->getConstant('SSRF_BLOCKED_IPV4_RANGES'));
+        $this->assertSame(PublicIpChecker::BLOCKED_IPV6_RANGES, $tools->getConstant('SSRF_BLOCKED_IPV6_RANGES'));
+        $this->assertSame(PublicIpChecker::IPV4_IN_IPV6_RANGES, $tools->getConstant('SSRF_IPV4_IN_IPV6_RANGES'));
     }
 
     /**
