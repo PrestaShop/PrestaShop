@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\InvalidGiftMessageException
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\MinimalQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartShopId;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
@@ -43,6 +44,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\Customizat
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\PackOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductCustomizationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Exception\MultiShopAccessDeniedException;
 use PrestaShop\PrestaShop\Core\Grid\GridFactory;
 use PrestaShop\PrestaShop\Core\Kpi\Row\HookableKpiRowFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CartFilter;
@@ -104,6 +107,8 @@ class CartController extends PrestaShopAdminController
         int $cartId,
         IniConfiguration $iniConfiguration,
     ): RedirectResponse {
+        $this->assertCartShopAuthorization($cartId);
+
         try {
             $this->dispatchCommand(new DeleteCartCommand($cartId));
             $this->addFlash('success', $this->trans('Successful deletion', [], 'Admin.Notifications.Success'));
@@ -129,6 +134,10 @@ class CartController extends PrestaShopAdminController
         $cartIds = $this->getBulkActionIds($request, 'cart_bulk');
 
         try {
+            foreach ($cartIds as $cartId) {
+                $this->assertCartShopAuthorization($cartId);
+            }
+
             $this->dispatchCommand(new BulkDeleteCartCommand($cartIds));
             $this->addFlash(
                 'success',
@@ -201,6 +210,8 @@ class CartController extends PrestaShopAdminController
         #[Autowire(service: 'prestashop.core.kpi_row.factory.cart')] HookableKpiRowFactory $kpiRowFactory,
         IniConfiguration $iniConfiguration
     ) {
+        $this->assertCartShopAuthorization($cartId);
+
         try {
             $cartView = $this->dispatchQuery(new GetCartForViewing($cartId));
         } catch (Exception $e) {
@@ -240,6 +251,8 @@ class CartController extends PrestaShopAdminController
         int $cartId,
         IniConfiguration $iniConfiguration
     ) {
+        $this->assertCartShopAuthorization($cartId);
+
         try {
             $cartInfo = $this->dispatchQuery(
                 (new GetCartForOrderCreation($cartId))
@@ -294,6 +307,8 @@ class CartController extends PrestaShopAdminController
         Request $request,
         IniConfiguration $iniConfiguration
     ): JsonResponse {
+        $this->assertCartShopAuthorization($cartId);
+
         $invoiceAddressId = $request->request->getInt('invoiceAddressId');
         $deliveryAddressId = $request->request->getInt('deliveryAddressId');
 
@@ -325,6 +340,8 @@ class CartController extends PrestaShopAdminController
         Request $request,
         IniConfiguration $iniConfiguration
     ): JsonResponse {
+        $this->assertCartShopAuthorization($cartId);
+
         try {
             $this->dispatchCommand(new UpdateCartCurrencyCommand(
                 $cartId,
@@ -352,6 +369,8 @@ class CartController extends PrestaShopAdminController
         Request $request,
         IniConfiguration $iniConfiguration
     ): JsonResponse {
+        $this->assertCartShopAuthorization($cartId);
+
         try {
             $this->dispatchCommand(new UpdateCartLanguageCommand(
                 $cartId,
@@ -379,6 +398,8 @@ class CartController extends PrestaShopAdminController
         int $cartId,
         IniConfiguration $iniConfiguration
     ): JsonResponse {
+        $this->assertCartShopAuthorization($cartId);
+
         try {
             $carrierId = (int) $request->request->get('carrierId');
             $this->dispatchCommand(new UpdateCartCarrierCommand(
@@ -407,6 +428,8 @@ class CartController extends PrestaShopAdminController
         int $cartId,
         IniConfiguration $iniConfiguration
     ): JsonResponse {
+        $this->assertCartShopAuthorization($cartId);
+
         $configuration = $this->getConfiguration();
         $recycledPackagingEnabled = (bool) $configuration->get('PS_RECYCLABLE_PACK');
         $giftSettingsEnabled = (bool) $configuration->get('PS_GIFT_WRAPPING');
@@ -443,6 +466,8 @@ class CartController extends PrestaShopAdminController
         int $cartId,
         IniConfiguration $iniConfiguration
     ): JsonResponse {
+        $this->assertCartShopAuthorization($cartId);
+
         $cartRuleId = $request->request->getInt('cartRuleId');
         try {
             $this->dispatchCommand(new AddCartRuleToCartCommand($cartId, $cartRuleId));
@@ -470,6 +495,8 @@ class CartController extends PrestaShopAdminController
         int $cartRuleId,
         IniConfiguration $iniConfiguration
     ): JsonResponse {
+        $this->assertCartShopAuthorization($cartId);
+
         try {
             $this->dispatchCommand(new RemoveCartRuleFromCartCommand($cartId, $cartRuleId));
 
@@ -496,6 +523,8 @@ class CartController extends PrestaShopAdminController
         int $cartId,
         IniConfiguration $iniConfiguration
     ): JsonResponse {
+        $this->assertCartShopAuthorization($cartId);
+
         $productId = $request->request->getInt('product_id');
         $quantity = $request->request->getInt('product_quantity');
         $combinationId = $request->request->getInt('combination_id');
@@ -542,6 +571,8 @@ class CartController extends PrestaShopAdminController
         int $productId,
         IniConfiguration $iniConfiguration
     ): JsonResponse {
+        $this->assertCartShopAuthorization($cartId);
+
         try {
             $addSpecificPriceCommand = new UpdateProductPriceInCartCommand(
                 $cartId,
@@ -578,6 +609,8 @@ class CartController extends PrestaShopAdminController
         int $productId,
         IniConfiguration $iniConfiguration
     ) {
+        $this->assertCartShopAuthorization($cartId);
+
         try {
             $newQty = $request->request->getInt('newQty');
             $attributeId = $request->request->getInt('attributeId');
@@ -619,6 +652,8 @@ class CartController extends PrestaShopAdminController
         int $cartId,
         IniConfiguration $iniConfiguration
     ): JsonResponse {
+        $this->assertCartShopAuthorization($cartId);
+
         try {
             $productId = $request->request->getInt('productId');
             $attributeId = $request->request->getInt('attributeId');
@@ -637,6 +672,16 @@ class CartController extends PrestaShopAdminController
                 ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e, $iniConfiguration))],
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
+        }
+    }
+
+    private function assertCartShopAuthorization(int $cartId): void
+    {
+        $shopId = $this->dispatchQuery(new GetCartShopId($cartId));
+        $shopConstraint = ShopConstraint::shop($shopId->getValue());
+
+        if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+            throw new MultiShopAccessDeniedException($shopConstraint);
         }
     }
 

@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForAddressCreati
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerOrders;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerShopId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\SearchCustomers;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\AddressCreationCustomerInformation;
@@ -39,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
+use PrestaShop\PrestaShop\Core\Exception\MultiShopAccessDeniedException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
@@ -202,6 +204,8 @@ class CustomerController extends PrestaShopAdminController
         FormHandlerInterface $formHandler,
         B2bFeature $b2bFeature,
     ): Response {
+        $this->assertCustomerShopAuthorization($customerId);
+
         $this->addGroupSelectionToRequest($request);
         /** @var EditableCustomer $customerInformation */
         $customerInformation = $this->dispatchQuery(new GetCustomerForEditing($customerId));
@@ -291,6 +295,8 @@ class CustomerController extends PrestaShopAdminController
         #[Autowire(service: 'prestashop.core.grid.factory.customer.viewed_product')]
         GridFactoryInterface $customerViewedProductGridFactory,
     ): Response {
+        $this->assertCustomerShopAuthorization($customerId);
+
         try {
             /** @var ViewableCustomer $customerInformation */
             $customerInformation = $this->dispatchQuery(new GetCustomerForViewing($customerId));
@@ -377,6 +383,8 @@ class CustomerController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_customers_index')]
     public function setPrivateNoteAction(int $customerId, Request $request): RedirectResponse
     {
+        $this->assertCustomerShopAuthorization($customerId);
+
         $privateNoteForm = $this->createForm(PrivateNoteType::class);
         $privateNoteForm->handleRequest($request);
 
@@ -420,6 +428,8 @@ class CustomerController extends PrestaShopAdminController
         Request $request,
         LegacyContext $legacyContext,
     ): RedirectResponse {
+        $this->assertCustomerShopAuthorization($customerId);
+
         try {
             $this->dispatchCommand(new TransformGuestToCustomerCommand($customerId));
 
@@ -557,6 +567,8 @@ class CustomerController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_customers_index', message: 'You do not have permission to edit this.')]
     public function toggleStatusAction(int $customerId): JsonResponse
     {
+        $this->assertCustomerShopAuthorization($customerId);
+
         try {
             /** @var EditableCustomer $editableCustomer */
             $editableCustomer = $this->dispatchQuery(new GetCustomerForEditing($customerId));
@@ -590,6 +602,8 @@ class CustomerController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_customers_index', message: 'You do not have permission to edit this.')]
     public function toggleNewsletterSubscriptionAction(int $customerId): JsonResponse
     {
+        $this->assertCustomerShopAuthorization($customerId);
+
         try {
             /** @var EditableCustomer $editableCustomer */
             $editableCustomer = $this->dispatchQuery(new GetCustomerForEditing($customerId));
@@ -625,6 +639,8 @@ class CustomerController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_customers_index', message: 'You do not have permission to edit this.')]
     public function togglePartnerOfferSubscriptionAction(int $customerId): JsonResponse
     {
+        $this->assertCustomerShopAuthorization($customerId);
+
         try {
             /** @var EditableCustomer $editableCustomer */
             $editableCustomer = $this->dispatchQuery(new GetCustomerForEditing($customerId));
@@ -669,6 +685,8 @@ class CustomerController extends PrestaShopAdminController
             }, $data['customers_to_delete']);
 
             try {
+                $this->assertCustomersShopAuthorization($customerIds);
+
                 $command = new BulkDeleteCustomerCommand(
                     $customerIds,
                     $data['delete_method']
@@ -707,6 +725,8 @@ class CustomerController extends PrestaShopAdminController
             $customerId = (int) reset($data['customers_to_delete']);
 
             try {
+                $this->assertCustomerShopAuthorization($customerId);
+
                 $command = new DeleteCustomerCommand(
                     $customerId,
                     $data['delete_method']
@@ -738,6 +758,8 @@ class CustomerController extends PrestaShopAdminController
         }, $request->request->all('customer_customers_bulk'));
 
         try {
+            $this->assertCustomersShopAuthorization($customerIds);
+
             $command = new BulkEnableCustomerCommand($customerIds);
 
             $this->dispatchCommand($command);
@@ -764,6 +786,8 @@ class CustomerController extends PrestaShopAdminController
             $customerIds = array_map(function ($customerId) {
                 return (int) $customerId;
             }, $request->request->all('customer_customers_bulk'));
+
+            $this->assertCustomersShopAuthorization($customerIds);
 
             $command = new BulkDisableCustomerCommand($customerIds);
 
@@ -843,6 +867,8 @@ class CustomerController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function getCartsAction(int $customerId): JsonResponse
     {
+        $this->assertCustomerShopAuthorization($customerId);
+
         try {
             $carts = $this->dispatchQuery(new GetCustomerCarts($customerId));
         } catch (Exception $e) {
@@ -865,6 +891,8 @@ class CustomerController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
     public function getOrdersAction(int $customerId): JsonResponse
     {
+        $this->assertCustomerShopAuthorization($customerId);
+
         try {
             $orders = $this->dispatchQuery(new GetCustomerOrders($customerId));
         } catch (Exception $e) {
@@ -877,6 +905,31 @@ class CustomerController extends PrestaShopAdminController
         return $this->json([
             'orders' => $orders,
         ]);
+    }
+
+    /**
+     * Checks that the employee is authorized to access the customer shop.
+     *
+     * @param int $customerId
+     */
+    private function assertCustomerShopAuthorization(int $customerId): void
+    {
+        $shopId = $this->dispatchQuery(new GetCustomerShopId($customerId));
+        $shopConstraint = ShopConstraint::shop($shopId->getValue());
+
+        if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+            throw new MultiShopAccessDeniedException($shopConstraint);
+        }
+    }
+
+    /**
+     * @param int[] $customerIds
+     */
+    private function assertCustomersShopAuthorization(array $customerIds): void
+    {
+        foreach ($customerIds as $customerId) {
+            $this->assertCustomerShopAuthorization($customerId);
+        }
     }
 
     /**

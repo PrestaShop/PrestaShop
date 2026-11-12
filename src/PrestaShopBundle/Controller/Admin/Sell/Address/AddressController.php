@@ -27,13 +27,18 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetCustomerAddressForEditing
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetRequiredFieldsForAddress;
 use PrestaShop\PrestaShop\Core\Domain\Address\QueryResult\EditableCustomerAddress;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CartAddressType;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartShopId;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerByEmailNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerShopId;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderAddressType;
+use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderShopId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
+use PrestaShop\PrestaShop\Core\Exception\MultiShopAccessDeniedException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
@@ -119,6 +124,7 @@ class AddressController extends PrestaShopAdminController
     public function deleteAction(Request $request, int $addressId): RedirectResponse
     {
         try {
+            $this->assertAddressShopAuthorization($addressId);
             $this->dispatchCommand(new DeleteAddressCommand($addressId));
             $this->addFlash(
                 'success',
@@ -146,6 +152,7 @@ class AddressController extends PrestaShopAdminController
         $addressIds = $this->getBulkAddressesFromRequest($request);
 
         try {
+            $this->assertAddressesShopAuthorization($addressIds);
             $this->dispatchCommand(new BulkDeleteAddressCommand($addressIds));
             $this->addFlash(
                 'success',
@@ -239,6 +246,7 @@ class AddressController extends PrestaShopAdminController
             /** @todo To Remove when PHPStan is fixed https://github.com/phpstan/phpstan/issues/3700 */
             /** @phpstan-ignore-next-line */
             $customerId = $formData['id_customer'];
+            $this->assertCustomerShopAuthorization($customerId);
             $customer = $customerDataProvider->getCustomer($customerId);
             $formData['first_name'] = $customer->firstname;
             $formData['last_name'] = $customer->lastname;
@@ -303,6 +311,7 @@ class AddressController extends PrestaShopAdminController
         try {
             /** @var EditableCustomerAddress $editableAddress */
             $editableAddress = $this->dispatchQuery(new GetCustomerAddressForEditing((int) $addressId));
+            $this->assertCustomerShopAuthorization($editableAddress->getCustomerId()->getValue());
 
             $formData = [];
             // Country needs to be preset before building form type because it is used to build state field choices
@@ -373,6 +382,7 @@ class AddressController extends PrestaShopAdminController
         #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.order_address_form_handler')]
         FormHandlerInterface $addressFormHandler
     ): Response {
+        $this->assertOrderShopAuthorization($orderId);
         // @todo: don't rely on Order ObjectModel, use a Adapter DataProvider
         $order = new Order($orderId);
         $addressId = null;
@@ -469,6 +479,7 @@ class AddressController extends PrestaShopAdminController
         #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.cart_address_form_handler')]
         FormHandlerInterface $addressFormHandler
     ): Response {
+        $this->assertCartShopAuthorization($cartId);
         // @todo: don't rely on Cart ObjectModel, use a Adapter DataProvider
         $cart = new Cart($cartId);
         $addressId = null;
@@ -544,6 +555,53 @@ class AddressController extends PrestaShopAdminController
             'cancelPath' => $this->generateUrl('admin_carts_view', ['cartId' => $cartId]),
             'displayInIframe' => $request->query->has('submitFormAjax'),
         ]);
+    }
+
+    private function assertAddressShopAuthorization(int $addressId): void
+    {
+        /** @var EditableCustomerAddress $editableAddress */
+        $editableAddress = $this->dispatchQuery(new GetCustomerAddressForEditing($addressId));
+        $this->assertCustomerShopAuthorization($editableAddress->getCustomerId()->getValue());
+    }
+
+    /**
+     * @param int[] $addressIds
+     */
+    private function assertAddressesShopAuthorization(array $addressIds): void
+    {
+        foreach ($addressIds as $addressId) {
+            $this->assertAddressShopAuthorization($addressId);
+        }
+    }
+
+    private function assertCustomerShopAuthorization(int $customerId): void
+    {
+        $shopId = $this->dispatchQuery(new GetCustomerShopId($customerId));
+        $shopConstraint = ShopConstraint::shop($shopId->getValue());
+
+        if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+            throw new MultiShopAccessDeniedException($shopConstraint);
+        }
+    }
+
+    private function assertOrderShopAuthorization(int $orderId): void
+    {
+        $shopId = $this->dispatchQuery(new GetOrderShopId($orderId));
+        $shopConstraint = ShopConstraint::shop($shopId->getValue());
+
+        if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+            throw new MultiShopAccessDeniedException($shopConstraint);
+        }
+    }
+
+    private function assertCartShopAuthorization(int $cartId): void
+    {
+        $shopId = $this->dispatchQuery(new GetCartShopId($cartId));
+        $shopConstraint = ShopConstraint::shop($shopId->getValue());
+
+        if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+            throw new MultiShopAccessDeniedException($shopConstraint);
+        }
     }
 
     /**
