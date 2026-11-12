@@ -12,7 +12,6 @@ use PrestaShop\PrestaShop\Adapter\File\HtaccessFileGenerator;
 use PrestaShop\PrestaShop\Adapter\Meta\SetUpUrlsDataConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tests\TestCase\AbstractConfigurationTestCase;
 
@@ -135,7 +134,6 @@ class SetUpUrlsDataConfigurationTest extends AbstractConfigurationTestCase
     public function provideInvalidConfiguration(): array
     {
         return [
-            [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['friendly_url' => 'wrong_type'])],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['default_language_url_prefix' => 'wrong_type'])],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['accented_url' => 'wrong_type'])],

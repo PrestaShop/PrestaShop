@@ -12,6 +12,8 @@ use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
+use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Tests\Resources\DummyMultistoreConfiguration;
 use Tests\TestCase\AbstractConfigurationTestCase;
 
@@ -85,6 +87,49 @@ class AbstractMultistoreConfigurationTest extends AbstractConfigurationTestCase
             ['toto', ['toto' => 'value', $multistorePrefix . 'toto' => true], true, 'set'], // multistore checkbox is there, method 'set' must be called
             ['toto', ['toto' => 'value'], true, 'deleteFromContext'], // multistore checkbox absent, method 'deleteFromContext' must be called
             ['toto', [], true, null], // do not make any update if the field is not in the input array
+        ];
+    }
+
+    /**
+     * @dataProvider provideForValidateConfiguration
+     *
+     * @param array $inputValues
+     * @param bool $isAllShopContext
+     * @param bool $isMultistoreUsed
+     * @param string|null $expectedException
+     */
+    public function testValidateConfiguration(array $inputValues, bool $isAllShopContext, bool $isMultistoreUsed, ?string $expectedException): void
+    {
+        $abstractMultistoreConfiguration = $this->getTestableClass($isAllShopContext, null, $isMultistoreUsed);
+
+        if (null !== $expectedException) {
+            $this->expectException($expectedException);
+        }
+
+        $this->assertTrue($abstractMultistoreConfiguration->validateConfiguration($inputValues));
+    }
+
+    /**
+     * @return array[]
+     */
+    public function provideForValidateConfiguration(): array
+    {
+        $multistorePrefix = MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX;
+        $coreFields = ['test_conf_1' => true, 'test_conf_2' => 'value'];
+
+        return [
+            'core fields only' => [$coreFields, true, false, null],
+            // A module adding a field through the form hook puts it in the submitted data; it is not core
+            // configuration, so it must not make the whole form fail to save.
+            'field added by a module' => [$coreFields + ['module_field' => 'value'], true, false, null],
+            'field added by a module, single shop context' => [
+                $coreFields + [$multistorePrefix . 'test_conf_1' => true, 'module_field' => 'value'],
+                false,
+                true,
+                null,
+            ],
+            'core field missing' => [['test_conf_1' => true], true, false, MissingOptionsException::class],
+            'core field of the wrong type' => [['test_conf_1' => 'not a bool', 'test_conf_2' => 'value'], true, false, InvalidOptionsException::class],
         ];
     }
 
