@@ -626,6 +626,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
             'The minimum amount to benefit from this promo code is' => 107,
             'This voucher is already in your cart' => 108,
             'This voucher is not combinable with an other voucher already in your cart:' => 109,
+            'Only one promo code can be used per cart' => 117,
             'You cannot use this voucher with these products' => 110,
             'You cannot use this voucher on products on sale' => 111,
             'You cannot use this voucher with this carrier' => 112,
