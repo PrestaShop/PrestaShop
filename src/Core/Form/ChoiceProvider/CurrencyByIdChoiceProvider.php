@@ -20,11 +20,10 @@ final class CurrencyByIdChoiceProvider implements FormChoiceProviderInterface, F
      */
     private $currencyDataProvider;
 
-    /**
-     * @param CurrencyDataProviderInterface $currencyDataProvider
-     */
-    public function __construct(CurrencyDataProviderInterface $currencyDataProvider)
-    {
+    public function __construct(
+        CurrencyDataProviderInterface $currencyDataProvider,
+        private readonly bool $includeDisabled = false
+    ) {
         $this->currencyDataProvider = $currencyDataProvider;
     }
 
@@ -61,6 +60,8 @@ final class CurrencyByIdChoiceProvider implements FormChoiceProviderInterface, F
 
     private function getCurrencies(): array
     {
-        return $this->currencyDataProvider->getCurrencies(false, true, true);
+        // Grouping by id_currency matters in multistore, where the shop association join returns the
+        // same currency once per shop it belongs to and the list would otherwise repeat it.
+        return $this->currencyDataProvider->getCurrencies(false, !$this->includeDisabled, true);
     }
 }
