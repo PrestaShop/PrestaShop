@@ -194,33 +194,44 @@ class OrderHistoryCore extends ObjectModel
 
             // foreach products of the order
             foreach ($order->getProductsDetail() as $product) {
+                /*
+                 * Units a refund or a return has already put back must not be moved again: the customer
+                 * is only holding what was ordered minus what was reinjected. This is the quantity
+                 * OrderRefundUpdater and AbstractOrderCommandHandler::reinjectQuantity() already call
+                 * reinjectable.
+                 */
+                $reinjectableQuantity = max(
+                    0,
+                    (int) $product['product_quantity'] - (int) $product['product_quantity_reinjected']
+                );
+
                 if (Validate::isLoadedObject($old_os)) {
                     // if becoming logable => adds sale
                     if ($new_os->logable && !$old_os->logable) {
                         ProductSale::addProductSale($product['product_id'], $product['product_quantity']);
                         if (!Pack::isPack($product['product_id'])
                             && in_array($old_os->id, $error_or_canceled_statuses)) {
-                            StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -(int) $product['product_quantity'], $order->id_shop);
+                            StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -$reinjectableQuantity, $order->id_shop);
                         }
                     } elseif (!$new_os->logable && $old_os->logable) {
                         // if becoming unlogable => removes sale
                         ProductSale::removeProductSale($product['product_id'], $product['product_quantity']);
                         if (!Pack::isPack($product['product_id'])
                             && in_array($new_os->id, $error_or_canceled_statuses)) {
-                            StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int) $product['product_quantity'], $order->id_shop);
+                            StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], $reinjectableQuantity, $order->id_shop);
                         }
                     } elseif (!$new_os->logable && !$old_os->logable
                         && in_array($new_os->id, $error_or_canceled_statuses)
                         && !in_array($old_os->id, $error_or_canceled_statuses)
                     ) {
                         // Status is changed from not loggable status as Processing in progress etc. to Payment error/Canceled
-                        StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int) $product['product_quantity'], $order->id_shop);
+                        StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], $reinjectableQuantity, $order->id_shop);
                     } elseif (!$new_os->logable && !$old_os->logable
                         && !in_array($new_os->id, $error_or_canceled_statuses)
                         && in_array($old_os->id, $error_or_canceled_statuses)
                     ) {
                         // Status is changed from Payment error/Canceled to not loggable status as Processing in progress etc.
-                        StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -(int) $product['product_quantity'], $order->id_shop);
+                        StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -$reinjectableQuantity, $order->id_shop);
                     }
                 }
                 // From here, there is 2 cases : $old_os exists, and we can test shipped state evolution,
