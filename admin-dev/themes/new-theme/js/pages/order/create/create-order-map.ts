@@ -109,6 +109,7 @@ export default {
   shippingForm: '.js-shipping-form',
   noCarrierBlock: '.js-no-carrier-block',
   deliveryOptionSelect: '#delivery-option-select',
+  deliveryOptionExtraContent: '.js-delivery-option-extra-content',
   totalShippingField: '.js-total-shipping-tax-inc',
   freeShippingSwitch: '.js-free-shipping-switch',
   recycledPackagingSwitch: '.js-recycled-packaging-switch',
