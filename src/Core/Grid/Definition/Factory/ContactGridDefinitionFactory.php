@@ -15,8 +15,10 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShopBundle\Form\Admin\Type\ReorderPositionsButtonType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
@@ -87,6 +89,16 @@ final class ContactGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
+                (new PositionColumn('position'))
+                    ->setName($this->trans('Position', [], 'Admin.Global'))
+                    ->setOptions([
+                        'id_field' => 'id_contact',
+                        'position_field' => 'position',
+                        'update_method' => 'POST',
+                        'update_route' => 'admin_contacts_update_position',
+                    ])
+            )
+            ->add(
                 (new ActionColumn('actions'))
                     ->setName($this->trans('Actions', [], 'Admin.Global'))
                     ->setOptions([
@@ -147,7 +159,10 @@ final class ContactGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
                     ->setAssociatedColumn('description')
             )
-
+            ->add(
+                (new Filter('position', ReorderPositionsButtonType::class))
+                    ->setAssociatedColumn('position')
+            )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
                     ->setTypeOptions([
