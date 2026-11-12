@@ -16,6 +16,7 @@ class EditImageSettingsCommand
     private array $formats;
     private string $baseFormat;
     private int $avifQuality;
+    private ?int $avifSpeed = null;
     private int $jpegQuality;
     private int $pngQuality;
     private int $webpQuality;
@@ -57,6 +58,16 @@ class EditImageSettingsCommand
     public function getAvifQuality(): int
     {
         return $this->avifQuality;
+    }
+
+    public function setAvifSpeed(int $avifSpeed): void
+    {
+        $this->avifSpeed = $avifSpeed;
+    }
+
+    public function getAvifSpeed(): ?int
+    {
+        return $this->avifSpeed;
     }
 
     public function setJpegQuality(int $jpegQuality): void
