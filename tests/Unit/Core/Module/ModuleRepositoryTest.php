@@ -44,7 +44,7 @@ class ModuleRepositoryTest extends TestCase
         'bankwire',
     ];
 
-    private const MODULE_COUNT = 12;
+    private const MODULE_COUNT = 14;
 
     /** @var ModuleRepository */
     private $moduleRepository;
