@@ -14,6 +14,7 @@ use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutVariablesBuilderInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\HTMLToTextTransformation;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationCollection;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationInterface;
 use Twig\Environment;
@@ -154,6 +155,14 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
                 continue;
             }
             if ($templateType !== $transformation->getType()) {
+                continue;
+            }
+
+            // A layout that is already text needs no conversion from HTML. Running it anyway drops the
+            // author's line breaks, their leading and trailing spaces, and anything that looks like a tag.
+            // The conversion is for the other case, which is the one this transformation documents itself
+            // as being for: no text layout exists, so the text part is derived from the HTML one.
+            if ($transformation instanceof HTMLToTextTransformation && !empty($mailLayout->getTxtPath())) {
                 continue;
             }
 
