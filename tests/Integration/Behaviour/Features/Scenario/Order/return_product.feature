@@ -275,15 +275,15 @@ Feature: Refund Order from Back Office (BO)
       | Mug Today is a good day     | 1        |
       | shipping_refund             | 1        |
     Then "bo_order_refund" has 1 credit slips
-    # Weird behavior, we are in tax EXCLUDED display, so total_products_tax_excl contains the initial refund
-    # amount, and total_products_tax_incl the real one (minus voucher) If we had been in tax INCLUDED display
-    # it would have been the opposite
+    # The voucher comes off BOTH totals, each in its own tax base: 11.90 excl less the 5.00 excl part of
+    # the voucher, and 12.61 incl less its 5.30 incl part. `amount` mirrors total_products_tax_excl on a
+    # tax-excluded shop and is read after the deduction, so it no longer reports the untouched 11.90.
     Then "bo_order_refund" last credit slip is:
-      | amount                  | 11.9 |
+      | amount                  | 6.9  |
       | shipping_cost_amount    | 7.42 |
       | total_shipping_tax_incl | 7.42 |
       | total_shipping_tax_excl | 7.0  |
-      | total_products_tax_excl | 11.9 |
+      | total_products_tax_excl | 6.9  |
       | total_products_tax_incl | 7.31 |
     And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
       | product_quantity            | 2 |
