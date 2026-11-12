@@ -6,6 +6,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 use Supplier;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -15,6 +17,15 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 final class SupplierImageUploader extends AbstractImageUploader implements ImageUploaderInterface
 {
+    private readonly ImageFormatConfiguration $imageFormatConfiguration;
+
+    public function __construct(
+        ?ImageFormatConfiguration $imageFormatConfiguration = null,
+    ) {
+        // Optional for backward compatibility with code instantiating this uploader without arguments
+        $this->imageFormatConfiguration = $imageFormatConfiguration ?? ServiceLocator::get(ImageFormatConfiguration::class);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -28,7 +39,12 @@ final class SupplierImageUploader extends AbstractImageUploader implements Image
         $this->uploadFromTemp($tempImageName, $destination);
 
         if (file_exists($destination)) {
-            $this->generateDifferentSize($supplierId, _PS_SUPP_IMG_DIR_, 'suppliers');
+            $this->generateDifferentSizeInFormats(
+                $supplierId,
+                _PS_SUPP_IMG_DIR_,
+                'suppliers',
+                $this->imageFormatConfiguration->getGenerationFormats()
+            );
         }
     }
 
