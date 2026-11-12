@@ -134,7 +134,10 @@ final class ImageCopier
             $targetWidth = $targetHeight = 0;
             $sourceWidth = $sourceHeight = 0;
             $error = 0;
-            ImageManager::resize(
+            // A download can succeed and still not be an image: an HTTP error page, a redirect to a login
+            // form, or a rewrite rule that answers with HTML. Nothing is written in that case, so report
+            // the failure instead of letting the caller record an image that has no file behind it.
+            if (!ImageManager::resize(
                 $tmpFile,
                 $path . '.jpg',
                 null,
@@ -147,7 +150,11 @@ final class ImageCopier
                 5,
                 $sourceWidth,
                 $sourceHeight
-            );
+            )) {
+                @unlink($origTmpfile);
+
+                return false;
+            }
             $imagesTypes = ImageType::getImagesTypes($entity, true);
 
             if ($regenerate) {
