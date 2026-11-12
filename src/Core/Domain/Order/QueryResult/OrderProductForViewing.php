@@ -90,6 +90,11 @@ class OrderProductForViewing implements JsonSerializable
     private $unitPriceTaxInclRaw;
 
     /**
+     * @var string|null
+     */
+    private $unitPriceOtherTaxMethod;
+
+    /**
      * @var string
      */
     private $taxRate;
@@ -205,7 +210,8 @@ class OrderProductForViewing implements JsonSerializable
         array $packItems = [],
         ?OrderProductCustomizationsForViewing $customizations = null,
         string $mpn = '',
-        array $shipmentIds = []
+        array $shipmentIds = [],
+        ?string $unitPriceOtherTaxMethod = null
     ) {
         $this->id = $id;
         $this->combinationId = $combinationId;
@@ -234,6 +240,7 @@ class OrderProductForViewing implements JsonSerializable
         $this->customizations = $customizations;
         $this->mpn = $mpn;
         $this->shipmentIds = $shipmentIds;
+        $this->unitPriceOtherTaxMethod = $unitPriceOtherTaxMethod;
     }
 
     /**
@@ -518,6 +525,17 @@ class OrderProductForViewing implements JsonSerializable
     public function getMpn(): string
     {
         return $this->mpn;
+    }
+
+    /**
+     * Same unit price as getUnitPrice(), expressed in the tax method the order does not
+     * display. Null when there is no counterpart to show, as for pack contents.
+     *
+     * @return string|null
+     */
+    public function getUnitPriceOtherTaxMethod(): ?string
+    {
+        return $this->unitPriceOtherTaxMethod;
     }
 
     /**
