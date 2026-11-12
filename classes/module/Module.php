@@ -1072,6 +1072,7 @@ abstract class ModuleCore implements ModuleInterface
 
         // set active to 1 in the module table
         Db::getInstance()->update('module', ['active' => 1], 'id_module = ' . (int) $this->id);
+        Db::getInstance()->update('tab', ['enabled' => 1], 'module = \'' . pSQL($this->name) . '\'');
 
         if ($moduleActivated) {
             $this->loadBuiltInTranslations();
@@ -1189,6 +1190,7 @@ abstract class ModuleCore implements ModuleInterface
         // if module has no more shop associations, set module.active = 0
         if (!$this->hasShopAssociations()) {
             $result &= Db::getInstance()->update('module', ['active' => 0], 'id_module = ' . (int) $this->id);
+            $result &= Db::getInstance()->update('tab', ['enabled' => 0], 'module = \'' . pSQL($this->name) . '\'');
         }
 
         return (bool) $result;
