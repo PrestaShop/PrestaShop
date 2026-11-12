@@ -26,6 +26,11 @@
       "db": "mysql"
     },
     {
+      "php": "8.6",
+      "browser": "chromium",
+      "db": "mysql"
+    },
+    {
       "php": "8.5",
       "browser": "firefox",
       "db": "mysql"

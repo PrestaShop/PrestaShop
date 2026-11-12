@@ -59,6 +59,7 @@ class NullDateTime extends DateTimeImmutable
      *
      * @return static
      */
+    #[ReturnTypeWillChange]
     public function add($interval): DateTimeImmutable
     {
         return $this;
@@ -103,6 +104,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
+    #[ReturnTypeWillChange]
     public function setDate($year, $month, $day): DateTimeImmutable
     {
         throw $this::buildUnusableMethodException('setDate');
@@ -111,6 +113,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
+    #[ReturnTypeWillChange]
     public function setISODate($year, $week, $dayOfWeek = 1): DateTimeImmutable
     {
         throw $this::buildUnusableMethodException('setISODate');
@@ -119,6 +122,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
+    #[ReturnTypeWillChange]
     public function setTime($hour, $minute, $second = 0, $microsecond = 0): DateTimeImmutable
     {
         throw $this::buildUnusableMethodException('setTime');
@@ -127,6 +131,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
+    #[ReturnTypeWillChange]
     public function setTimestamp($timestamp): DateTimeImmutable
     {
         throw $this::buildUnusableMethodException('setTimestamp');
@@ -135,6 +140,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
+    #[ReturnTypeWillChange]
     public function setTimezone($timezone): DateTimeImmutable
     {
         return $this;
@@ -147,6 +153,7 @@ class NullDateTime extends DateTimeImmutable
      *
      * @return static
      */
+    #[ReturnTypeWillChange]
     public function sub($interval): DateTimeImmutable
     {
         return $this;
@@ -188,6 +195,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
+    #[ReturnTypeWillChange]
     public static function createFromInterface(DateTimeInterface $object): DateTimeImmutable
     {
         throw self::buildUnusableMethodException('createFromInterface');
