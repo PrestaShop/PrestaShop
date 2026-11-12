@@ -287,6 +287,29 @@ Feature: Manage business entities
     When I edit the business entity with id 999999
     Then I should get an error that the business entity was not found
 
+  Scenario: Changing only the status refreshes updated_at and leaves every other field untouched
+    Given there is a business entity with the following details:
+      | name                | Narrow Change Corp |
+      | legal_name          | Narrow Change SA   |
+      | external_ref        | EXT-020            |
+      | delivery_authorized | 1                  |
+      | status              | pending            |
+      | billing_as_shipping | 1                  |
+    And the business entity has the following billing addresses:
+      | alias   | address1    | city  | postcode | country_id | is_default |
+      | Billing | 1 Narrow St | Paris | 75001    | 8          | 1          |
+    When I add the business entity
+    And the business entity "Narrow Change Corp" was last updated an hour ago
+    And I edit the business entity "Narrow Change Corp" with the following details:
+      | status | rejected |
+    Then the business entity "Narrow Change Corp" should have the following details:
+      | name                | Narrow Change Corp |
+      | legal_name          | Narrow Change SA   |
+      | external_ref        | EXT-020            |
+      | delivery_authorized | 1                  |
+      | status              | rejected           |
+    And the business entity "Narrow Change Corp" should have a refreshed updated_at
+
   Scenario: Delete a business entity
     Given there is a business entity named "Deletable Corp" with status "active"
     When I delete the business entity "Deletable Corp"

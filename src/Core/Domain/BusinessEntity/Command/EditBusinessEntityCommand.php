@@ -20,10 +20,10 @@ use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
  * External reference is the one nullable field that can also be cleared, so it carries its own
  * hasExternalRef() marker to tell "clear it" apart from "leave it alone".
  *
- * The back-office form always submits every field, so it never exercises the partial path: the
- * partial semantics are a deliberate choice for callers other than the form — modules and future
- * API resources — which need to change one field without resending, or silently clearing, the
- * others. Callers must therefore not assume a getter returning null means the stored value is null.
+ * The full edit form submits every field; the status modal, modules and future API resources are
+ * the callers that rely on the partial path to change one field without resending, or silently
+ * clearing, the others. Callers must therefore not assume a getter returning null means the stored
+ * value is null.
  *
  * Structural fields (shop, business identifiers) are intentionally absent: they are not editable
  * through this command.

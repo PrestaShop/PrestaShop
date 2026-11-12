@@ -11,6 +11,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\BusinessEntity;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\BulkDeleteBusinessEntityCommand;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\DeleteBusinessEntityCommand;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\EditBusinessEntityCommand;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BulkDeleteBusinessEntityException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityBillingAddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityConstraintException;
@@ -19,9 +20,11 @@ use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityNot
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\CannotDeleteBusinessEntityException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\CannotUpdateBusinessEntityException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\UnableToCreateBusinessEntityAddress;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Query\GetBusinessEntityForEditing;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Query\GetBusinessEntityForViewing;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Query\GetPendingBusinessEntitiesCount;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\QueryResult\BusinessEntityForViewing;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\QueryResult\EditableBusinessEntity;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\BusinessEntityGridDefinitionFactory;
@@ -32,6 +35,7 @@ use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
 use PrestaShopBundle\Form\Admin\Sell\BusinessEntity\BusinessEntityAddressType;
 use PrestaShopBundle\Form\Admin\Sell\BusinessEntity\BusinessEntityType;
+use PrestaShopBundle\Form\Admin\Sell\BusinessEntity\EditBusinessEntityStatusType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -237,6 +241,76 @@ class BusinessEntitiesController extends PrestaShopAdminController
                 'businessEntityId' => $businessEntityId,
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink('AdminBusinessEntities'),
+            ]
+        );
+    }
+
+    #[DemoRestricted(redirectRoute: 'admin_business_entities_list')]
+    #[AdminSecurity("is_granted('update', 'AdminBusinessEntities')", message: 'You do not have permission to edit this.', redirectRoute: 'admin_business_entities_list')]
+    public function statusAction(int $businessEntityId, Request $request): Response
+    {
+        $isLiteDisplaying = $request->query->has('liteDisplaying');
+
+        try {
+            /** @var EditableBusinessEntity $businessEntity */
+            $businessEntity = $this->dispatchQuery(new GetBusinessEntityForEditing($businessEntityId));
+        } catch (BusinessEntityException $e) {
+            if (!$isLiteDisplaying) {
+                $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+                return $this->redirectToRoute('admin_business_entities_list');
+            }
+
+            return $this->render(
+                '@PrestaShop/Admin/Sell/BusinessEntity/status_not_found.html.twig',
+                ['errorMessage' => $this->getErrorMessageForException($e, $this->getErrorMessages())],
+                new Response('', Response::HTTP_NOT_FOUND)
+            );
+        }
+
+        $form = $this->createForm(EditBusinessEntityStatusType::class, [
+            EditBusinessEntityStatusType::FIELD_STATUS => $businessEntity->getStatus(),
+        ]);
+        $form->handleRequest($request);
+
+        $errorMessage = null;
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $command = new EditBusinessEntityCommand($businessEntityId);
+                $command->setStatus($form->getData()[EditBusinessEntityStatusType::FIELD_STATUS]);
+
+                $this->dispatchCommand($command);
+
+                $this->addFlash('success', $this->trans('Successful update.', [], 'Admin.Notifications.Success'));
+
+                if ($isLiteDisplaying) {
+                    // The modal watches the reloaded form for the success alert the flash leaves
+                    // on it, so the answer has to be that form again rather than the list.
+                    return $this->redirectToRoute('admin_business_entities_status', [
+                        'businessEntityId' => $businessEntityId,
+                        'liteDisplaying' => 1,
+                    ]);
+                }
+
+                return $this->redirectToRoute('admin_business_entities_list');
+            } catch (Exception $e) {
+                // Rendered rather than flashed: the modal never displays the flash bag.
+                $errorMessage = $this->getErrorMessageForException($e, $this->getErrorMessages());
+            }
+        }
+
+        return $this->render(
+            '@PrestaShop/Admin/Sell/BusinessEntity/status.html.twig',
+            [
+                'businessEntityId' => $businessEntityId,
+                'businessEntityName' => $businessEntity->getName(),
+                'editStatusForm' => $form->createView(),
+                'enableSidebar' => true,
+                'errorMessage' => $errorMessage,
+                'help_link' => $this->generateSidebarLink('AdminBusinessEntities'),
+                'layoutTitle' => $this->trans('Edit status', [], 'Admin.Orderscustomers.Feature'),
+                'lightDisplay' => $isLiteDisplaying,
             ]
         );
     }

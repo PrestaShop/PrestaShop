@@ -1,0 +1,48 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% form_theme editStatusForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
+
+{% set entityName %}<strong>{{ businessEntityName }}</strong>{% endset %}
+
+{% set statusFormBody %}
+  {% if errorMessage is defined and errorMessage is not empty %}
+    <div class="alert alert-danger" role="alert">
+      <p class="alert-text">{{ errorMessage }}</p>
+    </div>
+  {% endif %}
+
+  <p class="mb-3">
+    {{ 'Change the status of %name%'|trans({'%name%': entityName}, 'Admin.Orderscustomers.Feature')|raw_purified }}
+  </p>
+
+  {{ form_errors(editStatusForm) }}
+  {{ form_row(editStatusForm.status) }}
+{% endset %}
+
+{{ form_start(editStatusForm) }}
+  {% if lightDisplay|default(false) %}
+    <div class="business-entity-status-form p-4">
+      {{ statusFormBody }}
+    </div>
+  {% else %}
+    <div class="business-entity-status-form card">
+      <div class="card-body">
+        {{ statusFormBody }}
+      </div>
+
+      <div class="card-footer">
+        <div class="d-inline-flex">
+          <a href="{{ path('admin_business_entities_list') }}" class="btn btn-outline-secondary cancel-btn">
+            {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+          </a>
+        </div>
+        <div class="d-inline-flex float-right">
+          <button type="submit" class="btn btn-primary">{{ 'Update status'|trans({}, 'Admin.Orderscustomers.Feature') }}</button>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{{ form_end(editStatusForm) }}

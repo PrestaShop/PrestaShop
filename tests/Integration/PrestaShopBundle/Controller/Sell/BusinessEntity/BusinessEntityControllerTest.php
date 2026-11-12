@@ -8,24 +8,33 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Controller\Sell\BusinessEntity;
 
 use DateTime;
+use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\AddBusinessEntityCommand;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\CannotDeleteBusinessEntityException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\CannotUpdateBusinessEntityException;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Query\GetBusinessEntityForEditing;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\QueryResult\EditableBusinessEntity;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityBillingAddress;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShopBundle\Controller\Admin\Sell\BusinessEntity\BusinessEntitiesController;
 use PrestaShopBundle\Entity\B2B\B2bRole;
 use PrestaShopBundle\Entity\B2B\BusinessEntity;
 use PrestaShopBundle\Entity\B2B\BusinessEntityCustomerB2b;
 use PrestaShopBundle\Entity\B2B\CustomerB2b;
 use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
 use PrestaShopBundle\Entity\Enum\CustomerB2bStatus;
+use PrestaShopBundle\Form\Admin\Sell\BusinessEntity\EditBusinessEntityStatusType;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
+use ReflectionMethod;
 use RuntimeException;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Tests\Integration\PrestaShopBundle\Controller\GridControllerTestCase;
 use Tests\Integration\PrestaShopBundle\Controller\TestEntityDTO;
 use Tests\Resources\Resetter\BusinessEntityResetter;
+use Throwable;
 
 class BusinessEntityControllerTest extends GridControllerTestCase
 {
@@ -36,6 +45,8 @@ class BusinessEntityControllerTest extends GridControllerTestCase
     private const SAVE_BUTTON_SELECTOR = 'save-button';
 
     private const UNKNOWN_BUSINESS_ENTITY_ID = 999999;
+
+    private const LOGGED_EMPLOYEE_ID = 1;
 
     private const CREATION_SAMPLE_VALUES = ['FR12345678901', '123 456 789 00012', '12-345-6789'];
 
@@ -891,6 +902,664 @@ class BusinessEntityControllerTest extends GridControllerTestCase
         }
 
         $entityManager->flush();
+    }
+
+    public function testTheListOffersEditStatusInTheKebabWithAStableHook(): void
+    {
+        $crawler = $this->client->request('GET', $this->generateGridUrl());
+        $this->assertResponseIsSuccessful();
+
+        $editStatus = $crawler->filter(sprintf(
+            '%s .dropdown-menu a[data-status-form-url*="/%d/status"]',
+            $this->getGridSelector(),
+            self::$activeBusinessEntityId
+        ));
+
+        $this->assertCount(1, $editStatus, 'AC1: Edit status must sit inside the kebab menu');
+
+        // aria-label rather than text(): the link also carries the material icon ligature.
+        $this->assertSame(
+            'Edit status',
+            $editStatus->attr('aria-label'),
+            'AC1: the kebab action must read "Edit status"'
+        );
+
+        // The JavaScript hooks on this class and never on the one built from the translated
+        // label, which changes with the language while the hook must not.
+        $this->assertStringContainsString('js-edit-business-entity-status', (string) $editStatus->attr('class'));
+
+        // FormIframeModal is handed its wording through these, and has no wording of its own:
+        // a missing label leaves the dialog without the button, which nothing else would catch.
+        $this->assertSame('Edit status', $editStatus->attr('data-modal-title'));
+        $this->assertSame('Update status', $editStatus->attr('data-confirm-button-label'));
+        $this->assertSame('Cancel', $editStatus->attr('data-cancel-button-label'));
+    }
+
+    /**
+     * FormIframeModal reaches into the loaded page for `form[name="edit_business_entity_status"]`,
+     * and silently does nothing when it finds none: the confirm button would stop submitting with
+     * no error anywhere. The form name comes from the type's block prefix, which a rename changes.
+     */
+    public function testTheStatusPageCarriesTheFormTheModalLooksFor(): void
+    {
+        $crawler = $this->client->request('GET', $this->router->generate(
+            'admin_business_entities_status',
+            ['businessEntityId' => self::$activeBusinessEntityId, 'liteDisplaying' => 1]
+        ));
+        $this->assertResponseIsSuccessful();
+
+        $this->assertCount(1, $crawler->filter('form[name="edit_business_entity_status"]'));
+    }
+
+    public function testAStatusSubmissionForAnUnknownEntityIsNotFound(): void
+    {
+        $this->client->disableReboot();
+
+        $crawler = $this->client->request('GET', $this->router->generate(
+            'admin_business_entities_status',
+            ['businessEntityId' => self::$activeBusinessEntityId, 'liteDisplaying' => 1]
+        ));
+        $this->assertResponseIsSuccessful();
+
+        $this->client->request(
+            'POST',
+            $this->router->generate(
+                'admin_business_entities_status',
+                ['businessEntityId' => self::UNKNOWN_BUSINESS_ENTITY_ID, 'liteDisplaying' => 1]
+            ),
+            ['edit_business_entity_status' => [
+                'status' => BusinessEntityStatus::ACTIVE->value,
+                '_token' => $crawler->filter('#edit_business_entity_status__token')->attr('value'),
+            ]]
+        );
+
+        // The entity is read before the form is even built, so the write answers like the read.
+        $this->assertResponseStatusCodeSame(404);
+        $this->assertSame(
+            'The object cannot be loaded (or found).',
+            trim($this->client->getCrawler()->filter('.alert-danger .alert-text')->text()),
+            'the frame must show a rendered message, not a bare sentence'
+        );
+    }
+
+    public function testTheStatusPageIsPrefilledWithTheCurrentStatus(): void
+    {
+        // Two fixtures holding two different statuses: against a single one, a hard coded
+        // pre-selection would satisfy the assertion by coincidence.
+        $this->assertStatusPagePreselects(
+            self::$activeBusinessEntityId,
+            BusinessEntityStatus::ACTIVE,
+            self::ACTIVE_COMPANY_NAME
+        );
+        $this->assertStatusPagePreselects(
+            self::$pendingBusinessEntityId,
+            BusinessEntityStatus::PENDING,
+            self::PENDING_COMPANY_NAME
+        );
+    }
+
+    private function assertStatusPagePreselects(
+        int $entityId,
+        BusinessEntityStatus $expectedStatus,
+        string $expectedName
+    ): void {
+        $crawler = $this->client->request('GET', $this->router->generate(
+            'admin_business_entities_status',
+            ['businessEntityId' => $entityId, 'liteDisplaying' => 1]
+        ));
+
+        $this->assertResponseIsSuccessful();
+
+        $selected = $crawler->filter('#edit_business_entity_status_status option[selected]');
+        $this->assertCount(1, $selected, 'AC2: exactly one status must be pre-selected');
+        $this->assertSame(
+            $expectedStatus->value,
+            $selected->attr('value'),
+            'AC2: the pre-selected status must be the one the entity currently holds'
+        );
+
+        // Pinning the whole sentence rather than the name alone: dropping |raw_purified would
+        // render the markup literally, and a containment check would stay green.
+        $this->assertSame(
+            sprintf('Change the status of %s', $expectedName),
+            trim($crawler->filter('p.mb-3')->text()),
+            'AC2: the context line must name the entity'
+        );
+        $this->assertSame(
+            $expectedName,
+            trim($crawler->filter('p.mb-3 strong')->text()),
+            'AC2: the entity name must stand out in the context line'
+        );
+        $this->assertSame(
+            '* Status',
+            trim($crawler->filter('label[for="edit_business_entity_status_status"]')->text()),
+            'AC2: the dropdown must carry the label the other screens use, marked required'
+        );
+        $this->assertSame(
+            ['Pending', 'Active', 'Inactive', 'Rejected'],
+            $crawler->filter('#edit_business_entity_status_status option')->each(
+                static fn (Crawler $option): string => trim($option->text())
+            ),
+            'AC2: the four statuses must be offered, translated, in the order the story lists'
+        );
+        // AC2 lists the status as the only input of the modal. Counting the visible controls keeps
+        // a field re-added to the type from slipping back into the modal unnoticed.
+        $this->assertCount(
+            0,
+            $crawler->filter('form[name="edit_business_entity_status"] input:not([type="hidden"]),'
+                . ' form[name="edit_business_entity_status"] textarea'),
+            'AC2: the modal must offer the status dropdown and nothing else'
+        );
+    }
+
+    public function testTheStatusPageOfAnUnknownEntityIsNotFound(): void
+    {
+        $crawler = $this->client->request('GET', $this->router->generate(
+            'admin_business_entities_status',
+            ['businessEntityId' => self::UNKNOWN_BUSINESS_ENTITY_ID, 'liteDisplaying' => 1]
+        ));
+
+        $this->assertResponseStatusCodeSame(404);
+        $this->assertSame(
+            'The object cannot be loaded (or found).',
+            trim($crawler->filter('.alert-danger .alert-text')->text()),
+            'the frame must show a rendered message, not a bare sentence'
+        );
+    }
+
+    /**
+     * The 404 page is a modal body, with no back-office navigation around it: outside the frame the
+     * merchant is sent back where the edit form sends them.
+     */
+    public function testTheStatusPageOfAnUnknownEntityOutsideTheModalRedirectsToTheListing(): void
+    {
+        $this->client->request('GET', $this->router->generate(
+            'admin_business_entities_status',
+            ['businessEntityId' => self::UNKNOWN_BUSINESS_ENTITY_ID]
+        ));
+
+        $this->assertResponseRedirects($this->router->generate('admin_business_entities_list'));
+
+        /** @var Session $session */
+        $session = $this->client->getRequest()->getSession();
+        $messages = $session->getFlashBag()->all();
+        $this->assertArrayHasKey('error', $messages);
+        $this->assertContains(
+            'The object cannot be loaded (or found).',
+            $messages['error'],
+            print_r($messages['error'], true)
+        );
+    }
+
+    /**
+     * The confirm button belongs to the modal. Opened as a page, the same route has to carry a
+     * button of its own, or the form it renders cannot be submitted at all.
+     */
+    public function testTheStatusPageOutsideTheModalCarriesItsOwnSubmitButton(): void
+    {
+        $crawler = $this->client->request('GET', $this->router->generate(
+            'admin_business_entities_status',
+            ['businessEntityId' => self::$activeBusinessEntityId]
+        ));
+        $this->assertResponseIsSuccessful();
+
+        $this->assertCount(
+            1,
+            $crawler->filter('form[name="edit_business_entity_status"] button[type="submit"]'),
+            'the page must offer the button the modal would otherwise provide'
+        );
+        $this->assertCount(
+            1,
+            $crawler->filter('form[name="edit_business_entity_status"] .cancel-btn'),
+            'and a way out that does not go through the browser history'
+        );
+    }
+
+    public function testUpdatingTheStatusFlashesAndShowsTheNewBadgeInTheList(): void
+    {
+        $this->client->disableReboot();
+
+        $entityId = self::createBusinessEntity(
+            $this->client->getContainer()->get('prestashop.core.command_bus'),
+            'Status change company',
+            'Status change legal name',
+            BusinessEntityStatus::PENDING
+        );
+
+        $this->submitStatusChange($entityId, BusinessEntityStatus::ACTIVE);
+
+        $this->assertResponseRedirects($this->router->generate('admin_business_entities_list'));
+
+        $crawler = $this->client->request('GET', $this->generateGridUrl());
+
+        $flash = $crawler->filter('.alert-success .alert-text');
+        $this->assertCount(
+            1,
+            $flash,
+            'AC4: the success flash must reach the page the browser lands on, not just the flash bag'
+        );
+        $this->assertStringContainsString('Successful update.', $flash->text());
+
+        $row = $crawler->filter(sprintf('%s tbody tr:contains("Status change company")', $this->getGridSelector()));
+
+        $this->assertCount(1, $row);
+        $this->assertSame(
+            'Active',
+            trim($row->filter('.column-status')->text()),
+            'AC4: the listing must reflect the new status'
+        );
+    }
+
+    /**
+     * The modal reloads the lite page after the write, and the layout *consumes* the flash bag
+     * when it renders its alerts: shown there, inside a frame nobody reads, the message would be
+     * gone by the time the merchant is back on the list.
+     */
+    public function testTheSuccessMessageSurvivesTheReloadOfTheModalAndReachesTheList(): void
+    {
+        $this->client->disableReboot();
+
+        $entityId = self::createBusinessEntity(
+            $this->client->getContainer()->get('prestashop.core.command_bus'),
+            'Lite display company',
+            'Lite display legal name',
+            BusinessEntityStatus::PENDING
+        );
+
+        $crawler = $this->client->request('GET', $this->router->generate(
+            'admin_business_entities_status',
+            ['businessEntityId' => $entityId, 'liteDisplaying' => 1]
+        ));
+        $this->assertResponseIsSuccessful();
+
+        $form = $crawler->filter('form[name="edit_business_entity_status"]')->form();
+        $form['edit_business_entity_status[status]'] = BusinessEntityStatus::ACTIVE->value;
+        $this->client->submit($form);
+
+        $crawler = $this->client->followRedirect();
+
+        $this->assertCount(
+            0,
+            $crawler->filter('.alert-success'),
+            'the reloaded modal must not display the alert, which would consume it'
+        );
+        // One write, one success alert: what the modal reads to know it can close.
+        $this->assertSame(
+            '1',
+            $crawler->filter('form[name="edit_business_entity_status"]')->attr('data-alerts-success'),
+            'AC4: the reloaded form must carry exactly the one success alert the modal waits for'
+        );
+
+        $crawler = $this->client->request('GET', $this->generateGridUrl());
+
+        $this->assertStringContainsString(
+            'Successful update.',
+            $crawler->filter('.alert-success .alert-text')->text(),
+            'the message must still be in the bag when the list reloads'
+        );
+    }
+
+    public function testTheStatusChangeIsRecordedInTheAdministrationLog(): void
+    {
+        $this->client->disableReboot();
+
+        $container = $this->client->getContainer();
+        $entityId = self::createBusinessEntity(
+            $container->get('prestashop.core.command_bus'),
+            'Status logged company',
+            'Status logged legal name',
+            BusinessEntityStatus::PENDING
+        );
+
+        $this->submitStatusChange($entityId, BusinessEntityStatus::REJECTED);
+
+        $entries = $this->statusLogEntriesFor($entityId);
+
+        $this->assertCount(1, $entries, 'AC6: the status change must reach the administration log');
+        $this->assertStringContainsString('"old":"pending"', $entries[0]['message']);
+        $this->assertStringContainsString('"new":"rejected"', $entries[0]['message']);
+        $this->assertSame(
+            self::LOGGED_EMPLOYEE_ID,
+            (int) $entries[0]['id_employee'],
+            'AC6: the log must name the employee who changed the status'
+        );
+    }
+
+    /**
+     * Pins AC6's "every change" against a handler that would start logging conditionally. It does
+     * NOT prove the allow_duplicate flag: PrestaShopLogger::isPresent() compares id_shop_group to
+     * (int) null while the column holds NULL, so its deduplication never fires here and removing
+     * the flag leaves this green. The flag is guarded by the unit test on the logger context.
+     */
+    public function testEveryStatusChangeOfTheSameEntityIsLogged(): void
+    {
+        $this->client->disableReboot();
+
+        $entityId = self::createBusinessEntity(
+            $this->client->getContainer()->get('prestashop.core.command_bus'),
+            'Status repeated company',
+            'Status repeated legal name',
+            BusinessEntityStatus::PENDING
+        );
+
+        $this->submitStatusChange($entityId, BusinessEntityStatus::ACTIVE);
+        $this->submitStatusChange($entityId, BusinessEntityStatus::PENDING);
+        $this->submitStatusChange($entityId, BusinessEntityStatus::ACTIVE);
+
+        $this->assertCount(
+            3,
+            $this->statusLogEntriesFor($entityId),
+            'AC6: every status change must be logged, including one repeating an earlier pair'
+        );
+    }
+
+    public function testResubmittingTheStatusItAlreadyHoldsWritesNoAuditEntry(): void
+    {
+        $this->client->disableReboot();
+
+        $entityId = self::createBusinessEntity(
+            $this->client->getContainer()->get('prestashop.core.command_bus'),
+            'Status unchanged company',
+            'Status unchanged legal name',
+            BusinessEntityStatus::PENDING
+        );
+
+        // The modal preselects the current status, so this is what one click on "Update status"
+        // sends. AC6 traces status changes: an entry naming none would be noise.
+        $this->submitStatusChange($entityId, BusinessEntityStatus::PENDING);
+
+        $this->assertResponseRedirects($this->router->generate('admin_business_entities_list'));
+        $this->assertSame(
+            [],
+            $this->statusLogEntriesFor($entityId),
+            'AC6: a submission that changes nothing must leave the administration log alone'
+        );
+    }
+
+    public function testAStatusSubmissionWithoutItsTokenIsRejected(): void
+    {
+        $this->client->disableReboot();
+
+        $container = $this->client->getContainer();
+        $entityId = self::createBusinessEntity(
+            $container->get('prestashop.core.command_bus'),
+            'Status untokened company',
+            'Status untokened legal name',
+            BusinessEntityStatus::PENDING
+        );
+
+        $this->client->request(
+            'POST',
+            $this->router->generate('admin_business_entities_status', ['businessEntityId' => $entityId]),
+            ['edit_business_entity_status' => ['status' => BusinessEntityStatus::ACTIVE->value]]
+        );
+
+        $this->assertResponseIsSuccessful();
+        $this->assertArrayNotHasKey(
+            'success',
+            $this->flashes(),
+            'a submission without its token must not report a success'
+        );
+
+        // Root errors belong to the form, not to any field: without form_errors the merchant
+        // reads nothing at all and the modal looks like it did nothing.
+        $this->assertCount(
+            1,
+            $this->client->getCrawler()->filter('.business-entity-status-form .alert-danger'),
+            'a rejected token must be reported in the modal'
+        );
+
+        $this->assertSame(
+            BusinessEntityStatus::PENDING->value,
+            $this->persistedStatusOf($entityId),
+            'a submission without its token must leave the status untouched'
+        );
+    }
+
+    public function testAnInvalidSubmissionIsRejectedWithoutTouchingTheStatus(): void
+    {
+        $this->client->disableReboot();
+
+        $entityId = self::createBusinessEntity(
+            $this->client->getContainer()->get('prestashop.core.command_bus'),
+            'Status kept input company',
+            'Status kept input legal name',
+            BusinessEntityStatus::PENDING
+        );
+
+        $crawler = $this->client->request('GET', $this->router->generate(
+            'admin_business_entities_status',
+            ['businessEntityId' => $entityId]
+        ));
+        $this->assertResponseIsSuccessful();
+
+        $this->client->request(
+            'POST',
+            $this->router->generate('admin_business_entities_status', ['businessEntityId' => $entityId]),
+            ['edit_business_entity_status' => [
+                EditBusinessEntityStatusType::FIELD_STATUS => 'not-a-status',
+                '_token' => $crawler->filter('#edit_business_entity_status__token')->attr('value'),
+            ]]
+        );
+
+        // Symfony renders the rejection in place, the way it does on every other admin form.
+        $this->assertResponseIsSuccessful();
+        $form = $this->client->getCrawler()->filter('form[name="edit_business_entity_status"]');
+
+        $this->assertSame('1', $form->attr('data-form-submitted'));
+        $this->assertSame(
+            '0',
+            $form->attr('data-form-valid'),
+            'the refused submission must come back as an invalid form'
+        );
+        $this->assertSame(
+            '0',
+            $form->attr('data-alerts-success'),
+            'and must not look successful to the modal, which watches this attribute'
+        );
+
+        $this->assertSame(
+            BusinessEntityStatus::PENDING->value,
+            $this->persistedStatusOf($entityId),
+            'nothing must be written when the submission is rejected'
+        );
+    }
+
+    /**
+     * The PageVoter of the test environment grants every permission, so a denial never reaches the
+     * listener here and the attributes themselves are all there is to check.
+     */
+    public function testTheStatusActionIsGuardedAsAWrite(): void
+    {
+        $action = new ReflectionMethod(BusinessEntitiesController::class, 'statusAction');
+
+        $security = $action->getAttributes(AdminSecurity::class);
+        $this->assertCount(1, $security, 'the status action must stay guarded');
+        $this->assertStringContainsString(
+            "is_granted('update', 'AdminBusinessEntities')",
+            (string) $security[0]->getArguments()[0],
+            'reading the form is already a step towards writing: it asks for the update permission'
+        );
+
+        $this->assertCount(
+            1,
+            $action->getAttributes(DemoRestricted::class),
+            'the action writes, so it must stay closed to the demo mode'
+        );
+    }
+
+    public function testAFailedStatusUpdateAnswersWithTheMappedDomainMessage(): void
+    {
+        $this->client->disableReboot();
+        $this->substituteBusFailingWith(
+            new CannotUpdateBusinessEntityException('Could not update business entity')
+        );
+
+        // In the modal, where the layout renders no alert: a flashed message would survive the
+        // request and surface on whatever page the merchant loads next.
+        $this->submitStatusChange(self::$activeBusinessEntityId, BusinessEntityStatus::REJECTED, true);
+
+        $this->assertResponseIsSuccessful();
+
+        $this->assertStringContainsString(
+            'An error occurred while updating the business entity.',
+            (string) $this->client->getResponse()->getContent(),
+            'the merchant must read the mapped domain message, not a generic one'
+        );
+        $this->assertSame(
+            '0',
+            $this->client->getCrawler()->filter('form[name="edit_business_entity_status"]')->attr('data-alerts-success'),
+            'a rejected update must not leave a success alert on the form the modal watches'
+        );
+        $this->assertArrayNotHasKey(
+            'error',
+            $this->flashes(),
+            'the message belongs to the modal, not to the next page the merchant loads'
+        );
+    }
+
+    public function testAnInfrastructureFailureDuringAStatusUpdateIsReportedInTheModal(): void
+    {
+        $this->client->disableReboot();
+        $this->substituteBusFailingWith(new RuntimeException('Connection lost'));
+
+        $this->submitStatusChange(self::$activeBusinessEntityId, BusinessEntityStatus::REJECTED);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertCount(
+            1,
+            $this->client->getCrawler()->filter('.business-entity-status-form .alert-danger'),
+            'a failure outside the domain must reach the merchant as a message, not as a 500'
+        );
+    }
+
+    /**
+     * The handler takes its logger from the container, and anything it could report the failure to
+     * ends up in the same table through the legacy Monolog handler. Only the real wiring shows that
+     * an unwritable administration log leaves the status change alone.
+     */
+    public function testAnUnwritableAdministrationLogStillPersistsTheStatus(): void
+    {
+        $this->client->disableReboot();
+
+        // Narrowed to the update entry so the fixture below can still be created and logged: the
+        // substitution has to be in place before any request, the service being shared.
+        $refusedWrites = 0;
+        $logger = $this->createMock(LegacyLogger::class);
+        $logger->method('info')->willReturnCallback(static function (string $message) use (&$refusedWrites): void {
+            if (str_starts_with($message, 'Business entity updated successfully')) {
+                ++$refusedWrites;
+
+                throw new RuntimeException('ps_log is unwritable');
+            }
+        });
+
+        self::$kernel->getContainer()->set('prestashop.adapter.legacy.logger', $logger);
+
+        $entityId = self::createBusinessEntity(
+            $this->client->getContainer()->get('prestashop.core.command_bus'),
+            'Unwritable log company',
+            'Unwritable log legal name',
+            BusinessEntityStatus::PENDING
+        );
+
+        $this->submitStatusChange($entityId, BusinessEntityStatus::REJECTED);
+
+        $this->assertResponseRedirects($this->router->generate('admin_business_entities_list'));
+        $this->assertSame(
+            1,
+            $refusedWrites,
+            'the update entry must have reached the failing logger, or this test proves nothing'
+        );
+
+        $flashes = $this->flashes();
+        $this->assertArrayHasKey(
+            'success',
+            $flashes,
+            'an unwritable log must not turn a saved edit into a reported failure'
+        );
+        $this->assertArrayNotHasKey('error', $flashes);
+        $this->assertSame(
+            BusinessEntityStatus::REJECTED->value,
+            $this->persistedStatusOf($entityId),
+            'the status must stay saved even though its log entry could not be written'
+        );
+    }
+
+    /**
+     * @return array<string, array<int, string>>
+     */
+    private function flashes(): array
+    {
+        /** @var Session $session */
+        $session = $this->client->getRequest()->getSession();
+
+        return $session->getFlashBag()->all();
+    }
+
+    private function persistedStatusOf(int $entityId): string
+    {
+        return (string) $this->client->getContainer()->get('doctrine.dbal.default_connection')->fetchOne(
+            sprintf('SELECT status FROM %sbusiness_entity WHERE id_business_entity = ?', _DB_PREFIX_),
+            [$entityId]
+        );
+    }
+
+    private function submitStatusChange(int $entityId, BusinessEntityStatus $status, bool $inModal = false): Crawler
+    {
+        $crawler = $this->client->request('GET', $this->router->generate(
+            'admin_business_entities_status',
+            array_filter(['businessEntityId' => $entityId, 'liteDisplaying' => $inModal ? 1 : null])
+        ));
+        $this->assertResponseIsSuccessful();
+
+        $form = $crawler->filter('form[name="edit_business_entity_status"]')->form();
+        $form['edit_business_entity_status[status]'] = $status->value;
+
+        return $this->client->submit($form);
+    }
+
+    /**
+     * The modal reads the entity through the same bus it writes through, so the substitute has to
+     * keep answering the query for the status page to be rendered at all.
+     */
+    private function substituteBusFailingWith(Throwable $failure): void
+    {
+        $commandBus = $this->createMock(CommandBusInterface::class);
+        $commandBus->method('handle')->willReturnCallback(
+            static function (object $message) use ($failure): EditableBusinessEntity {
+                if ($message instanceof GetBusinessEntityForEditing) {
+                    return new EditableBusinessEntity(
+                        1,
+                        'Failing Corp',
+                        null,
+                        null,
+                        true,
+                        BusinessEntityStatus::ACTIVE,
+                        1,
+                        self::DEFAULT_SHOP_ID
+                    );
+                }
+
+                throw $failure;
+            }
+        );
+
+        self::$kernel->getContainer()->set('prestashop.core.command_bus', $commandBus);
+    }
+
+    /**
+     * @return array<int, array{message: string, id_employee: int}>
+     */
+    private function statusLogEntriesFor(int $entityId): array
+    {
+        return $this->client->getContainer()->get('doctrine.dbal.default_connection')->fetchAllAssociative(
+            sprintf(
+                'SELECT message, id_employee FROM %slog WHERE object_type = ? AND object_id = ? AND message LIKE ? ORDER BY id_log ASC',
+                _DB_PREFIX_
+            ),
+            ['BusinessEntity', $entityId, 'Business entity updated successfully%']
+        );
     }
 
     private static function createBusinessEntity(
