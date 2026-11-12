@@ -549,7 +549,7 @@ class OrderCore extends ObjectModel
             LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_state_lang') . ' osl ON (os.id_order_state = osl.id_order_state AND osl.id_lang = ' . (int) $id_lang . ')
             LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'employee') . ' e ON e.id_employee = oh.id_employee
             LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'mutation') . ' m ON m.mutation_table = \'order_history\' AND m.mutation_row_id = oh.id_order_history AND m.mutator_type = \'' . MutatorType::API_CLIENT->value . '\'
-            LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'api_client') . ' a ON m.mutator_identifier = a.id_api_client
+            LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'api_client') . ' a ON m.mutator_identifier = CONCAT(a.id_api_client, \'\')
             WHERE oh.id_order = ' . (int) $this->id . '
             ' . ($no_hidden ? ' AND os.hidden = 0' : '') . '
             ' . ($logable ? ' AND os.logable = 1' : '') . '

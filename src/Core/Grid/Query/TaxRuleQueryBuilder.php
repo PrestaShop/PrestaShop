@@ -55,7 +55,7 @@ class TaxRuleQueryBuilder extends AbstractDoctrineQueryBuilder
                 'tr.id_country AS country_id',
                 'cl.name AS country_name',
                 'tr.id_state AS state_id',
-                'IFNULL(s.name, \'--\') AS state_name',
+                'COALESCE(s.name, \'--\') AS state_name',
                 'CASE '
                     . ' WHEN CONCAT_WS(\' - \', tr.zipcode_from, tr.zipcode_to) = \'0 - 0\''
                     . ' THEN \'--\' ELSE CONCAT_WS(\' - \', tr.zipcode_from, tr.zipcode_to)'

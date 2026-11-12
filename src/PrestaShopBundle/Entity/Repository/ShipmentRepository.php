@@ -70,7 +70,7 @@ class ShipmentRepository extends EntityRepository
             )
             ->where('sp.id_order_detail = :orderDetailId')
             ->andWhere('s.id_order = :orderId')
-            ->andWhere('s.deleted = false')
+            ->andWhere('s.deleted = 0')
             ->groupBy('sp.id_shipment')
             ->setParameter('orderDetailId', $orderDetailId)
             ->setParameter('orderId', $orderId);
@@ -97,7 +97,7 @@ class ShipmentRepository extends EntityRepository
     {
         return $this->createQueryBuilder('s')
             ->where('s.id IN (:ids)')
-            ->andWhere('s.deleted = false')
+            ->andWhere('s.deleted = 0')
             ->setParameter('ids', $shipmentIds)
             ->getQuery()
             ->getResult();
@@ -152,7 +152,7 @@ class ShipmentRepository extends EntityRepository
             ->leftJoin('sp', $this->tablePrefix . 'order_detail', 'od', 'sp.id_order_detail = od.id_order_detail')
             ->leftJoin('s', $this->tablePrefix . 'carrier', 'c', 's.id_carrier = c.id_carrier')
             ->where('s.id_order = :orderId')
-            ->andWhere('s.deleted = false')
+            ->andWhere('s.deleted = 0')
             ->setParameter('orderId', $orderId)
             ->groupBy('s.id_shipment');
 

@@ -69,7 +69,7 @@ class ProductImporterFieldRulesTest extends AbstractProductImportEngineTestCase
         $this->assertNotNull($productId);
 
         // 2 file fields + 1 text field, numbered generic labels
-        $fields = $this->fetchAll('SELECT cf.type, cfl.name FROM {p}customization_field cf INNER JOIN {p}customization_field_lang cfl ON cfl.id_customization_field = cf.id_customization_field AND cfl.id_lang = 1 WHERE cf.id_product = :id GROUP BY cf.id_customization_field ORDER BY cf.type, cf.id_customization_field', ['id' => $productId]);
+        $fields = $this->fetchAll('SELECT cf.type, cfl.name FROM {p}customization_field cf INNER JOIN {p}customization_field_lang cfl ON cfl.id_customization_field = cf.id_customization_field AND cfl.id_lang = 1 AND cfl.id_shop = 1 WHERE cf.id_product = :id ORDER BY cf.type, cf.id_customization_field', ['id' => $productId]);
         $this->assertSame(
             [['type' => '0', 'name' => 'Customization #1'], ['type' => '0', 'name' => 'Customization #2'], ['type' => '1', 'name' => 'Customization #3']],
             array_map(static fn (array $row): array => ['type' => (string) $row['type'], 'name' => $row['name']], $fields)

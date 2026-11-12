@@ -153,13 +153,24 @@ class CMSCore extends ObjectModel
             $idLang = (int) Configuration::get('PS_LANG_DEFAULT');
         }
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT c.id_cms, l.meta_title
+        $from = '
 		FROM  ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms') . ' c
 		JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_lang') . ' l ON (c.id_cms = l.id_cms)
 		' . Shop::addSqlAssociation('cms', 'c') . '
 		' . (($idBlock) ? 'JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'block_cms') . ' b ON (c.id_cms = b.id_cms)' : '') . '
-		WHERE l.id_lang = ' . (int) $idLang . (($idBlock) ? ' AND b.id_block = ' . (int) $idBlock : '') . ($active ? ' AND c.active = 1 ' : '') . '
+		WHERE l.id_lang = ' . (int) $idLang . (($idBlock) ? ' AND b.id_block = ' . (int) $idBlock : '') . ($active ? ' AND c.active = 1 ' : '');
+
+        if (_DB_TYPE_ == 'pgsql') {
+            // PostgreSQL has no relaxed GROUP BY: keep one row per page with DISTINCT ON
+            return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+            SELECT id_cms, meta_title FROM (
+                SELECT DISTINCT ON (c.id_cms) c.id_cms, l.meta_title, c.position' . $from . '
+                ORDER BY c.id_cms
+            ) cms_pages
+            ORDER BY position');
+        }
+
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT c.id_cms, l.meta_title' . $from . '
 		GROUP BY c.id_cms
 		ORDER BY c.position');
     }

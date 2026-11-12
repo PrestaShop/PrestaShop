@@ -580,7 +580,7 @@ class CartRuleCore extends ObjectModel
         $query->from('cart_rule', 'cr');
         $query->where('cr.id_customer = ' . $customerId);
         $query->leftJoin('cart_rule_lang', 'crl', 'cr.id_cart_rule = crl.id_cart_rule AND crl.id_lang = ' . (int) Configuration::get('PS_LANG_DEFAULT'));
-        $query->orderBy('cr.active DESC, cr.id_customer DESC');
+        $query->orderBy('cr.active DESC, cr.id_customer DESC, cr.id_cart_rule DESC');
 
         $result = Db::getInstance()->executeS($query);
 

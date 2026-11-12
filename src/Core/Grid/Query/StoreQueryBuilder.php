@@ -58,7 +58,6 @@ class StoreQueryBuilder extends AbstractDoctrineQueryBuilder
                 s.id_store, sl.name, sl.address1 AS address, s.city, s.postcode,
                 state.name AS state, cl.name AS country, s.phone, s.fax, s.active
             ')
-            ->groupBy('s.id_store')
         ;
 
         $this->searchCriteriaApplicator
@@ -92,12 +91,7 @@ class StoreQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $qb = $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'store', 's')
-            ->innerJoin(
-                's',
-                $this->dbPrefix . 'store_shop',
-                'ss',
-                's.id_store = ss.id_store AND ss.id_shop IN (:shopIds)'
-            )
+            ->andWhere('EXISTS (SELECT 1 FROM ' . $this->dbPrefix . 'store_shop ss WHERE ss.id_store = s.id_store AND ss.id_shop IN (:shopIds))')
             ->setParameter('shopIds', $shopIds, Connection::PARAM_INT_ARRAY)
             ->innerJoin(
                 's',
@@ -160,8 +154,8 @@ class StoreQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            // and wildcard for all other filters
-            $qb->andWhere($dbColumn . ' LIKE :' . $filterName)
+            // and case-insensitive wildcard for all other filters, as PostgreSQL LIKE is case-sensitive
+            $qb->andWhere('LOWER(' . $dbColumn . ') LIKE LOWER(:' . $filterName . ')')
                 ->setParameter($filterName, '%' . $value . '%');
         }
     }

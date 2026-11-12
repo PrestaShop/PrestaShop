@@ -706,14 +706,14 @@ class ObjectModelTest extends TestCase
     protected static function installTestableObjectTables(): void
     {
         $allowedCollations = ['utf8mb4_general_ci', 'utf8mb4_unicode_ci'];
-        $databaseCollation = Db::getInstance()->getValue('SELECT @@collation_database');
+        $databaseCollation = _DB_TYPE_ == 'pgsql' ? '' : Db::getInstance()->getValue('SELECT @@collation_database');
         $sqlLoader = new SqlLoader();
         $sqlLoader->setMetaData([
             'PREFIX_' => _DB_PREFIX_,
             'ENGINE_TYPE' => _MYSQL_ENGINE_,
             'COLLATION' => (empty($databaseCollation) || !in_array($databaseCollation, $allowedCollations)) ? '' : 'COLLATE ' . $databaseCollation,
         ]);
-        $sqlLoader->parseFile(dirname(__DIR__, 2) . '/Resources/sql/install_testable_object.sql');
+        $sqlLoader->parseFile(dirname(__DIR__, 2) . '/Resources/sql/install_testable_object' . (_DB_TYPE_ == 'pgsql' ? '.pgsql' : '') . '.sql');
     }
 
     protected static function installLanguages(): void

@@ -90,28 +90,20 @@ class StockManager
     {
         $this->updateReservedProductQuantity($shopId, $errorState, $cancellationState, $idProduct, $idOrder);
 
-        $updatePhysicalQuantityQuery = 'UPDATE {table_prefix}stock_available sa';
-
-        if ($idOrder) {
-            $updatePhysicalQuantityQuery .= '
-                INNER JOIN (
-                    SELECT product_id
-                    FROM {table_prefix}order_detail
-                    WHERE id_order = ' . (int) $idOrder . '
-                ) od
-                ON sa.id_product = od.product_id
-            ';
-        }
-
         $stockContext = $this->getStockContext((int) $shopId);
 
-        $updatePhysicalQuantityQuery .= '
-            SET sa.physical_quantity = sa.quantity + sa.reserved_quantity
+        $updatePhysicalQuantityQuery = '
+            UPDATE {table_prefix}stock_available sa
+            SET physical_quantity = quantity + reserved_quantity
             WHERE sa.id_shop = ' . (int) $stockContext['shopId'] . ' AND sa.id_shop_group = ' . (int) $stockContext['shopGroupId']
         ;
 
         if ($idProduct) {
             $updatePhysicalQuantityQuery .= ' AND sa.id_product = ' . (int) $idProduct;
+        }
+
+        if ($idOrder) {
+            $updatePhysicalQuantityQuery .= ' AND sa.id_product IN (SELECT product_id FROM {table_prefix}order_detail WHERE id_order = ' . (int) $idOrder . ')';
         }
 
         $updatePhysicalQuantityQuery = str_replace('{table_prefix}', _DB_PREFIX_, $updatePhysicalQuantityQuery);
@@ -147,9 +139,10 @@ class StockManager
         /* @phpstan-ignore-next-line */
         $signedType = _DB_TYPE_ == 'pgsql' ? 'BIGINT' : 'SIGNED';
         // SET names the bare column and the order filter is a subquery: PostgreSQL refuses an
-        // aliased SET column and the MySQL UPDATE ... JOIN syntax
+        // aliased SET column and the MySQL UPDATE ... JOIN syntax. Without pending order the sum is NULL,
+        // which non-strict MySQL silently stores as 0 and PostgreSQL rejects.
         $updateReservedQuantityQuery .= '
-            SET reserved_quantity = (
+            SET reserved_quantity = COALESCE((
                 SELECT SUM(GREATEST(CAST(od.product_quantity AS ' . $signedType . ') - CAST(od.product_quantity_refunded AS ' . $signedType . '), 0))
                 FROM {table_prefix}orders o
                 INNER JOIN {table_prefix}order_detail od ON od.id_order = o.id_order
@@ -163,7 +156,7 @@ class StockManager
                 ) AND sa.id_product = od.product_id AND
                 sa.id_product_attribute = od.product_attribute_id
                 GROUP BY od.product_id, od.product_attribute_id
-            )
+            ), 0)
             WHERE
                 sa.id_shop = :stock_shop_id AND 
                 sa.id_shop_group = :stock_shop_group_id 

@@ -512,7 +512,7 @@ class AdminCartRulesControllerCore extends AdminController
             case 'attributes':
                 $attributes = ['selected' => [], 'unselected' => []];
                 $results = Db::getInstance()->executeS('
-				SELECT CONCAT(agl.name, " - ", al.name) as name, a.id_attribute as id
+				SELECT CONCAT(agl.name, \' - \', al.name) as name, a.id_attribute as id
 				FROM ' . _DB_PREFIX_ . 'attribute_group_lang agl
 				LEFT JOIN ' . _DB_PREFIX_ . 'attribute a ON a.id_attribute_group = agl.id_attribute_group
 				LEFT JOIN ' . _DB_PREFIX_ . 'attribute_lang al ON (a.id_attribute = al.id_attribute AND al.id_lang = ' . (int) Context::getContext()->language->id . ')

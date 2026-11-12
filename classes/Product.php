@@ -2370,9 +2370,11 @@ class ProductCore extends ObjectModel
                 WHERE id_product = ' . (int) $this->id
             )
             && Db::getInstance()->execute(
-                'DELETE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field_lang') . ' FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field_lang') . ' LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field') . '
-                ON (' . _DB_PREFIX_ . 'customization_field.id_customization_field = ' . _DB_PREFIX_ . 'customization_field_lang.id_customization_field)
-                WHERE ' . _DB_PREFIX_ . 'customization_field.id_customization_field IS NULL'
+                'DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field_lang') . '
+                WHERE NOT EXISTS (
+                    SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field') . ' cf
+                    WHERE cf.id_customization_field = ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field_lang') . '.id_customization_field
+                )'
             );
     }
 
@@ -2482,7 +2484,7 @@ class ProductCore extends ObjectModel
         }
         // Delete product features
         $result = Db::getInstance()->execute('
-            DELETE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_product') . ' FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_product') . '
+            DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_product') . '
             WHERE id_product = ' . (int) $this->id . (!$all_shops ? '
                 AND id_feature IN (
                     SELECT id_feature
@@ -2587,9 +2589,9 @@ class ProductCore extends ObjectModel
             $id_lang = Context::getContext()->language->id;
         }
 
-        $sql = 'SELECT pa.*, product_attribute_shop.*, ag.id_attribute_group, ag.is_color_group, agl.name AS group_name, al.name AS attribute_name, ' .
-            'a.id_attribute, a.position AS attribute_position, stock.location ' .
-            'FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute') . ' pa ' .
+        $select = 'pa.*, product_attribute_shop.*, ag.id_attribute_group, ag.is_color_group, agl.name AS group_name, al.name AS attribute_name, ' .
+            'a.id_attribute, a.position AS attribute_position, stock.location ';
+        $from = 'FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute') . ' pa ' .
             Shop::addSqlAssociation('product_attribute', 'pa') . ' ' .
             'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute_combination') . ' pac ON pac.id_product_attribute = pa.id_product_attribute ' .
             'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute') . ' a ON a.id_attribute = pac.id_attribute ' .
@@ -2597,11 +2599,8 @@ class ProductCore extends ObjectModel
             'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute_lang') . ' al ON (a.id_attribute = al.id_attribute AND al.id_lang = ' . (int) $id_lang . ') ' .
             'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute_group_lang') . ' agl ON (ag.id_attribute_group = agl.id_attribute_group AND agl.id_lang = ' . (int) $id_lang . ') ' .
             'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'stock_available') . ' stock ON (stock.id_product = pa.id_product AND stock.id_product_attribute = COALESCE(pa.id_product_attribute, 0)) ' .
-            'WHERE pa.id_product = ' . (int) $this->id . ' ' .
-            'GROUP BY pa.id_product_attribute' . ($groupByIdAttributeGroup ? ', ag.id_attribute_group ' : '') .
-            'ORDER BY pa.id_product_attribute, ag.position, a.position';
-
-        $res = Db::getInstance()->executeS($sql);
+            'WHERE pa.id_product = ' . (int) $this->id . ' ';
+        $res = $this->getGroupedCombinationRows($select, $from, $groupByIdAttributeGroup);
 
         // Get quantity of each variations
         foreach ($res as $key => $row) {
@@ -2621,6 +2620,42 @@ class ProductCore extends ObjectModel
     }
 
     /**
+     * Runs a combination query with one row per combination (and attribute group when asked),
+     * sorted by combination, attribute group position then attribute position.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function getGroupedCombinationRows(string $select, string $from, bool $groupByIdAttributeGroup): array
+    {
+        $groupBy = 'pa.id_product_attribute' . ($groupByIdAttributeGroup ? ', ag.id_attribute_group' : '');
+
+        if (_DB_TYPE_ != 'pgsql') {
+            $rows = Db::getInstance()->executeS(
+                'SELECT ' . $select . $from . 'GROUP BY ' . $groupBy . ' ORDER BY pa.id_product_attribute, ag.position, a.position'
+            );
+
+            return is_array($rows) ? $rows : [];
+        }
+
+        // PostgreSQL has no relaxed GROUP BY: keep the first row of each group with DISTINCT ON, then sort as MySQL does
+        $rows = Db::getInstance()->executeS(
+            'SELECT * FROM (SELECT DISTINCT ON (' . $groupBy . ') ' . $select .
+            ', pa.id_product_attribute AS combination_sort_id, ag.position AS attribute_group_sort_position, a.position AS attribute_sort_position ' .
+            $from . 'ORDER BY ' . $groupBy . ', ag.position, a.position) combinations ' .
+            'ORDER BY combination_sort_id, attribute_group_sort_position, attribute_sort_position'
+        );
+        if (!is_array($rows)) {
+            return [];
+        }
+        foreach ($rows as &$row) {
+            unset($row['combination_sort_id'], $row['attribute_group_sort_position'], $row['attribute_sort_position']);
+        }
+        unset($row);
+
+        return $rows;
+    }
+
+    /**
      * Get product attribute combination by id_product_attribute.
      *
      * @param int $id_product_attribute Attribute identifier
@@ -2634,9 +2669,9 @@ class ProductCore extends ObjectModel
         if (!Combination::isFeatureActive()) {
             return [];
         }
-        $sql = 'SELECT pa.*, product_attribute_shop.*, ag.id_attribute_group, ag.is_color_group, agl.name AS group_name, al.name AS attribute_name,
-                    a.id_attribute, a.position
-                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute') . ' pa
+        $select = 'pa.*, product_attribute_shop.*, ag.id_attribute_group, ag.is_color_group, agl.name AS group_name, al.name AS attribute_name,
+                    a.id_attribute, a.position ';
+        $from = 'FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute') . ' pa
                 ' . Shop::addSqlAssociation('product_attribute', 'pa') . '
                 LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute_combination') . ' pac ON pac.id_product_attribute = pa.id_product_attribute
                 LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute') . ' a ON a.id_attribute = pac.id_attribute
@@ -2644,11 +2679,9 @@ class ProductCore extends ObjectModel
                 LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute_lang') . ' al ON (a.id_attribute = al.id_attribute AND al.id_lang = ' . (int) $id_lang . ')
                 LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute_group_lang') . ' agl ON (ag.id_attribute_group = agl.id_attribute_group AND agl.id_lang = ' . (int) $id_lang . ')
                 WHERE pa.id_product = ' . (int) $this->id . '
-                AND pa.id_product_attribute = ' . (int) $id_product_attribute . '
-                GROUP BY pa.id_product_attribute' . ($groupByIdAttributeGroup ? ',ag.id_attribute_group' : '') . '
-                ORDER BY pa.id_product_attribute, ag.position, a.position';
+                AND pa.id_product_attribute = ' . (int) $id_product_attribute . ' ';
 
-        $res = Db::getInstance()->executeS($sql);
+        $res = $this->getGroupedCombinationRows($select, $from, $groupByIdAttributeGroup);
 
         $computingPrecision = Context::getContext()->getComputingPrecision();
         // Get quantity of each variations
@@ -6281,14 +6314,10 @@ class ProductCore extends ObjectModel
         if (
             $extra_file > 0
             && count($customization_fields[Product::CUSTOMIZE_FILE]) - $extra_file >= 0
-            && (!Db::getInstance()->execute(
-                'DELETE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field') . ',' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field_lang') . '
-                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field') . ' JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field_lang') . '
-                WHERE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field') . '.id_product = ' . (int) $this->id . '
-                AND ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field') . '.type = ' . Product::CUSTOMIZE_FILE . '
-                AND ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field_lang') . '.id_customization_field = ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field') . '.id_customization_field
-                AND ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field') . '.id_customization_field >= ' . (int) $customization_fields[Product::CUSTOMIZE_FILE][count($customization_fields[Product::CUSTOMIZE_FILE]) - $extra_file]
-            ))
+            && !$this->deleteCustomizationFieldsFrom(
+                Product::CUSTOMIZE_FILE,
+                (int) $customization_fields[Product::CUSTOMIZE_FILE][count($customization_fields[Product::CUSTOMIZE_FILE]) - $extra_file]
+            )
         ) {
             return false;
         }
@@ -6296,14 +6325,10 @@ class ProductCore extends ObjectModel
         if (
             $extra_text > 0
             && count($customization_fields[Product::CUSTOMIZE_TEXTFIELD]) - $extra_text >= 0
-            && (!Db::getInstance()->execute(
-                'DELETE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field') . ',' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field_lang') . '
-                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field') . ' JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field_lang') . '
-                WHERE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field') . '.id_product = ' . (int) $this->id . '
-                AND ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field') . '.type = ' . Product::CUSTOMIZE_TEXTFIELD . '
-                AND ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field_lang') . '.id_customization_field = ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field') . '.id_customization_field
-                AND ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field') . '.id_customization_field >= ' . (int) $customization_fields[Product::CUSTOMIZE_TEXTFIELD][count($customization_fields[Product::CUSTOMIZE_TEXTFIELD]) - $extra_text]
-            ))
+            && !$this->deleteCustomizationFieldsFrom(
+                Product::CUSTOMIZE_TEXTFIELD,
+                (int) $customization_fields[Product::CUSTOMIZE_TEXTFIELD][count($customization_fields[Product::CUSTOMIZE_TEXTFIELD]) - $extra_text]
+            )
         ) {
             return false;
         }
@@ -6312,6 +6337,27 @@ class ProductCore extends ObjectModel
         Configuration::updateGlobalValue('PS_CUSTOMIZATION_FEATURE_ACTIVE', Customization::isCurrentlyUsed());
 
         return true;
+    }
+
+    /**
+     * Deletes the customization fields of the given type from the given id, with their translations.
+     */
+    private function deleteCustomizationFieldsFrom(int $type, int $firstDeletedId): bool
+    {
+        $fieldsCondition = 'id_product = ' . (int) $this->id . '
+            AND type = ' . $type . '
+            AND id_customization_field >= ' . $firstDeletedId;
+
+        return Db::getInstance()->execute(
+            'DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field_lang') . '
+            WHERE id_customization_field IN (
+                SELECT id_customization_field FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field') . '
+                WHERE ' . $fieldsCondition . '
+            )'
+        ) && Db::getInstance()->execute(
+            'DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field') . '
+            WHERE ' . $fieldsCondition
+        );
     }
 
     /**

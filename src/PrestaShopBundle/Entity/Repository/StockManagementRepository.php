@@ -8,6 +8,7 @@ namespace PrestaShopBundle\Entity\Repository;
 
 use Context;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\DBAL\Statement;
 use Doctrine\ORM\EntityManager;
 use Employee;
@@ -216,19 +217,17 @@ abstract class StockManagementRepository
      */
     public function getData(QueryParamsCollection $queryParams)
     {
-        $query = $this->selectSql(
-            $this->andWhere($queryParams),
-            $this->having($queryParams),
-            $this->orderBy($queryParams)
-        ) . $this->paginate();
+        $andWhere = $this->andWhere($queryParams);
+        $having = $this->having($queryParams);
+        $query = $this->selectSql($andWhere, $having, $this->orderBy($queryParams)) . $this->paginate();
 
         $statement = $this->connection->prepare($query);
-        $this->bindStockManagementValues($statement, $queryParams);
+        $this->bindStockManagementValues($statement, $queryParams, null, $query);
 
         $result = $statement->executeQuery();
         $rows = $result->fetchAllAssociative();
         $result->free();
-        $this->foundRows = $this->getFoundRows();
+        $this->foundRows = $this->countFoundRows($this->selectSql($andWhere, $having, ''), $queryParams);
 
         $rows = $this->addAdditionalData($rows);
 
@@ -257,21 +256,9 @@ abstract class StockManagementRepository
      */
     public function countPages(QueryParamsCollection $queryParams)
     {
-        $query = sprintf(
-            'SELECT CEIL(%d / :%s) as total_pages',
-            $this->foundRows,
-            QueryParamsCollection::SQL_PARAM_MAX_RESULTS
-        );
+        $paginationParams = $queryParams->getSqlPaginationParams();
 
-        $statement = $this->connection->prepare($query);
-        $this->bindMaxResultsValue($statement, $queryParams);
-
-        $result = $statement->executeQuery();
-
-        $count = (int) $result->fetchOne();
-        $result->free();
-
-        return $count;
+        return (int) ceil($this->foundRows / $paginationParams[QueryParamsCollection::SQL_PARAM_MAX_RESULTS]);
     }
 
     /**
@@ -361,9 +348,9 @@ abstract class StockManagementRepository
     protected function paginate()
     {
         return sprintf(
-            'LIMIT :%s,:%s',
-            QueryParamsCollection::SQL_PARAM_FIRST_RESULT,
-            QueryParamsCollection::SQL_PARAM_MAX_RESULTS
+            ' LIMIT :%s OFFSET :%s',
+            QueryParamsCollection::SQL_PARAM_MAX_RESULTS,
+            QueryParamsCollection::SQL_PARAM_FIRST_RESULT
         );
     }
 
@@ -371,20 +358,22 @@ abstract class StockManagementRepository
      * @param Statement $statement
      * @param QueryParamsCollection|null $queryParams
      * @param ProductIdentity|null $productIdentity
+     * @param string|null $query when given, the values that this query does not use are not bound
      */
     protected function bindStockManagementValues(
         Statement $statement,
         ?QueryParamsCollection $queryParams = null,
-        ?ProductIdentity $productIdentity = null
+        ?ProductIdentity $productIdentity = null,
+        ?string $query = null
     ) {
         $shop = $this->getCurrentShop();
         $shopId = $shop->getContextualShopId();
         $shopGroup = $shop->getGroup();
         $languageId = $this->getCurrentLanguageId();
 
-        $statement->bindValue('shop_id', $shopId, PDO::PARAM_INT);
-        $statement->bindValue('language_id', $languageId, PDO::PARAM_INT);
-        $statement->bindValue('state', Product::STATE_SAVED, PDO::PARAM_INT);
+        $this->bindValueUsedBy($statement, $query, 'shop_id', $shopId, PDO::PARAM_INT);
+        $this->bindValueUsedBy($statement, $query, 'language_id', $languageId, PDO::PARAM_INT);
+        $this->bindValueUsedBy($statement, $query, 'state', Product::STATE_SAVED, PDO::PARAM_INT);
 
         // if quantities are shared between shops of the group
         if ($shopGroup->share_stock) {
@@ -395,34 +384,43 @@ abstract class StockManagementRepository
             $stockGroupId = 0;
         }
 
-        $statement->bindValue('stock_shop_id', $stockShopId, PDO::PARAM_INT);
-        $statement->bindValue('stock_group_id', $stockGroupId, PDO::PARAM_INT);
+        $this->bindValueUsedBy($statement, $query, 'stock_shop_id', $stockShopId, PDO::PARAM_INT);
+        $this->bindValueUsedBy($statement, $query, 'stock_group_id', $stockGroupId, PDO::PARAM_INT);
 
         if ($queryParams) {
-            $this->bindValuesInStatement($statement, $queryParams);
+            $this->bindValuesInStatement($statement, $queryParams, $query);
         }
 
         if ($productIdentity) {
-            $statement->bindValue('product_id', $productIdentity->getProductId(), PDO::PARAM_INT);
-            $statement->bindValue('combination_id', $productIdentity->getCombinationId(), PDO::PARAM_INT);
+            $this->bindValueUsedBy($statement, $query, 'product_id', $productIdentity->getProductId(), PDO::PARAM_INT);
+            $this->bindValueUsedBy($statement, $query, 'combination_id', $productIdentity->getCombinationId(), PDO::PARAM_INT);
         }
     }
 
     /**
      * @param Statement $statement
      * @param QueryParamsCollection $queryParams
+     * @param string|null $query when given, the values that this query does not use are not bound
      */
-    protected function bindValuesInStatement(Statement $statement, QueryParamsCollection $queryParams)
+    protected function bindValuesInStatement(Statement $statement, QueryParamsCollection $queryParams, ?string $query = null)
     {
         $sqlParams = $queryParams->getSqlParams();
 
         foreach ($sqlParams as $name => $value) {
-            if (is_int($value)) {
-                $statement->bindValue($name, $value, PDO::PARAM_INT);
-            } else {
-                $statement->bindValue($name, $value, PDO::PARAM_STR);
-            }
+            $this->bindValueUsedBy($statement, $query, (string) $name, $value, is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR);
         }
+    }
+
+    /**
+     * PostgreSQL rejects a value bound to a parameter that the query does not contain.
+     */
+    private function bindValueUsedBy(Statement $statement, ?string $query, string $name, mixed $value, int $type): void
+    {
+        if (null !== $query && !preg_match('/:' . preg_quote(ltrim($name, ':'), '/') . '\b/', $query)) {
+            return;
+        }
+
+        $statement->bindValue($name, $value, $type);
     }
 
     /**
@@ -440,16 +438,35 @@ abstract class StockManagementRepository
     }
 
     /**
-     * Store the number of rows found in a previous query executed with SQL_CALC_FOUND_ROWS.
+     * Counts the rows of the query without pagination.
      */
-    protected function getFoundRows()
+    private function countFoundRows(string $query, QueryParamsCollection $queryParams): int
     {
-        $statement = $this->connection->prepare('SELECT FOUND_ROWS()');
+        $countQuery = 'SELECT COUNT(*) FROM (' . $query . ') found_rows';
+        $statement = $this->connection->prepare($countQuery);
+        $this->bindStockManagementValues($statement, $queryParams, null, $countQuery);
+
         $result = $statement->executeQuery();
         $rowCount = (int) $result->fetchOne();
         $result->free();
 
         return $rowCount;
+    }
+
+    /**
+     * Aggregates the values of the expression into a string, like MySQL GROUP_CONCAT.
+     */
+    protected function groupConcat(string $expression, string $separator = ',', string $orderBy = '', bool $distinct = false): string
+    {
+        $distinctKeyword = $distinct ? 'DISTINCT ' : '';
+        $orderByClause = $orderBy !== '' ? ' ORDER BY ' . $orderBy : '';
+        $quotedSeparator = $this->connection->quote($separator);
+
+        if ($this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform) {
+            return 'STRING_AGG(' . $distinctKeyword . 'CAST(' . $expression . ' AS TEXT), ' . $quotedSeparator . $orderByClause . ')';
+        }
+
+        return 'GROUP_CONCAT(' . $distinctKeyword . $expression . $orderByClause . ' SEPARATOR ' . $quotedSeparator . ')';
     }
 
     /**
@@ -459,10 +476,7 @@ abstract class StockManagementRepository
      */
     protected function getAttributeNameSubquery()
     {
-        return '(SELECT GROUP_CONCAT(
-                        DISTINCT CONCAT(agl.name)
-                        SEPARATOR ", "
-                    )
+        return '(SELECT ' . $this->groupConcat('agl.name', ', ', '', true) . '
                     FROM ' . $this->tablePrefix . 'product_attribute pa2
                     JOIN ' . $this->tablePrefix . 'product_attribute_combination pac ON (
                         pac.id_product_attribute = pa2.id_product_attribute
@@ -488,10 +502,7 @@ abstract class StockManagementRepository
      */
     protected function getCombinationNameSubquery()
     {
-        return '(SELECT GROUP_CONCAT(
-                        DISTINCT CONCAT(agl.name, " - ", al.name)
-                        SEPARATOR ", "
-                    )
+        return '(SELECT ' . $this->groupConcat('CONCAT(agl.name, \' - \', al.name)', ', ', '', true) . '
                     FROM ' . $this->tablePrefix . 'product_attribute pa2
                     JOIN ' . $this->tablePrefix . 'product_attribute_combination pac ON (
                         pac.id_product_attribute = pa2.id_product_attribute
@@ -522,10 +533,7 @@ abstract class StockManagementRepository
     protected function getProductFeatures(array $row)
     {
         if (!isset($this->productFeatures[$row['product_id']])) {
-            $query = 'SELECT GROUP_CONCAT(
-                      CONCAT(fp.id_feature, ":", fp.id_feature_value)
-                      ORDER BY fp.id_feature_value
-                    ) AS features
+            $query = 'SELECT ' . $this->groupConcat('CONCAT(fp.id_feature, \':\', fp.id_feature_value)', ',', 'fp.id_feature_value') . ' AS features
                         FROM ' . $this->tablePrefix . 'feature_product fp
                             JOIN  ' . $this->tablePrefix . 'feature f ON (
                                 fp.id_feature = f.id_feature
@@ -577,10 +585,7 @@ abstract class StockManagementRepository
      */
     protected function getProductAttributes(array $row)
     {
-        $query = 'SELECT GROUP_CONCAT(
-                    CONCAT(ag.id_attribute_group, ":", a.id_attribute)
-                    ORDER BY ag.id_attribute_group, a.id_attribute
-                ) AS attributes
+        $query = 'SELECT ' . $this->groupConcat('CONCAT(ag.id_attribute_group, \':\', a.id_attribute)', ',', 'ag.id_attribute_group, a.id_attribute') . ' AS attributes
                     FROM ' . $this->tablePrefix . 'product_attribute_combination pac
                         JOIN ' . $this->tablePrefix . 'attribute a ON (
                             pac.id_attribute = a.id_attribute

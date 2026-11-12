@@ -57,8 +57,7 @@ final class CmsPageCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
         $qb
-            ->select('cc.id_cms_category, cc.id_parent, cc.active, cc.position, ccl.name, ccl.description')
-            ->groupBy('cc.id_cms_category');
+            ->select('cc.id_cms_category, cc.id_parent, cc.active, cc.position, ccl.name, ccl.description');
 
         $orderBy = $this->getModifiedOrderBy($searchCriteria->getOrderBy());
         if (!empty($orderBy)) {
@@ -106,23 +105,24 @@ final class CmsPageCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'cms_category', 'cc')
+            // One row per category: the translation of the first context shop, without a GROUP BY
             ->leftJoin(
                 'cc',
                 $this->dbPrefix . 'cms_category_lang',
                 'ccl',
-                'ccl.id_cms_category = cc.id_cms_category'
-            )
-            ->innerJoin(
-                'cc',
-                $this->dbPrefix . 'cms_category_shop',
-                'ccs',
-                'ccs.id_cms_category = cc.id_cms_category'
+                'ccl.id_cms_category = cc.id_cms_category AND ccl.id_shop = (
+                    SELECT MIN(ccl_shop.id_shop) FROM ' . $this->dbPrefix . 'cms_category_lang ccl_shop
+                    WHERE ccl_shop.id_cms_category = cc.id_cms_category
+                    AND ccl_shop.id_lang = :contextLangId AND ccl_shop.id_shop IN (:contextShopIds)
+                )'
             )
         ;
 
         $qb->andWhere('ccl.id_lang = :contextLangId');
-        $qb->andWhere('ccl.id_shop IN (:contextShopIds)');
-        $qb->andWhere('ccs.id_shop IN (:contextShopIds)');
+        $qb->andWhere('EXISTS (
+            SELECT 1 FROM ' . $this->dbPrefix . 'cms_category_shop ccs
+            WHERE ccs.id_cms_category = cc.id_cms_category AND ccs.id_shop IN (:contextShopIds)
+        )');
 
         $qb->setParameter('contextLangId', $this->contextIdLang);
         $qb->setParameter('contextShopIds', $this->contextShopIds, Connection::PARAM_INT_ARRAY);

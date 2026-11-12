@@ -51,13 +51,12 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
             ->addSelect('c.date_add')
             ->addSelect('ca.name AS carrier_name')
             ->addSelect('o.id_order AS id_order')
-            ->addSelect('CONCAT(LEFT(cu.firstname, 1), ". ", cu.lastname) AS customer_name')
+            ->addSelect('CONCAT(LEFT(cu.firstname, 1), \'. \', cu.lastname) AS customer_name')
             ->addSelect('co.id_guest AS customer_online')
             ->addSelect('s.name AS shop_name')
             ->addSelect('o.total_products AS cart_total')
             ->addSelect($this->getCartStatusQuery() . ' AS status')
-            ->setParameter('current_date', date('Y-m-d H:i:00', time()))
-            ->setParameter('cart_expiration_time', CartStatus::ABANDONED_CART_EXPIRATION_TIME)
+            ->setParameter('cart_abandoned_before', $this->getCartAbandonedBefore())
         ;
 
         $this->searchCriteriaApplicator
@@ -78,6 +77,11 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
             ->select('COUNT(DISTINCT c.id_cart)');
     }
 
+    private function getCartAbandonedBefore(): string
+    {
+        return date('Y-m-d H:i:00', time() - CartStatus::ABANDONED_CART_EXPIRATION_TIME);
+    }
+
     /**
      * Format cart status query.
      *
@@ -85,13 +89,11 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getCartStatusQuery(): string
     {
-        return '(IF
-           (
-                IFNULL(o.id_order, "not_ordered") = "not_ordered",
-                IF (TIME_TO_SEC(TIMEDIFF(:current_date, c.date_add)) > :cart_expiration_time, "abandoned_cart", "not_ordered"),
-                "ordered"
-           )
-       )';
+        return '(CASE
+            WHEN o.id_order IS NOT NULL THEN \'ordered\'
+            WHEN c.date_add < :cart_abandoned_before THEN \'abandoned_cart\'
+            ELSE \'not_ordered\'
+        END)';
     }
 
     /**
@@ -212,13 +214,12 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
             if ('status' === $filterName) {
                 $qb->andWhere($this->getCartStatusQuery() . ' = :' . $filterName);
                 $qb->setParameter($filterName, $filterValue);
-                $qb->setParameter('current_date', date('Y-m-d H:i:00', time()));
-                $qb->setParameter('cart_expiration_time', CartStatus::ABANDONED_CART_EXPIRATION_TIME);
+                $qb->setParameter('cart_abandoned_before', $this->getCartAbandonedBefore());
                 continue;
             }
 
             if ('customer_name' === $filterName) {
-                $qb->andWhere('cu.firstname LIKE :' . $filterName . ' OR cu.lastname LIKE :' . $filterName . ' OR CONCAT(LEFT(cu.firstname, 1), ". ", cu.lastname) LIKE :' . $filterName);
+                $qb->andWhere('cu.firstname LIKE :' . $filterName . ' OR cu.lastname LIKE :' . $filterName . ' OR CONCAT(LEFT(cu.firstname, 1), \'. \', cu.lastname) LIKE :' . $filterName);
                 $qb->setParameter($filterName, '%' . $filterValue . '%');
                 continue;
             }

@@ -29,7 +29,7 @@ class BusinessEntityRepositoryTest extends TestCase
 
         $this->assertStringContainsString('be.idShop IN (:shopIds)', $dql);
         $this->assertStringContainsString('be.id = :businessEntityId', $dql);
-        $this->assertStringContainsString('be.deleted = false', $dql);
+        $this->assertStringContainsString('be.deleted = 0', $dql);
     }
 
     public function testFindByIdDoesNotRestrictShopsInAllShopContext(): void

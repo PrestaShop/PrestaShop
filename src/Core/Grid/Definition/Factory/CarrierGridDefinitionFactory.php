@@ -336,7 +336,7 @@ class CarrierGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         $sql = 'SELECT count(external_module_name)
                 FROM ' . $this->dbPrefix . 'carrier
-                WHERE deleted = 0 AND external_module_name != ""';
+                WHERE deleted = 0 AND external_module_name != \'\'';
 
         return (int) $this->connection->fetchOne($sql) > 0;
     }

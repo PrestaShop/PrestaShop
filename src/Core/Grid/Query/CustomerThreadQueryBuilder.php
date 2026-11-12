@@ -51,10 +51,16 @@ class CustomerThreadQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria)
             ->select('ct.*, CONCAT(c.firstname, \' \', c.lastname) as customer')
-            ->addSelect('cm.private, cl.name as contact, l.name as langName')
+            ->addSelect('cl.name as contact, l.name as langName')
             ->addSelect('s.name as shopName')
 
-            // we need to get only the latest message and its employee
+            // we need to get only the latest message, its visibility and its employee
+            ->addSelect('(
+				SELECT cm4.private
+				FROM ' . $this->connection->quoteIdentifier($this->dbPrefix . 'customer_message') . ' cm4
+				WHERE cm4.id_customer_thread = ct.id_customer_thread
+				ORDER BY cm4.date_add DESC LIMIT 1
+			) as private')
             ->addSelect('(
 				SELECT cm3.message
 				FROM ' . $this->connection->quoteIdentifier(_DB_PREFIX_ . 'customer_message') . ' cm3
@@ -71,8 +77,9 @@ class CustomerThreadQueryBuilder extends AbstractDoctrineQueryBuilder
 				ORDER BY cm2.date_add DESC LIMIT 1
 			) as employee')
 
-            ->addOrderBy('cm.date_add', 'DESC')
-            ->groupBy('ct.id_customer_thread');
+            ->addOrderBy('MAX(cm.date_add)', 'DESC')
+            // The keys of the one-to-one joins let PostgreSQL accept their selected columns
+            ->groupBy('ct.id_customer_thread', 'c.id_customer', 'l.id_lang', 'cl.id_contact', 'cl.id_lang', 's.id_shop');
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
@@ -192,7 +199,7 @@ class CustomerThreadQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ($filterName === 'customer') {
-                $builder->andWhere('CONCAT(c.firstname," ",c.lastname) LIKE :' . $filterName);
+                $builder->andWhere('CONCAT(c.firstname, \' \', c.lastname) LIKE :' . $filterName);
                 $builder->setParameter($filterName, '%' . $filterValue . '%');
                 continue;
             }

@@ -761,9 +761,7 @@ class CartCore extends ObjectModel
         }
         $sql->where('p.id_product IS NOT NULL');
 
-        // Build ORDER BY
-        $sql->orderBy('cp.date_add, cp.id_product, cp.id_product_attribute ASC');
-
+        $distinctCartLines = false;
         if (Customization::isFeatureActive()) {
             $sql->select('cu.id_customization, cu.quantity AS customization_quantity');
             $sql->leftJoin(
@@ -771,7 +769,11 @@ class CartCore extends ObjectModel
                 'cu',
                 'p.id_product = cu.id_product AND cp.id_product_attribute = cu.id_product_attribute AND cp.id_customization = cu.id_customization AND cu.id_cart = ' . (int) $this->id
             );
-            $sql->groupBy('cp.id_product_attribute, cp.id_product, cp.id_shop, cp.id_customization');
+            if (_DB_TYPE_ == 'pgsql') {
+                $distinctCartLines = true;
+            } else {
+                $sql->groupBy('cp.id_product_attribute, cp.id_product, cp.id_shop, cp.id_customization');
+            }
         } else {
             $sql->select('NULL AS customization_quantity, NULL AS id_customization');
         }
@@ -803,8 +805,25 @@ class CartCore extends ObjectModel
         $sql->leftJoin('image_shop', 'image_shop', 'image_shop.id_product = p.id_product AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $this->id_shop);
         $sql->leftJoin('image_lang', 'il', 'il.id_image = image_shop.id_image AND il.id_lang = ' . (int) $this->getAssociatedLanguage()->getId());
 
-        /** @var array<string, mixed>|false $products */
-        $products = Db::getInstance()->executeS($sql);
+        if ($distinctCartLines) {
+            // PostgreSQL has no relaxed GROUP BY: keep one row per cart line with DISTINCT ON, then sort as MySQL does
+            $sql->select('cp.date_add AS cart_line_date_add');
+            $sql->orderBy('cp.id_product_attribute, cp.id_product, cp.id_shop, cp.id_customization, cp.id_address_delivery');
+            $query = 'SELECT * FROM (SELECT DISTINCT ON (cp.id_product_attribute, cp.id_product, cp.id_shop, cp.id_customization) ' . substr($sql->build(), strlen('SELECT ')) . ') cart_lines
+                ORDER BY cart_line_date_add, id_product, id_product_attribute ASC';
+            /** @var array<string, mixed>|false $products */
+            $products = Db::getInstance()->executeS($query);
+            if (is_array($products)) {
+                foreach ($products as &$cartLine) {
+                    unset($cartLine['cart_line_date_add']);
+                }
+                unset($cartLine);
+            }
+        } else {
+            $sql->orderBy('cp.date_add, cp.id_product, cp.id_product_attribute ASC');
+            /** @var array<string, mixed>|false $products */
+            $products = Db::getInstance()->executeS($sql);
+        }
 
         // Reset the cache before the following return, or else an empty cart will add dozens of queries
         $products_ids = [];

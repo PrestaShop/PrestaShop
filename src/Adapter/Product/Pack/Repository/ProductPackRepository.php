@@ -88,15 +88,17 @@ class ProductPackRepository extends AbstractObjectModelRepository
                     $this->dbPrefix . 'product_lang',
                     'language',
                     // We use product default shop as fallback in case the required shop is not associated to the product
-                    'product.id_product = language.id_product AND language.id_lang = :idLanguage AND (language.id_shop = :idShop OR language.id_shop = product.id_shop_default)'
+                    'product.id_product = language.id_product AND language.id_lang = :idLanguage AND language.id_shop = COALESCE(
+                        (SELECT shop_language.id_shop FROM ' . $this->dbPrefix . 'product_lang shop_language
+                            WHERE shop_language.id_product = product.id_product AND shop_language.id_lang = :idLanguage AND shop_language.id_shop = :idShop),
+                        product.id_shop_default
+                    )'
                 )
                 ->where('pack.id_product_pack = :idProduct')
                 ->orderBy('pack.id_product_item', 'ASC')
                 ->setParameter('idProduct', $productId->getValue())
                 ->setParameter('idLanguage', $languageId->getValue())
                 ->setParameter('idShop', $shopConstraint->getShopId()->getValue())
-                ->addGroupBy('product.id_product')
-                ->addGroupBy('attribute.id_product_attribute')
             ;
             $packedProducts = $qb->executeQuery()->fetchAll();
         } catch (Throwable $exception) {

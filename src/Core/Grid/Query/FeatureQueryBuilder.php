@@ -58,14 +58,10 @@ class FeatureQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getQueryBuilder($searchCriteria);
         $qb
             ->select('f.id_feature, fl.name, f.position')
-            ->addSelect('COUNT(DISTINCT(fv.id_feature_value)) AS values_count')
-            ->leftJoin(
-                'f',
-                $this->dbPrefix . 'feature_value',
-                'fv',
-                'f.id_feature = fv.id_feature AND (fv.custom IS NULL OR fv.custom = 0)'
-            )
-            ->groupBy('f.id_feature')
+            ->addSelect('(
+                SELECT COUNT(fv.id_feature_value) FROM ' . $this->dbPrefix . 'feature_value fv
+                WHERE fv.id_feature = f.id_feature AND (fv.custom IS NULL OR fv.custom = 0)
+            ) AS values_count')
         ;
 
         $this->searchCriteriaApplicator
@@ -109,12 +105,7 @@ class FeatureQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'feature', 'f')
-            ->innerJoin(
-                'f',
-                $this->dbPrefix . 'feature_shop',
-                'fs',
-                'fs.id_feature = f.id_feature AND fs.id_shop IN (:shopIds)'
-            )
+            ->andWhere('EXISTS (SELECT 1 FROM ' . $this->dbPrefix . 'feature_shop fs WHERE fs.id_feature = f.id_feature AND fs.id_shop IN (:shopIds))')
             ->setParameter('shopIds', $shopIds, Connection::PARAM_INT_ARRAY)
             ->leftJoin(
                 'f',
@@ -137,7 +128,7 @@ class FeatureQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('position' === $filterName) {
-                $qb->andWhere('f.position LIKE :' . $filterName)
+                $qb->andWhere('CONCAT(f.position, \'\') LIKE :' . $filterName)
                     // position value starts from 0 in database, but in list view they are incremented by +1,
                     // so if it is a position filter, then we decrement the value to return expected results
                     ->setParameter($filterName, '%' . ((int) $value - 1) . '%');

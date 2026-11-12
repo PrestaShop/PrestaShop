@@ -112,7 +112,8 @@ class SupplierCore extends ObjectModel
         }
         $query->orderBy(' s.name ASC');
         $query->limit($n, ($p - 1) * $n);
-        $query->groupBy('s.id_supplier');
+        // sl holds one row per supplier: grouping on its column keeps the same result
+        $query->groupBy('s.id_supplier, sl.description');
 
         $suppliers = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
         if ($suppliers === false) {

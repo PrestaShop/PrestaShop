@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Stock\Repository;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
 
@@ -44,6 +45,11 @@ class StockMovementRepository
         int $offset = 0,
         int $limit = self::DEFAULT_LIMIT
     ): array {
+        $isPostgreSql = $this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform;
+        $listOf = static fn (string $column): string => $isPostgreSql
+            ? 'STRING_AGG(CAST(' . $column . ' AS TEXT), \',\')'
+            : 'GROUP_CONCAT(' . $column . ')';
+
         $queryBuilder = $this->connection->createQueryBuilder();
         $queryBuilder
             ->select('sm.*')
@@ -51,23 +57,27 @@ class StockMovementRepository
             ->select(
                 'MIN(sm.id_stock_mvt) id_stock_mvt_min',
                 'COUNT(id_stock_mvt) id_stock_mvt_count',
-                'GROUP_CONCAT(id_stock_mvt) id_stock_mvt_list',
-                'GROUP_CONCAT(id_stock) id_stock_list',
-                'GROUP_CONCAT(id_stock_mvt_reason) id_stock_mvt_reason_list',
-                'GROUP_CONCAT(id_order) id_order_list',
-                'GROUP_CONCAT(id_employee) id_employee_list',
+                $listOf('id_stock_mvt') . ' id_stock_mvt_list',
+                $listOf('id_stock') . ' id_stock_list',
+                $listOf('id_stock_mvt_reason') . ' id_stock_mvt_reason_list',
+                $listOf('id_order') . ' id_order_list',
+                $listOf('id_employee') . ' id_employee_list',
                 'MIN(employee_firstname) employee_firstname',
                 'MIN(employee_lastname) employee_lastname',
                 // SQL doesn't allow use to multiply physical_quantity by negative number because its unsignedInt
-                'SUM(IF(sign = 1, physical_quantity, 0)) delta_quantity_positive',
-                'SUM(IF(sign = -1, physical_quantity, 0)) delta_quantity_negative',
+                'SUM(CASE WHEN sign = 1 THEN physical_quantity ELSE 0 END) delta_quantity_positive',
+                'SUM(CASE WHEN sign = -1 THEN physical_quantity ELSE 0 END) delta_quantity_negative',
                 'MIN(sm.date_add) date_add_min',
                 'MAX(sm.date_add) date_add_max'
             )
         ;
 
         // Add grouping condition to get orders and edition rows alternatively
-        $this->addGroupingCondition($queryBuilder);
+        if ($isPostgreSql) {
+            $this->addPostgreSqlGroupingCondition($queryBuilder);
+        } else {
+            $this->addGroupingCondition($queryBuilder);
+        }
 
         $queryBuilder
             ->orderBy('id_stock_mvt_min', 'DESC')
@@ -77,8 +87,10 @@ class StockMovementRepository
             ->setMaxResults($limit)
         ;
 
-        // It is CRITICAL to reset the counter before each request
-        $this->connection->executeStatement('SET @grouping_id := null');
+        if (!$isPostgreSql) {
+            // It is CRITICAL to reset the counter before each request
+            $this->connection->executeStatement('SET @grouping_id := null');
+        }
         $result = $queryBuilder->executeQuery()->fetchAllAssociative();
         foreach ($result as $key => $row) {
             $totalQuantity = $row['delta_quantity_positive'] - $row['delta_quantity_negative'];
@@ -112,7 +124,8 @@ class StockMovementRepository
         $queryBuilder
             ->select('m.mutation_row_id', 'ac.id_api_client', 'ac.client_name')
             ->from($this->dbPrefix . 'mutation', 'm')
-            ->innerJoin('m', $this->dbPrefix . 'api_client', 'ac', 'ac.id_api_client = m.mutator_identifier')
+            // mutator_identifier is a string: PostgreSQL does not compare it with an integer implicitly
+            ->innerJoin('m', $this->dbPrefix . 'api_client', 'ac', 'CONCAT(ac.id_api_client, \'\') = m.mutator_identifier')
             ->andWhere('m.mutation_table = :mutationTable')
             ->andWhere('m.mutator_type = :mutatorType')
             ->andWhere('m.mutation_row_id IN (:stockMovementIds)')
@@ -177,6 +190,29 @@ class StockMovementRepository
                 "MIN(@grouping_id := CASE WHEN @grouping_id IS NULL THEN $stockMovementId WHEN $groupingCondition THEN $stockMovementId ELSE @grouping_id END) grouping_id",
                 "CASE WHEN $groupingCondition THEN CONCAT('edition-', $stockMovementId) ELSE CONCAT('orders-', @grouping_id) END grouping_name",
                 "CASE WHEN $groupingCondition THEN 'edition' ELSE 'orders' END grouping_type"
+            )
+            ->groupBy('grouping_name')
+        ;
+    }
+
+    /**
+     * Same grouping as addGroupingCondition() without session variables: an orders row belongs to the
+     * last edition before it, or to the first movement of the stock when no edition precedes it.
+     */
+    private function addPostgreSqlGroupingCondition(QueryBuilder $queryBuilder): void
+    {
+        $groupingCondition = 'sm.id_order IS NULL';
+        $groupingId = 'CASE WHEN ' . $groupingCondition . ' THEN sm.id_stock_mvt ELSE COALESCE(
+            (SELECT MAX(edition.id_stock_mvt) FROM ' . $this->dbPrefix . 'stock_mvt edition
+                WHERE edition.id_stock = sm.id_stock AND edition.id_order IS NULL AND edition.id_stock_mvt <= sm.id_stock_mvt),
+            (SELECT MIN(first_movement.id_stock_mvt) FROM ' . $this->dbPrefix . 'stock_mvt first_movement
+                WHERE first_movement.id_stock = sm.id_stock)
+        ) END';
+        $queryBuilder
+            ->addSelect(
+                'MIN(' . $groupingId . ') grouping_id',
+                "CASE WHEN $groupingCondition THEN CONCAT('edition-', sm.id_stock_mvt) ELSE CONCAT('orders-', $groupingId) END grouping_name",
+                "MIN(CASE WHEN $groupingCondition THEN 'edition' ELSE 'orders' END) grouping_type"
             )
             ->groupBy('grouping_name')
         ;

@@ -169,7 +169,7 @@ class TagCore extends ObjectModel
                 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_tag') . ' pt
                 INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_shop') . ' product_shop
                     USING (id_product)
-                JOIN (SELECT DISTINCT id_group FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_group') . ') cg
+                CROSS JOIN (SELECT DISTINCT id_group FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_group') . ') cg
                 WHERE product_shop.active = 1
                 AND EXISTS(SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_product') . ' cp
                                 LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_group') . ' cgo ON (cp.id_category = cgo.id_category)

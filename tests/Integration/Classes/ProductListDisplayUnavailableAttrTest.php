@@ -113,7 +113,7 @@ class ProductListDisplayUnavailableAttrTest extends TestCase
         $db->execute('
             INSERT INTO ' . _DB_PREFIX_ . 'stock_available
                 (id_product, id_product_attribute, id_shop, id_shop_group, quantity, physical_quantity, reserved_quantity, depends_on_stock, out_of_stock, location)
-            VALUES (' . $this->productId . ', ' . $id . ', ' . $idShop . ', 0, ' . $quantity . ', ' . $quantity . ', 0, 0, 0, "")');
+            VALUES (' . $this->productId . ', ' . $id . ', ' . $idShop . ', 0, ' . $quantity . ', ' . $quantity . ', 0, 0, 0, \'\')');
 
         return $id;
     }

@@ -901,22 +901,26 @@ class CategoryCore extends ObjectModel
             return [];
         }
 
-        $sql = 'SELECT c.id_category, cl.name, c.id_parent
+        // PostgreSQL has no relaxed GROUP BY: DISTINCT ON keeps the same first row per category
+        $isPostgreSql = _DB_TYPE_ == 'pgsql';
+        $sql = 'SELECT %s c.id_category, cl.name, c.id_parent
 		FROM %s c
 		LEFT JOIN %s cl ON (c.id_category = cl.id_category%s) %s
 		WHERE cl.id_lang = %d AND c.nleft >= %d AND c.nright <= %d
-		GROUP BY c.id_category
+		%s
 		ORDER BY c.id_category, category_shop.position';
 
         $sql = sprintf(
             $sql,
+            $isPostgreSql ? 'DISTINCT ON (c.id_category)' : '',
             Db::quoteIdentifier(_DB_PREFIX_ . 'category'),
             Db::quoteIdentifier(_DB_PREFIX_ . 'category_lang'),
             Shop::addSqlRestrictionOnLang('cl'),
             Shop::addSqlAssociation('category', 'c'),
             (int) $idLang,
             (int) $rootTreeInfo['nleft'],
-            (int) $rootTreeInfo['nright']
+            (int) $rootTreeInfo['nright'],
+            $isPostgreSql ? '' : 'GROUP BY c.id_category'
         );
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);

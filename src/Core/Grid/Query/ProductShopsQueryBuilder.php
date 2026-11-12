@@ -28,8 +28,10 @@ class ProductShopsQueryBuilder extends ProductQueryBuilder
         }
 
         $qb = parent::getSearchQueryBuilder($searchCriteria);
+        // Rows of the same product are listed in shop order whatever the database
         $qb
             ->addSelect('ps.id_shop')
+            ->addOrderBy('ps.id_shop', 'ASC')
         ;
 
         // In case only group shops are request we add a condition to filter only shops from group

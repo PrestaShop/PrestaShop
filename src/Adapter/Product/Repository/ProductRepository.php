@@ -489,6 +489,7 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
             ->select('id_shop')
             ->from($this->dbPrefix . 'product_shop')
             ->where('id_product = :productId')
+            ->orderBy('id_shop', 'ASC')
             ->setParameter('productId', $productId->getValue())
         ;
 
@@ -517,6 +518,7 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
             )
             ->where('ps.id_product = :productId')
             ->andWhere('s.id_shop_group = :shopGroupId')
+            ->orderBy('ps.id_shop', 'ASC')
             ->setParameter('shopGroupId', $shopGroupId->getValue())
             ->setParameter('productId', $productId->getValue())
         ;

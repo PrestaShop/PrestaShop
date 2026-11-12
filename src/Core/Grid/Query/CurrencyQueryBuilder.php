@@ -60,7 +60,6 @@ final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $qb
             ->select('c.id_currency, c.iso_code, cs.conversion_rate, c.active, c.modified, c.unofficial, cl.name, cl.symbol')
-            ->groupBy('c.id_currency')
         ;
 
         $this->searchCriteriaApplicator
@@ -116,7 +115,11 @@ final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
                 'c.id_currency = cl.id_currency'
             )
         ;
-        $qb->andWhere('cs.id_shop IN (:shops)');
+        // One row per currency: the rate of the first context shop, without a GROUP BY
+        $qb->andWhere('cs.id_shop = (
+            SELECT MIN(cs_shop.id_shop) FROM ' . $this->dbPrefix . 'currency_shop cs_shop
+            WHERE cs_shop.id_currency = c.id_currency AND cs_shop.id_shop IN (:shops)
+        )');
         $qb->andWhere('cl.id_lang = :lang');
         $qb->andWhere('c.deleted = 0');
 

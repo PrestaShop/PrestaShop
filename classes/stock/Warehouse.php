@@ -310,7 +310,7 @@ class WarehouseCore extends ObjectModel
         }
 
         $query = new DbQuery();
-        $query->select('wpl.id_warehouse, CONCAT(w.reference, " - ", w.name) as name');
+        $query->select('wpl.id_warehouse, CONCAT(w.reference, \' - \', w.name) as name');
         $query->from('warehouse_product_location', 'wpl');
         $query->innerJoin('warehouse_shop', 'ws', 'ws.id_warehouse = wpl.id_warehouse AND id_shop IN (' . implode(',', array_map('intval', $ids_shop)) . ')');
         $query->innerJoin('warehouse', 'w', 'ws.id_warehouse = w.id_warehouse');
@@ -454,7 +454,7 @@ class WarehouseCore extends ObjectModel
         }
 
         $query = new DbQuery();
-        $query->select('DISTINCT w.id_warehouse, CONCAT(w.reference, " - ", w.name) as name');
+        $query->select('DISTINCT w.id_warehouse, CONCAT(w.reference, \' - \', w.name) as name');
         $query->from('warehouse', 'w');
         $query->leftJoin('warehouse_product_location', 'wpl', 'wpl.id_warehouse = w.id_warehouse');
         if ($id_product) {

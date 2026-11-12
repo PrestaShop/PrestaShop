@@ -666,7 +666,7 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
         $qb = $this->connection->createQueryBuilder();
         $qb
             ->update(sprintf('%sstock_available', $this->dbPrefix), 'ps')
-            ->set('ps.out_of_stock', (string) $outOfStockType->getValue())
+            ->set('out_of_stock', (string) $outOfStockType->getValue())
             ->where('ps.id_product = :productId')
             ->setParameter('productId', $productId->getValue())
         ;

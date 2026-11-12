@@ -645,11 +645,11 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
             }
             $this->connection->createQueryBuilder()
                 ->update($this->dbPrefix . 'image_shop')
-                ->set($this->dbPrefix . 'image_shop.cover', ':cover')
+                ->set('cover', ':cover')
                 ->setParameter('cover', $newValue)
-                ->andWhere($this->dbPrefix . 'image_shop.id_image = :imageId')
+                ->andWhere('id_image = :imageId')
                 ->setParameter('imageId', (int) $image['id_image'])
-                ->andWhere($this->dbPrefix . 'image_shop.id_shop = :shopId')
+                ->andWhere('id_shop = :shopId')
                 ->setParameter('shopId', (int) $image['id_shop'])
                 ->executeStatement()
             ;

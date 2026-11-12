@@ -489,7 +489,7 @@ abstract class QueryParamsCollection
     protected function appendSqlCategoryFilter(array $filters)
     {
         $filters[] = 'AND EXISTS(SELECT 1 FROM {table_prefix}category_product cp
-        WHERE cp.id_product=p.id_product AND FIND_IN_SET(cp.id_category, :categories_ids))';
+        WHERE cp.id_product=p.id_product AND :categories_ids LIKE CONCAT(\'%,\', cp.id_category, \',%\'))';
 
         return $filters;
     }
@@ -507,7 +507,8 @@ abstract class QueryParamsCollection
         }
 
         $value = array_map('intval', $value);
-        $sqlParams[':categories_ids'] = implode(',', $value);
+        // Comma-wrapped so that each id can be matched with LIKE on any database
+        $sqlParams[':categories_ids'] = ',' . implode(',', $value) . ',';
 
         return $sqlParams;
     }
@@ -525,12 +526,10 @@ abstract class QueryParamsCollection
         }
 
         if (array_key_exists('sup', $dateAdd)) {
-            $search = ($this->isTimestamp($dateAdd['sup']) ? 'UNIX_TIMESTAMP(%s)' : '%s');
-            $filters[] = sprintf('AND ' . $search . ' >= %s', '{date_add}', ':date_add_sup');
+            $filters[] = sprintf('AND %s >= %s', '{date_add}', ':date_add_sup');
         }
         if (array_key_exists('inf', $dateAdd)) {
-            $search = ($this->isTimestamp($dateAdd['inf']) ? 'UNIX_TIMESTAMP(%s)' : '%s');
-            $filters[] = sprintf('AND ' . $search . ' <= %s', '{date_add}', ':date_add_inf');
+            $filters[] = sprintf('AND %s <= %s', '{date_add}', ':date_add_inf');
         }
 
         return $filters;
@@ -548,11 +547,12 @@ abstract class QueryParamsCollection
             $value = [$value];
         }
 
+        // A timestamp becomes a date so that the comparison needs no database-specific conversion
         if (array_key_exists('sup', $value)) {
-            $sqlParams[':date_add_sup'] = $value['sup'];
+            $sqlParams[':date_add_sup'] = $this->isTimestamp($value['sup']) ? date('Y-m-d H:i:s', (int) $value['sup']) : $value['sup'];
         }
         if (array_key_exists('inf', $value)) {
-            $sqlParams[':date_add_inf'] = $value['inf'];
+            $sqlParams[':date_add_inf'] = $this->isTimestamp($value['inf']) ? date('Y-m-d H:i:s', (int) $value['inf']) : $value['inf'];
         }
 
         return $sqlParams;

@@ -62,18 +62,14 @@ final class CustomerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb
             ->select(
                 'a.id_address,
-                CONCAT(a.firstname, " ", a.lastname) AS full_name,
-                CONCAT(a.address1, " ", a.address2, " ", a.postcode, " ", a.city) AS full_address,
-                IF(
-                  a.company IS NULL or a.company = "",
-                  "--",
-                  a.company
-                ) AS company,
-                IF(
-                  a.phone IS NULL or a.phone = "",
-                  IF(a.phone_mobile IS NULL or a.phone_mobile = "", "--",  a.phone_mobile),
-                  a.phone
-                ) AS phone_number'
+                CONCAT(a.firstname, \' \', a.lastname) AS full_name,
+                CONCAT(a.address1, \' \', a.address2, \' \', a.postcode, \' \', a.city) AS full_address,
+                CASE WHEN a.company IS NULL OR a.company = \'\' THEN \'--\' ELSE a.company END AS company,
+                CASE
+                  WHEN a.phone IS NOT NULL AND a.phone <> \'\' THEN a.phone
+                  WHEN a.phone_mobile IS NOT NULL AND a.phone_mobile <> \'\' THEN a.phone_mobile
+                  ELSE \'--\'
+                END AS phone_number'
             )
             ->addSelect('cl.name as country_name')
         ;

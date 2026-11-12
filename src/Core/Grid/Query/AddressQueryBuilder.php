@@ -158,7 +158,8 @@ final class AddressQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            $qb->andWhere($allowedFiltersMap[$filterName] . ' LIKE :' . $filterName)
+            // CONCAT turns the integer id into a string, PostgreSQL has no LIKE on integers
+            $qb->andWhere('CONCAT(' . $allowedFiltersMap[$filterName] . ', \'\') LIKE :' . $filterName)
                 ->setParameter($filterName, '%' . $value . '%');
         }
     }

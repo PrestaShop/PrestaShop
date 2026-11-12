@@ -580,6 +580,13 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         // Get object id in database if force_id is not true
         if (empty($this->id)) {
             $this->id = Db::getInstance()->Insert_ID();
+        } elseif (_DB_TYPE_ == 'pgsql') {
+            // A PostgreSQL identity sequence ignores explicit ids: move it past the forced one
+            $tableName = _DB_PREFIX_ . $this->def['table'];
+            Db::getInstance()->execute(
+                'SELECT setval(pg_get_serial_sequence(\'' . pSQL($tableName) . '\', \'' . pSQL($this->def['primary']) . '\'), '
+                . '(SELECT MAX(' . Db::quoteIdentifier($this->def['primary']) . ') FROM ' . Db::quoteIdentifier($tableName) . '))'
+            );
         }
 
         // Database insertion for multishop fields related to the object

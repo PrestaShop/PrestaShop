@@ -65,16 +65,16 @@ final class GetTaxRuleListHandler
 
         $qb->select([
             'tr.id_tax_rule',
-            'IFNULL(cl.name, \'--\') AS country_name',
-            'IFNULL(s.name, \'--\') AS state_name',
+            'COALESCE(cl.name, \'--\') AS country_name',
+            'COALESCE(s.name, \'--\') AS state_name',
             'CASE'
                 . ' WHEN CONCAT_WS(\' - \', tr.zipcode_from, tr.zipcode_to) = \'0 - 0\''
                 . ' THEN \'--\''
                 . ' ELSE CONCAT_WS(\' - \', tr.zipcode_from, tr.zipcode_to)'
             . ' END AS zipcode',
             'tr.behavior',
-            'IFNULL(tl.name, \'\') AS tax_name',
-            'IFNULL(t.rate, \'0\') AS tax_rate',
+            'COALESCE(tl.name, \'\') AS tax_name',
+            'COALESCE(t.rate, \'0\') AS tax_rate',
             'tr.description',
         ]);
 

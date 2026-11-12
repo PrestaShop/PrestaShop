@@ -347,7 +347,7 @@ class GroupCore extends ObjectModel
         $sql = 'INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module_group') . ' (id_module, id_shop, id_group) VALUES ';
         foreach ($modules as $module) {
             foreach ($shops as $shop) {
-                $sql .= '("' . (int) $module . '", "' . (int) $shop . '", "' . (int) $id_group . '"),';
+                $sql .= '(' . (int) $module . ', ' . (int) $shop . ', ' . (int) $id_group . '),';
             }
         }
         $sql = rtrim($sql, ',');

@@ -54,7 +54,7 @@ final class OrderReturnStatesQueryBuilder extends AbstractDoctrineQueryBuilder
                 'ors.id_order_return_state',
                 'orsl.name',
                 'ors.color',
-                'IF(ors.id_order_return_state IN (1,2,3,4,5),1,0) AS unremovable'
+                'CASE WHEN ors.id_order_return_state IN (1,2,3,4,5) THEN 1 ELSE 0 END AS unremovable'
             );
 
         $this->applySorting($searchQueryBuilder, $searchCriteria);

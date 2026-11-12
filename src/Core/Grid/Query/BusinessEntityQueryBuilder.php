@@ -49,7 +49,8 @@ final class BusinessEntityQueryBuilder extends AbstractDoctrineQueryBuilder
                 'becb',
                 'becb.id_business_entity = be.id_business_entity'
             )
-            ->groupBy('be.id_business_entity')
+            // The shop key lets PostgreSQL accept s.name, the shop being joined one-to-one
+            ->groupBy('be.id_business_entity', 's.id_shop')
         ;
 
         $this->applySorting($qb, $searchCriteria);

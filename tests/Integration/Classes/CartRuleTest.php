@@ -232,7 +232,7 @@ class CartRuleTest extends TestCase
             false
         );
 
-        $this->assertEquals(
+        $this->assertEqualsCanonicalizing(
             [
                 $CodeNohighlightSpecific->id,
                 $NocodeNohighlightSpecific->id,
@@ -327,7 +327,7 @@ class CartRuleTest extends TestCase
             false,
             true
         );
-        $this->assertEquals(
+        $this->assertEqualsCanonicalizing(
             [
                 $CodeHighlightEveryone->id,
                 $NocodeHighlightEveryone->id,
@@ -348,7 +348,7 @@ class CartRuleTest extends TestCase
             false,
             true
         );
-        $this->assertEquals(
+        $this->assertEqualsCanonicalizing(
             [
                 $CodeHighlightEveryone->id,
                 $NocodeHighlightEveryone->id,

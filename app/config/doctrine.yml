@@ -32,5 +32,5 @@ doctrine:
     auto_mapping: true
     dql:
       string_functions:
-        regexp: DoctrineExtensions\Query\Mysql\Regexp
-        binary: DoctrineExtensions\Query\Mysql\Binary
+        regexp: PrestaShopBundle\Doctrine\Query\RegexpFunction
+        binary: PrestaShopBundle\Doctrine\Query\BinaryFunction

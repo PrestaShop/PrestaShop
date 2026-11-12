@@ -152,12 +152,12 @@ class StockRepository extends StockManagementRepository
         $query = $this->selectSql($andWhereClause);
 
         $statement = $this->connection->prepare($query);
-        $this->bindStockManagementValues($statement, null, $productIdentity);
+        $this->bindStockManagementValues($statement, null, $productIdentity, $query);
 
         $result = $statement->executeQuery();
         $rows = $result->fetchAllAssociative();
         $result->free();
-        $this->foundRows = $this->getFoundRows();
+        $this->foundRows = count($rows);
 
         if (count($rows) === 0) {
             throw new ProductNotFoundException(sprintf('Product with id %d and combination id %d can not be found', $productIdentity->getProductId(), $productIdentity->getCombinationId()));
@@ -235,32 +235,36 @@ class StockRepository extends StockManagementRepository
                 $combinationNameQuery,
                 $attributeNameQuery,
             ],
-            'SELECT SQL_CALC_FOUND_ROWS
-          p.id_product                                                                      AS product_id,
-          COALESCE(pa.id_product_attribute, 0)                                              AS combination_id,
-          IF(COALESCE(p.reference, "") = "", "N/A", p.reference)                            AS product_reference,
-          IF(COALESCE(p.ean13, "") = "", "N/A", p.ean13)                                    AS product_ean13,
-          IF(COALESCE(p.isbn, "") = "", "N/A", p.isbn)                                      AS product_isbn,
-          IF(COALESCE(p.upc, "") = "", "N/A", p.upc)                                        AS product_upc,
-          IF(COALESCE(p.mpn, "") = "", "N/A", p.mpn)                                        AS product_mpn,
-          IF(COALESCE(pa.reference, "") = "", "N/A", pa.reference)                          AS combination_reference,
-          IF(COALESCE(pa.ean13, "") = "", "N/A", pa.ean13)                                  AS combination_ean13,
-          IF(COALESCE(pa.isbn, "") = "", "N/A", pa.isbn)                                    AS combination_isbn,
-          IF(COALESCE(pa.upc, "") = "", "N/A", pa.upc)                                      AS combination_upc,
-          IF(COALESCE(pa.mpn, "") = "", "N/A", pa.mpn)                                      AS combination_mpn,
-          pl.name                                                                           AS product_name,
-          p.id_supplier                                                                     AS supplier_id,
-          COALESCE(s.name, "N/A")                                                           AS supplier_name,
-          COALESCE(ic.id_image, 0)                                                          AS product_cover_id,
+            // Filters and sorting apply to the column aliases, hence the derived table
+            'SELECT * FROM (SELECT
+          p.id_product                                                           AS product_id,
+          COALESCE(pa.id_product_attribute, 0)                                   AS combination_id,
+          CASE WHEN COALESCE(p.reference, \'\') = \'\' THEN \'N/A\' ELSE p.reference END AS product_reference,
+          CASE WHEN COALESCE(p.ean13, \'\') = \'\' THEN \'N/A\' ELSE p.ean13 END AS product_ean13,
+          CASE WHEN COALESCE(p.isbn, \'\') = \'\' THEN \'N/A\' ELSE p.isbn END   AS product_isbn,
+          CASE WHEN COALESCE(p.upc, \'\') = \'\' THEN \'N/A\' ELSE p.upc END     AS product_upc,
+          CASE WHEN COALESCE(p.mpn, \'\') = \'\' THEN \'N/A\' ELSE p.mpn END     AS product_mpn,
+          CASE WHEN COALESCE(pa.reference, \'\') = \'\' THEN \'N/A\' ELSE pa.reference END AS combination_reference,
+          CASE WHEN COALESCE(pa.ean13, \'\') = \'\' THEN \'N/A\' ELSE pa.ean13 END AS combination_ean13,
+          CASE WHEN COALESCE(pa.isbn, \'\') = \'\' THEN \'N/A\' ELSE pa.isbn END AS combination_isbn,
+          CASE WHEN COALESCE(pa.upc, \'\') = \'\' THEN \'N/A\' ELSE pa.upc END   AS combination_upc,
+          CASE WHEN COALESCE(pa.mpn, \'\') = \'\' THEN \'N/A\' ELSE pa.mpn END   AS combination_mpn,
+          pl.name                                                                AS product_name,
+          p.id_supplier                                                          AS supplier_id,
+          COALESCE(s.name, \'N/A\')                                              AS supplier_name,
+          COALESCE(ic.id_image, 0)                                               AS product_cover_id,
           p.active,
-          sa.quantity                                                                       AS product_available_quantity,
-          sa.physical_quantity                                                              AS product_physical_quantity,
-          sa.reserved_quantity                                                              AS product_reserved_quantity,
-          IF(COALESCE(pa.id_product_attribute, 0) > 0, COALESCE(pas.low_stock_threshold, "N/A"),
-             COALESCE(ps.low_stock_threshold,
-                      "N/A"))                                                               AS product_low_stock_threshold,
-          IF(COALESCE(pa.id_product_attribute, 0) > 0, IF(sa.quantity <= pas.low_stock_threshold, 1, 0),
-             IF(sa.quantity <= ps.low_stock_threshold, 1, 0))                               AS product_low_stock_alert,
+          sa.quantity                                                            AS product_available_quantity,
+          sa.physical_quantity                                                   AS product_physical_quantity,
+          sa.reserved_quantity                                                   AS product_reserved_quantity,
+          CASE WHEN COALESCE(pa.id_product_attribute, 0) > 0
+            THEN CASE WHEN pas.low_stock_threshold IS NULL THEN \'N/A\' ELSE CONCAT(pas.low_stock_threshold, \'\') END
+            ELSE CASE WHEN ps.low_stock_threshold IS NULL THEN \'N/A\' ELSE CONCAT(ps.low_stock_threshold, \'\') END
+          END                                                                    AS product_low_stock_threshold,
+          CASE WHEN COALESCE(pa.id_product_attribute, 0) > 0
+            THEN CASE WHEN sa.quantity <= pas.low_stock_threshold THEN 1 ELSE 0 END
+            ELSE CASE WHEN sa.quantity <= ps.low_stock_threshold THEN 1 ELSE 0 END
+          END                                                                    AS product_low_stock_alert,
           {combination_name},
           {attribute_name}
         FROM {table_prefix}product p
@@ -274,15 +278,14 @@ class StockRepository extends StockManagementRepository
           LEFT JOIN {table_prefix}image_shop ims
             ON (p.id_product = ims.id_product AND ic.id_image = ims.id_image AND ims.id_shop = :shop_id AND ims.cover = 1)
           LEFT JOIN {table_prefix}supplier s ON (p.id_supplier = s.id_supplier)
-          LEFT JOIN {table_prefix}product_attribute_combination pac ON (pac.id_product_attribute = pa.id_product_attribute)
           LEFT JOIN {table_prefix}product_attribute_shop pas
             ON (pas.id_product = pa.id_product AND pas.id_product_attribute = pa.id_product_attribute AND
                 pas.id_shop = :shop_id)
         WHERE
           p.state = :state
           {and_where}
-        GROUP BY p.id_product, pa.id_product_attribute
-        HAVING 1 {having}
+        ) stock
+        WHERE 1 = 1 {having}
         {order_by}
         '
         );
@@ -303,7 +306,7 @@ class StockRepository extends StockManagementRepository
      */
     private function orderByProductIds()
     {
-        return 'ORDER BY p.id_product DESC, COALESCE(pa.id_product_attribute, 0) DESC';
+        return 'ORDER BY product_id DESC, combination_id DESC';
     }
 
     /**

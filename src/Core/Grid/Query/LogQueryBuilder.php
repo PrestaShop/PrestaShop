@@ -63,8 +63,8 @@ final class LogQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $queryBuilder = $this->getQueryBuilder()
             ->select('COUNT(lg.id_log)')
-            ->from($this->dbPrefix . 'log', 'lg');
-        $this->applyAssociatedQueries($queryBuilder);
+            ->from($this->dbPrefix . 'log', 'lg')
+            ->leftJoin('lg', $this->dbPrefix . 'employee', 'e', 'e.id_employee = lg.id_employee');
 
         return $this->applyFilters($searchCriteria->getFilters(), $queryBuilder);
     }

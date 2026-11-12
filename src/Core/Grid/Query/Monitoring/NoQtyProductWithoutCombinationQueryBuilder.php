@@ -60,7 +60,7 @@ final class NoQtyProductWithoutCombinationQueryBuilder extends AbstractProductQu
             ->from($this->dbPrefix . 'stock_available', 'stock')
             ->andWhere('p.id_product = stock.id_product')
             ->andWhere('NOT EXISTS(' . $attrSubQuery->getSQL() . ')')
-            ->andWhere('IFNULL(stock.quantity, 0) <= 0');
+            ->andWhere('COALESCE(stock.quantity, 0) <= 0');
 
         if ($this->multistoreContextChecker->isSingleShopContext()) {
             $subQuery->andWhere('stock.id_shop = :context_shop_id')
