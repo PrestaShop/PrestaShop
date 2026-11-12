@@ -9,13 +9,12 @@ namespace PrestaShopBundle\Form\Admin\Sell\Address;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressStateRequired;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressZipCode;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\ExistingCustomerEmail;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\Domain\Address\Configuration\AddressConstraint;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
-use PrestaShopBundle\Form\Admin\Type\EmailType;
+use PrestaShopBundle\Form\Admin\Type\CustomerSearchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -24,7 +23,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -90,23 +89,24 @@ class CustomerAddressType extends TranslatorAwareType
         $requiredFields = $options['requiredFields'];
 
         if (!isset($data['id_customer'])) {
-            $builder->add('customer_email', EmailType::class, [
-                'label' => $this->trans('Customer email', 'Admin.Orderscustomers.Feature'),
+            // Use a specific customer ID instead of resolving an ambiguous email address.
+            $builder->add('selected_customer', CustomerSearchType::class, [
+                'label' => $this->trans('Customer', 'Admin.Global'),
                 'required' => true,
+                'search_attr' => [
+                    'required' => 'required',
+                ],
+                'disabling_switch' => false,
+                'allow_delete' => true,
                 'constraints' => [
-                    new NotBlank([
-                        'message' => $this->trans(
-                            'This field cannot be empty.', 'Admin.Notifications.Error'
+                    new Count([
+                        'min' => 1,
+                        'max' => 1,
+                        'exactMessage' => $this->trans(
+                            'Please select a customer.',
+                            'Admin.Notifications.Error'
                         ),
                     ]),
-                    new CleanHtml(),
-                    new Email([
-                        'message' => $this->trans('This field is invalid', 'Admin.Notifications.Error'),
-                    ]),
-                    new ExistingCustomerEmail(),
-                ],
-                'attr' => [
-                    'data-customer-information-url' => $this->router->generate('admin_customer_for_address_information'),
                 ],
             ]);
         } else {
