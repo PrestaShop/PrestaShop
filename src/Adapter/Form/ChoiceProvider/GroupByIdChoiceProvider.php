@@ -7,7 +7,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
 use Group;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceFormatter;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
@@ -16,22 +16,15 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 final class GroupByIdChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
-    /**
      * @var int
      */
     private $contextLangId;
 
     /**
-     * @param ConfigurationInterface $configuration
      * @param int $contextLangId
      */
-    public function __construct(ConfigurationInterface $configuration, int $contextLangId)
+    public function __construct(int $contextLangId)
     {
-        $this->configuration = $configuration;
         $this->contextLangId = $contextLangId;
     }
 
@@ -40,24 +33,13 @@ final class GroupByIdChoiceProvider implements FormChoiceProviderInterface
      */
     public function getChoices(): array
     {
-        $choices = [];
-        $groups = Group::getGroups($this->contextLangId, true);
-
-        $groupsToSkip = [
-            (int) $this->configuration->get('PS_UNIDENTIFIED_GROUP'),
-            (int) $this->configuration->get('PS_GUEST_GROUP'),
-        ];
-
-        foreach ($groups as $group) {
-            $groupId = $group['id_group'];
-
-            if (in_array($groups, $groupsToSkip)) {
-                continue;
-            }
-
-            $choices[$group['name']] = (int) $groupId;
-        }
-
-        return $choices;
+        // Use FormChoiceFormatter so groups sharing the same name don't collapse
+        // into a single choice (the name is used as the choice key by Symfony).
+        return FormChoiceFormatter::formatFormChoices(
+            Group::getGroups($this->contextLangId, true),
+            'id_group',
+            'name',
+            false
+        );
     }
 }
