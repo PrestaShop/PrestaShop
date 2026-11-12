@@ -7,6 +7,8 @@
 namespace Tests\Integration\Classes\module;
 
 use Cache;
+use Db;
+use Language;
 use Module;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
@@ -85,6 +87,120 @@ class ModuleTest extends TestCase
         $this->assertCount(2, $overrides);
 
         HelperModule::removeModule('pscsx3241');
+    }
+
+    public function testDeclaredControllersAreInstalledWithTheirMetaAndRemovedOnUninstall(): void
+    {
+        $frenchId = $this->addLanguage('fr');
+        $module = $this->getTestModule([
+            'plain',
+            ['name' => 'single', 'title' => 'Single title', 'url_rewrite' => 'single-slug'],
+            ['name' => 'mapped', 'url_rewrite' => ['en' => 'order-confirmed', 'fr' => 'commande-confirmee']],
+        ]);
+
+        try {
+            $this->assertTrue($module->install());
+
+            $this->assertSame([1 => ['', ''], $frenchId => ['', '']], $this->getPageMeta('plain'));
+            $this->assertSame([1 => ['Single title', 'single-slug'], $frenchId => ['Single title', 'single-slug']], $this->getPageMeta('single'));
+            $this->assertSame([1 => ['', 'order-confirmed'], $frenchId => ['', 'commande-confirmee']], $this->getPageMeta('mapped'));
+
+            $this->assertTrue($module->uninstall());
+            $this->assertSame(0, $this->countPages());
+        } finally {
+            $this->removeTestModule($module);
+            $this->removeLanguage($frenchId);
+        }
+    }
+
+    public function testAnInvalidDeclarationInstallsNoPage(): void
+    {
+        $module = $this->getTestModule([
+            ['name' => 'valid', 'url_rewrite' => 'valid-slug'],
+            ['name' => 'invalid', 'url_rewrite' => 'not a slug!'],
+        ]);
+
+        try {
+            $this->assertFalse($module->install());
+            $this->assertContains('Could not install module controllers.', $module->getErrors());
+            $this->assertSame(0, $this->countPages());
+        } finally {
+            $this->removeTestModule($module);
+        }
+    }
+
+    private function getTestModule(array $controllers): Module
+    {
+        // Module translations are unrelated, and updating them needs the Symfony container
+        Module::updateTranslationsAfterInstall(false);
+        HelperModule::addModule('testnooverride');
+        $module = Module::getInstanceByName('testnooverride');
+        $module->controllers = $controllers;
+
+        return $module;
+    }
+
+    private function removeTestModule(Module $module): void
+    {
+        if (Module::isInstalled($module->name)) {
+            $module->uninstall();
+        }
+        Db::getInstance()->execute(
+            'DELETE m, ml FROM ' . _DB_PREFIX_ . 'meta m LEFT JOIN ' . _DB_PREFIX_ . 'meta_lang ml ON ml.id_meta = m.id_meta'
+            . ' WHERE m.page LIKE "module-testnooverride-%"'
+        );
+        HelperModule::removeModule('testnooverride');
+        Module::resetStaticCache();
+        Module::updateTranslationsAfterInstall(true);
+    }
+
+    /**
+     * @return array<int, array{0: string, 1: string}> title and url_rewrite by language id
+     */
+    private function getPageMeta(string $controller): array
+    {
+        $rows = Db::getInstance()->executeS(
+            'SELECT ml.id_lang, ml.title, ml.url_rewrite FROM ' . _DB_PREFIX_ . 'meta m'
+            . ' INNER JOIN ' . _DB_PREFIX_ . 'meta_lang ml ON ml.id_meta = m.id_meta'
+            . ' WHERE m.page = "module-testnooverride-' . pSQL($controller) . '" AND ml.id_shop = 1 ORDER BY ml.id_lang'
+        );
+        $meta = [];
+        foreach ($rows as $row) {
+            $meta[(int) $row['id_lang']] = [$row['title'], $row['url_rewrite']];
+        }
+
+        return $meta;
+    }
+
+    private function countPages(): int
+    {
+        return (int) Db::getInstance()->getValue('SELECT COUNT(*) FROM ' . _DB_PREFIX_ . 'meta WHERE page LIKE "module-testnooverride-%"');
+    }
+
+    private function addLanguage(string $isoCode): int
+    {
+        Db::getInstance()->insert('lang', [
+            'name' => 'Probe ' . $isoCode,
+            'active' => 1,
+            'iso_code' => $isoCode,
+            'language_code' => $isoCode,
+            'locale' => $isoCode . '-' . strtoupper($isoCode),
+            'date_format_lite' => 'Y-m-d',
+            'date_format_full' => 'Y-m-d H:i:s',
+            'is_rtl' => 0,
+        ]);
+        $languageId = (int) Db::getInstance()->Insert_ID();
+        Db::getInstance()->insert('lang_shop', ['id_lang' => $languageId, 'id_shop' => 1]);
+        Language::resetStaticCache();
+
+        return $languageId;
+    }
+
+    private function removeLanguage(int $languageId): void
+    {
+        Db::getInstance()->delete('lang_shop', 'id_lang = ' . $languageId);
+        Db::getInstance()->delete('lang', 'id_lang = ' . $languageId);
+        Language::resetStaticCache();
     }
 
     /**
