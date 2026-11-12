@@ -80,10 +80,18 @@ class GroupCore extends ObjectModel
         self::$ps_customer_group = null;
     }
 
-    public static function getGroups($id_lang, $id_shop = false)
+    /**
+     * Returns all customer groups, ordered by id.
+     *
+     * @param int $id_lang
+     * @param bool $filterByShop When true, restricts the result to the groups associated with the
+     *                           **current shop context** (via Shop::addSqlAssociation). The value is
+     *                           used as a flag, not as a shop id: pass true/false, not a shop id.
+     */
+    public static function getGroups($id_lang, $filterByShop = false)
     {
         $shop_criteria = '';
-        if ($id_shop) {
+        if ($filterByShop) {
             $shop_criteria = Shop::addSqlAssociation('group', 'g');
         }
 
