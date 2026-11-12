@@ -660,14 +660,19 @@ class CurrencyCore extends ObjectModel
      */
     public static function findAll($active = true, $groupBy = false, $currentShopOnly = true)
     {
-        $currencies = Db::getInstance()->executeS('
-            SELECT *
-            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'currency') . ' c
+        $from = ' FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'currency') . ' c
             ' . ($currentShopOnly ? Shop::addSqlAssociation('currency', 'c') : '') . '
                 WHERE c.deleted = 0' .
-                ($active ? ' AND c.active = 1' : '') .
-                ($groupBy ? ' GROUP BY c.id_currency' : '') .
-                ' ORDER BY iso_code ASC');
+                ($active ? ' AND c.active = 1' : '');
+
+        if ($groupBy && _DB_TYPE_ == 'pgsql') {
+            // PostgreSQL has no relaxed GROUP BY: keep one row per currency with DISTINCT ON
+            $sql = 'SELECT * FROM (SELECT DISTINCT ON (c.id_currency) *' . $from . ' ORDER BY c.id_currency) currencies ORDER BY iso_code ASC';
+        } else {
+            $sql = 'SELECT *' . $from . ($groupBy ? ' GROUP BY c.id_currency' : '') . ' ORDER BY iso_code ASC';
+        }
+
+        $currencies = Db::getInstance()->executeS($sql);
 
         return $currencies;
     }

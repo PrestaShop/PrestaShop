@@ -901,20 +901,21 @@ class SearchCore
         // search_word must be deleted before search_index, since its condition matches against
         // still-existing search_index rows.
         if ($full && Context::getContext()->shop->getContext() == Shop::CONTEXT_SHOP) {
-            $db->execute('DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'search_word') . ' sw
+            $searchWordTable = Db::quoteIdentifier(_DB_PREFIX_ . 'search_word');
+            $db->execute('DELETE FROM ' . $searchWordTable . '
 				WHERE EXISTS (
 					SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'search_index') . ' si
 					INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p ON (p.id_product = si.id_product)
 					' . Shop::addSqlAssociation('product', 'p') . '
-					WHERE sw.id_word = si.id_word AND product_shop.id_shop = sw.id_shop
+					WHERE ' . $searchWordTable . '.id_word = si.id_word AND product_shop.id_shop = ' . $searchWordTable . '.id_shop
 					AND product_shop.visibility IN (\'both\', \'search\')
 					AND product_shop.active = 1
 				)');
-            $db->execute('DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'search_index') . ' si
+            $db->execute('DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'search_index') . '
 				WHERE EXISTS (
 					SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p
 					' . Shop::addSqlAssociation('product', 'p') . '
-					WHERE p.id_product = si.id_product
+					WHERE p.id_product = ' . Db::quoteIdentifier(_DB_PREFIX_ . 'search_index') . '.id_product
 					AND product_shop.visibility IN (\'both\', \'search\')
 					AND product_shop.active = 1
 				)');
@@ -940,11 +941,11 @@ class SearchCore
             $db->execute('TRUNCATE ' . _DB_PREFIX_ . 'search_word');
             ObjectModel::updateMultishopTable('Product', ['indexed' => 0]);
         } else {
-            $db->execute('DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'search_index') . ' si
+            $db->execute('DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'search_index') . '
 				WHERE EXISTS (
 					SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p
 					' . Shop::addSqlAssociation('product', 'p') . '
-					WHERE p.id_product = si.id_product
+					WHERE p.id_product = ' . Db::quoteIdentifier(_DB_PREFIX_ . 'search_index') . '.id_product
 					AND product_shop.visibility IN (\'both\', \'search\')
 					AND product_shop.active = 1
 					AND ' . ($id_product ? 'p.id_product = ' . (int) $id_product : 'product_shop.indexed = 0') . '

@@ -2416,10 +2416,10 @@ class ProductCore extends ObjectModel
                 WHERE id_product = ' . (int) $this->id
             )
             && Db::getInstance()->execute(
-                'DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'search_word') . ' sw
+                'DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'search_word') . '
                 WHERE NOT EXISTS (
                     SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'search_index') . ' si
-                    WHERE si.id_word = sw.id_word
+                    WHERE si.id_word = ' . Db::quoteIdentifier(_DB_PREFIX_ . 'search_word') . '.id_word
                 )'
             );
     }
@@ -3122,7 +3122,7 @@ class ProductCore extends ObjectModel
             WHERE product_shop.active = 1
             AND product_shop.show_price = 1
             ' . ($front ? " AND product_shop.visibility IN ('both', 'catalog')" : '') . '
-            ' . ((!$beginning && !$ending) ? 'AND p.id_product IN(' . ((is_array($tab_id_product) && count($tab_id_product)) ? implode(', ', $tab_id_product) : 0) . ')' : '') . '
+            ' . ((!$beginning && !$ending) ? 'AND p.id_product IN(' . (count($tab_id_product) ? implode(', ', $tab_id_product) : 0) . ')' : '') . '
             ' . $sql_groups);
 
             return $count === false ? $count : (int) $count;
@@ -3162,7 +3162,7 @@ class ProductCore extends ObjectModel
         WHERE product_shop.active = 1
         AND product_shop.show_price = 1
         ' . ($front ? " AND product_shop.visibility IN ('both', 'catalog')" : '') . '
-        ' . ((!$beginning && !$ending) ? ' AND p.id_product IN (' . ((is_array($tab_id_product) && count($tab_id_product)) ? implode(', ', $tab_id_product) : 0) . ')' : '') . '
+        ' . ((!$beginning && !$ending) ? ' AND p.id_product IN (' . (count($tab_id_product) ? implode(', ', $tab_id_product) : 0) . ')' : '') . '
         ' . $sql_groups;
 
         if ($order_by != 'price') {

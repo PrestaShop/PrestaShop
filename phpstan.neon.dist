@@ -68,6 +68,7 @@ parameters:
     - Product
   dynamicConstantNames:
     - _DB_PREFIX_
+    - _DB_TYPE_
     - _PS_CREATION_DATE_
     - _PS_DEBUG_PROFILING_
     - _PS_DEBUG_SQL_
