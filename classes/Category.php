@@ -294,19 +294,46 @@ class CategoryCore extends ObjectModel
     public function recurseLiteCategTree($maxDepth = 3, $currentDepth = 0, $idLang = null, $excludedIdsArray = null, $format = 'default')
     {
         $idLang = null === $idLang ? Context::getContext()->language->id : (int) $idLang;
+        $idLang = Language::getLanguage($idLang) !== false ? $idLang : (int) Configuration::get('PS_LANG_DEFAULT');
 
-        $children = [];
-        $subcats = $this->getSubCategories($idLang, true);
-        if (($maxDepth == 0 || $currentDepth < $maxDepth) && count($subcats)) {
-            foreach ($subcats as $subcat) {
-                if (!$subcat['id_category']) {
-                    break;
-                } elseif (!is_array($excludedIdsArray) || !in_array($subcat['id_category'], $excludedIdsArray)) {
-                    $categ = new Category($subcat['id_category'], $idLang);
-                    $children[] = $categ->recurseLiteCategTree($maxDepth, $currentDepth + 1, $idLang, $excludedIdsArray, $format);
+        $levels = [];
+        $parentIds = [(int) $this->id];
+        for ($depth = $currentDepth; $parentIds && ($maxDepth == 0 || $depth < $maxDepth); ++$depth) {
+            $level = [];
+            foreach (self::getActiveSubCategoriesOf($parentIds, $idLang) as $subcat) {
+                if (!is_array($excludedIdsArray) || !in_array($subcat['id_category'], $excludedIdsArray)) {
+                    $level[] = $subcat;
+                }
+            }
+            $levels[] = $level;
+            $parentIds = array_column($level, 'id_category');
+        }
+
+        // Deepest level first, so that the children of a category are built before it
+        $childrenByParent = [];
+        foreach (array_reverse($levels) as $level) {
+            foreach ($level as $subcat) {
+                $idCategory = (int) $subcat['id_category'];
+                $subcatChildren = $childrenByParent[$idCategory] ?? [];
+                if ($format === 'sitemap') {
+                    $childrenByParent[$subcat['id_parent']][] = [
+                        'id' => 'category-page-' . $idCategory,
+                        'label' => $subcat['name'],
+                        'url' => Context::getContext()->link->getCategoryLink($idCategory, $subcat['link_rewrite']),
+                        'children' => $subcatChildren,
+                    ];
+                } else {
+                    $childrenByParent[$subcat['id_parent']][] = [
+                        'id' => $idCategory,
+                        'link' => Context::getContext()->link->getCategoryLink($idCategory, $subcat['link_rewrite']),
+                        'name' => $subcat['name'],
+                        'desc' => Category::getDescriptionClean($subcat['description']),
+                        'children' => $subcatChildren,
+                    ];
                 }
             }
         }
+        $children = $childrenByParent[$this->id] ?? [];
 
         if (is_array($this->description)) {
             foreach ($this->description as $lang => $description) {
@@ -332,6 +359,37 @@ class CategoryCore extends ObjectModel
             'desc' => $this->description,
             'children' => $children,
         ];
+    }
+
+    /**
+     * Active subcategories of several categories, filtered like getSubCategories().
+     *
+     * @param int[] $parentIds
+     * @param int $idLang
+     *
+     * @return array
+     */
+    private static function getActiveSubCategoriesOf(array $parentIds, int $idLang): array
+    {
+        $sqlGroupsWhere = '';
+        $sqlGroupsJoin = '';
+        if (Group::isFeatureActive()) {
+            $sqlGroupsJoin = 'LEFT JOIN `' . _DB_PREFIX_ . 'category_group` cg ON (cg.`id_category` = c.`id_category`)';
+            $groups = FrontController::getCurrentCustomerGroups();
+            $sqlGroupsWhere = 'AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Configuration::get('PS_UNIDENTIFIED_GROUP'));
+        }
+
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		SELECT c.`id_category`, c.`id_parent`, cl.`name`, cl.`description`, cl.`link_rewrite`
+		FROM `' . _DB_PREFIX_ . 'category` c
+		' . Shop::addSqlAssociation('category', 'c') . '
+		LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON (c.`id_category` = cl.`id_category` AND `id_lang` = ' . $idLang . ' ' . Shop::addSqlRestrictionOnLang('cl') . ')
+		' . $sqlGroupsJoin . '
+		WHERE `id_parent` IN (' . implode(',', array_map('intval', $parentIds)) . ')
+		AND `active` = 1
+		' . $sqlGroupsWhere . '
+		GROUP BY c.`id_category`
+		ORDER BY `level_depth` ASC, category_shop.`position` ASC, c.`id_category` ASC');
     }
 
     /**
