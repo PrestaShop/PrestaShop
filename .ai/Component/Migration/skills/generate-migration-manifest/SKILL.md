@@ -4,7 +4,8 @@ description: >
   Synthesize the outputs of `audit-legacy-controller` and `audit-object-model`
   into a single `migration-manifest.md` that serves as the migration
   specification. Every subsequent migration step reads from this document to
-  know what to create.
+  know what to create. Trigger: "generate the migration manifest for Xxx",
+  "write the migration spec", once both audits of a page migration are done.
 needs: [audit-legacy-controller, audit-object-model]
 produces: "migration-manifest.md — authoritative spec listing all commands, queries, form fields, grid columns, hooks, and sub-resources"
 subagent: recommended

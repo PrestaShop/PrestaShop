@@ -3,6 +3,8 @@ name: audit-legacy-controller
 description: >
   Read the legacy `Admin{Domain}sController.php` without modifying it. Extract
   every field rendered, every action method, and every `Hook::exec()` call.
+  Trigger: "audit AdminXxxController", "what does the legacy Xxx page do",
+  first step of migrating a legacy admin page.
 produces: "Field map, action list (CRUD/bulk/toggle), hook inventory from the legacy controller"
 subagent: recommended
 ---

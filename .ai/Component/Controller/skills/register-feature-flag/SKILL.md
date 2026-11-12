@@ -3,7 +3,9 @@ name: register-feature-flag
 description: >
   Register the domain's feature flag in `feature_flag.xml`. This entry populates
   the `ps_feature_flag` table at install/upgrade and enables the flag-based
-  routing between legacy and Symfony controllers.
+  routing between legacy and Symfony controllers. Trigger: "register a feature
+  flag for Xxx", "add Xxx to feature_flag.xml", before routing a migrated page
+  behind `_legacy_feature_flag`.
 needs: [create-admin-routing]
 produces: "feature_flag.xml entry with stability=beta and state=0"
 ---
