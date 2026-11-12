@@ -38,24 +38,40 @@ final class PositionDefinition implements PositionDefinitionInterface
     private $firstPosition;
 
     /**
+     * @var array<string, scalar>
+     */
+    private $filters;
+
+    /**
      * @param string $table
      * @param string $idField
      * @param string $positionField
      * @param string|null $parentIdField
      * @param int $firstPosition
+     * @param array<string, scalar> $filters column => value the rows of the sequence must match
      */
     public function __construct(
         $table,
         $idField,
         $positionField,
         $parentIdField = null,
-        int $firstPosition = 0
+        int $firstPosition = 0,
+        array $filters = []
     ) {
         $this->table = $table;
         $this->idField = $idField;
         $this->positionField = $positionField;
         $this->parentIdField = $parentIdField;
         $this->firstPosition = $firstPosition;
+        $this->filters = $filters;
+    }
+
+    /**
+     * @return array<string, scalar>
+     */
+    public function getFilters(): array
+    {
+        return $this->filters;
     }
 
     /**

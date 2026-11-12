@@ -46,6 +46,7 @@ services:
       $table: 'carrier'
       $idField: 'id_carrier'
       $positionField: 'position'
+      $filters: { deleted: 0 }
 
   prestashop.core.grid.image.position_definition:
     class: 'PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition'
