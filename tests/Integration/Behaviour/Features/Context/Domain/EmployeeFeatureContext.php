@@ -7,6 +7,7 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use Configuration;
 use Context;
 use Employee;
 use PHPUnit\Framework\Assert;
@@ -18,19 +19,26 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Command\EditEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ResetEmployeePasswordCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\SendEmployeePasswordResetEmailCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ToggleEmployeeStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\AdminEmployeeException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\EditableEmployee;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
+use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Tab\Exception\TabNotFoundException;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProfileChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TabChoiceProvider;
 use PrestaShopBundle\Entity\Repository\EmployeeRepository;
+use Profile;
 use RuntimeException;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
+use Tab;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -125,9 +133,80 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
             $command->setActive($data['active']);
         }
 
+        $this->handleEditCommand($command);
+    }
+
+    /**
+     * @When I edit employee :employeeReference setting the unknown :field id :id
+     */
+    public function editEmployeeWithUnknownReference(string $employeeReference, string $field, int $id): void
+    {
+        $command = new EditEmployeeCommand($this->referenceToId($employeeReference));
+        match ($field) {
+            'default page' => $command->setDefaultPageId($id),
+            'language' => $command->setLanguageId($id),
+            'profile' => $command->setProfileId($id),
+            'shop' => $command->setShopAssociation([$id]),
+            default => throw new RuntimeException('Field not handled'),
+        };
+
+        $this->handleEditCommand($command);
+    }
+
+    /**
+     * Resolved without the choice providers, which depend on the employee in the context
+     *
+     * @When I edit employee :employeeReference setting the profile :profileName and the default page :tabClassName
+     */
+    public function editEmployeeProfileAndDefaultPage(string $employeeReference, string $profileName, string $tabClassName): void
+    {
+        $profileIds = array_column(Profile::getProfiles((int) Configuration::get('PS_LANG_DEFAULT')), 'id_profile', 'name');
+        Assert::assertArrayHasKey($profileName, $profileIds);
+
+        $command = new EditEmployeeCommand($this->referenceToId($employeeReference));
+        $command->setProfileId((int) $profileIds[$profileName]);
+        $command->setDefaultPageId((int) Tab::getIdFromClassName($tabClassName));
+
+        $this->handleEditCommand($command);
+    }
+
+    /**
+     * @Given I reference the employee with email :email as :employeeReference
+     */
+    public function referenceEmployeeByEmail(string $email, string $employeeReference): void
+    {
+        $employee = (new Employee())->getByEmail($email);
+        Assert::assertInstanceOf(Employee::class, $employee, sprintf('No employee with email %s', $email));
+        SharedStorage::getStorage()->set($employeeReference, (int) $employee->id);
+    }
+
+    /**
+     * @Then I should get an error that the referenced :entity does not exist
+     */
+    public function assertLastErrorIsReferenceNotFound(string $entity): void
+    {
+        $this->assertLastErrorIs(match ($entity) {
+            'language' => LanguageNotFoundException::class,
+            'profile' => ProfileNotFoundException::class,
+            'shop' => ShopNotFoundException::class,
+            'tab' => TabNotFoundException::class,
+            default => throw new RuntimeException('Entity not handled'),
+        });
+    }
+
+    /**
+     * @Then I should get an error that only a super admin can change a super admin
+     */
+    public function assertLastErrorIsSuperAdminOnly(): void
+    {
+        $this->assertLastErrorIs(AdminEmployeeException::class, AdminEmployeeException::CANNOT_MANAGE_SUPER_ADMIN);
+    }
+
+    private function handleEditCommand(EditEmployeeCommand $command): void
+    {
         try {
             $this->getCommandBus()->handle($command);
-        } catch (EmployeeException $e) {
+        } catch (EmployeeException|LanguageNotFoundException|ProfileNotFoundException|ShopNotFoundException|TabNotFoundException $e) {
             $this->setLastException($e);
         }
     }
@@ -149,7 +228,11 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
      */
     public function deleteEmployee(string $employeeReference): void
     {
-        $this->getCommandBus()->handle(new DeleteEmployeeCommand($this->referenceToId($employeeReference)));
+        try {
+            $this->getCommandBus()->handle(new DeleteEmployeeCommand($this->referenceToId($employeeReference)));
+        } catch (EmployeeException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
@@ -247,7 +330,11 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
      */
     public function toggleEmployeeStatus(string $employeeReference): void
     {
-        $this->getCommandBus()->handle(new ToggleEmployeeStatusCommand($this->referenceToId($employeeReference)));
+        try {
+            $this->getCommandBus()->handle(new ToggleEmployeeStatusCommand($this->referenceToId($employeeReference)));
+        } catch (EmployeeException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
