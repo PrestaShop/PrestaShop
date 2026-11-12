@@ -71,6 +71,11 @@ class EntitySearchInputType extends CollectionType
             'limit' => 0,
             // Min length before suggestions start getting rendered
             'min_length' => 2,
+            // Let initComponents(['AutoEntitySearchInput']) build the javascript component for this
+            // widget, instead of the page instantiating EntitySearchInput itself. Off by default:
+            // a page that already instantiates it would otherwise end up with two components on
+            // the same container.
+            'auto_init' => false,
             // Search input attributes (if needed to be customized)
             'search_attr' => [],
             // List container attributes (if needed to be customized)
@@ -99,6 +104,7 @@ class EntitySearchInputType extends CollectionType
             'suggestion_field' => 'name',
         ]);
         $resolver->setAllowedTypes('allow_search', ['bool']);
+        $resolver->setAllowedTypes('auto_init', ['bool']);
         $resolver->setAllowedTypes('search_attr', ['array']);
         $resolver->setAllowedTypes('list_attr', ['array']);
         $resolver->setAllowedTypes('placeholder', ['string']);
@@ -154,6 +160,7 @@ class EntitySearchInputType extends CollectionType
 
         $view->vars = array_replace($view->vars, [
             'allow_search' => $options['allow_search'],
+            'auto_init' => $options['auto_init'],
             'remote_url' => $options['remote_url'],
             'limit' => $options['limit'],
             'min_length' => $options['min_length'],
