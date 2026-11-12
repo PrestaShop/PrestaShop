@@ -11,6 +11,8 @@ use AddressFormat;
 use Carrier;
 use Cart;
 use Context;
+use Hook;
+use Module;
 use Order;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Shipment\OrderShipmentService;
@@ -133,6 +135,20 @@ final class MailPreviewVariablesBuilder
         $templateVars['{history_url}'] = $this->context->link->getPageLink('history');
         $templateVars['{color}'] = $this->configuration->get('PS_MAIL_COLOR');
         $templateVars = array_merge($templateVars, $this->buildOrderVariables($mailLayout));
+
+        if (!empty($mailLayout->getModuleName())) {
+            $moduleTemplateVars = Hook::exec(
+                'actionMailPreviewBuildTemplateVariables',
+                [
+                    'templateVars' => $templateVars,
+                ],
+                (int) Module::getModuleIdByName($mailLayout->getModuleName()),
+                true
+            );
+            if (isset($moduleTemplateVars[$mailLayout->getModuleName()])) {
+                $templateVars = array_merge($templateVars, $moduleTemplateVars[$mailLayout->getModuleName()]);
+            }
+        }
 
         return $templateVars;
     }
