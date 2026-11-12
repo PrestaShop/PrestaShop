@@ -112,11 +112,16 @@ class ModuleController extends ModuleAbstractController
                 ['%modulename%' => $module_name],
                 'Admin.Modules.Notification'
             ));
-            $layoutSubTitle = null;
-        } else {
-            $this->saveModuleHistory($module);
-            $layoutSubTitle = $module->getInstance()->displayName;
+
+            // The branch that reports the module as missing used to fall through into
+            // method_exists($module->getInstance(), 'getContent'), which is a TypeError on PHP 8 - so the
+            // message was never seen and the page answered with a fatal instead. There is nothing to
+            // configure, so go back to where the message can be read.
+            return $this->redirectToRoute('admin_module_manage');
         }
+
+        $this->saveModuleHistory($module);
+        $layoutSubTitle = $module->getInstance()->displayName;
 
         // This controller is not purely migrated, in the sense that it still relies on the legacy layout because module implementing
         // getContent need the default theme to be working as expected
