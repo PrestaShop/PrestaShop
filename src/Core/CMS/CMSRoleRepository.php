@@ -17,8 +17,8 @@ class CMSRoleRepository extends \PrestaShop\PrestaShop\Core\Foundation\Database\
     {
         $sql = '
 			SELECT *
-			FROM `' . $this->getTableNameWithPrefix() . '`
-			WHERE `id_cms` != 0';
+			FROM ' . $this->db->quoteIdentifier($this->getTableNameWithPrefix()) . '
+			WHERE id_cms != 0';
 
         return $this->hydrateMany($this->db->select($sql));
     }

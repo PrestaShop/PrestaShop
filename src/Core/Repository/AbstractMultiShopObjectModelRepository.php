@@ -32,6 +32,18 @@ class AbstractMultiShopObjectModelRepository extends AbstractObjectModelReposito
     use ShopConstraintTrait;
 
     /**
+     * Quotes an identifier for the current database engine without going through the legacy Db class.
+     */
+    private static function quoteIdentifier(string $identifier): string
+    {
+        if (_DB_TYPE_ == 'pgsql') {
+            return '"' . str_replace('"', '""', $identifier) . '"';
+        }
+
+        return '`' . \bqSQL($identifier) . '`';
+    }
+
+    /**
      * @param int $id
      * @param string $objectModelClass
      * @param string $exceptionClass
@@ -132,17 +144,17 @@ class AbstractMultiShopObjectModelRepository extends AbstractObjectModelReposito
         $query = new DbQuery();
         if (Shop::isTableAssociated($objectTable)) {
             $query
-                ->select('e.`' . \bqSQL($primaryColumn) . '` as id')
+                ->select('e.' . self::quoteIdentifier($primaryColumn) . ' as id')
                 ->from(\bqSQL($objectTable) . '_shop', 'e')
-                ->where('e.`' . \bqSQL($primaryColumn) . '` = ' . $id)
-                ->where('e.`id_shop` = ' . $shopId->getValue())
+                ->where('e.' . self::quoteIdentifier($primaryColumn) . ' = ' . $id)
+                ->where('e.id_shop = ' . $shopId->getValue())
             ;
         } elseif (!empty($modelDefinition['multilang_shop'])) {
             $query
-                ->select('e.`' . \bqSQL($primaryColumn) . '` as id')
+                ->select('e.' . self::quoteIdentifier($primaryColumn) . ' as id')
                 ->from(\bqSQL($objectTable) . '_lang', 'e')
-                ->where('e.`' . \bqSQL($primaryColumn) . '` = ' . $id)
-                ->where('e.`id_shop` = ' . $shopId->getValue())
+                ->where('e.' . self::quoteIdentifier($primaryColumn) . ' = ' . $id)
+                ->where('e.id_shop = ' . $shopId->getValue())
             ;
         } else {
             throw new ShopDefinitionNotFound(sprintf(
@@ -239,8 +251,8 @@ class AbstractMultiShopObjectModelRepository extends AbstractObjectModelReposito
         $primaryColumn = $modelDefinition['primary'];
 
         $query = new DbQuery();
-        $primaryColumn = 'e.`' . \bqSQL($primaryColumn) . '`';
-        $shopColumn = 'e.`id_shop`';
+        $primaryColumn = 'e.' . self::quoteIdentifier($primaryColumn);
+        $shopColumn = 'e.id_shop';
         if (Shop::isTableAssociated($objectTable)) {
             $query
                 ->select($shopColumn . ' AS id_shop')
@@ -308,7 +320,7 @@ class AbstractMultiShopObjectModelRepository extends AbstractObjectModelReposito
         if (!empty($shopIdsToRemove)) {
             Db::getInstance()->delete(
                 $tableName . '_shop',
-                '`' . $primaryKeyName . '` = ' . $id . ' AND `id_shop` IN (' . implode(',', $shopIdsToRemove) . ')'
+                self::quoteIdentifier($primaryKeyName) . ' = ' . $id . ' AND id_shop IN (' . implode(',', $shopIdsToRemove) . ')'
             );
         }
 

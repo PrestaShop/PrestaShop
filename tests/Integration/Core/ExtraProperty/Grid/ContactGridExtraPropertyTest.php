@@ -75,7 +75,7 @@ class ContactGridExtraPropertyTest extends KernelTestCase
 
     public function testContactGridRendersWithLangScopedExtraProperty(): void
     {
-        $contactId = (int) Db::getInstance()->getValue('SELECT MIN(id_contact) FROM `' . _DB_PREFIX_ . 'contact`');
+        $contactId = (int) Db::getInstance()->getValue('SELECT MIN(id_contact) FROM ' . _DB_PREFIX_ . 'contact');
         $this->assertGreaterThan(0, $contactId, 'The test installation must provide at least one contact');
 
         /** @var ExtraPropertyWriterInterface $writer */

@@ -32,6 +32,11 @@ if (!array_key_exists('parameters', $parameters)) {
     throw new Exception('Missing "parameters" key in "parameters.php" configuration file');
 }
 
+// Shops installed before PostgreSQL support have no database type in their parameters: they run on MySQL
+$parameters['parameters']['database_type'] ??= 'mysql';
+$parameters['parameters']['database_driver'] ??= $parameters['parameters']['database_type'] === 'pgsql' ? 'pdo_pgsql' : 'pdo_mysql';
+$parameters['parameters']['database_charset'] ??= $parameters['parameters']['database_type'] === 'pgsql' ? 'UTF8' : 'utf8mb4';
+
 if (!defined('_PS_IN_TEST_') && isset($_SERVER['argv'])) {
     $input = new Symfony\Component\Console\Input\ArgvInput();
     $env = $input->getParameterOption(['--env', '-e'], getenv('SYMFONY_ENV') ?: 'dev');

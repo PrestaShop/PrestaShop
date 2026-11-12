@@ -70,14 +70,18 @@ class ContactCore extends ObjectModel
     public static function getContacts($idLang)
     {
         $shopIds = Shop::getContextListShopID();
-        $sql = 'SELECT *
-                FROM `' . _DB_PREFIX_ . 'contact` c
-                ' . Shop::addSqlAssociation('contact', 'c', false) . '
-                LEFT JOIN `' . _DB_PREFIX_ . 'contact_lang` cl ON (c.`id_contact` = cl.`id_contact`)
-                WHERE cl.`id_lang` = ' . (int) $idLang . '
-                AND contact_shop.`id_shop` IN (' . implode(', ', array_map('intval', $shopIds)) . ')
-                GROUP BY c.`id_contact`
-                ORDER BY `name` ASC';
+        // The shop association is an EXISTS so a contact on several shops comes once, without a GROUP BY
+        // PostgreSQL would reject on the non-aggregated columns
+        $sql = 'SELECT c.*, cl.*
+                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'contact') . ' c
+                LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'contact_lang') . ' cl ON (c.id_contact = cl.id_contact)
+                WHERE cl.id_lang = ' . (int) $idLang . '
+                AND EXISTS (
+                    SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'contact_shop') . ' contact_shop
+                    WHERE contact_shop.id_contact = c.id_contact
+                    AND contact_shop.id_shop IN (' . implode(', ', array_map('intval', $shopIds)) . ')
+                )
+                ORDER BY name ASC';
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }
@@ -98,8 +102,8 @@ class ContactCore extends ObjectModel
             LEFT JOIN ' . _DB_PREFIX_ . 'contact_lang cl
                 ON (cl.id_contact = ct.id_contact AND cl.id_lang = ' . (int) Context::getContext()->language->id . ')
             WHERE ct.customer_service = 1
-            AND contact_shop.`id_shop` IN (' . implode(', ', array_map('intval', $shopIds)) . ')
-            GROUP BY ct.`id_contact`
+            AND contact_shop.id_shop IN (' . implode(', ', array_map('intval', $shopIds)) . ')
+            GROUP BY ct.id_contact
         ');
     }
 }

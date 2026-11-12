@@ -10,6 +10,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Language;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockProperties;
@@ -464,10 +465,9 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
                     ],
                     CannotDuplicateProductException::FAILED_DUPLICATE_COMBINATIONS
                 );
-                $newCombination = array_merge(reset($oldCombinations), [
-                    'id_product' => $newProductId,
-                    'id_product_attribute' => null,
-                ]);
+                // The id is left out for the database to generate it, PostgreSQL rejects an explicit null
+                $newCombination = array_merge(reset($oldCombinations), ['id_product' => $newProductId]);
+                unset($newCombination['id_product_attribute']);
                 $newCombinationId = $this->insertRow('product_attribute', $newCombination, CannotDuplicateProductException::FAILED_DUPLICATE_COMBINATIONS);
                 if (empty($newCombinationId)) {
                     throw new CannotDuplicateProductException('Could not duplicate combination', CannotDuplicateProductException::FAILED_DUPLICATE_COMBINATIONS);
@@ -594,6 +594,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
                 $newCustomFeatureValuesLang = array_merge($newCustomFeatureValuesLang, $langData);
             }
             $this->bulkInsert('feature_value', $newCustomFeatureValues, CannotDuplicateProductException::FAILED_DUPLICATE_FEATURES);
+            $this->syncIdSequence('feature_value', 'id_feature_value');
             $this->bulkInsert('feature_value_lang', $newCustomFeatureValuesLang, CannotDuplicateProductException::FAILED_DUPLICATE_FEATURES);
         }
 
@@ -668,6 +669,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
                 $newCustomFeatureValuesLang = array_merge($newCustomFeatureValuesLang, $langData);
             }
             $this->bulkInsert('feature_value', $newCustomFeatureValues, CannotDuplicateProductException::FAILED_DUPLICATE_FEATURES);
+            $this->syncIdSequence('feature_value', 'id_feature_value');
             $this->bulkInsert('feature_value_lang', $newCustomFeatureValuesLang, CannotDuplicateProductException::FAILED_DUPLICATE_FEATURES);
         }
 
@@ -708,7 +710,11 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
 
         // Duplicate priorities
         $oldPriorities = $this->getRows('specific_price_priority', ['id_product' => $oldProductId], CannotDuplicateProductException::FAILED_DUPLICATE_SPECIFIC_PRICES);
-        $newPriorities = $this->replaceInRows($oldPriorities, ['id_product' => $newProductId, 'id_specific_price_priority' => null]);
+        $newPriorities = array_map(static function (array $priority): array {
+            unset($priority['id_specific_price_priority']);
+
+            return $priority;
+        }, $this->replaceInRows($oldPriorities, ['id_product' => $newProductId]));
         $this->bulkInsert('specific_price_priority', $newPriorities, CannotDuplicateProductException::FAILED_DUPLICATE_SPECIFIC_PRICES);
     }
 
@@ -795,12 +801,13 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         foreach ($oldVirtualProductFiles as $oldVirtualProductFile) {
             $newFilename = VirtualProductFile::getNewFilename();
             copy(_PS_DOWNLOAD_DIR_ . $oldVirtualProductFile['filename'], _PS_DOWNLOAD_DIR_ . $newFilename);
-            $newVirtualProductFiles[] = array_merge($oldVirtualProductFile, [
-                'id_product_download' => null,
+            $newVirtualProductFile = array_merge($oldVirtualProductFile, [
                 'id_product' => $newProductId,
                 'filename' => $newFilename,
                 'date_add' => date('Y-m-d H:i:s'),
             ]);
+            unset($newVirtualProductFile['id_product_download']);
+            $newVirtualProductFiles[] = $newVirtualProductFile;
         }
         $this->bulkInsert('product_download', $newVirtualProductFiles, CannotDuplicateProductException::FAILED_DUPLICATE_DOWNLOADS);
     }
@@ -1030,6 +1037,24 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
                 $errorCode
             );
         }
+    }
+
+    /**
+     * Rows inserted with an explicit id leave a PostgreSQL sequence behind, the next generated id would collide.
+     */
+    private function syncIdSequence(string $table, string $idColumn): void
+    {
+        if (!$this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform) {
+            return;
+        }
+
+        $this->connection->executeQuery(sprintf(
+            'SELECT setval(pg_get_serial_sequence(%s, %s), (SELECT MAX(%s) FROM %s))',
+            $this->connection->quote($this->dbPrefix . $table),
+            $this->connection->quote($idColumn),
+            $idColumn,
+            $this->dbPrefix . $table
+        ));
     }
 
     /**

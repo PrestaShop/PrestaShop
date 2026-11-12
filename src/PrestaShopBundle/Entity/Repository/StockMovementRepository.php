@@ -89,7 +89,8 @@ class StockMovementRepository extends StockManagementRepository
                 $combinationNameQuery,
                 $attributeNameQuery,
             ],
-            'SELECT SQL_CALC_FOUND_ROWS
+            // Filters and sorting apply to the column aliases, hence the derived table
+            'SELECT * FROM (SELECT
               sm.id_stock_mvt,
               sm.id_stock,
               sm.id_order,
@@ -103,11 +104,11 @@ class StockMovementRepository extends StockManagementRepository
               smrl.name                                   AS movement_reason,
               p.id_product                                AS product_id,
               COALESCE(pa.id_product_attribute, 0)        AS combination_id,
-              IF(
-                  LENGTH(COALESCE(pa.reference, "")) = 0,
-                  IF(LENGTH(TRIM(p.reference)) > 0, p.reference, "N/A"),
-                  CONCAT(p.reference, " ", pa.reference)
-              )                                           AS product_reference,
+              CASE
+                  WHEN LENGTH(COALESCE(pa.reference, \'\')) > 0 THEN CONCAT(p.reference, \' \', pa.reference)
+                  WHEN LENGTH(TRIM(p.reference)) > 0 THEN p.reference
+                  ELSE \'N/A\'
+              END                                         AS product_reference,
               pl.name                                     AS product_name,
               p.ean13                                     AS product_ean13,
               p.isbn                                      AS product_isbn,
@@ -118,7 +119,7 @@ class StockMovementRepository extends StockManagementRepository
               pa.upc                                      AS combination_upc,
               pa.mpn                                      AS combination_mpn,
               p.id_supplier                               AS supplier_id,
-              COALESCE(s.name, "N/A")                     AS supplier_name,
+              COALESCE(s.name, \'N/A\')                   AS supplier_name,
               COALESCE(ic.id_image, 0)                    AS product_cover_id,
               {combination_name},
               {attribute_name}
@@ -131,7 +132,8 @@ class StockMovementRepository extends StockManagementRepository
             LEFT JOIN {table_prefix}product_attribute pa ON (pa.id_product_attribute = sa.id_product_attribute)
             LEFT JOIN {table_prefix}product_lang pl ON (
                 p.id_product = pl.id_product AND
-                pl.id_lang = :language_id
+                pl.id_lang = :language_id AND
+                pl.id_shop = :shop_id
             )
             INNER JOIN {table_prefix}product_shop ps ON (
                 p.id_product = ps.id_product AND
@@ -148,9 +150,6 @@ class StockMovementRepository extends StockManagementRepository
                 ims.cover = 1
             )
             LEFT JOIN {table_prefix}supplier s ON (p.id_supplier = s.id_supplier)
-            LEFT JOIN {table_prefix}product_attribute_combination pac ON (
-                pac.id_product_attribute = pa.id_product_attribute
-            )
             LEFT JOIN {table_prefix}product_attribute_shop pas ON (
                 pas.id_product = pa.id_product AND
                 pas.id_product_attribute = pa.id_product_attribute AND
@@ -161,8 +160,8 @@ class StockMovementRepository extends StockManagementRepository
             sa.id_shop_group = :stock_group_id AND
             sa.id_product_attribute = COALESCE(pa.id_product_attribute, 0)
             {and_where}
-            GROUP BY sm.id_stock_mvt
-            HAVING 1 {having}
+            ) stock_movement
+            WHERE 1 = 1 {having}
             {order_by}
         '
         );
@@ -173,7 +172,7 @@ class StockMovementRepository extends StockManagementRepository
      */
     private function orderByMovementsIds()
     {
-        return 'ORDER BY sm.id_stock_mvt DESC';
+        return 'ORDER BY id_stock_mvt DESC';
     }
 
     /**
@@ -252,11 +251,11 @@ class StockMovementRepository extends StockManagementRepository
     public function getTypes($grouped = false)
     {
         if ($grouped) {
-            $select = 'GROUP_CONCAT(DISTINCT sm.id_stock_mvt_reason) as id_stock_mvt_reason, smrl.name AS name';
-            $groupBy = 'GROUP BY name';
+            $select = $this->groupConcat('sm.id_stock_mvt_reason', ',', '', true) . ' as id_stock_mvt_reason, smrl.name AS name';
+            $groupBy = 'GROUP BY smrl.name';
         } else {
             $select = 'sm.id_stock_mvt_reason, smrl.name AS name';
-            $groupBy = 'GROUP BY id_stock_mvt_reason';
+            $groupBy = 'GROUP BY sm.id_stock_mvt_reason, smrl.name';
         }
 
         $query = str_replace(

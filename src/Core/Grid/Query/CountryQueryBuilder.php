@@ -57,8 +57,7 @@ class CountryQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria)
-            ->select('c.id_country, c.iso_code, c.call_prefix, c.active, cl.name, z.name as zone_name')
-            ->groupBy('c.id_country');
+            ->select('c.id_country, c.iso_code, c.call_prefix, c.active, cl.name, z.name as zone_name');
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
@@ -96,12 +95,7 @@ class CountryQueryBuilder extends AbstractDoctrineQueryBuilder
                 'z',
                 'z.id_zone = c.id_zone'
             )
-            ->innerJoin(
-                'c',
-                $this->dbPrefix . 'country_shop',
-                'cs',
-                'c.id_country = cs.id_country AND cs.id_shop in (:contextShopIds)'
-            )
+            ->andWhere('EXISTS (SELECT 1 FROM ' . $this->dbPrefix . 'country_shop cs WHERE cs.id_country = c.id_country AND cs.id_shop IN (:contextShopIds))')
             ->setParameter('contextLangId', $this->contextLangId)
             ->setParameter('contextShopIds', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
         ;
@@ -143,7 +137,8 @@ class CountryQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if (in_array($filterName, ['iso_code', 'call_prefix'])) {
-                $builder->andWhere('c.' . $filterName . ' LIKE :' . $filterName);
+                // call_prefix is an integer: compare its text form
+                $builder->andWhere('CONCAT(c.' . $filterName . ', \'\') LIKE :' . $filterName);
                 $builder->setParameter($filterName, '%' . $filterValue . '%');
             }
         }

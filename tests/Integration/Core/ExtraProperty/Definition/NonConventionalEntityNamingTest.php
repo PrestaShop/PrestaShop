@@ -9,6 +9,8 @@ declare(strict_types=1);
 namespace Tests\Integration\Core\ExtraProperty\Definition;
 
 use Db;
+use Doctrine\DBAL\Schema\AbstractSchemaManager;
+use Doctrine\DBAL\Schema\Column;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
@@ -87,7 +89,7 @@ class NonConventionalEntityNamingTest extends KernelTestCase
     protected function tearDown(): void
     {
         foreach (['orders_extra', 'product_attribute_extra_lang', 'product_attribute_extra_shop'] as $table) {
-            Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . $table . '`');
+            Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . $table);
         }
 
         parent::tearDown();
@@ -104,10 +106,9 @@ class NonConventionalEntityNamingTest extends KernelTestCase
         // The physical extra table mirrors the base table's PK (id_order, NOT id_orders) —
         // and hydration introspects exactly that column.
         $this->assertSame('id_order', $definition->getPrimaryKeyName());
-        $primaryColumns = Db::getInstance()->executeS(
-            'SHOW COLUMNS FROM `' . _DB_PREFIX_ . "orders_extra` WHERE `Key` = 'PRI'"
-        );
-        $this->assertSame(['id_order'], array_column($primaryColumns, 'Field'));
+        $primaryKey = self::getSchemaManager()->introspectTable(_DB_PREFIX_ . 'orders_extra')->getPrimaryKey();
+        $this->assertNotNull($primaryKey);
+        $this->assertSame(['id_order'], $primaryKey->getColumns());
     }
 
     public function testEverySpellingConvergesOnTheSameDefinition(): void
@@ -130,7 +131,7 @@ class NonConventionalEntityNamingTest extends KernelTestCase
         ));
 
         $count = (int) Db::getInstance()->getValue(sprintf(
-            "SELECT COUNT(*) FROM `%sextra_property_definition` WHERE `property_name` = 'naming_note' AND `module_name` = '%s'",
+            "SELECT COUNT(*) FROM %sextra_property_definition WHERE property_name = 'naming_note' AND module_name = '%s'",
             _DB_PREFIX_,
             self::MODULE
         ));
@@ -186,7 +187,7 @@ class NonConventionalEntityNamingTest extends KernelTestCase
     public function testCombinationLangAndShopScopesRoundtrip(): void
     {
         $combinationId = (int) Db::getInstance()->getValue(
-            'SELECT MIN(`id_product_attribute`) FROM `' . _DB_PREFIX_ . 'product_attribute` WHERE `id_product` = 1'
+            'SELECT MIN(id_product_attribute) FROM ' . _DB_PREFIX_ . 'product_attribute WHERE id_product = 1'
         );
         $this->assertGreaterThan(0, $combinationId, 'Standard fixtures should provide combinations on product 1.');
 
@@ -231,11 +232,9 @@ class NonConventionalEntityNamingTest extends KernelTestCase
             // The column landed on attribute_extra, never on the combination COMMON storage
             // table (which this class's fixtures don't even create — a hijack would have).
             $columnName = self::MODULE . '_naming_attribute_note';
-            $attributeColumns = array_column(Db::getInstance()->executeS('SHOW COLUMNS FROM `' . _DB_PREFIX_ . 'attribute_extra`'), 'Field');
-            $this->assertContains($columnName, $attributeColumns);
-            if (Db::getInstance()->executeS("SHOW TABLES LIKE '" . _DB_PREFIX_ . "product_attribute_extra'")) {
-                $combinationColumns = array_column(Db::getInstance()->executeS('SHOW COLUMNS FROM `' . _DB_PREFIX_ . 'product_attribute_extra`'), 'Field');
-                $this->assertNotContains($columnName, $combinationColumns);
+            $this->assertContains($columnName, self::getColumnNames(_DB_PREFIX_ . 'attribute_extra'));
+            if (self::getSchemaManager()->tablesExist([_DB_PREFIX_ . 'product_attribute_extra'])) {
+                $this->assertNotContains($columnName, self::getColumnNames(_DB_PREFIX_ . 'product_attribute_extra'));
             }
         } finally {
             self::$registry->unregister($definition, true);
@@ -296,6 +295,22 @@ class NonConventionalEntityNamingTest extends KernelTestCase
         self::$definitionRepository = $container->get(ExtraPropertyDefinitionRepositoryInterface::class);
         self::$reader = $container->get(ExtraPropertyReaderInterface::class);
         self::$writer = $container->get(ExtraPropertyWriterInterface::class);
+    }
+
+    private static function getSchemaManager(): AbstractSchemaManager
+    {
+        return self::getContainer()->get('doctrine.dbal.default_connection')->createSchemaManager();
+    }
+
+    /**
+     * @return string[]
+     */
+    private static function getColumnNames(string $tableName): array
+    {
+        return array_map(
+            static fn (Column $column): string => $column->getName(),
+            array_values(self::getSchemaManager()->introspectTable($tableName)->getColumns())
+        );
     }
 
     /**

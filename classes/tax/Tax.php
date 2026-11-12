@@ -94,9 +94,9 @@ class TaxCore extends ObjectModel
     {
         return Db::getInstance()->getValue(
             '
-		SELECT `id_tax`
-		FROM `' . _DB_PREFIX_ . 'order_detail_tax`
-		WHERE `id_tax` = ' . (int) $this->id
+		SELECT id_tax
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_detail_tax') . '
+		WHERE id_tax = ' . (int) $this->id
         );
     }
 
@@ -113,16 +113,16 @@ class TaxCore extends ObjectModel
         $sql = new DbQuery();
         $sql->select('t.id_tax, t.rate');
         $sql->from('tax', 't');
-        $sql->where('t.`deleted` != 1');
+        $sql->where('t.deleted != 1');
 
         if ($id_lang) {
             $sql->select('tl.name, tl.id_lang');
-            $sql->leftJoin('tax_lang', 'tl', 't.`id_tax` = tl.`id_tax` AND tl.`id_lang` = ' . (int) $id_lang);
-            $sql->orderBy('`name` ASC');
+            $sql->leftJoin('tax_lang', 'tl', 't.id_tax = tl.id_tax AND tl.id_lang = ' . (int) $id_lang);
+            $sql->orderBy('name ASC');
         }
 
         if ($active_only) {
-            $sql->where('t.`active` = 1');
+            $sql->where('t.active = 1');
         }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
@@ -149,11 +149,11 @@ class TaxCore extends ObjectModel
     public static function getTaxIdByName($tax_name, $active = 1)
     {
         $tax = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-			SELECT t.`id_tax`
-			FROM `' . _DB_PREFIX_ . 'tax` t
-			LEFT JOIN `' . _DB_PREFIX_ . 'tax_lang` tl ON (tl.id_tax = t.id_tax)
-			WHERE tl.`name` = \'' . pSQL($tax_name) . '\' ' .
-            ($active == 1 ? ' AND t.`active` = 1' : ''));
+			SELECT t.id_tax
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tax') . ' t
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tax_lang') . ' tl ON (tl.id_tax = t.id_tax)
+			WHERE tl.name = \'' . pSQL($tax_name) . '\' ' .
+            ($active == 1 ? ' AND t.active = 1' : ''));
 
         return $tax ? (int) $tax['id_tax'] : false;
     }

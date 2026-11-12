@@ -17,6 +17,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Constraint\DecodedConstraints;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Constraint\ExtraPropertyConstraintParser;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Constraint\ExtraPropertyConstraintRenderer;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Schema\ColumnDefinitionMapper;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Schema\LiveColumnReader;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyValueCaster;
 use Psr\Log\LoggerInterface;
 use Throwable;
@@ -569,9 +570,7 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
     protected function fetchColumnMetadata(string $tableName): array
     {
         try {
-            $columns = $this->connection->fetchAllAssociative(
-                'SHOW COLUMNS FROM ' . $this->connection->quoteIdentifier($tableName)
-            );
+            $columns = LiveColumnReader::fetchColumns($this->connection, $tableName);
         } catch (Throwable) {
             return [];
         }

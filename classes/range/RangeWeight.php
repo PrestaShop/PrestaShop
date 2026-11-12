@@ -86,9 +86,9 @@ class RangeWeightCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
             SELECT *
-            FROM `' . _DB_PREFIX_ . 'range_weight`
-            WHERE `id_carrier` = ' . (int) $id_carrier . '
-            ORDER BY `delimiter1` ASC');
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'range_weight') . '
+            WHERE id_carrier = ' . (int) $id_carrier . '
+            ORDER BY delimiter1 ASC');
     }
 
     /**
@@ -105,13 +105,13 @@ class RangeWeightCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
             SELECT count(*)
-            FROM `' . _DB_PREFIX_ . 'range_weight` rw' .
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'range_weight') . ' rw' .
             (null === $id_carrier && $id_reference ? '
-            INNER JOIN `' . _DB_PREFIX_ . 'carrier` c on (rw.`id_carrier` = c.`id_carrier`)' : '') . '
+            INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'carrier') . ' c on (rw.id_carrier = c.id_carrier)' : '') . '
             WHERE' .
-            ($id_carrier ? ' `id_carrier` = ' . (int) $id_carrier : '') .
-            (null === $id_carrier && $id_reference ? ' c.`id_reference` = ' . (int) $id_reference : '') . '
-            AND `delimiter1` = ' . (float) $delimiter1 . ' AND `delimiter2` = ' . (float) $delimiter2);
+            ($id_carrier ? ' id_carrier = ' . (int) $id_carrier : '') .
+            (null === $id_carrier && $id_reference ? ' c.id_reference = ' . (int) $id_reference : '') . '
+            AND delimiter1 = ' . (float) $delimiter1 . ' AND delimiter2 = ' . (float) $delimiter2);
     }
 
     /**
@@ -128,13 +128,13 @@ class RangeWeightCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
             SELECT count(*)
-            FROM `' . _DB_PREFIX_ . 'range_weight`
-            WHERE `id_carrier` = ' . (int) $id_carrier . '
-            AND ((`delimiter1` >= ' . (float) $delimiter1 . ' AND `delimiter1` < ' . (float) $delimiter2 . ')
-                OR (`delimiter2` > ' . (float) $delimiter1 . ' AND `delimiter2` < ' . (float) $delimiter2 . ')
-                OR (' . (float) $delimiter1 . ' > `delimiter1` AND ' . (float) $delimiter1 . ' < `delimiter2`)
-                OR (' . (float) $delimiter2 . ' < `delimiter1` AND ' . (float) $delimiter2 . ' > `delimiter2`)
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'range_weight') . '
+            WHERE id_carrier = ' . (int) $id_carrier . '
+            AND ((delimiter1 >= ' . (float) $delimiter1 . ' AND delimiter1 < ' . (float) $delimiter2 . ')
+                OR (delimiter2 > ' . (float) $delimiter1 . ' AND delimiter2 < ' . (float) $delimiter2 . ')
+                OR (' . (float) $delimiter1 . ' > delimiter1 AND ' . (float) $delimiter1 . ' < delimiter2)
+                OR (' . (float) $delimiter2 . ' < delimiter1 AND ' . (float) $delimiter2 . ' > delimiter2)
             )
-            ' . (null !== $id_rang ? ' AND `id_range_weight` != ' . (int) $id_rang : ''));
+            ' . (null !== $id_rang ? ' AND id_range_weight != ' . (int) $id_rang : ''));
     }
 }

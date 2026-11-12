@@ -11,4 +11,9 @@ interface DatabaseInterface
     public function select($sqlString);
 
     public function escape($unsafeData);
+
+    /**
+     * Quotes an identifier (table or column name) for the current database engine.
+     */
+    public function quoteIdentifier(string $identifier): string;
 }

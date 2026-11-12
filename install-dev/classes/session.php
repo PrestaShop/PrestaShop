@@ -13,6 +13,7 @@
  * @property string $install_type
  * @property bool $database_clear
  * @property string $step
+ * @property string $database_type
  * @property string $database_server
  * @property string $database_login
  * @property string $database_password

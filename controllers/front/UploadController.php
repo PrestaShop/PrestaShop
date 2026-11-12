@@ -46,9 +46,9 @@ class UploadControllerCore extends GetFileController
             LEFT JOIN ' . _DB_PREFIX_ . 'orders o ON c.id_cart = o.id_cart
             WHERE (c.id_customer = ' . (int) $this->context->cart->id_customer . '
             AND c.id_guest = ' . (int) $this->context->cart->id_guest . '
-            OR o.reference = "' . pSQL(Tools::getValue('reference')) . '")
+            OR o.reference = \'' . pSQL(Tools::getValue('reference')) . '\')
             AND cd.type = ' . Product::CUSTOMIZE_FILE . '
-            AND (cd.value = "' . $this->filename . '" OR CONCAT(cd.value, "_small") = "' . $this->filename . '")');
+            AND (cd.value = \'' . $this->filename . '\' OR CONCAT(cd.value, \'_small\') = \'' . $this->filename . '\')');
 
         return (bool) $isCustomization;
     }

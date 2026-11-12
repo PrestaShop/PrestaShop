@@ -67,36 +67,41 @@ class CategoriesProvider
     {
         $mainCategoryQuery = new DbQuery();
         $mainCategoryQuery
-            ->select('c.`id_cms_category`, cl.`name`')
+            ->select('c.id_cms_category, cl.name')
             ->from('cms_category', 'c')
             ->innerJoin(
                 'cms_category_lang',
                 'cl',
-                'cl.`id_cms_category` = c.`id_cms_category`'
+                'cl.id_cms_category = c.id_cms_category'
             )
-            ->where('c.`id_cms_category` = ' . (int) $cmsPageCategoryId)
-            ->where('cl.`id_lang` = ' . $this->contextLanguageId)
-            ->where('cl.`id_shop` IN (' . implode(',', $this->contextShopIds) . ')')
-            ->groupBy('c.`id_cms_category`')
+            ->where('c.id_cms_category = ' . (int) $cmsPageCategoryId)
+            ->where('cl.id_lang = ' . $this->contextLanguageId)
+            ->where('cl.id_shop IN (' . implode(',', $this->contextShopIds) . ')')
         ;
 
         $result = Db::getInstance()->getRow($mainCategoryQuery);
         $categories = is_array($result) ? $result : [];
 
+        // PostgreSQL has no relaxed GROUP BY: DISTINCT ON keeps one row per category
+        $isPostgreSql = _DB_TYPE_ == 'pgsql';
         $childrenQuery = new DbQuery();
         $childrenQuery
-            ->select('c.`id_cms_category`, cl.`name`')
+            ->select(($isPostgreSql ? 'DISTINCT ON (c.id_cms_category) ' : '') . 'c.id_cms_category, cl.name')
             ->from('cms_category', 'c')
             ->innerJoin(
                 'cms_category_lang',
                 'cl',
-                'cl.`id_cms_category` = c.`id_cms_category`'
+                'cl.id_cms_category = c.id_cms_category'
             )
-            ->where('c.`id_parent` = ' . (int) $cmsPageCategoryId)
-            ->where('cl.`id_lang` = ' . $this->contextLanguageId)
-            ->where('cl.`id_shop` IN (' . implode(',', $this->contextShopIds) . ')')
-            ->groupBy('c.`id_cms_category`')
+            ->where('c.id_parent = ' . (int) $cmsPageCategoryId)
+            ->where('cl.id_lang = ' . $this->contextLanguageId)
+            ->where('cl.id_shop IN (' . implode(',', $this->contextShopIds) . ')')
         ;
+        if ($isPostgreSql) {
+            $childrenQuery->orderBy('c.id_cms_category');
+        } else {
+            $childrenQuery->groupBy('c.id_cms_category');
+        }
 
         $childCategories = Db::getInstance()->executeS($childrenQuery);
         $childCategories = is_array($childCategories) ? $childCategories : [];

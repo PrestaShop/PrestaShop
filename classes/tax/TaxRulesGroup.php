@@ -162,7 +162,7 @@ class TaxRulesGroupCore extends ObjectModel
             $sql .= ', t.rate';
         }
 
-        $sql .= ' FROM `' . _DB_PREFIX_ . 'tax_rules_group` g';
+        $sql .= ' FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tax_rules_group') . ' g';
 
         if ($includeRates) {
             $sql .= '
@@ -174,7 +174,7 @@ class TaxRulesGroupCore extends ObjectModel
         }
 
         $sql .= Shop::addSqlAssociation('tax_rules_group', 'g') . ' WHERE g.deleted = 0'
-            . ($onlyActive ? ' AND g.`active` = 1' : '')
+            . ($onlyActive ? ' AND g.active = 1' : '')
             . ' ORDER BY name ASC';
 
         return Db::getInstance()->executeS($sql);
@@ -182,7 +182,7 @@ class TaxRulesGroupCore extends ObjectModel
 
     public function delete()
     {
-        $res = Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'tax_rule` WHERE `id_tax_rules_group`=' . (int) $this->id);
+        $res = Db::getInstance()->execute('DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tax_rule') . ' WHERE id_tax_rules_group=' . (int) $this->id);
 
         return parent::delete() && $res;
     }
@@ -194,13 +194,13 @@ class TaxRulesGroupCore extends ObjectModel
     {
         $rows = Db::getInstance()->executeS(
             '
-			SELECT rg.`id_tax_rules_group`, t.`rate`
-			FROM `' . _DB_PREFIX_ . 'tax_rules_group` rg
-			LEFT JOIN `' . _DB_PREFIX_ . 'tax_rule` tr ON (tr.`id_tax_rules_group` = rg.`id_tax_rules_group`)
-			LEFT JOIN `' . _DB_PREFIX_ . 'tax` t ON (t.`id_tax` = tr.`id_tax`)
-			WHERE tr.`id_country` = ' . (int) $id_country . '
-			AND tr.`id_state` = 0
-			AND 0 between `zipcode_from` AND `zipcode_to`'
+				SELECT rg.id_tax_rules_group, t.rate
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tax_rules_group') . ' rg
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tax_rule') . ' tr ON (tr.id_tax_rules_group = rg.id_tax_rules_group)
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tax') . ' t ON (t.id_tax = tr.id_tax)
+				WHERE tr.id_country = ' . (int) $id_country . '
+				AND tr.id_state = 0
+				AND 0 between zipcode_from AND zipcode_to'
         );
 
         $res = [];
@@ -221,10 +221,10 @@ class TaxRulesGroupCore extends ObjectModel
     public static function getIdByName($name)
     {
         return (int) Db::getInstance()->getValue(
-            'SELECT `id_tax_rules_group`
-			FROM `' . _DB_PREFIX_ . 'tax_rules_group` rg
-			WHERE `name` = \'' . pSQL($name) . '\'
-            ORDER BY `active` DESC, `deleted` ASC'
+            'SELECT id_tax_rules_group
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tax_rules_group') . ' rg
+				WHERE name = \'' . pSQL($name) . '\'
+            ORDER BY active DESC, deleted ASC'
         );
     }
 
@@ -244,9 +244,9 @@ class TaxRulesGroupCore extends ObjectModel
     {
         return Db::getInstance()->getValue(
             '
-		SELECT `id_tax_rules_group`
-		FROM `' . _DB_PREFIX_ . 'order_detail`
-		WHERE `id_tax_rules_group` = ' . (int) $this->id
+			SELECT id_tax_rules_group
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_detail') . '
+			WHERE id_tax_rules_group = ' . (int) $this->id
         );
     }
 }

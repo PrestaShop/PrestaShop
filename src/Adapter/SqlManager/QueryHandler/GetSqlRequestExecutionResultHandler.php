@@ -69,12 +69,14 @@ final class GetSqlRequestExecutionResultHandler implements GetSqlRequestExecutio
      */
     private function hideSensitiveData(array $records, string $query): array
     {
-        $sensitiveAttributes = $this->getSensitiveAttributes($query);
+        // Column names are compared case-insensitively: PostgreSQL returns an unquoted alias in lower case
+        $sensitiveAttributes = array_change_key_case($this->getSensitiveAttributes($query));
 
         foreach ($records as $key => $record) {
-            foreach ($sensitiveAttributes as $sensitiveAttribute => $placeholder) {
-                if (isset($record[$sensitiveAttribute])) {
-                    $records[$key][$sensitiveAttribute] = $placeholder;
+            foreach ($record as $column => $value) {
+                $placeholder = $sensitiveAttributes[strtolower((string) $column)] ?? null;
+                if (null !== $placeholder && null !== $value) {
+                    $records[$key][$column] = $placeholder;
                 }
             }
         }

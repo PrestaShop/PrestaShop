@@ -74,7 +74,7 @@ class CmsTest extends KernelTestCase
             'id_shop' => $idShop,
             'meta_title' => 'test',
             'content' => pSQL($content, true),
-        ], false, true, Db::REPLACE);
+        ], false, true, Db::REPLACE, true, ['id_cms', 'id_shop', 'id_lang']);
     }
 
     private static function initMultistore(): int

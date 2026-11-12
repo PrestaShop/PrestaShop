@@ -76,22 +76,23 @@ class CustomerDataProvider
      */
     public function getCustomerMessages(int $customerId, ?int $orderId = null, ?int $limit = null)
     {
-        $mainSql = 'SELECT cm.*, c.`firstname` AS cfirstname, c.`lastname` AS clastname,
-            e.`firstname` AS efirstname, e.`lastname` AS elastname
+        $mainSql = 'SELECT cm.*, c.firstname AS cfirstname, c.lastname AS clastname,
+            e.firstname AS efirstname, e.lastname AS elastname
             FROM ' . _DB_PREFIX_ . 'customer_thread ct
 			LEFT JOIN ' . _DB_PREFIX_ . 'customer_message cm
 				ON ct.id_customer_thread = cm.id_customer_thread
-            LEFT JOIN `' . _DB_PREFIX_ . 'customer` c
-                ON ct.`id_customer` = c.`id_customer`
-            LEFT OUTER JOIN `' . _DB_PREFIX_ . 'employee` e
-                ON e.`id_employee` = cm.`id_employee`
+            LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer') . ' c
+                ON ct.id_customer = c.id_customer
+            LEFT OUTER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'employee') . ' e
+                ON e.id_employee = cm.id_employee
 			WHERE ct.id_customer = ' . $customerId;
 
         if ($orderId) {
-            $mainSql .= ' AND ct.`id_order` = ' . $orderId;
+            $mainSql .= ' AND ct.id_order = ' . $orderId;
         }
 
-        $mainSql .= ' GROUP BY cm.id_customer_message
+        // The keys of the one-to-one joins let PostgreSQL accept their selected columns
+        $mainSql .= ' GROUP BY cm.id_customer_message, c.id_customer, e.id_employee
             ORDER BY cm.date_add DESC, cm.id_customer_message DESC';
 
         $count = Db::getInstance()->executeS("SELECT COUNT(*) AS total FROM ($mainSql) AS messages");

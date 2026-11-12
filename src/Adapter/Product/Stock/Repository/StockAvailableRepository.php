@@ -10,6 +10,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Stock\Repository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Validate\StockAvailableValidator;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopGroupRepository;
@@ -131,7 +132,7 @@ class StockAvailableRepository extends AbstractMultiShopObjectModelRepository
      */
     public function getStockIdByProduct(ProductId $productId, ShopId $shopId): StockId
     {
-        $stockAvailableId = StockAvailable::getStockAvailableIdByProductId($productId->getValue(), null, $shopId->getValue());
+        $stockAvailableId = StockAvailable::getStockAvailableIdByProductId($productId->getValue(), NoCombinationId::NO_COMBINATION_ID, $shopId->getValue());
         if ($stockAvailableId <= 0) {
             throw new StockAvailableNotFoundException(sprintf(
                 'Cannot find StockAvailable for product #%d',
@@ -330,6 +331,8 @@ class StockAvailableRepository extends AbstractMultiShopObjectModelRepository
 
     protected function updateReservedProductQuantity(StockId $stockId, OrderStateId $errorStateId, OrderStateId $canceledStateId): void
     {
+        // PostgreSQL has no SIGNED cast type, its integer columns already are
+        $signedType = $this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform ? 'BIGINT' : 'SIGNED';
         $qb = $this->connection->createQueryBuilder();
         $qb
             // WHY: product_quantity and product_quantity_refunded are UNSIGNED, so an over-refunded
@@ -337,7 +340,7 @@ class StockAvailableRepository extends AbstractMultiShopObjectModelRepository
             // query with "BIGINT UNSIGNED value is out of range". Clamp each line to >= 0 (such a line
             // reserves nothing) by casting to SIGNED before subtracting.
             // @see https://github.com/PrestaShop/PrestaShop/issues/37338
-            ->addSelect('SUM(GREATEST(CAST(od.product_quantity AS SIGNED) - CAST(od.product_quantity_refunded AS SIGNED), 0)) AS reserved_quantity')
+            ->addSelect('SUM(GREATEST(CAST(od.product_quantity AS ' . $signedType . ') - CAST(od.product_quantity_refunded AS ' . $signedType . '), 0)) AS reserved_quantity')
             ->from($this->dbPrefix . 'orders', 'o')
             ->innerJoin('o', $this->dbPrefix . 'order_detail', 'od', 'od.id_order = o.id_order')
             ->innerJoin('o', $this->dbPrefix . 'order_state', 'os', 'os.id_order_state = o.current_state')

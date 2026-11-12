@@ -90,28 +90,20 @@ class StockManager
     {
         $this->updateReservedProductQuantity($shopId, $errorState, $cancellationState, $idProduct, $idOrder);
 
-        $updatePhysicalQuantityQuery = 'UPDATE {table_prefix}stock_available sa';
-
-        if ($idOrder) {
-            $updatePhysicalQuantityQuery .= '
-                INNER JOIN (
-                    SELECT product_id
-                    FROM {table_prefix}order_detail
-                    WHERE id_order = ' . (int) $idOrder . '
-                ) od
-                ON sa.id_product = od.product_id
-            ';
-        }
-
         $stockContext = $this->getStockContext((int) $shopId);
 
-        $updatePhysicalQuantityQuery .= '
-            SET sa.physical_quantity = sa.quantity + sa.reserved_quantity
+        $updatePhysicalQuantityQuery = '
+            UPDATE {table_prefix}stock_available sa
+            SET physical_quantity = quantity + reserved_quantity
             WHERE sa.id_shop = ' . (int) $stockContext['shopId'] . ' AND sa.id_shop_group = ' . (int) $stockContext['shopGroupId']
         ;
 
         if ($idProduct) {
             $updatePhysicalQuantityQuery .= ' AND sa.id_product = ' . (int) $idProduct;
+        }
+
+        if ($idOrder) {
+            $updatePhysicalQuantityQuery .= ' AND sa.id_product IN (SELECT product_id FROM {table_prefix}order_detail WHERE id_order = ' . (int) $idOrder . ')';
         }
 
         $updatePhysicalQuantityQuery = str_replace('{table_prefix}', _DB_PREFIX_, $updatePhysicalQuantityQuery);
@@ -132,17 +124,6 @@ class StockManager
     {
         $updateReservedQuantityQuery = 'UPDATE {table_prefix}stock_available sa';
 
-        if ($idOrder) {
-            $updateReservedQuantityQuery .= '
-                INNER JOIN (
-                    SELECT product_id
-                    FROM {table_prefix}order_detail
-                    WHERE id_order = :order_id
-                ) od2
-                ON sa.id_product = od2.product_id
-            ';
-        }
-
         $stockContext = $this->getStockContext((int) $shopId);
 
         $orderScopeCondition = $stockContext['shopGroupId'] > 0
@@ -154,9 +135,14 @@ class StockManager
         // with "BIGINT UNSIGNED value is out of range", which prevented orders from being processed.
         // Clamp each line to >= 0 (such a line reserves nothing) by casting to SIGNED before subtracting.
         // @see https://github.com/PrestaShop/PrestaShop/issues/37338
+        // PostgreSQL has no SIGNED cast type, its integer columns already are
+        $signedType = _DB_TYPE_ == 'pgsql' ? 'BIGINT' : 'SIGNED';
+        // SET names the bare column and the order filter is a subquery: PostgreSQL refuses an
+        // aliased SET column and the MySQL UPDATE ... JOIN syntax. Without pending order the sum is NULL,
+        // which non-strict MySQL silently stores as 0 and PostgreSQL rejects.
         $updateReservedQuantityQuery .= '
-            SET sa.reserved_quantity = (
-                SELECT SUM(GREATEST(CAST(od.product_quantity AS SIGNED) - CAST(od.product_quantity_refunded AS SIGNED), 0))
+            SET reserved_quantity = COALESCE((
+                SELECT SUM(GREATEST(CAST(od.product_quantity AS ' . $signedType . ') - CAST(od.product_quantity_refunded AS ' . $signedType . '), 0))
                 FROM {table_prefix}orders o
                 INNER JOIN {table_prefix}order_detail od ON od.id_order = o.id_order
                 INNER JOIN {table_prefix}order_state os ON os.id_order_state = o.current_state
@@ -169,7 +155,7 @@ class StockManager
                 ) AND sa.id_product = od.product_id AND
                 sa.id_product_attribute = od.product_attribute_id
                 GROUP BY od.product_id, od.product_attribute_id
-            )
+            ), 0)
             WHERE
                 sa.id_shop = :stock_shop_id AND 
                 sa.id_shop_group = :stock_shop_group_id 
@@ -189,6 +175,7 @@ class StockManager
         }
 
         if ($idOrder) {
+            $updateReservedQuantityQuery .= ' AND sa.id_product IN (SELECT product_id FROM {table_prefix}order_detail WHERE id_order = :order_id)';
             $strParams[':order_id'] = (int) $idOrder;
         }
 

@@ -78,7 +78,8 @@ class CatalogPriceRuleRepository
     public function countByProductId(ProductId $productId, LanguageId $langId): int
     {
         $qb = $this->getCatalogPriceRulesQueryBuilder($langId, $productId)
-            ->select('COUNT(spr.id_specific_price_rule) as total_catalog_price_rules');
+            ->select('COUNT(spr.id_specific_price_rule) as total_catalog_price_rules')
+            ->resetOrderBy();
 
         return (int) $qb->executeQuery()->fetchAssociative()['total_catalog_price_rules'];
     }

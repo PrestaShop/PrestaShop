@@ -266,14 +266,14 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     {
         // First clear existing associations
         Db::getInstance()->execute(
-            'DELETE FROM `' . _DB_PREFIX_ . 'cart_rule_carrier` WHERE `id_cart_rule` = ' . (int) $cartRule->id
+            'DELETE FROM ' . _DB_PREFIX_ . 'cart_rule_carrier WHERE id_cart_rule = ' . (int) $cartRule->id
         );
 
         // Now add the associations
         if (!empty($carrierIds)) {
             foreach ($carrierIds as $carrierId) {
                 Db::getInstance()->execute(
-                    'INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_carrier` (`id_cart_rule`, `id_carrier`) ' .
+                    'INSERT INTO ' . _DB_PREFIX_ . 'cart_rule_carrier (id_cart_rule, id_carrier) ' .
                     'VALUES (' . (int) $cartRule->id . ', ' . (int) $carrierId . ')'
                 );
             }
@@ -286,14 +286,14 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     {
         // First clear existing associations
         Db::getInstance()->execute(
-            'DELETE FROM `' . _DB_PREFIX_ . 'cart_rule_country` WHERE `id_cart_rule` = ' . (int) $cartRule->id
+            'DELETE FROM ' . _DB_PREFIX_ . 'cart_rule_country WHERE id_cart_rule = ' . (int) $cartRule->id
         );
 
         // Now add the associations
         if (!empty($countryIds)) {
             foreach ($countryIds as $countryId) {
                 Db::getInstance()->execute(
-                    'INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_country` (`id_cart_rule`, `id_country`) ' .
+                    'INSERT INTO ' . _DB_PREFIX_ . 'cart_rule_country (id_cart_rule, id_country) ' .
                     'VALUES (' . (int) $cartRule->id . ', ' . (int) $countryId . ')'
                 );
             }
@@ -320,18 +320,18 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $category = $this->categoryFeatureContext->getCategoryWithName($categoryName);
 
         Db::getInstance()->execute(
-            'INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_product_rule_group` (`id_cart_rule`, `quantity`) ' .
+            'INSERT INTO ' . _DB_PREFIX_ . 'cart_rule_product_rule_group (id_cart_rule, quantity) ' .
             'VALUES (' . (int) $cartRuleId . ', ' . $quantity . ')'
         );
         $idProductRuleGroup = Db::getInstance()->Insert_ID();
 
         Db::getInstance()->execute(
-            'INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_product_rule` (`id_product_rule_group`, `type`) ' .
-            'VALUES (' . (int) $idProductRuleGroup . ', "categories")'
+            'INSERT INTO ' . _DB_PREFIX_ . 'cart_rule_product_rule (id_product_rule_group, type) ' .
+            'VALUES (' . (int) $idProductRuleGroup . ', \'categories\')'
         );
 
         Db::getInstance()->execute(
-            'INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_product_rule_value` (`id_product_rule`, `id_item`) ' .
+            'INSERT INTO ' . _DB_PREFIX_ . 'cart_rule_product_rule_value (id_product_rule, id_item) ' .
             'VALUES (' . (int) $idProductRuleGroup . ', ' . $category->id . ')'
         );
     }

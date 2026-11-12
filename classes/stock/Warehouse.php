@@ -229,10 +229,10 @@ class WarehouseCore extends ObjectModel
     public static function setProductLocation($id_product, $id_product_attribute, $id_warehouse, $location)
     {
         Db::getInstance()->execute('
-			DELETE FROM `' . _DB_PREFIX_ . 'warehouse_product_location`
-			WHERE `id_product` = ' . (int) $id_product . '
-			AND `id_product_attribute` = ' . (int) $id_product_attribute . '
-			AND `id_warehouse` = ' . (int) $id_warehouse);
+			DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'warehouse_product_location') . '
+			WHERE id_product = ' . (int) $id_product . '
+			AND id_product_attribute = ' . (int) $id_product_attribute . '
+			AND id_warehouse = ' . (int) $id_warehouse);
 
         $row_to_insert = [
             'id_product' => (int) $id_product,
@@ -250,8 +250,8 @@ class WarehouseCore extends ObjectModel
     public function resetProductsLocations()
     {
         Db::getInstance()->execute('
-			DELETE FROM `' . _DB_PREFIX_ . 'warehouse_product_location`
-			WHERE `id_warehouse` = ' . (int) $this->id);
+			DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'warehouse_product_location') . '
+			WHERE id_warehouse = ' . (int) $this->id);
     }
 
     /**
@@ -310,7 +310,7 @@ class WarehouseCore extends ObjectModel
         }
 
         $query = new DbQuery();
-        $query->select('wpl.id_warehouse, CONCAT(w.reference, " - ", w.name) as name');
+        $query->select('wpl.id_warehouse, CONCAT(w.reference, \' - \', w.name) as name');
         $query->from('warehouse_product_location', 'wpl');
         $query->innerJoin('warehouse_shop', 'ws', 'ws.id_warehouse = wpl.id_warehouse AND id_shop IN (' . implode(',', array_map('intval', $ids_shop)) . ')');
         $query->innerJoin('warehouse', 'w', 'ws.id_warehouse = w.id_warehouse');
@@ -415,9 +415,9 @@ class WarehouseCore extends ObjectModel
     public function getStockValue()
     {
         $query = new DbQuery();
-        $query->select('SUM(s.`price_te` * s.`physical_quantity`)');
+        $query->select('SUM(s.price_te * s.physical_quantity)');
         $query->from('stock', 's');
-        $query->where('s.`id_warehouse` = ' . (int) $this->id);
+        $query->where('s.id_warehouse = ' . (int) $this->id);
 
         return (float) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
@@ -454,7 +454,7 @@ class WarehouseCore extends ObjectModel
         }
 
         $query = new DbQuery();
-        $query->select('DISTINCT w.id_warehouse, CONCAT(w.reference, " - ", w.name) as name');
+        $query->select('DISTINCT w.id_warehouse, CONCAT(w.reference, \' - \', w.name) as name');
         $query->from('warehouse', 'w');
         $query->leftJoin('warehouse_product_location', 'wpl', 'wpl.id_warehouse = w.id_warehouse');
         if ($id_product) {

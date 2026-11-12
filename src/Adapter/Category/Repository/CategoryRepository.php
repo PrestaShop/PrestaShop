@@ -202,7 +202,8 @@ class CategoryRepository extends AbstractObjectModelRepository
 
         $qb = $this->connection->createQueryBuilder();
         $qb
-            ->select('c.id_category, cl.name')
+            // A name per shop is joined, PostgreSQL needs it aggregated
+            ->select('c.id_category, MIN(cl.name) AS name')
             ->from($this->dbPrefix . 'category', 'c')
             ->innerJoin('c', $this->dbPrefix . 'category_lang', 'cl', 'c.id_category = cl.id_category')
             ->andWhere('c.nleft < :left AND c.nright > :right')

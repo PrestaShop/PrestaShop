@@ -1,5 +1,7 @@
 #!/bin/sh
 
+DB_TYPE=${DB_TYPE:-mysql}
+
 if [ $PS_ENABLE_SSL = 1 ]; then
   if [ -f ./.docker/ssl.key ]; then
     echo "\n* Remove default-ssl.conf file ...";
@@ -91,7 +93,11 @@ elif [ "$DB_SERVER" != "<to be defined>" -a $PS_INSTALL_AUTO = 1 ]; then
     RET=1
     while [ $RET -ne 0 ]; do
         echo "\n* Checking if $DB_SERVER is available..."
-        mysql -h $DB_SERVER -P $DB_PORT -u $DB_USER -p$DB_PASSWD -e "status" > /dev/null 2>&1
+        if [ "$DB_TYPE" = "pgsql" ]; then
+            PGPASSWORD=$DB_PASSWD pg_isready -h $DB_SERVER -p $DB_PORT -U $DB_USER -d $DB_NAME > /dev/null 2>&1
+        else
+            mysql -h $DB_SERVER -P $DB_PORT -u $DB_USER -p$DB_PASSWD -e "status" > /dev/null 2>&1
+        fi
         RET=$?
 
         if [ $RET -ne 0 ]; then
@@ -121,8 +127,13 @@ if [ ! -f ./app/config/parameters.php ]; then
         echo "\n* Installing PrestaShop, this may take a while ...";
 
         if [ $PS_ERASE_DB = 1 ]; then
-            echo "\n* Drop & recreate mysql database...";
-            if [ $DB_PASSWD = "" ]; then
+            echo "\n* Drop & recreate $DB_TYPE database...";
+            if [ "$DB_TYPE" = "pgsql" ]; then
+                echo "\n* Dropping existing database $DB_NAME..."
+                PGPASSWORD=$DB_PASSWD dropdb -h $DB_SERVER -p $DB_PORT -U $DB_USER --if-exists --force $DB_NAME
+                echo "\n* Creating database $DB_NAME..."
+                PGPASSWORD=$DB_PASSWD createdb -h $DB_SERVER -p $DB_PORT -U $DB_USER $DB_NAME
+            elif [ $DB_PASSWD = "" ]; then
                 echo "\n* Dropping existing database $DB_NAME..."
                 mysql -h $DB_SERVER -P $DB_PORT -u $DB_USER -e "drop database if exists $DB_NAME;"
                 echo "\n* Creating database $DB_NAME..."
@@ -141,7 +152,7 @@ if [ ! -f ./app/config/parameters.php ]; then
 
         echo "\n* Launching the installer script..."
         runuser -g www-data -u www-data -- php /var/www/html/$PS_FOLDER_INSTALL/index_cli.php \
-        --domain="$PS_DOMAIN" --db_server=$DB_SERVER:$DB_PORT --db_name="$DB_NAME" --db_user=$DB_USER \
+        --domain="$PS_DOMAIN" --db_type=$DB_TYPE --db_server=$DB_SERVER:$DB_PORT --db_name="$DB_NAME" --db_user=$DB_USER \
         --db_password=$DB_PASSWD --prefix="$DB_PREFIX" --firstname="Marc" --lastname="Beier" \
         --password="$ADMIN_PASSWD" --email="$ADMIN_MAIL" --language=$PS_LANGUAGE --country=$PS_COUNTRY \
         --all_languages=$PS_ALL_LANGUAGES --newsletter=0 --send_email=0 --ssl=$PS_ENABLE_SSL --fixtures=$PS_INSTALL_DEMO_PRODUCTS

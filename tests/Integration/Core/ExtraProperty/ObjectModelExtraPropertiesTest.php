@@ -184,7 +184,7 @@ class ObjectModelExtraPropertiesTest extends KernelTestCase
             $this->assertSame(
                 0,
                 (int) Db::getInstance()->getValue(sprintf(
-                    'SELECT COUNT(*) FROM `%s%s` WHERE `id_manufacturer` = %d',
+                    'SELECT COUNT(*) FROM %s%s WHERE id_manufacturer = %d',
                     _DB_PREFIX_,
                     $table,
                     $manufacturerId

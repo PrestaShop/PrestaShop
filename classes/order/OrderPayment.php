@@ -71,8 +71,8 @@ class OrderPaymentCore extends ObjectModel
             'OrderPayment',
             Db::getInstance()->executeS(
                 'SELECT *
-			    FROM `' . _DB_PREFIX_ . 'order_payment`
-			    WHERE `order_reference` = \'' . pSQL($order_reference) . '\''
+			    FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_payment') . '
+			    WHERE order_reference = \'' . pSQL($order_reference) . '\''
             )
         );
     }
@@ -86,7 +86,7 @@ class OrderPaymentCore extends ObjectModel
      */
     public static function getByInvoiceId($id_invoice)
     {
-        $payments = Db::getInstance()->executeS('SELECT id_order_payment FROM `' . _DB_PREFIX_ . 'order_invoice_payment` WHERE id_order_invoice = ' . (int) $id_invoice);
+        $payments = Db::getInstance()->executeS('SELECT id_order_payment FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_invoice_payment') . ' WHERE id_order_invoice = ' . (int) $id_invoice);
         if (!$payments) {
             return [];
         }
@@ -111,7 +111,7 @@ class OrderPaymentCore extends ObjectModel
     {
         $res = Db::getInstance()->getValue('
 		SELECT id_order_invoice
-		FROM `' . _DB_PREFIX_ . 'order_invoice_payment`
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_invoice_payment') . '
 		WHERE id_order_payment = ' . (int) $this->id . '
 		AND id_order = ' . (int) $id_order);
 

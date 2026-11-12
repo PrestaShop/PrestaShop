@@ -58,9 +58,8 @@ final class CmsPageQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
 
         $qb
-            ->select('c.`id_cms`, cl.`link_rewrite`, c.`active`, c.`position`, cl.`meta_title`, cl.`head_seo_title`')
-            ->addSelect('c.`id_cms_category`')
-            ->groupBy('c.`id_cms`')
+            ->select('c.id_cms, cl.link_rewrite, c.active, c.position, cl.meta_title, cl.head_seo_title')
+            ->addSelect('c.id_cms_category')
         ;
 
         $this->searchCriteriaApplicator
@@ -77,7 +76,7 @@ final class CmsPageQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('COUNT(DISTINCT c.`id_cms`)')
+            ->select('COUNT(DISTINCT c.id_cms)')
         ;
 
         return $qb;
@@ -105,23 +104,20 @@ final class CmsPageQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'cms', 'c')
+            // One row per page: the translation of the first context shop, without a GROUP BY
             ->leftJoin(
                 'c',
                 $this->dbPrefix . 'cms_lang',
                 'cl',
-                'cl.`id_cms` = c.`id_cms`'
-            )
-            ->innerJoin(
-                'c',
-                $this->dbPrefix . 'cms_shop',
-                'cs',
-                'cs.`id_cms` = c.`id_cms`'
+                'cl.id_cms = c.id_cms AND cl.id_shop = (
+                    SELECT MIN(cl_shop.id_shop) FROM ' . $this->dbPrefix . 'cms_lang cl_shop
+                    WHERE cl_shop.id_cms = c.id_cms AND cl_shop.id_lang = :contextLangId AND cl_shop.id_shop IN (:contextShopIds)
+                )'
             )
         ;
 
-        $qb->andWhere('cl.`id_lang` = :contextLangId');
-        $qb->andWhere('cl.`id_shop` IN (:contextShopIds)');
-        $qb->andWhere('cs.`id_shop` IN (:contextShopIds)');
+        $qb->andWhere('cl.id_lang = :contextLangId');
+        $qb->andWhere('EXISTS (SELECT 1 FROM ' . $this->dbPrefix . 'cms_shop cs WHERE cs.id_cms = c.id_cms AND cs.id_shop IN (:contextShopIds))');
 
         $qb->setParameter('contextLangId', $this->contextIdLang);
         $qb->setParameter('contextShopIds', $this->contextShopIds, Connection::PARAM_INT_ARRAY);
@@ -132,14 +128,14 @@ final class CmsPageQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('id_cms_category_parent' === $filterName) {
-                $qb->andWhere('c.`id_cms_category` = :id_cms_category_parent');
+                $qb->andWhere('c.id_cms_category = :id_cms_category_parent');
                 $qb->setParameter('id_cms_category_parent', $value);
 
                 continue;
             }
 
             if (in_array($filterName, ['id_cms', 'active'], true)) {
-                $qb->andWhere('c.`' . $filterName . '` = :' . $filterName);
+                $qb->andWhere('c.' . $this->connection->quoteIdentifier($filterName) . ' = :' . $filterName);
                 $qb->setParameter($filterName, $value);
 
                 continue;
@@ -147,12 +143,12 @@ final class CmsPageQueryBuilder extends AbstractDoctrineQueryBuilder
 
             if ('position' === $filterName) {
                 $modifiedPositionFilter = $this->getModifiedPositionFilter($value);
-                $qb->andWhere('c.`' . $filterName . '` = :' . $filterName);
+                $qb->andWhere('c.' . $this->connection->quoteIdentifier($filterName) . ' = :' . $filterName);
                 $qb->setParameter($filterName, $modifiedPositionFilter);
                 continue;
             }
 
-            $qb->andWhere('cl.`' . $filterName . '` LIKE :' . $filterName);
+            $qb->andWhere('cl.' . $this->connection->quoteIdentifier($filterName) . ' LIKE :' . $filterName);
             $qb->setParameter($filterName, '%' . $value . '%');
         }
 

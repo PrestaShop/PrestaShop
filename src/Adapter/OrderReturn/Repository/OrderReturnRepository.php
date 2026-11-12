@@ -126,8 +126,8 @@ class OrderReturnRepository extends AbstractObjectModelRepository
     {
         // The legacy delete succeeds when no row matches: check the line is part of the return first
         $lineExists = (bool) Db::getInstance()->getValue(sprintf(
-            'SELECT 1 FROM `%sorder_return_detail` WHERE `id_order_return` = %d AND `id_order_detail` = %d AND `id_customization` = %d',
-            _DB_PREFIX_,
+            'SELECT 1 FROM %s WHERE id_order_return = %d AND id_order_detail = %d AND id_customization = %d',
+            Db::quoteIdentifier(_DB_PREFIX_ . 'order_return_detail'),
             $orderReturnId->getValue(),
             $productId->getOrderDetailId(),
             $productId->getCustomizationId()

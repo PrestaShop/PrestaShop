@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\ExtraProperty\Schema;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertySqlIndex;
@@ -50,6 +51,24 @@ class ExtraPropertySchemaManagerSyncTest extends TestCase
             $this->assertStringContainsString('`mymodule_test_field`', $this->statements[0]);
             $this->assertStringContainsString($expectedSqlFragment, $this->statements[0]);
         }
+    }
+
+    public function testPostgreSqlColumnIsAlteredClauseByClauseAndItsEnumCheckReplaced(): void
+    {
+        $manager = $this->buildManager(
+            [['field' => 'mymodule_test_field', 'type' => 'character varying(255)', 'not_null' => true, 'default_value' => null, 'is_primary' => false,
+                'check_definition' => "CHECK (((mymodule_test_field)::text = ANY ((ARRAY['a'::character varying])::text[])))"]],
+            new PostgreSQLPlatform()
+        );
+
+        $manager->ensureExtraTableAndColumn(self::definition(type: ExtraPropertyType::CHOICE, enumValues: ['a', 'b'], defaultValue: 'a'));
+
+        $this->assertCount(2, $this->statements);
+        $this->assertStringContainsString('DROP CONSTRAINT IF EXISTS "chk_extra_', $this->statements[0]);
+        $this->assertStringContainsString('ALTER COLUMN "mymodule_test_field" TYPE VARCHAR(255)', $this->statements[0]);
+        $this->assertStringContainsString('ALTER COLUMN "mymodule_test_field" DROP NOT NULL', $this->statements[0]);
+        $this->assertStringContainsString('ALTER COLUMN "mymodule_test_field" SET DEFAULT \'a\'', $this->statements[0]);
+        $this->assertStringContainsString('CHECK ("mymodule_test_field" IN (\'a\',\'b\'))', $this->statements[1]);
     }
 
     public static function syncProvider(): array
@@ -116,11 +135,14 @@ class ExtraPropertySchemaManagerSyncTest extends TestCase
     /**
      * @param array<int, array<string, mixed>> $showColumnsRows
      */
-    private function buildManager(array $showColumnsRows): ExtraPropertySchemaManager
+    private function buildManager(array $showColumnsRows, ?PostgreSQLPlatform $postgreSqlPlatform = null): ExtraPropertySchemaManager
     {
         $connection = $this->createMock(Connection::class);
+        if (null !== $postgreSqlPlatform) {
+            $connection->method('getDatabasePlatform')->willReturn($postgreSqlPlatform);
+        }
         $connection->method('quoteIdentifier')->willReturnCallback(
-            static fn (string $identifier): string => '`' . $identifier . '`'
+            static fn (string $identifier): string => null !== $postgreSqlPlatform ? '"' . $identifier . '"' : '`' . $identifier . '`'
         );
         $connection->method('fetchAllAssociative')->willReturn($showColumnsRows);
         $connection->method('executeStatement')->willReturnCallback(

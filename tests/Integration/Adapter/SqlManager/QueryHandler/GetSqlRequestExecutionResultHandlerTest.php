@@ -71,19 +71,23 @@ class GetSqlRequestExecutionResultHandlerTest extends KernelTestCase
         $sqlRequestExecutionResult = $this->queryBus->handle($query);
         self::assertEquals('*******************', $sqlRequestExecutionResult->getRows()[0]['MyStrongPassword']);
 
-        /** @var SqlRequestId $sqlRequestId */
-        $sqlRequestId = $this->commandBus->handle(new AddSqlRequestCommand('request1', 'SELECT e.email, e.lastname, e.firstname, e.passwd as  `MyStrongPassword` FROM ps_employee e;'));
-        $query = new GetSqlRequestExecutionResult($sqlRequestId->getValue());
-        /** @var SqlRequestExecutionResult $sqlRequestExecutionResult */
-        $sqlRequestExecutionResult = $this->queryBus->handle($query);
-        self::assertEquals('*******************', $sqlRequestExecutionResult->getRows()[0]['MyStrongPassword']);
+        // Backtick-quoted aliases only exist in the MySQL dialect
+        if (_DB_TYPE_ !== 'pgsql') {
+            /** @var SqlRequestId $sqlRequestId */
+            $sqlRequestId = $this->commandBus->handle(new AddSqlRequestCommand('request1', 'SELECT e.email, e.lastname, e.firstname, e.passwd as  `MyStrongPassword` FROM ps_employee e;'));
+            $query = new GetSqlRequestExecutionResult($sqlRequestId->getValue());
+            /** @var SqlRequestExecutionResult $sqlRequestExecutionResult */
+            $sqlRequestExecutionResult = $this->queryBus->handle($query);
+            self::assertEquals('*******************', $sqlRequestExecutionResult->getRows()[0]['MyStrongPassword']);
+        }
 
         /** @var SqlRequestId $sqlRequestId */
         $sqlRequestId = $this->commandBus->handle(new AddSqlRequestCommand('request1', 'SELECT e.email, e.lastname, e.firstname, LOWER(LOWER(e.passwd)) as MyStrongPassword FROM ps_employee e;'));
         $query = new GetSqlRequestExecutionResult($sqlRequestId->getValue());
         /** @var SqlRequestExecutionResult $sqlRequestExecutionResult */
         $sqlRequestExecutionResult = $this->queryBus->handle($query);
-        self::assertEquals('*******************', $sqlRequestExecutionResult->getRows()[0]['MyStrongPassword']);
+        // PostgreSQL folds an unquoted alias to lower case
+        self::assertEquals('*******************', array_change_key_case($sqlRequestExecutionResult->getRows()[0])['mystrongpassword']);
     }
 
     public function testUnauthorizedFunctionInSelect(): void

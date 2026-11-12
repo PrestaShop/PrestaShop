@@ -489,6 +489,7 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
             ->select('id_shop')
             ->from($this->dbPrefix . 'product_shop')
             ->where('id_product = :productId')
+            ->orderBy('id_shop', 'ASC')
             ->setParameter('productId', $productId->getValue())
         ;
 
@@ -517,6 +518,7 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
             )
             ->where('ps.id_product = :productId')
             ->andWhere('s.id_shop_group = :shopGroupId')
+            ->orderBy('ps.id_shop', 'ASC')
             ->setParameter('shopGroupId', $shopGroupId->getValue())
             ->setParameter('productId', $productId->getValue())
         ;
@@ -901,9 +903,7 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
             [],
             $limit);
         $qb
-            ->addSelect('p.id_product, pl.name, p.reference, i.id_image, p.product_type')
-            ->addGroupBy('p.id_product')
-            ->addOrderBy('pl.name', 'ASC')
+            ->addSelect('p.product_type')
             ->addOrderBy('p.id_product', 'ASC')
         ;
 
@@ -937,13 +937,12 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
             $limit
         );
         $qb
-            ->addSelect('p.id_product, pa.id_product_attribute, pl.name, i.id_image')
+            ->addSelect('pa.id_product_attribute')
             ->addSelect('p.reference as product_reference')
             ->addSelect('pa.reference as combination_reference')
-            ->addSelect('ai.id_image as combination_image_id')
+            ->addSelect('MIN(ai.id_image) as combination_image_id')
             ->leftJoin('p', $this->dbPrefix . 'product_attribute_image', 'ai', 'ai.id_product_attribute = pa.id_product_attribute')
-            ->addGroupBy('p.id_product, pa.id_product_attribute')
-            ->addOrderBy('pl.name', 'ASC')
+            ->addGroupBy('pa.id_product_attribute')
             ->addOrderBy('p.id_product', 'ASC')
             ->addOrderBy('pa.id_product_attribute', 'ASC')
         ;
@@ -979,12 +978,10 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
             $limit
         );
         $qb
-            ->addSelect('p.id_product, pl.name, p.reference, i.id_image, p.product_type')
+            ->addSelect('p.product_type')
             ->addSelect('ps.available_for_order, ps.minimal_quantity, ps.customizable')
-            ->addSelect('sa.quantity as stock_quantity, sa.out_of_stock')
+            ->addSelect('MIN(sa.quantity) as stock_quantity, MIN(sa.out_of_stock) as out_of_stock')
             ->leftJoin('p', $this->dbPrefix . 'stock_available', 'sa', 'sa.id_product = p.id_product AND sa.id_shop = :shopId AND sa.id_product_attribute = 0')
-            ->addGroupBy('p.id_product')
-            ->addOrderBy('pl.name', 'ASC')
             ->addOrderBy('p.id_product', 'ASC')
         ;
 
@@ -1025,7 +1022,8 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
     ): QueryBuilder {
         $qb = $this->connection->createQueryBuilder();
         $qb
-            ->addSelect('p.id_product, pl.name, p.reference, i.id_image')
+            // The joined rows are aggregated so that PostgreSQL accepts the grouping on the product
+            ->addSelect('p.id_product, MIN(pl.name) AS name, p.reference, MIN(i.id_image) AS id_image')
             ->from($this->dbPrefix . 'product', 'p')
             ->join('p', $this->dbPrefix . 'product_shop', 'ps', 'ps.id_product = p.id_product AND ps.id_shop = :shopId')
             ->leftJoin('p', $this->dbPrefix . 'product_lang', 'pl', 'pl.id_product = p.id_product AND pl.id_lang = :languageId')
@@ -1034,30 +1032,31 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
             ->leftJoin('p', $this->dbPrefix . 'product_attribute', 'pa', 'pa.id_product = p.id_product')
             ->setParameter('shopId', $shopId->getValue())
             ->setParameter('languageId', $languageId->getValue())
-            ->addOrderBy('pl.name', 'ASC')
-            ->addGroupBy('p.id_product')
+            ->addOrderBy('MIN(pl.name)', 'ASC')
+            ->addGroupBy('p.id_product', 'ps.id_product', 'ps.id_shop')
         ;
 
         $qb->where($qb->expr()->or(
-            $qb->expr()->like('pl.name', ':dbSearchPhrase'),
+            $qb->expr()->like('LOWER(pl.name)', ':dbSearchPhrase'),
 
             // Product references
-            $qb->expr()->like('p.isbn', ':dbSearchPhrase'),
-            $qb->expr()->like('p.upc', ':dbSearchPhrase'),
-            $qb->expr()->like('p.mpn', ':dbSearchPhrase'),
-            $qb->expr()->like('p.reference', ':dbSearchPhrase'),
-            $qb->expr()->like('p.ean13', ':dbSearchPhrase'),
-            $qb->expr()->like('p.supplier_reference', ':dbSearchPhrase'),
+            $qb->expr()->like('LOWER(p.isbn)', ':dbSearchPhrase'),
+            $qb->expr()->like('LOWER(p.upc)', ':dbSearchPhrase'),
+            $qb->expr()->like('LOWER(p.mpn)', ':dbSearchPhrase'),
+            $qb->expr()->like('LOWER(p.reference)', ':dbSearchPhrase'),
+            $qb->expr()->like('LOWER(p.ean13)', ':dbSearchPhrase'),
+            $qb->expr()->like('LOWER(p.supplier_reference)', ':dbSearchPhrase'),
 
             // Combination attributes
-            $qb->expr()->like('pa.isbn', ':dbSearchPhrase'),
-            $qb->expr()->like('pa.upc', ':dbSearchPhrase'),
-            $qb->expr()->like('pa.mpn', ':dbSearchPhrase'),
-            $qb->expr()->like('pa.reference', ':dbSearchPhrase'),
-            $qb->expr()->like('pa.ean13', ':dbSearchPhrase'),
-            $qb->expr()->like('pa.supplier_reference', ':dbSearchPhrase')
+            $qb->expr()->like('LOWER(pa.isbn)', ':dbSearchPhrase'),
+            $qb->expr()->like('LOWER(pa.upc)', ':dbSearchPhrase'),
+            $qb->expr()->like('LOWER(pa.mpn)', ':dbSearchPhrase'),
+            $qb->expr()->like('LOWER(pa.reference)', ':dbSearchPhrase'),
+            $qb->expr()->like('LOWER(pa.ean13)', ':dbSearchPhrase'),
+            $qb->expr()->like('LOWER(pa.supplier_reference)', ':dbSearchPhrase')
         ));
-        $dbSearchPhrase = sprintf('%%%s%%', $searchPhrase);
+        // Lower cased on both sides, PostgreSQL's LIKE being case-sensitive
+        $dbSearchPhrase = sprintf('%%%s%%', mb_strtolower($searchPhrase));
         $qb->setParameter('dbSearchPhrase', $dbSearchPhrase);
 
         foreach ($filters as $type => $filter) {

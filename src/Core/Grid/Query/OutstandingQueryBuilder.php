@@ -213,9 +213,9 @@ final class OutstandingQueryBuilder implements DoctrineQueryBuilderInterface
     private function getCustomerField(bool $includeFullFirstname = true): string
     {
         if ($includeFullFirstname) {
-            return 'CONCAT(c.`firstname`, \' \', c.`lastname`)';
+            return 'CONCAT(c.firstname, \' \', c.lastname)';
         }
 
-        return 'CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`)';
+        return 'CONCAT(LEFT(c.firstname, 1), \'. \', c.lastname)';
     }
 }

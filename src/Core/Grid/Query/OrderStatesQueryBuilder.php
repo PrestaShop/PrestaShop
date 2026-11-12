@@ -128,14 +128,14 @@ final class OrderStatesQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if (in_array($filterName, ['send_email', 'delivery', 'invoice', 'id_order_state'])) {
-                $qb->andWhere('os.`' . $filterName . '` = :' . $filterName);
+                $qb->andWhere('os.' . $this->connection->quoteIdentifier($filterName) . ' = :' . $filterName);
                 $qb->setParameter($filterName, $filterValue);
 
                 continue;
             }
 
             if (in_array($filterName, ['name', 'template'])) {
-                $qb->andWhere('osl.`' . $filterName . '` LIKE :' . $filterName);
+                $qb->andWhere('osl.' . $this->connection->quoteIdentifier($filterName) . ' LIKE :' . $filterName);
                 $qb->setParameter($filterName, '%' . $filterValue . '%');
 
                 continue;

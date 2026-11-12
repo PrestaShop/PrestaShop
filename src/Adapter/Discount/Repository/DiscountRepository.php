@@ -155,6 +155,7 @@ class DiscountRepository extends AbstractObjectModelRepository
             ->from($this->dbPrefix . 'cart_rule_carrier', 'crc')
             ->where('crc.id_cart_rule = :discountId')
             ->setparameter('discountId', $discountId->getValue())
+            ->orderBy('crc.id_carrier', 'ASC')
         ;
 
         return array_map(fn (array $row) => (int) $row['id_carrier'], $qb->executeQuery()->fetchAllAssociative());
@@ -171,6 +172,7 @@ class DiscountRepository extends AbstractObjectModelRepository
             ->from($this->dbPrefix . 'cart_rule_country', 'crc')
             ->where('crc.id_cart_rule = :discountId')
             ->setparameter('discountId', $discountId->getValue())
+            ->orderBy('crc.id_country', 'ASC')
         ;
 
         return array_map(fn (array $row) => (int) $row['id_country'], $qb->executeQuery()->fetchAllAssociative());
@@ -187,6 +189,7 @@ class DiscountRepository extends AbstractObjectModelRepository
             ->from($this->dbPrefix . 'cart_rule_group', 'crg')
             ->where('crg.id_cart_rule = :discountId')
             ->setparameter('discountId', $discountId->getValue())
+            ->orderBy('crg.id_group', 'ASC')
         ;
 
         return array_map(fn (array $row) => (int) $row['id_group'], $qb->executeQuery()->fetchAllAssociative());

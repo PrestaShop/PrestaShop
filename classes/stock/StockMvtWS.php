@@ -236,7 +236,7 @@ class StockMvtWSCore extends ObjectModelCore
         $old_filter = $filter;
         if ($filter) {
             foreach ($this->tables_assoc as $key => $value) {
-                $filter = str_replace('main.`' . $key . '`', $value['table'] . '.`' . $key . '`', $filter);
+                $filter = str_replace('main.' . Db::quoteIdentifier($key), $value['table'] . '.' . Db::quoteIdentifier($key), $filter);
             }
         }
 
@@ -252,7 +252,7 @@ class StockMvtWSCore extends ObjectModelCore
             $query .= $join;
         }
 
-        $query .= 'WHERE 1 ';
+        $query .= 'WHERE 1=1 ';
 
         if ($filter) {
             $query .= $filter . ' ';

@@ -69,6 +69,11 @@ if ($lastParametersModificationTime) {
         $param = str_replace('%%', '%', $param ?? '');
     });
 
+    $database_type = $config['parameters']['database_type'] ?? 'mysql';
+    if (!defined('_DB_TYPE_')) {
+        define('_DB_TYPE_', $database_type);
+    }
+
     $database_host = $config['parameters']['database_host'];
 
     if (!empty($config['parameters']['database_port'])) {

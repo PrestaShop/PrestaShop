@@ -34,8 +34,8 @@ class ShopRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->createQueryBuilder('s')
             ->select(['s', 'sg'])
             ->join('s.shopGroup', 'sg')
-            ->where('s.active = true')
-            ->andWhere('s.deleted = false')
+            ->where('s.active = 1')
+            ->andWhere('s.deleted = 0')
             ->andWhere('LOWER(s.name) LIKE :searchTerm')
             ->setParameter('searchTerm', '%' . strtolower($searchTerm) . '%');
 

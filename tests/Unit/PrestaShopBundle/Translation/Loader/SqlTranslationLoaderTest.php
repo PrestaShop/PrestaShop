@@ -53,7 +53,7 @@ final class SqlTranslationLoaderTest extends TestCase
         $condition = (new ExposedSqlTranslationLoader())->getThemeCondition();
 
         $this->assertStringContainsString(
-            '`theme_name`',
+            'theme_name',
             $condition,
             'Active-shop theme rows must always be included — ps_shop.theme_name is the correct column'
         );
@@ -75,7 +75,7 @@ final class SqlTranslationLoaderTest extends TestCase
             'Core rows must still be loaded even when a theme context is available — '
             . 'in PS9 a single loader instance handles both row types'
         );
-        $this->assertStringContainsString('`theme_name`', $condition);
+        $this->assertStringContainsString('theme_name', $condition);
     }
 }
 

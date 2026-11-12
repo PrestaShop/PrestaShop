@@ -200,6 +200,7 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
     {
         $qb = $this->getSpecificPricesQueryBuilder($productId, $langId, $filters)
             ->select('COUNT(sp.id_specific_price) AS total_specific_prices')
+            ->resetOrderBy()
         ;
 
         return (int) $qb->executeQuery()->fetchAssociative()['total_specific_prices'];

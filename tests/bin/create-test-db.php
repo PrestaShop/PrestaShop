@@ -58,8 +58,8 @@ $install->setTranslator($translator);
 
 $modelDatabase = new Database($logger);
 $modelDatabase->setTranslator($translator);
-$modelDatabase->testDatabaseSettings(_DB_SERVER_, _DB_NAME_, _DB_USER_, _DB_PASSWD_, _DB_PREFIX_);
-$modelDatabase->createDatabase(_DB_SERVER_, _DB_NAME_, _DB_USER_, _DB_PASSWD_);
+$modelDatabase->testDatabaseSettings(_DB_TYPE_, _DB_SERVER_, _DB_NAME_, _DB_USER_, _DB_PASSWD_, _DB_PREFIX_);
+$modelDatabase->createDatabase(_DB_TYPE_, _DB_SERVER_, _DB_NAME_, _DB_USER_, _DB_PASSWD_);
 
 $install->clearDatabase(false);
 checkInstallationErrors($install, $logger);

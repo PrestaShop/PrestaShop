@@ -247,13 +247,13 @@ class QueryParamsCollectionTest extends TestCase
             [
                 ['category_id' => 1],
                 [QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND EXISTS(SELECT 1 FROM {table_prefix}category_product cp
-        WHERE cp.id_product=p.id_product AND FIND_IN_SET(cp.id_category, :categories_ids))'],
+        WHERE cp.id_product=p.id_product AND :categories_ids LIKE CONCAT(\'%,\', cp.id_category, \',%\'))'],
                 $categoryFilterMessage,
             ],
             [
                 ['category_id' => [1, 2]],
                 [QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND EXISTS(SELECT 1 FROM {table_prefix}category_product cp
-        WHERE cp.id_product=p.id_product AND FIND_IN_SET(cp.id_category, :categories_ids))'],
+        WHERE cp.id_product=p.id_product AND :categories_ids LIKE CONCAT(\'%,\', cp.id_category, \',%\'))'],
                 $categoryFilterMessage,
             ],
             [

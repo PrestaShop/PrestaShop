@@ -189,7 +189,7 @@ class ModuleExtraPropertyRegistrationTest extends KernelTestCase
         $this->assertTrue($this->columnExists('product_extra', self::MODULE . '_reg_keep'));
 
         $this->connection->executeStatement(
-            'ALTER TABLE ' . _DB_PREFIX_ . 'product_extra DROP COLUMN `' . self::MODULE . '_reg_keep`'
+            'ALTER TABLE ' . _DB_PREFIX_ . 'product_extra DROP COLUMN ' . $this->connection->quoteIdentifier(self::MODULE . '_reg_keep')
         );
     }
 

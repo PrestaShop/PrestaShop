@@ -162,9 +162,9 @@ final class EditLanguageHandler extends AbstractLanguageHandler implements EditL
     {
         if (false === $command->isActive()) {
             Db::getInstance()->execute(
-                'UPDATE `' . _DB_PREFIX_ . 'employee`
-                 SET `id_lang`=' . (int) Configuration::get('PS_LANG_DEFAULT') . '
-                 WHERE `id_lang`=' . (int) $command->getLanguageId()->getValue()
+                'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'employee') . '
+                 SET id_lang=' . (int) Configuration::get('PS_LANG_DEFAULT') . '
+                 WHERE id_lang=' . (int) $command->getLanguageId()->getValue()
             );
         }
     }

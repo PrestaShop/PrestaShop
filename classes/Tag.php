@@ -42,8 +42,8 @@ class TagCore extends ObjectModel
         } elseif ($name && Validate::isGenericName($name) && $idLang && Validate::isUnsignedId($idLang)) {
             $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
             SELECT *
-            FROM `' . _DB_PREFIX_ . 'tag` t
-            WHERE `name` = \'' . pSQL($name) . '\' AND `id_lang` = ' . (int) $idLang);
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tag') . ' t
+            WHERE name = \'' . pSQL($name) . '\' AND id_lang = ' . (int) $idLang);
 
             if ($row) {
                 $this->id = (int) $row['id_tag'];
@@ -144,31 +144,42 @@ class TagCore extends ObjectModel
         if (!Module::getBatchMode()) {
             if ($tagList != null) {
                 $tagListQuery = ' AND pt.id_tag IN (' . implode(',', array_map('intval', $tagList)) . ')';
-                Db::getInstance()->execute('DELETE pt FROM `' . _DB_PREFIX_ . 'tag_count` pt WHERE 1=1 ' . $tagListQuery);
+                // PostgreSQL doesn't support MySQL's "DELETE alias FROM table alias" syntax;
+                // a plain single-table DELETE with an alias covers the same case.
+                if (_DB_TYPE_ == 'pgsql') {
+                    Db::getInstance()->execute('DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tag_count') . ' AS pt WHERE 1=1 ' . $tagListQuery);
+                } else {
+                    Db::getInstance()->execute('DELETE pt FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tag_count') . ' pt WHERE 1=1 ' . $tagListQuery);
+                }
             } else {
                 $tagListQuery = '';
             }
 
-            Db::getInstance()->execute('REPLACE INTO `' . _DB_PREFIX_ . 'tag_count` (id_group, id_tag, id_lang, id_shop, counter)
+            $insertKeyword = _DB_TYPE_ == 'pgsql' ? 'INSERT' : 'REPLACE';
+            $onConflict = _DB_TYPE_ == 'pgsql' ? ' ON CONFLICT (id_group, id_tag) DO UPDATE SET id_lang = EXCLUDED.id_lang, id_shop = EXCLUDED.id_shop, counter = EXCLUDED.counter' : '';
+            // "ORDER BY NULL" is a MySQL-only optimizer hint disabling the implicit GROUP BY sort; meaningless in PostgreSQL.
+            $orderByNull = _DB_TYPE_ == 'pgsql' ? '' : ' ORDER BY NULL';
+
+            Db::getInstance()->execute($insertKeyword . ' INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tag_count') . ' (id_group, id_tag, id_lang, id_shop, counter)
             SELECT cg.id_group, pt.id_tag, pt.id_lang, id_shop, COUNT(pt.id_tag) AS times
-                FROM `' . _DB_PREFIX_ . 'product_tag` pt
-                INNER JOIN `' . _DB_PREFIX_ . 'product_shop` product_shop
+                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_tag') . ' pt
+                INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_shop') . ' product_shop
                     USING (id_product)
-                JOIN (SELECT DISTINCT id_group FROM `' . _DB_PREFIX_ . 'category_group`) cg
-                WHERE product_shop.`active` = 1
-                AND EXISTS(SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp
-                                LEFT JOIN `' . _DB_PREFIX_ . 'category_group` cgo ON (cp.`id_category` = cgo.`id_category`)
-                                WHERE cgo.`id_group` = cg.id_group AND product_shop.`id_product` = cp.`id_product`)
+                CROSS JOIN (SELECT DISTINCT id_group FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_group') . ') cg
+                WHERE product_shop.active = 1
+                AND EXISTS(SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_product') . ' cp
+                                LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_group') . ' cgo ON (cp.id_category = cgo.id_category)
+                                WHERE cgo.id_group = cg.id_group AND product_shop.id_product = cp.id_product)
                 ' . $tagListQuery . '
-                GROUP BY pt.id_tag, pt.id_lang, cg.id_group, id_shop ORDER BY NULL');
-            Db::getInstance()->execute('REPLACE INTO `' . _DB_PREFIX_ . 'tag_count` (id_group, id_tag, id_lang, id_shop, counter)
+                GROUP BY pt.id_tag, pt.id_lang, cg.id_group, id_shop' . $orderByNull . $onConflict);
+            Db::getInstance()->execute($insertKeyword . ' INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tag_count') . ' (id_group, id_tag, id_lang, id_shop, counter)
             SELECT 0, pt.id_tag, pt.id_lang, id_shop, COUNT(pt.id_tag) AS times
-                FROM `' . _DB_PREFIX_ . 'product_tag` pt
-                INNER JOIN `' . _DB_PREFIX_ . 'product_shop` product_shop
+                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_tag') . ' pt
+                INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_shop') . ' product_shop
                     USING (id_product)
-                WHERE product_shop.`active` = 1
+                WHERE product_shop.active = 1
                 ' . $tagListQuery . '
-                GROUP BY pt.id_tag, pt.id_lang, id_shop ORDER BY NULL');
+                GROUP BY pt.id_tag, pt.id_lang, id_shop' . $orderByNull . $onConflict);
         }
     }
 
@@ -188,18 +199,18 @@ class TagCore extends ObjectModel
 
             return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
             SELECT t.name, counter AS times
-            FROM `' . _DB_PREFIX_ . 'tag_count` pt
-            LEFT JOIN `' . _DB_PREFIX_ . 'tag` t ON (t.id_tag = pt.id_tag)
-            WHERE pt.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id) . '
-            AND pt.`id_lang` = ' . (int) $idLang . ' AND pt.`id_shop` = ' . (int) $context->shop->id . '
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tag_count') . ' pt
+            LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tag') . ' t ON (t.id_tag = pt.id_tag)
+            WHERE pt.id_group ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id) . '
+            AND pt.id_lang = ' . (int) $idLang . ' AND pt.id_shop = ' . (int) $context->shop->id . '
             ORDER BY times DESC
             LIMIT ' . (int) $nb);
         } else {
             return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
             SELECT t.name, counter AS times
-            FROM `' . _DB_PREFIX_ . 'tag_count` pt
-            LEFT JOIN `' . _DB_PREFIX_ . 'tag` t ON (t.id_tag = pt.id_tag)
-            WHERE pt.id_group = 0 AND pt.`id_lang` = ' . (int) $idLang . ' AND pt.`id_shop` = ' . (int) $context->shop->id . '
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tag_count') . ' pt
+            LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tag') . ' t ON (t.id_tag = pt.id_tag)
+            WHERE pt.id_group = 0 AND pt.id_lang = ' . (int) $idLang . ' AND pt.id_shop = ' . (int) $context->shop->id . '
             ORDER BY times DESC
             LIMIT ' . (int) $nb);
         }
@@ -215,10 +226,10 @@ class TagCore extends ObjectModel
     public static function getProductTags($idProduct)
     {
         if (!$tmp = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-        SELECT t.`id_lang`, t.`name`
+        SELECT t.id_lang, t.name
         FROM ' . _DB_PREFIX_ . 'tag t
         LEFT JOIN ' . _DB_PREFIX_ . 'product_tag pt ON (pt.id_tag = t.id_tag)
-        WHERE pt.`id_product`=' . (int) $idProduct)) {
+        WHERE pt.id_product=' . (int) $idProduct)) {
             return false;
         }
         $result = [];
@@ -255,12 +266,12 @@ class TagCore extends ObjectModel
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
         SELECT pl.name, pl.id_product
-        FROM `' . _DB_PREFIX_ . 'product` p
-        LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON p.id_product = pl.id_product' . Shop::addSqlRestrictionOnLang('pl') . '
+        FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p
+        LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_lang') . ' pl ON p.id_product = pl.id_product' . Shop::addSqlRestrictionOnLang('pl') . '
         ' . Shop::addSqlAssociation('product', 'p') . '
         WHERE pl.id_lang = ' . (int) $idLang .
         ' ' . $onlyActive . ' ' .
-        ($this->id ? ('AND p.id_product ' . $in . ' (SELECT pt.id_product FROM `' . _DB_PREFIX_ . 'product_tag` pt WHERE pt.id_tag = ' . (int) $this->id . ')') : '') . '
+        ($this->id ? ('AND p.id_product ' . $in . ' (SELECT pt.id_product FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_tag') . ' pt WHERE pt.id_tag = ' . (int) $this->id . ')') : '') . '
         ORDER BY pl.name');
     }
 

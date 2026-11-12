@@ -102,6 +102,9 @@ describe('Install Prestashop', async () => {
   it('should fill database configuration form and check database connection', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkDatabaseConnection', baseContext);
 
+    if (global.INSTALL.DB_SERVER === 'postgresql') {
+      await page.locator('#dbType').selectOption('pgsql');
+    }
     await installPage.fillDatabaseForm(page);
     const result = await installPage.isDatabaseConnected(page);
     expect(result).to.eq(true);

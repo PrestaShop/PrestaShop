@@ -131,8 +131,9 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
         }
 
         if (isset($filters['reference'])) {
-            $qb->andWhere('pa.reference LIKE :reference')
-                ->setParameter('reference', '%' . $filters['reference'] . '%')
+            // Lower cased on both sides, PostgreSQL's LIKE being case-sensitive
+            $qb->andWhere('LOWER(pa.reference) LIKE :reference')
+                ->setParameter('reference', '%' . mb_strtolower((string) $filters['reference']) . '%')
             ;
         }
 

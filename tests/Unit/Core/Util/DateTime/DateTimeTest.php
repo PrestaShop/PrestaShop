@@ -47,6 +47,7 @@ class DateTimeTest extends TestCase
         yield ['0'];
         yield [DateTime::NULL_DATE];
         yield [DateTime::NULL_DATETIME];
+        yield [DateTime::POSTGRESQL_NULL_DATE];
     }
 
     /**
@@ -84,6 +85,7 @@ class DateTimeTest extends TestCase
         yield ['', true];
         yield ['0', true];
         yield [0, true];
+        yield [DateTime::POSTGRESQL_NULL_DATE, true];
         yield [new NullDateTime(), true];
         yield [new DateTimeImmutable(self::DATE_SAMPLE), false];
         yield [new DateTimeImmutable(self::DATE_TIME_SAMPLE), false];

@@ -260,6 +260,7 @@ class AttributeRepository extends AbstractMultiShopObjectModelRepository
             ->where($qb->expr()->in('a.id_attribute', ':attributeIds'))
             ->setParameter('shopIds', $shopIdValues, Connection::PARAM_INT_ARRAY)
             ->setParameter('attributeIds', $attributeIdValues, Connection::PARAM_INT_ARRAY)
+            ->orderBy('attr_shop.id_shop', 'ASC')
             ->executeQuery()
             ->fetchAllAssociative()
         ;
@@ -269,6 +270,8 @@ class AttributeRepository extends AbstractMultiShopObjectModelRepository
             $attributeShops[(int) $result['id_attribute']][] = (int) $result['id_shop'];
         }
 
+        // Shop lists are compared in the same order, the query returns them sorted
+        sort($shopIdValues);
         foreach ($attributeIdValues as $attributeIdValue) {
             if (!isset($attributeShops[$attributeIdValue]) || $attributeShops[$attributeIdValue] !== $shopIdValues) {
                 throw new ShopAssociationNotFound('Provided attributes do not exist in every shop');
@@ -297,6 +300,9 @@ class AttributeRepository extends AbstractMultiShopObjectModelRepository
             ->from($this->dbPrefix . 'product_attribute_combination', 'pac')
             ->where($qb->expr()->in('pac.id_product_attribute', ':combinationIds'))
             ->setParameter('combinationIds', $combinationIds, Connection::PARAM_INT_ARRAY)
+            // The order MySQL reads from the primary key, that combination names follow
+            ->orderBy('pac.id_product_attribute', 'ASC')
+            ->addOrderBy('pac.id_attribute', 'ASC')
         ;
 
         return $qb->executeQuery()->fetchAllAssociative();

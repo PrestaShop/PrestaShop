@@ -106,21 +106,19 @@ class ExtraPropertyDefinitionAvailabilityConsistencyTest extends KernelTestCase
         // Fake module rows are enough: the fallback only reads ps_module + ps_module_shop.
         // MODULE is enabled on shop 1 and the third shop; ORPHAN_MODULE has no row at all.
         Db::getInstance()->execute(sprintf(
-            "INSERT INTO `%smodule` (`name`, `active`, `version`) VALUES ('%s', 1, '1.0.0')",
+            "INSERT INTO %smodule (name, active, version) VALUES ('%s', 1, '1.0.0')",
             _DB_PREFIX_,
             self::MODULE
         ));
         $moduleId = (int) Db::getInstance()->Insert_ID();
         foreach ([self::DEFAULT_SHOP_ID, self::$thirdShopId] as $shopId) {
-            Db::getInstance()->execute(sprintf(
-                'INSERT IGNORE INTO `%smodule_shop` (`id_module`, `id_shop`) VALUES (%d, %d)',
-                _DB_PREFIX_,
-                $moduleId,
-                $shopId
-            ));
+            Db::getInstance()->insert('module_shop', [
+                'id_module' => $moduleId,
+                'id_shop' => $shopId,
+            ], false, true, Db::INSERT_IGNORE);
         }
         Db::getInstance()->execute(sprintf(
-            "INSERT INTO `%smodule` (`name`, `active`, `version`) VALUES ('%s', 0, '1.0.0')",
+            "INSERT INTO %smodule (name, active, version) VALUES ('%s', 0, '1.0.0')",
             _DB_PREFIX_,
             self::ORPHAN_MODULE
         ));
@@ -138,7 +136,7 @@ class ExtraPropertyDefinitionAvailabilityConsistencyTest extends KernelTestCase
             self::$registry->unregister($definition, true);
         }
         Db::getInstance()->execute(sprintf(
-            "DELETE FROM `%smodule` WHERE `name` IN ('%s', '%s')",
+            "DELETE FROM %smodule WHERE name IN ('%s', '%s')",
             _DB_PREFIX_,
             self::MODULE,
             self::ORPHAN_MODULE

@@ -148,7 +148,7 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            $queryBuilder->andWhere("`$filterName` LIKE :$filterName");
+            $queryBuilder->andWhere($this->connection->quoteIdentifier($filterName) . ' LIKE :' . $filterName);
             $queryBuilder->setParameter($filterName, '%' . $filterValue . '%');
         }
     }

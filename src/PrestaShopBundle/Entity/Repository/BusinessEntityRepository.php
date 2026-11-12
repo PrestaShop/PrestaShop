@@ -37,7 +37,7 @@ class BusinessEntityRepository extends EntityRepository
             ->leftJoin('bei.businessIdentifier', 'bi')
             ->addSelect('bi')
             ->where('be.id = :businessEntityId')
-            ->andWhere('be.deleted = false')
+            ->andWhere('be.deleted = 0')
             ->setParameter('businessEntityId', $businessEntityId);
 
         if (null !== $shopIds) {
@@ -83,7 +83,7 @@ class BusinessEntityRepository extends EntityRepository
         $qb = $this->createQueryBuilder('be')
             ->select('COUNT(be.id)')
             ->where('be.status = :status')
-            ->andWhere('be.deleted = false')
+            ->andWhere('be.deleted = 0')
             ->setParameter('status', BusinessEntityStatus::PENDING);
 
         if (null !== $shopIds) {

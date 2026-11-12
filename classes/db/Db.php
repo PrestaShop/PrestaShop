@@ -277,10 +277,17 @@ abstract class DbCore
     {
         $class = '';
         /* @phpstan-ignore-next-line */
-        if (extension_loaded('pdo_mysql')) {
-            $class = 'DbPDO';
-        } elseif (extension_loaded('mysqli')) {
-            $class = 'DbMySQLi';
+        if (_DB_TYPE_ == 'mysql') {
+            if (extension_loaded('pdo_mysql')) {
+                $class = 'DbPDO';
+            } elseif (extension_loaded('mysqli')) {
+                $class = 'DbMySQLi';
+            }
+        }
+        if (_DB_TYPE_ == 'pgsql') {
+            if (extension_loaded('pdo_pgsql')) {
+                $class = 'DbPDO';
+            }
         }
 
         if (empty($class)) {
@@ -373,20 +380,40 @@ abstract class DbCore
     }
 
     /**
+     * Quotes an identifier (table or column name) for the current database engine:
+     * backticks for MySQL, double quotes for PostgreSQL.
+     *
+     * @param string $identifier
+     *
+     * @return string
+     */
+    public static function quoteIdentifier($identifier)
+    {
+        if (_DB_TYPE_ == 'pgsql') {
+            return '"' . str_replace('"', '""', $identifier) . '"';
+        }
+
+        return '`' . bqSQL($identifier) . '`';
+    }
+
+    /**
      * Executes an INSERT query.
      *
      * @param string $table Table name without prefix
      * @param array $data Data to insert as associative array. If $data is a list of arrays, multiple insert will be done
      * @param bool $null_values If we want to use NULL values instead of empty quotes
      * @param bool $use_cache
-     * @param int $type Must be Db::INSERT or Db::INSERT_IGNORE or Db::REPLACE
+     * @param int $type Must be Db::INSERT or Db::INSERT_IGNORE or Db::REPLACE or Db::ON_DUPLICATE_KEY
      * @param bool $add_prefix Add or not _DB_PREFIX_ before table name
+     * @param string[] $conflictColumns For Db::REPLACE/Db::ON_DUPLICATE_KEY on PostgreSQL: the column(s) of the
+     *                                  unique/primary key that determines the conflict (PostgreSQL's `ON CONFLICT`
+     *                                  needs this explicitly, unlike MySQL which infers it). Ignored on MySQL.
      *
      * @return bool
      *
      * @throws PrestaShopDatabaseException
      */
-    public function insert($table, $data, $null_values = false, $use_cache = true, $type = Db::INSERT, $add_prefix = true)
+    public function insert($table, $data, $null_values = false, $use_cache = true, $type = Db::INSERT, $add_prefix = true, $conflictColumns = [])
     {
         if (!$data && !$null_values) {
             return true;
@@ -396,16 +423,24 @@ abstract class DbCore
             $table = _DB_PREFIX_ . $table;
         }
 
-        if ($type == Db::INSERT) {
+        if (!in_array($type, [Db::INSERT, Db::INSERT_IGNORE, Db::REPLACE, Db::ON_DUPLICATE_KEY], true)) {
+            throw new PrestaShopDatabaseException('Bad keyword, must be Db::INSERT or Db::INSERT_IGNORE or Db::REPLACE or Db::ON_DUPLICATE_KEY');
+        }
+
+        if (_DB_TYPE_ == 'pgsql') {
+            $insert_keyword = 'INSERT';
+        } elseif ($type == Db::INSERT) {
             $insert_keyword = 'INSERT';
         } elseif ($type == Db::INSERT_IGNORE) {
             $insert_keyword = 'INSERT IGNORE';
         } elseif ($type == Db::REPLACE) {
             $insert_keyword = 'REPLACE';
-        } elseif ($type == Db::ON_DUPLICATE_KEY) {
-            $insert_keyword = 'INSERT';
         } else {
-            throw new PrestaShopDatabaseException('Bad keyword, must be Db::INSERT or Db::INSERT_IGNORE or Db::REPLACE or Db::ON_DUPLICATE_KEY');
+            $insert_keyword = 'INSERT';
+        }
+
+        if (_DB_TYPE_ == 'pgsql' && in_array($type, [Db::REPLACE, Db::ON_DUPLICATE_KEY], true) && !$conflictColumns) {
+            throw new PrestaShopDatabaseException('PostgreSQL requires $conflictColumns to be set for Db::REPLACE or Db::ON_DUPLICATE_KEY');
         }
 
         // Check if $data is a list of row
@@ -415,6 +450,7 @@ abstract class DbCore
         }
 
         $keys = [];
+        $raw_keys = [];
         $values_stringified = [];
         $first_loop = true;
         $duplicate_key_stringified = '';
@@ -424,7 +460,7 @@ abstract class DbCore
             foreach ($row_data as $key => $value) {
                 if (!$first_loop) {
                     // Check if row array mapping are the same
-                    if (!in_array("`$key`", $keys)) {
+                    if (!in_array($key, $raw_keys, true)) {
                         throw new PrestaShopDatabaseException('Keys form $data subarray don\'t match');
                     }
 
@@ -432,7 +468,8 @@ abstract class DbCore
                         throw new PrestaShopDatabaseException('On duplicate key cannot be used on insert with more than 1 VALUE group');
                     }
                 } else {
-                    $keys[] = '`' . bqSQL($key) . '`';
+                    $raw_keys[] = $key;
+                    $keys[] = static::quoteIdentifier($key);
                 }
 
                 if (!is_array($value)) {
@@ -444,8 +481,8 @@ abstract class DbCore
                     $values[] = $string_value = $null_values && ($value['value'] === '' || null === $value['value']) ? 'NULL' : "'{$value['value']}'";
                 }
 
-                if ($type == Db::ON_DUPLICATE_KEY) {
-                    $duplicate_key_stringified .= '`' . bqSQL($key) . '` = ' . $string_value . ',';
+                if ($type == Db::ON_DUPLICATE_KEY && !in_array($key, $conflictColumns, true)) {
+                    $duplicate_key_stringified .= static::quoteIdentifier($key) . ' = ' . $string_value . ',';
                 }
             }
             $first_loop = false;
@@ -453,8 +490,37 @@ abstract class DbCore
         }
         $keys_stringified = implode(', ', $keys);
 
-        $sql = $insert_keyword . ' INTO `' . bqSQL($table) . '` (' . $keys_stringified . ') VALUES ' . implode(', ', $values_stringified);
-        if ($type == Db::ON_DUPLICATE_KEY) {
+        if ($keys_stringified === '' && _DB_TYPE_ == 'pgsql') {
+            // PostgreSQL has no equivalent of MySQL's `INSERT INTO t () VALUES ()` (an all-default row);
+            // the portable form is `INSERT INTO t DEFAULT VALUES`, which only supports a single row.
+            if (count($values_stringified) > 1) {
+                throw new PrestaShopDatabaseException('Cannot insert more than one all-default row at a time on PostgreSQL');
+            }
+            $sql = $insert_keyword . ' INTO ' . static::quoteIdentifier($table) . ' DEFAULT VALUES';
+        } else {
+            $sql = $insert_keyword . ' INTO ' . static::quoteIdentifier($table) . ' (' . $keys_stringified . ') VALUES ' . implode(', ', $values_stringified);
+        }
+
+        if (_DB_TYPE_ == 'pgsql') {
+            if ($type == Db::INSERT_IGNORE) {
+                $sql .= ' ON CONFLICT DO NOTHING';
+            } elseif ($type == Db::ON_DUPLICATE_KEY) {
+                $conflictTarget = implode(', ', array_map([static::class, 'quoteIdentifier'], $conflictColumns));
+                $sql .= $duplicate_key_stringified === ''
+                    ? " ON CONFLICT ($conflictTarget) DO NOTHING"
+                    : " ON CONFLICT ($conflictTarget) DO UPDATE SET " . substr($duplicate_key_stringified, 0, -1);
+            } elseif ($type == Db::REPLACE) {
+                $conflictTarget = implode(', ', array_map([static::class, 'quoteIdentifier'], $conflictColumns));
+                $updateColumns = array_diff($raw_keys, $conflictColumns);
+                $updateStringified = implode(', ', array_map(
+                    static fn ($key) => static::quoteIdentifier($key) . ' = EXCLUDED.' . static::quoteIdentifier($key),
+                    $updateColumns
+                ));
+                $sql .= $updateStringified === ''
+                    ? " ON CONFLICT ($conflictTarget) DO NOTHING"
+                    : " ON CONFLICT ($conflictTarget) DO UPDATE SET $updateStringified";
+            }
+        } elseif ($type == Db::ON_DUPLICATE_KEY) {
             $sql .= ' ON DUPLICATE KEY UPDATE ' . substr($duplicate_key_stringified, 0, -1);
         }
 
@@ -484,27 +550,39 @@ abstract class DbCore
             $table = _DB_PREFIX_ . $table;
         }
 
-        $sql = 'UPDATE `' . bqSQL($table) . '` SET ';
+        $sql = 'UPDATE ' . static::quoteIdentifier($table) . ' SET ';
         foreach ($data as $key => $value) {
             if (!is_array($value)) {
                 $value = ['type' => 'text', 'value' => $value];
             }
             if ($value['type'] == 'sql') {
-                $sql .= '`' . bqSQL($key) . "` = {$value['value']},";
+                $sql .= static::quoteIdentifier($key) . " = {$value['value']},";
             } else {
-                $sql .= ($null_values && ($value['value'] === '' || null === $value['value'])) ? '`' . bqSQL($key) . '` = NULL,' : '`' . bqSQL($key) . "` = '{$value['value']}',";
+                $sql .= ($null_values && ($value['value'] === '' || null === $value['value'])) ? static::quoteIdentifier($key) . ' = NULL,' : static::quoteIdentifier($key) . " = '{$value['value']}',";
             }
         }
 
-        $sql = rtrim($sql, ',');
-        if ($where) {
-            $sql .= ' WHERE ' . $where;
-        }
-        if ($limit) {
-            $sql .= ' LIMIT ' . (int) $limit;
-        }
+        $sql = rtrim($sql, ',') . $this->buildLimitedWhere($table, $where, (int) $limit);
 
         return (bool) $this->q($sql, $use_cache);
+    }
+
+    /**
+     * Builds the WHERE and LIMIT clauses of an UPDATE or DELETE query. PostgreSQL has no LIMIT
+     * on these queries: the limit applies to a subquery on the physical row identifier instead.
+     */
+    protected function buildLimitedWhere(string $table, string $where, int $limit): string
+    {
+        $whereClause = $where ? ' WHERE ' . $where : '';
+        if (!$limit) {
+            return $whereClause;
+        }
+
+        if (_DB_TYPE_ == 'pgsql') {
+            return ' WHERE ctid IN (SELECT ctid FROM ' . static::quoteIdentifier($table) . $whereClause . ' LIMIT ' . $limit . ')';
+        }
+
+        return $whereClause . ' LIMIT ' . $limit;
     }
 
     /**
@@ -525,7 +603,7 @@ abstract class DbCore
         }
 
         $this->result = false;
-        $sql = 'DELETE FROM `' . bqSQL($table) . '`' . ($where ? ' WHERE ' . $where : '') . ($limit ? ' LIMIT ' . (int) $limit : '');
+        $sql = 'DELETE FROM ' . static::quoteIdentifier($table) . $this->buildLimitedWhere($table, $where, (int) $limit);
         $res = $this->query($sql);
         if ($use_cache && $this->is_cache_enabled) {
             Cache::getInstance()->deleteQuery($sql);
@@ -897,6 +975,8 @@ abstract class DbCore
             return;
         }
 
-        $this->_query("SET SESSION time_zone = '" . $offset . "'");
+        // A bare '+01:00' string follows the POSIX sign convention on PostgreSQL (west positive): the interval form keeps the ISO sign
+        $sql = _DB_TYPE_ == 'pgsql' ? "SET TIME ZONE INTERVAL '" . $offset . "' HOUR TO MINUTE" : "SET SESSION time_zone = '" . $offset . "'";
+        $this->_query($sql);
     }
 }

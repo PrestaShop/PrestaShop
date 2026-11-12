@@ -250,7 +250,7 @@ final class OrderCustomizationWeightTest extends SymfonyIntegrationTestCase
             'customized_data',
             ['weight' => $weight],
             'id_customization = ' . (int) $customizationId
-            . ' AND `index` = ' . (int) $field->id
+            . ' AND ' . Db::quoteIdentifier('index') . ' = ' . (int) $field->id
             . ' AND type = ' . Product::CUSTOMIZE_TEXTFIELD
         ));
 

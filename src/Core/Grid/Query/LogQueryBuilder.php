@@ -63,8 +63,8 @@ final class LogQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $queryBuilder = $this->getQueryBuilder()
             ->select('COUNT(lg.id_log)')
-            ->from($this->dbPrefix . 'log', 'lg');
-        $this->applyAssociatedQueries($queryBuilder);
+            ->from($this->dbPrefix . 'log', 'lg')
+            ->leftJoin('lg', $this->dbPrefix . 'employee', 'e', 'e.id_employee = lg.id_employee');
 
         return $this->applyFilters($searchCriteria->getFilters(), $queryBuilder);
     }
@@ -197,7 +197,7 @@ final class LogQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            $qb->andWhere('`' . $filterName . '` LIKE :' . $filterName);
+            $qb->andWhere($this->connection->quoteIdentifier($filterName) . ' LIKE :' . $filterName);
             $qb->setParameter($filterName, '%' . $filterValue . '%');
         }
 
@@ -210,9 +210,9 @@ final class LogQueryBuilder extends AbstractDoctrineQueryBuilder
     private function getEmployeeField(bool $includeFullFirstname = true): string
     {
         if ($includeFullFirstname) {
-            return 'CONCAT(e.`firstname`, \' \', e.`lastname`)';
+            return 'CONCAT(e.firstname, \' \', e.lastname)';
         }
 
-        return 'CONCAT(LEFT(e.`firstname`, 1), \'. \', e.`lastname`)';
+        return 'CONCAT(LEFT(e.firstname, 1), \'. \', e.lastname)';
     }
 }

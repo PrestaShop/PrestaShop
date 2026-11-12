@@ -302,12 +302,11 @@ class ImportJobFeatureContext extends AbstractDomainFeatureContext
      */
     public function backDateImportJob(string $reference, int $days): void
     {
-        Db::getInstance()->execute(sprintf(
-            'UPDATE %simport_job SET date_upd = DATE_SUB(NOW(), INTERVAL %d DAY) WHERE import_job_uuid = "%s"',
-            _DB_PREFIX_,
-            $days,
-            pSQL($this->referenceToUuid($reference))
-        ));
+        Db::getInstance()->update(
+            'import_job',
+            ['date_upd' => date('Y-m-d H:i:s', time() - $days * 86400)],
+            'import_job_uuid = \'' . pSQL($this->referenceToUuid($reference)) . '\''
+        );
 
         $workingFile = $this->getWorkingFilePath($reference);
         if (file_exists($workingFile)) {

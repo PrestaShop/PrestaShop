@@ -46,7 +46,6 @@ class UpdateCustomerThreadStatusHandler implements UpdateCustomerThreadStatusHan
             UPDATE ' . $this->dbPrefix . 'customer_thread
             SET status = :status
 		    WHERE id_customer_thread = :id_customer_thread
-		    LIMIT 1
         ');
 
         $statement->bindValue(':status', $command->getCustomerThreadStatus()->getValue());

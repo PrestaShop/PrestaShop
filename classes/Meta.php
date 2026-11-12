@@ -142,9 +142,9 @@ class MetaCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
-		FROM `' . _DB_PREFIX_ . 'meta` m
-		LEFT JOIN `' . _DB_PREFIX_ . 'meta_lang` ml ON m.`id_meta` = ml.`id_meta`
-		WHERE ml.`id_lang` = ' . (int) $idLang
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'meta') . ' m
+		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'meta_lang') . ' ml ON m.id_meta = ml.id_meta
+		WHERE ml.id_lang = ' . (int) $idLang
             . Shop::addSqlRestrictionOnLang('ml') .
         'ORDER BY page ASC');
     }
@@ -164,8 +164,8 @@ class MetaCore extends ObjectModel
         		FROM ' . _DB_PREFIX_ . 'meta m
         		LEFT JOIN ' . _DB_PREFIX_ . 'meta_lang ml ON m.id_meta = ml.id_meta
         		WHERE (
-        			m.page = "' . pSQL($page) . '"
-        			OR m.page = "' . pSQL(str_replace('-', '', strtolower($page))) . '"
+        			m.page = \'' . pSQL($page) . '\'
+        			OR m.page = \'' . pSQL(str_replace('-', '', strtolower($page))) . '\'
         		)
         		AND ml.id_lang = ' . (int) $idLang . '
 		' . Shop::addSqlRestrictionOnLang('ml'));
@@ -254,10 +254,10 @@ class MetaCore extends ObjectModel
     {
         return Db::getInstance()->getValue('
 		SELECT url_rewrite
-		FROM `' . _DB_PREFIX_ . 'meta_lang`
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'meta_lang') . '
 		WHERE id_meta = (
 			SELECT id_meta
-			FROM `' . _DB_PREFIX_ . 'meta_lang`
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'meta_lang') . '
 			WHERE url_rewrite = \'' . pSQL($urlRewrite) . '\' AND id_lang = ' . (int) $idLang . '
 			AND id_shop = ' . Context::getContext()->shop->id . '
 		)

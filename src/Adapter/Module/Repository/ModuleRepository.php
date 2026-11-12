@@ -84,11 +84,11 @@ class ModuleRepository extends AbstractObjectModelRepository
     public function getEnabledShopIds(string $technicalName): array
     {
         $rows = Db::getInstance()->executeS(
-            'SELECT ms.`id_shop`
-            FROM `' . _DB_PREFIX_ . 'module_shop` ms
-            INNER JOIN `' . _DB_PREFIX_ . 'module` m ON m.`id_module` = ms.`id_module`
-            WHERE m.`name` = "' . pSQL($technicalName) . '"
-            ORDER BY ms.`id_shop` ASC'
+            'SELECT ms.id_shop
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module_shop') . ' ms
+            INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module') . ' m ON m.id_module = ms.id_module
+            WHERE m.name = \'' . pSQL($technicalName) . '\'
+            ORDER BY ms.id_shop ASC'
         );
 
         return is_array($rows) ? array_map(static fn (array $row): int => (int) $row['id_shop'], $rows) : [];
@@ -111,7 +111,7 @@ class ModuleRepository extends AbstractObjectModelRepository
         $activeModules = [];
         try {
             $modulesData = Db::getInstance()->executeS(
-                'SELECT m.* FROM `' . _DB_PREFIX_ . 'module` m WHERE m.`active` = 1'
+                'SELECT m.* FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module') . ' m WHERE m.active = 1'
             );
 
             if (is_array($modulesData)) {
@@ -165,7 +165,7 @@ class ModuleRepository extends AbstractObjectModelRepository
         $installedModules = [];
         try {
             $modulesData = Db::getInstance()->executeS(
-                'SELECT m.* FROM `' . _DB_PREFIX_ . 'module` m'
+                'SELECT m.* FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module') . ' m'
             );
 
             if (is_array($modulesData)) {

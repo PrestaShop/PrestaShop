@@ -104,7 +104,7 @@ class BusinessEntityQueryBuilderTest extends TestCase
 
         $where = (string) $qb->getQueryPart('where');
         $this->assertStringContainsString('be.deleted = 0', $where);
-        $this->assertSame(['be.id_business_entity'], $qb->getQueryPart('groupBy'));
+        $this->assertSame(['be.id_business_entity', 's.id_shop'], $qb->getQueryPart('groupBy'));
     }
 
     public function testSearchQueryIsNotShopScopedInAllShopContext(): void
@@ -183,10 +183,10 @@ class BusinessEntityQueryBuilderTest extends TestCase
     public function provideSortableColumns(): iterable
     {
         yield 'id' => ['id_business_entity', 'be.id_business_entity'];
-        yield 'name' => ['name', 'be.`name`'];
-        yield 'legal_name' => ['legal_name', 'be.`legal_name`'];
-        yield 'status' => ['status', 'be.`status`'];
-        yield 'shop_name' => ['shop_name', 's.`name`'];
+        yield 'name' => ['name', 'be.name'];
+        yield 'legal_name' => ['legal_name', 'be.legal_name'];
+        yield 'status' => ['status', 'be.status'];
+        yield 'shop_name' => ['shop_name', 's.name'];
         yield 'customers_count aggregate alias' => ['customers_count', 'customers_count'];
     }
 
@@ -347,7 +347,7 @@ class BusinessEntityQueryBuilderTest extends TestCase
                 's.name AS shop_name',
                 'COUNT(DISTINCT becb.id_customer_b2b) AS customers_count',
             ],
-            'groupBy' => ['be.id_business_entity'],
+            'groupBy' => ['be.id_business_entity', 's.id_shop'],
             'orderBy' => ['be.id_business_entity asc'],
         ]);
     }

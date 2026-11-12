@@ -166,7 +166,7 @@ class ProductImporterCreateTest extends AbstractProductImportEngineTestCase
         $productId = $this->getProductIdByReference('IMP-LAMP-002');
         $this->assertNotNull($productId, 'Product IMP-LAMP-002 was not created');
 
-        $productShop = $this->fetchRow('SELECT price, visibility, `condition`, online_only, on_sale FROM {p}product_shop WHERE id_product = :id AND id_shop = 1', ['id' => $productId]);
+        $productShop = $this->fetchRow('SELECT price, visibility, ' . $this->connection->quoteIdentifier('condition') . ', online_only, on_sale FROM {p}product_shop WHERE id_product = :id AND id_shop = 1', ['id' => $productId]);
 
         // expected price derives from the same rate the importer used
         // (tax rules group 1 for the shop address country, legacy Shop::getAddress resolution)

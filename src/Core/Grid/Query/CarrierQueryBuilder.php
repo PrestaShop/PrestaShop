@@ -69,8 +69,7 @@ final class CarrierQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getCarrierQueryBuilder($searchCriteria)
-            ->select('c.id_carrier, c.name, cl.delay, c.active, c.is_free, c.position, c.external_module_name')
-            ->groupBy('c.id_carrier');
+            ->select('c.id_carrier, c.name, cl.delay, c.active, c.is_free, c.position, c.external_module_name');
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
@@ -92,11 +91,13 @@ final class CarrierQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'carrier', 'c')
-            ->innerJoin('c', $this->dbPrefix . 'carrier_lang', 'cl', 'c.id_carrier = cl.id_carrier')
-            ->innerJoin('c', $this->dbPrefix . 'carrier_shop', 'cs', 'c.id_carrier = cs.id_carrier')
+            // One row per carrier: the translation of the first context shop, without a GROUP BY
+            ->innerJoin('c', $this->dbPrefix . 'carrier_lang', 'cl', 'c.id_carrier = cl.id_carrier AND cl.id_shop = (
+                SELECT MIN(cl_shop.id_shop) FROM ' . $this->dbPrefix . 'carrier_lang cl_shop
+                WHERE cl_shop.id_carrier = c.id_carrier AND cl_shop.id_lang = :contextIdLang AND cl_shop.id_shop IN (:contextShopIds)
+            )')
             ->andWhere('cl.id_lang = :contextIdLang')
-            ->andWhere('cs.id_shop IN (:contextShopIds)')
-            ->andWhere('cl.id_shop IN (:contextShopIds)')
+            ->andWhere('EXISTS (SELECT 1 FROM ' . $this->dbPrefix . 'carrier_shop cs WHERE cs.id_carrier = c.id_carrier AND cs.id_shop IN (:contextShopIds))')
             ->andWhere('c.deleted = 0')
             ->setParameter('contextShopIds', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
             ->setParameter('contextIdLang', $this->contextIdLang);
