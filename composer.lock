@@ -5384,12 +5384,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jolelievre/ps_apiresources.git",
-                "reference": "5fe9492030dfbdd6636e33703f1ed8d7c428273a"
+                "reference": "6e2962c2f4d056edb84a7e4cb691435ef74a1a8f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jolelievre/ps_apiresources/zipball/5fe9492030dfbdd6636e33703f1ed8d7c428273a",
-                "reference": "5fe9492030dfbdd6636e33703f1ed8d7c428273a",
+                "url": "https://api.github.com/repos/jolelievre/ps_apiresources/zipball/6e2962c2f4d056edb84a7e4cb691435ef74a1a8f",
+                "reference": "6e2962c2f4d056edb84a7e4cb691435ef74a1a8f",
                 "shasum": ""
             },
             "require": {
@@ -5410,9 +5410,6 @@
                 },
                 "classmap": [
                     "ps_apiresources.php"
-                ],
-                "files": [
-                    "polyfill/autoload.php"
                 ]
             },
             "autoload-dev": {
