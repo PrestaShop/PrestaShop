@@ -73,6 +73,8 @@ if (isset($container) && $container instanceof Symfony\Component\DependencyInjec
     }
     $container->setParameter('cache.driver', $driver);
     $container->setParameter('cache.adapter', $adapters[$driver]);
+    // seconds, 0 = never expires
+    $container->setParameter('cache.default_lifetime', (int) ($parameters['parameters']['ps_cache_lifetime'] ?? 0));
 
     // Parameter used only in dev and test env
     $envParameter = getenv('DISABLE_DEBUG_TOOLBAR');
