@@ -90,14 +90,23 @@ class CartRuleCalculator
         }
         if ($cartRule->getType() === DiscountType::ORDER_LEVEL && (float) $cartRule->reduction_percent > 0 && $cartRule->reduction_product == 0) {
             if ($this->isDiscountFeatureFlagEnabled()) {
-                $initialShippingFees = $this->calculator->getFees()->getInitialShippingFees();
                 $productsTotal = $this->calculator->getRowTotal();
-                $orderTotal = $productsTotal->add($initialShippingFees);
-                $orderDiscountAmount = new AmountImmutable(
-                    $orderTotal->getTaxExcluded() * $cartRule->reduction_percent / 100,
-                    $orderTotal->getTaxIncluded() * $cartRule->reduction_percent / 100
-                );
-                $cartRuleData->addDiscountApplied($orderDiscountAmount);
+                $cartRuleData->addDiscountApplied(new AmountImmutable(
+                    $productsTotal->getTaxIncluded() * $cartRule->reduction_percent / 100,
+                    $productsTotal->getTaxExcluded() * $cartRule->reduction_percent / 100
+                ));
+
+                $fees = $this->calculator->getFees();
+                if (null !== $fees->getFinalShippingFees()) {
+                    // Applied on the fees, like free shipping, so the discount cap includes it
+                    $initialShippingFees = $fees->getInitialShippingFees();
+                    $shippingDiscount = new AmountImmutable(
+                        $initialShippingFees->getTaxIncluded() * $cartRule->reduction_percent / 100,
+                        $initialShippingFees->getTaxExcluded() * $cartRule->reduction_percent / 100
+                    );
+                    $fees->subDiscountValueShipping($shippingDiscount);
+                    $cartRuleData->addDiscountApplied($shippingDiscount);
+                }
 
                 return;
             }
