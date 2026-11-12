@@ -98,13 +98,23 @@ export default class TaggableField {
    * allow to add token on focus out action. See bootstrap-tokenfield docs for more information.
    */
   constructor({tokenFieldSelector, options = {}}: TaggableFieldParams) {
-    $(tokenFieldSelector).tokenfield(options);
-
     const maxCharacters: number = options.maxCharacters || 0;
+    const $field = $(tokenFieldSelector);
 
     if (maxCharacters > 0) {
-      const $inputFields = $(tokenFieldSelector).siblings('.token-input');
-      $inputFields.prop('maxlength', maxCharacters);
+      // WHY: this used to set maxlength on the token input, which caps the WHOLE input. Pasting a
+      // comma separated list longer than maxCharacters was then truncated by the browser before
+      // tokenfield could split it, even when every single tag was short enough. The limit describes
+      // one tag, so check it when a token is created and let the rest of the list through.
+      $field.on('tokenfield:createtoken', (event: JQuery.TriggeredEvent) => {
+        const {attrs} = event as JQuery.TriggeredEvent & {attrs?: {value: string}};
+
+        if (attrs && attrs.value.length > maxCharacters) {
+          event.preventDefault();
+        }
+      });
     }
+
+    $field.tokenfield(options);
   }
 }
