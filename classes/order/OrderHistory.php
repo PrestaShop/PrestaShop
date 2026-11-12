@@ -281,31 +281,30 @@ class OrderHistoryCore extends ObjectModel
             }
 
             $invoices = $order->getInvoicesCollection();
-            foreach ($invoices as $invoice) {
+
+            if ($invoices->count() > 0) {
+                $isSplit = $order->getBrother()->count() > 0;
                 /** @var OrderInvoice $invoice */
-                $rest_paid = $invoice->getRestPaid();
-                if ($rest_paid > 0) {
-                    $payment = new OrderPayment();
-                    $payment->order_reference = $order->reference;
-                    $payment->id_currency = $order->id_currency;
-                    $payment->amount = $rest_paid;
-                    $payment->payment_method = isset($payment_method) && $payment_method instanceof Module ? $payment_method->displayName : null;
-                    $payment->conversion_rate = $order->conversion_rate;
-                    $payment->save();
-
-                    // Update total_paid_real value for backward compatibility reasons
-                    $order->total_paid_real += $rest_paid;
-                    $order->save();
-
-                    Db::getInstance()->insert(
-                        'order_invoice_payment',
-                        [
-                            'id_order_invoice' => (int) $invoice->id,
-                            'id_order_payment' => (int) $payment->id,
-                            'id_order' => (int) $order->id,
-                        ]
-                    );
+                foreach ($invoices as $invoice) {
+                    $restPaid = (float) $invoice->getRestPaid();
+                    if ($isSplit) {
+                        $referenceRest = round($order->getOrdersTotalPaid(), 2) - round($order->getTotalPaid(), 2);
+                        if ($referenceRest < $restPaid) {
+                            // Payments of the whole reference already cover this invoice, as at checkout
+                            $this->linkReferencePayments($order, $invoice);
+                            $restPaid = $referenceRest;
+                        }
+                    }
+                    $this->recordPayment($order, $restPaid, $payment_method ?? null, $invoice);
                 }
+            } else {
+                // A paid status that does not invoice: what is left to pay is read from the orders of the reference
+                $this->recordPayment(
+                    $order,
+                    round($order->getOrdersTotalPaid(), 2) - round($order->getTotalPaid(), 2),
+                    $payment_method ?? null,
+                    null
+                );
             }
         }
 
@@ -332,6 +331,53 @@ class OrderHistoryCore extends ObjectModel
         );
 
         ShopUrl::resetMainDomainCache();
+    }
+
+    private function linkReferencePayments(OrderCore $order, OrderInvoice $invoice): void
+    {
+        Db::getInstance()->execute('
+            INSERT INTO `' . _DB_PREFIX_ . 'order_invoice_payment` (`id_order_invoice`, `id_order_payment`, `id_order`)
+            SELECT ' . (int) $invoice->id . ', op.`id_order_payment`, ' . (int) $order->id . '
+            FROM `' . _DB_PREFIX_ . 'order_payment` op
+            WHERE op.`order_reference` = \'' . pSQL($order->reference) . '\'
+            AND NOT EXISTS (
+                SELECT 1 FROM `' . _DB_PREFIX_ . 'order_invoice_payment` oip
+                WHERE oip.`id_order_payment` = op.`id_order_payment` AND oip.`id_order_invoice` = ' . (int) $invoice->id . '
+            )');
+        Cache::clean('order_invoice_paid_*');
+    }
+
+    /**
+     * @param Module|false|null $paymentMethod
+     */
+    private function recordPayment(OrderCore $order, float $restPaid, $paymentMethod, ?OrderInvoice $invoice): void
+    {
+        if ($restPaid <= 0) {
+            return;
+        }
+
+        $payment = new OrderPayment();
+        $payment->order_reference = $order->reference;
+        $payment->id_currency = $order->id_currency;
+        $payment->amount = $restPaid;
+        $payment->payment_method = $paymentMethod instanceof Module ? $paymentMethod->displayName : null;
+        $payment->conversion_rate = $order->conversion_rate;
+        $payment->save();
+
+        // Update total_paid_real value for backward compatibility reasons
+        $order->total_paid_real += $restPaid;
+        $order->save();
+
+        if ($invoice !== null) {
+            Db::getInstance()->insert(
+                'order_invoice_payment',
+                [
+                    'id_order_invoice' => (int) $invoice->id,
+                    'id_order_payment' => (int) $payment->id,
+                    'id_order' => (int) $order->id,
+                ]
+            );
+        }
     }
 
     /**
