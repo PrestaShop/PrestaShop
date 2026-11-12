@@ -73,6 +73,13 @@ class CachingType extends TranslatorAwareType
                     'class' => 'memcache',
                 ],
                 'choice_translation_domain' => 'Admin.Advparameters.Feature',
+            ])
+            ->add('parallel_warmup', SwitchType::class, [
+                'required' => false,
+                'label' => $this->trans('Rebuild in parallel', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans('Rebuilds the caches of the back office, the front office and the API at the same time when the cache is cleared, for example after a module action.', 'Admin.Advparameters.Help'),
+                'alert_type' => 'warning',
+                'alert_message' => $this->trans('This option can use up to three times more memory while the caches are rebuilt. It may not be suited to every server and configuration: use it at your own risk.', 'Admin.Advparameters.Notification'),
             ]);
     }
 
