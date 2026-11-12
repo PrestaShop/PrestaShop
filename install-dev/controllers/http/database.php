@@ -179,7 +179,11 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
             }
 
             $this->database_server = $parameters['parameters']['database_host'];
-            if (!empty($parameters['parameters']['database_port'])) {
+            // Mirrors _DB_SERVER_: a socket takes the place of the port, so re-displaying the
+            // form round-trips a socket-configured shop instead of silently dropping it.
+            if (!empty($parameters['parameters']['database_unix_socket'])) {
+                $this->database_server .= ':' . $parameters['parameters']['database_unix_socket'];
+            } elseif (!empty($parameters['parameters']['database_port'])) {
                 $this->database_server .= ':' . $parameters['parameters']['database_port'];
             }
             $this->database_name = $parameters['parameters']['database_name'];

@@ -71,7 +71,12 @@ if ($lastParametersModificationTime) {
 
     $database_host = $config['parameters']['database_host'];
 
-    if (!empty($config['parameters']['database_port'])) {
+    // A unix socket replaces the port in the server string: DbPDO parses a trailing ":/path"
+    // back out of it and connects through unix_socket= instead of host=, so both the legacy
+    // and the Doctrine layer end up on the same socket.
+    if (!empty($config['parameters']['database_unix_socket'])) {
+        $database_host .= ':' . $config['parameters']['database_unix_socket'];
+    } elseif (!empty($config['parameters']['database_port'])) {
         $database_host .= ':'. $config['parameters']['database_port'];
     }
 
