@@ -29,6 +29,16 @@ use Tools;
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/head_tag.html.twig')]
 class HeadTag
 {
+    /** TinyMCE language files not named after the shipped iso code */
+    private const EDITOR_LANGUAGE_FILES = [
+        'mx' => 'es_MX',
+        'no' => 'nb',
+        'qc' => 'fr',
+        'si' => 'sl',
+        'tw' => 'zh_TW',
+        'vn' => 'vi',
+    ];
+
     protected string $metaTitle;
 
     public function __construct(
@@ -107,6 +117,14 @@ class HeadTag
         return $this->templateVariables->getIsoUser();
     }
 
+    public function getIsoUserForEditor(): string
+    {
+        $isoCode = $this->languageContext->getIsoCode();
+        $file = self::EDITOR_LANGUAGE_FILES[$isoCode] ?? $isoCode;
+
+        return file_exists(_PS_CORE_DIR_ . '/js/tiny_mce/langs/' . $file . '.js') ? $file : 'en';
+    }
+
     public function getCountryIsoCode(): string
     {
         return $this->countryContext->getIsoCode();
@@ -135,6 +153,12 @@ class HeadTag
     public function getFullLanguageCode(): string
     {
         return $this->languageContext->getLanguageCode();
+    }
+
+    public function getMomentLanguageCode(): string
+    {
+        // Moment names Norwegian "nb"
+        return 'no' === $this->languageContext->getIsoCode() ? 'nb' : strtolower($this->languageContext->getLocale());
     }
 
     public function getFullCldrLanguageCode(): string
