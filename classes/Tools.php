@@ -1943,7 +1943,6 @@ class ToolsCore
             $error = curl_error($curl);
             $httpStatus = (int) curl_getinfo($curl, CURLINFO_HTTP_CODE);
             $redirectUrl = curl_getinfo($curl, CURLINFO_REDIRECT_URL);
-            curl_close($curl);
 
             // Hardened mode is used while importing untrusted data: a single unreachable
             // URL must not interrupt the import, so keep the failure silent there.

@@ -46,12 +46,28 @@ final class ExportCsvFileWriter implements FileWriterInterface
             );
         }
 
-        $exportFile->fputcsv($data->getTitles(), $separator, '"', '');
+        // SplFileObject::fputcsv() is deprecated since PHP 8.6, each line is formatted by fputcsv() in a buffer instead
+        $lineBuffer = fopen('php://memory', 'w+');
+        $this->writeLine($exportFile, $lineBuffer, $data->getTitles(), $separator);
 
         foreach ($data->getRows() as $row) {
-            $exportFile->fputcsv($row, $separator, '"', '');
+            $this->writeLine($exportFile, $lineBuffer, $row, $separator);
         }
 
+        fclose($lineBuffer);
+
         return $exportFile;
+    }
+
+    /**
+     * @param resource $lineBuffer
+     */
+    private function writeLine(SplFileObject $exportFile, $lineBuffer, array $fields, string $separator): void
+    {
+        ftruncate($lineBuffer, 0);
+        rewind($lineBuffer);
+        fputcsv($lineBuffer, $fields, $separator, '"', '');
+        rewind($lineBuffer);
+        $exportFile->fwrite(stream_get_contents($lineBuffer));
     }
 }

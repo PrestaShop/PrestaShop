@@ -1179,6 +1179,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         if (isset(Context::getContext()->shop) && is_object(Context::getContext()->shop) && $id_shop === null) {
             $id_shop = (int) Context::getContext()->shop->id;
         }
+        $id_shop = (int) $id_shop;
 
         if (!isset(static::$countActiveLanguages[$id_shop])) {
             static::$countActiveLanguages[$id_shop] = Db::getInstance()->getValue('
