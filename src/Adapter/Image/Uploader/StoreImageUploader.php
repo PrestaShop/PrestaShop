@@ -9,10 +9,16 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 
 use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
+use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 
 final class StoreImageUploader extends AbstractImageUploader
 {
+    public function __construct(
+        private readonly ImageFormatConfiguration $imageFormatConfiguration,
+    ) {
+    }
+
     /**
      * Uploads the store image from a file path, so it can be used
      * from both the back office form and the Admin API.
@@ -24,6 +30,11 @@ final class StoreImageUploader extends AbstractImageUploader
     {
         $this->uploadFromTemp($filePath, _PS_STORE_IMG_DIR_ . $storeId . '.jpg');
 
-        $this->generateDifferentSize($storeId, _PS_STORE_IMG_DIR_, 'stores');
+        $this->generateDifferentSizeInFormats(
+            $storeId,
+            _PS_STORE_IMG_DIR_,
+            'stores',
+            $this->imageFormatConfiguration->getGenerationFormats()
+        );
     }
 }
