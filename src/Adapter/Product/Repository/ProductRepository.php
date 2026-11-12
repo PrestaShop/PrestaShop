@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
+use Cache;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Exception;
 use Doctrine\DBAL\Exception as ExceptionAlias;
@@ -312,6 +313,7 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
             ->setParameter('shopIds', $shopIds, Connection::PARAM_INT_ARRAY)
             ->executeStatement()
         ;
+        $this->invalidateLegacyQueryCache($deleteQb->getSQL());
 
         $insertValues = [];
         foreach ($carrierReferenceIds as $referenceId) {
@@ -339,6 +341,21 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
         ';
 
         $this->connection->executeStatement($stmt);
+        $this->invalidateLegacyQueryCache($stmt);
+    }
+
+    /**
+     * Writes made through this connection bypass the legacy Db class, which is what normally calls
+     * Cache::deleteQuery on every write. Without this the legacy cached reads of the tables written
+     * here keep serving the rows that were just replaced, for as long as the cache holds them.
+     */
+    private function invalidateLegacyQueryCache(string $sql): void
+    {
+        if (!defined('_PS_CACHE_ENABLED_') || !_PS_CACHE_ENABLED_) {
+            return;
+        }
+
+        Cache::getInstance()->deleteQuery($sql);
     }
 
     /**
