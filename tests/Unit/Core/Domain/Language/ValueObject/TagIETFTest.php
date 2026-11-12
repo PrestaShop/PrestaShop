@@ -32,6 +32,24 @@ class TagIETFTest extends TestCase
         new TagIETF($invalidTagIETFValue);
     }
 
+    /**
+     * @dataProvider getTagIETFAndExpectedLocale
+     */
+    public function testItDerivesTheLocaleFromTheTag(string $tagIETF, ?string $expectedLocale): void
+    {
+        $this->assertSame($expectedLocale, (new TagIETF($tagIETF))->toLocale());
+    }
+
+    public static function getTagIETFAndExpectedLocale(): iterable
+    {
+        yield 'lower region' => ['de-ch', 'de-CH'];
+        yield 'already cased' => ['lt-LT', 'lt-LT'];
+        yield 'upper language' => ['EN-gb', 'en-GB'];
+        yield 'no region' => ['fr', null];
+        yield 'no region, upper' => ['DE', null];
+        yield 'no region, no CLDR locale from repetition' => ['en', null];
+    }
+
     public function getValidTagIETFValues()
     {
         yield ['fr'];
