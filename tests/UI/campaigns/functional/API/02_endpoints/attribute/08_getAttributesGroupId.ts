@@ -139,6 +139,7 @@ describe('API : GET /attributes/groups/{attributeGroupId}', async () => {
       expect(jsonResponse).to.have.all.keys(
         'attributeGroupId',
         'names',
+        'position',
         'publicNames',
         'shopIds',
         'type',
@@ -187,6 +188,17 @@ describe('API : GET /attributes/groups/{attributeGroupId}', async () => {
       expect(jsonResponse).to.have.property('shopIds');
       expect(jsonResponse.shopIds).to.be.a('array');
       expect(jsonResponse.shopIds).to.deep.equal([1]);
+    });
+
+    it('should check the JSON Response : `position`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponsePosition', baseContext);
+
+      // A new group is appended with getHighestPosition() + 1, and deleting one calls cleanPositions(),
+      // which re-sequences to 0..n-1. Positions therefore stay contiguous, so the group created above
+      // lands on the count read before it was created.
+      expect(jsonResponse).to.have.property('position');
+      expect(jsonResponse.position).to.be.a('number');
+      expect(jsonResponse.position).to.be.equal(numberOfAttributes);
     });
   });
 
