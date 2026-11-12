@@ -267,7 +267,7 @@ class CartCore extends ObjectModel
     /**
      * Adds current Cart as a new Object to the database.
      *
-     * @param bool $autoDate Automatically set date_upd and date_add columns
+     * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
      * @return bool Whether the Cart has been successfully added
@@ -1618,7 +1618,7 @@ class CartCore extends ObjectModel
             Pack::STOCK_TYPE_PACK_BOTH,
         ];
         $packStockTypesDefaultSupported = (int) in_array($defaultPackStockType, $packStockTypesAllowed);
-        // We need to SUM up cp.quantity because multiple rows could be returned when id_customization filtering is skipped.
+        // We need to SUM up cp.`quantity` because multiple rows could be returned when id_customization filtering is skipped.
         $firstUnionSql = 'SELECT SUM(cp.quantity) as first_level_quantity, 0 as pack_quantity
           FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_product') . ' cp';
         $secondUnionSql = 'SELECT 0 as first_level_quantity, SUM(cp.quantity * p.quantity) as pack_quantity

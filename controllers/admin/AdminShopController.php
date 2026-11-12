@@ -198,7 +198,7 @@ class AdminShopControllerCore extends AdminController
 				ON (a.id_shop_group = gs.id_shop_group)
 			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_lang') . ' cl
 				ON (a.id_category = cl.id_category AND cl.id_lang=' . (int) $this->context->language->id . ')
-			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'shop_url') . ' su
+			LEFT JOIN ' . _DB_PREFIX_ . 'shop_url su
 				ON a.id_shop = su.id_shop AND su.main = 1
 		';
         $this->_group = 'GROUP BY a.id_shop';

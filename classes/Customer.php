@@ -881,7 +881,6 @@ class CustomerCore extends ObjectModel
     {
         // PostgreSQL's STRING_AGG() requires a text argument and takes the separator
         // as a second parameter, unlike MySQL's GROUP_CONCAT().
-        /* @phpstan-ignore-next-line */
         $groupIdsExpr = _DB_TYPE_ == 'pgsql'
             ? 'STRING_AGG(CAST(cg.id_group AS TEXT), \',\')'
             : 'GROUP_CONCAT(cg.id_group SEPARATOR \',\')';
@@ -909,7 +908,6 @@ class CustomerCore extends ObjectModel
 
         // c.id_customer is an integer column: MySQL implicitly casts it to string for LIKE,
         // but PostgreSQL requires an explicit cast (no ~~ operator for integer).
-        /* @phpstan-ignore-next-line */
         $idCustomerCastType = _DB_TYPE_ == 'pgsql' ? 'TEXT' : 'CHAR';
 
         $search_items = explode(' ', $query);
@@ -981,7 +979,6 @@ class CustomerCore extends ObjectModel
         WHERE g.id_customer = ' . (int) $this->id . ' ORDER BY c.date_add DESC ');
 
         // PostgreSQL's AGE() computes the birthday-aware year difference, an unset birthday is stored as -infinity
-        /* @phpstan-ignore-next-line */
         $ageExpr = _DB_TYPE_ == 'pgsql'
             ? 'CASE WHEN ISFINITE(c.birthday) THEN EXTRACT(YEAR FROM AGE(CURRENT_DATE, c.birthday)) END'
             : '(YEAR(CURRENT_DATE)-YEAR(c.birthday)) - (RIGHT(CURRENT_DATE, 5)<RIGHT(c.birthday, 5))';
@@ -1027,13 +1024,8 @@ class CustomerCore extends ObjectModel
             return [];
         }
 
-        // TIMEDIFF() has no PostgreSQL equivalent, but PostgreSQL's "-" operator between two
-        // timestamps already yields an INTERVAL directly (MySQL doesn't overload "-" this way,
-        // hence TIMEDIFF()). INET_NTOA() (decode a bigint back to a dotted-quad IPv4 string)
-        // has no PostgreSQL equivalent either; rebuilt from bit-shifting the stored bigint.
-        /* @phpstan-ignore-next-line */
+        // PostgreSQL has no TIMEDIFF() nor INET_NTOA(): subtract the timestamps and decode the IPv4 by hand
         $timeExpr = _DB_TYPE_ == 'pgsql' ? '(MAX(cp.time_end) - c.date_add)' : 'TIMEDIFF(MAX(cp.time_end), c.date_add)';
-        /* @phpstan-ignore-next-line */
         $ipAddressExpr = _DB_TYPE_ == 'pgsql'
             ? "(((ip_address >> 24) & 255)::text || '.' || ((ip_address >> 16) & 255)::text || '.' || ((ip_address >> 8) & 255)::text || '.' || (ip_address & 255)::text)"
             : 'INET_NTOA(ip_address)';
@@ -1064,7 +1056,7 @@ class CustomerCore extends ObjectModel
         if (!Cache::isStored($cacheId)) {
             $result = (int) Db::getInstance()->getValue('
             SELECT id_customer
-            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer') . ' c
+            FROM ' . _DB_PREFIX_ . 'customer c
             WHERE c.id_customer = ' . (int) $idCustomer);
             Cache::store($cacheId, $result);
 
@@ -1141,7 +1133,7 @@ class CustomerCore extends ObjectModel
             self::$_customer_groups[$idCustomer] = [];
             $result = Db::getInstance()->executeS('
             SELECT cg.id_group
-            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_group') . ' cg
+            FROM ' . _DB_PREFIX_ . 'customer_group cg
             WHERE cg.id_customer = ' . (int) $idCustomer);
             foreach ($result as $group) {
                 self::$_customer_groups[$idCustomer][] = (int) $group['id_group'];
@@ -1513,7 +1505,7 @@ class CustomerCore extends ObjectModel
         return Db::getInstance()->executeS(
             '
             SELECT cg.id_group as id
-            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_group') . ' cg
+            FROM ' . _DB_PREFIX_ . 'customer_group cg
             ' . Shop::addSqlAssociation('group', 'cg') . '
             WHERE cg.id_customer = ' . (int) $this->id
         );

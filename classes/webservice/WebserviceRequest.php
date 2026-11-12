@@ -1673,9 +1673,7 @@ class WebserviceRequestCore
                             $assocTableName = _DB_PREFIX_ . $this->resourceConfiguration['retrieveData']['table'] . '_' . $assoc['type'];
                             // All shop-association tables key on (id_shop, <entity id column>);
                             // PostgreSQL has no INSERT IGNORE, so ON CONFLICT DO NOTHING replicates it.
-                            /* @phpstan-ignore-next-line */
                             $insertKeyword = _DB_TYPE_ == 'pgsql' ? 'INSERT' : 'INSERT IGNORE';
-                            /* @phpstan-ignore-next-line */
                             $onConflict = _DB_TYPE_ == 'pgsql' ? ' ON CONFLICT (id_shop, ' . Db::quoteIdentifier($idColumn) . ') DO NOTHING' : '';
 
                             $sql = $insertKeyword . ' INTO ' . Db::quoteIdentifier($assocTableName) . ' (id_shop, ' . Db::quoteIdentifier($idColumn) . ') VALUES ';

@@ -1196,8 +1196,8 @@ abstract class ModuleCore implements ModuleInterface
 
     public function hasShopAssociations(): bool
     {
-        $sql = 'SELECT m.id_module FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module') . ' m INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module_shop') . ' ms ON ms.id_module = m.id_module WHERE m.id_module = ' . (int) $this->id;
-        $result = Db::getInstance()->getRow($sql);
+        $sql = "SELECT m.id_module FROM %smodule m INNER JOIN %smodule_shop ms ON ms.id_module = m.id_module WHERE m.id_module = '%s'";
+        $result = Db::getInstance()->getRow(sprintf($sql, _DB_PREFIX_, _DB_PREFIX_, (int) $this->id));
 
         return isset($result['id_module']);
     }
@@ -1963,11 +1963,8 @@ abstract class ModuleCore implements ModuleInterface
         // dependent on hm.id_hook/hm.id_module through the join (MySQL allows non-aggregated
         // columns from joined tables under GROUP BY; PostgreSQL only allows it for the grouped
         // table's own columns). DISTINCT ON is PostgreSQL's idiomatic equivalent here.
-        /* @phpstan-ignore-next-line */
         $dedupeClause = _DB_TYPE_ == 'pgsql' ? 'DISTINCT ON (hm.id_hook, hm.id_module) ' : 'DISTINCT ';
-        /* @phpstan-ignore-next-line */
         $groupByClause = _DB_TYPE_ == 'pgsql' ? '' : 'GROUP BY hm.id_hook, hm.id_module';
-        /* @phpstan-ignore-next-line */
         $orderByClause = _DB_TYPE_ == 'pgsql' ? 'ORDER BY hm.id_hook, hm.id_module, hm.position, m.name DESC' : 'ORDER BY hm.position, m.name DESC';
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT ' . $dedupeClause . 'm.id_module, h.id_hook, m.name, hm.position

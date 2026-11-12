@@ -501,27 +501,12 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     }
 
     /**
-     * Creates new entries in _lang tables using the data from default language.
-     * If data already exist in that language, they won't be overwritten.
-     *
-     * @param string $tableName
-     * @param int $shopDefaultLangId
-     * @param int $shopId
-     *
-     * @return bool
-     *
-     * @throws PrestaShopDatabaseException
-     */
-    /**
-     * MySQL's "SHOW TABLES FROM db" has no PostgreSQL equivalent; querying pg_catalog instead.
-     * The result is reshaped to expose the exact same "Tables_in_<dbname>" key MySQL returns,
-     * so every caller can stay dialect-agnostic.
+     * Portable "SHOW TABLES FROM db", keyed "Tables_in_<dbname>" like MySQL.
      *
      * @return array<int, array<string, string>>
      */
     private static function showTables()
     {
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'pgsql') {
             return Db::getInstance()->executeS(
                 'SELECT tablename AS ' . Db::quoteIdentifier('Tables_in_' . _DB_NAME_) . ' FROM pg_catalog.pg_tables WHERE schemaname = \'public\''
@@ -532,9 +517,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     }
 
     /**
-     * MySQL's "SHOW COLUMNS FROM table" has no PostgreSQL equivalent; querying
-     * information_schema instead. The result is reshaped to expose the same "Field" key
-     * MySQL returns, so every caller can stay dialect-agnostic.
+     * Portable "SHOW COLUMNS FROM table", keyed "Field" like MySQL.
      *
      * @param string $tableName
      *
@@ -542,7 +525,6 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     private static function showColumns($tableName)
     {
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'pgsql') {
             return Db::getInstance()->executeS(
                 'SELECT column_name AS "Field" FROM information_schema.columns
@@ -555,14 +537,12 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     }
 
     /**
-     * MySQL's "SHOW TABLES LIKE '...'" has no PostgreSQL equivalent; querying pg_catalog
-     * instead. Returns every "*_lang" table for this installation.
+     * Portable "SHOW TABLES LIKE '<prefix>%_lang'".
      *
      * @return array<int, array<string, string>>
      */
     private static function showLangTables()
     {
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'pgsql') {
             return Db::getInstance()->executeS(
                 'SELECT tablename AS ' . Db::quoteIdentifier('Tables_in_' . _DB_NAME_) . '
@@ -574,6 +554,18 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         return Db::getInstance()->executeS('SHOW TABLES LIKE \'' . str_replace('_', '\\_', _DB_PREFIX_) . '%\_lang\' ');
     }
 
+    /**
+     * Creates new entries in _lang tables using the data from default language.
+     * If data already exist in that language, they won't be overwritten.
+     *
+     * @param string $tableName
+     * @param int $shopDefaultLangId
+     * @param int $shopId
+     *
+     * @return bool
+     *
+     * @throws PrestaShopDatabaseException
+     */
     private function duplicateRowsFromDefaultShopLang($tableName, $shopDefaultLangId, $shopId)
     {
         // We load all columns from the table
@@ -629,11 +621,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
         // Format the SQL query and run it
         // Entries which already exist are ignored, only new ones are added.
-        // PostgreSQL has no INSERT IGNORE; ON CONFLICT DO NOTHING (no explicit target needed)
-        // achieves the same "skip silently on conflict" behavior.
-        /* @phpstan-ignore-next-line */
         $insertKeyword = _DB_TYPE_ == 'pgsql' ? 'INSERT' : 'INSERT IGNORE';
-        /* @phpstan-ignore-next-line */
         $onConflict = _DB_TYPE_ == 'pgsql' ? ' ON CONFLICT DO NOTHING' : '';
         $sql = '
         ' . $insertKeyword . ' INTO ' . Db::quoteIdentifier($tableName) . ' (' . implode(', ', $insertFields) . ')
@@ -1136,7 +1124,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     {
         static::$_LANGUAGES = [];
 
-        $result = Db::getInstance()->executeS('SELECT * FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'lang') . '');
+        $result = Db::getInstance()->executeS('SELECT * FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'lang'));
 
         foreach ($result as $row) {
             $idLang = (int) $row['id_lang'];
@@ -1221,7 +1209,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     {
         if (static::$_cache_language_installation === null) {
             static::$_cache_language_installation = [];
-            $result = Db::getInstance()->executeS('SELECT id_lang, iso_code FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'lang') . '');
+            $result = Db::getInstance()->executeS('SELECT id_lang, iso_code FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'lang'));
             foreach ($result as $row) {
                 static::$_cache_language_installation[$row['iso_code']] = $row['id_lang'];
             }
@@ -1234,7 +1222,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     {
         if (static::$_cache_language_installation_by_locale === null) {
             static::$_cache_language_installation_by_locale = [];
-            $result = Db::getInstance()->executeS('SELECT id_lang, locale FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'lang') . '');
+            $result = Db::getInstance()->executeS('SELECT id_lang, locale FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'lang'));
             foreach ($result as $row) {
                 static::$_cache_language_installation_by_locale[$row['locale']] = $row['id_lang'];
             }

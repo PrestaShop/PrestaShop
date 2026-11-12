@@ -139,15 +139,15 @@ class FeatureValueCore extends ObjectModel
         if (null !== $idProduct && $idProduct) {
             $idFeatureValue = Db::getInstance()->getValue('
 				SELECT fp.id_feature_value
-				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_product') . ' fp
-				INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_value') . ' fv USING (id_feature_value)
+				FROM ' . _DB_PREFIX_ . 'feature_product fp
+				INNER JOIN ' . _DB_PREFIX_ . 'feature_value fv USING (id_feature_value)
 				WHERE fp.id_feature = ' . (int) $idFeature . '
 				AND fv.custom = ' . (int) $custom . '
 				AND fp.id_product = ' . (int) $idProduct);
 
             if ($custom && $idFeatureValue && null !== $idLang && $idLang) {
                 Db::getInstance()->execute('
-				UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_value_lang') . '
+				UPDATE ' . _DB_PREFIX_ . 'feature_value_lang
 				SET value = \'' . pSQL($value) . '\'
 				WHERE id_feature_value = ' . (int) $idFeatureValue . '
 				AND value != \'' . pSQL($value) . '\'
@@ -158,8 +158,8 @@ class FeatureValueCore extends ObjectModel
         if (!$custom) {
             $idFeatureValue = Db::getInstance()->getValue('
 				SELECT fv.id_feature_value
-				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_value') . ' fv
-				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_value_lang') . ' fvl ON (fvl.id_feature_value = fv.id_feature_value AND fvl.id_lang = ' . (int) $idLang . ')
+				FROM ' . _DB_PREFIX_ . 'feature_value fv
+				LEFT JOIN ' . _DB_PREFIX_ . 'feature_value_lang fvl ON (fvl.id_feature_value = fv.id_feature_value AND fvl.id_lang = ' . (int) $idLang . ')
 				WHERE value = \'' . pSQL($value) . '\'
 				AND fv.id_feature = ' . (int) $idFeature . '
 				AND fv.custom = 0
@@ -290,7 +290,6 @@ class FeatureValueCore extends ObjectModel
 
         // PostgreSQL has no session variables (MySQL's @i trick); renumber via a window
         // function instead, joined back on the primary key.
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'pgsql') {
             return (bool) Db::getInstance()->execute('
                 UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_value') . ' AS target

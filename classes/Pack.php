@@ -417,7 +417,6 @@ class PackCore extends Product
 
         // PostgreSQL's STRING_AGG() needs an explicit text cast, unlike MySQL's GROUP_CONCAT()
         // which casts integers implicitly.
-        /* @phpstan-ignore-next-line */
         $idsAggExpr = _DB_TYPE_ == 'pgsql' ? "STRING_AGG(a.id_product_pack::text, ',')" : 'GROUP_CONCAT(a.id_product_pack)';
         $packs = Db::getInstance()->getValue('
 		SELECT ' . $idsAggExpr . '

@@ -115,7 +115,6 @@ class ProductAssemblerCore
         }
         $now = date('Y-m-d') . ' 00:00:00';
         $dateAddColumn = Db::quoteIdentifier('date_add');
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'pgsql') {
             $newProductExpr = "(p.{$dateAddColumn}::date - ('$now'::timestamp - INTERVAL '$nbDaysNewProduct days')::date) > 0";
         } else {

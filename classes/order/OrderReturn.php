@@ -238,8 +238,8 @@ class OrderReturnCore extends ObjectModel
     {
         $details = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             'SELECT od.id_order_detail, GREATEST(od.product_quantity_return, COALESCE(SUM(ord.product_quantity),0)) as qty_returned
-			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_detail') . ' od
-			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_return_detail') . ' ord ON ord.id_order_detail = od.id_order_detail AND ord.cancelled = 0
+			FROM ' . _DB_PREFIX_ . 'order_detail od
+			LEFT JOIN ' . _DB_PREFIX_ . 'order_return_detail ord ON ord.id_order_detail = od.id_order_detail AND ord.cancelled = 0
 			WHERE od.id_order = ' . (int) $id_order . '
 			GROUP BY od.id_order_detail'
         );
@@ -262,7 +262,7 @@ class OrderReturnCore extends ObjectModel
     public static function setCancelledStatus(int $idOrderReturn, bool $cancelled): void
     {
         Db::getInstance()->execute(
-            'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_return_detail') . ' ord '
+            'UPDATE ' . _DB_PREFIX_ . 'order_return_detail ord '
             . 'SET cancelled = ' . ($cancelled ? '1' : '0') . ' '
             . 'WHERE id_order_return = ' . (string) $idOrderReturn
         );

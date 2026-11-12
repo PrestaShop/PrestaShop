@@ -1701,19 +1701,14 @@ class ProductCore extends ObjectModel
         if (!Validate::isUnsignedInt($nbDaysNewProduct)) {
             $nbDaysNewProduct = 20;
         }
-        $now = date('Y-m-d') . ' 00:00:00';
-        // "date_add > (now - N days)" instead of "DATEDIFF(now, date_add) < N":
-        // DATE_SUB() has no PostgreSQL equivalent, and TIMESTAMP-literal-minus-INTERVAL has no MySQL equivalent.
-        /* @phpstan-ignore-next-line */
-        $newProductThreshold = _DB_TYPE_ == 'pgsql'
-            ? "(TIMESTAMP '" . pSQL($now) . "' - INTERVAL '" . $nbDaysNewProduct . " DAY')"
-            : "DATE_SUB('" . pSQL($now) . "', INTERVAL " . $nbDaysNewProduct . ' DAY)';
+        // A product is new while its creation day is within the last N days
+        $newProductThreshold = "'" . date('Y-m-d 00:00:00', strtotime(sprintf('%+d days', 1 - (int) $nbDaysNewProduct))) . "'";
 
         $query = 'SELECT COUNT(p.id_product)
             FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p
             ' . Shop::addSqlAssociation('product', 'p') . '
             WHERE p.id_product = ' . (int) $idProduct . '
-            AND product_shop.date_add > ' . $newProductThreshold;
+            AND product_shop.date_add >= ' . $newProductThreshold;
 
         return (bool) Db::getInstance()->getValue($query, false);
     }
@@ -2530,7 +2525,6 @@ class ProductCore extends ObjectModel
         // PostgreSQL's STRING_AGG() takes a single expression to aggregate (with an explicit
         // CONCAT() for the per-row value) plus the separator, unlike MySQL's GROUP_CONCAT()
         // which accepts multiple expressions and a trailing SEPARATOR clause.
-        /* @phpstan-ignore-next-line */
         $attributeDesignationExpr = _DB_TYPE_ == 'pgsql'
             ? 'STRING_AGG(CONCAT(agl.name, \'' . pSQL($attribute_value_separator) . '\', al.name), \'' . pSQL($attribute_separator) . '\' ORDER BY ag.position, a.position)'
             : 'GROUP_CONCAT(agl.name, \'' . pSQL($attribute_value_separator) . '\',al.name ORDER BY ag.position, a.position SEPARATOR \'' . pSQL($attribute_separator) . '\')';
@@ -2809,17 +2803,12 @@ class ProductCore extends ObjectModel
      */
     public static function getNewProducts($id_lang, $page_number = 0, $nb_products = 10, $count = false, $order_by = null, $order_way = null, ?Context $context = null)
     {
-        $now = date('Y-m-d') . ' 00:00:00';
         if (!$context) {
             $context = Context::getContext();
         }
         $nb_days_new_product = (int) Configuration::get('PS_NB_DAYS_NEW_PRODUCT');
-        // "product_shop.date_add > (now - N days)": DATE_SUB() has no PostgreSQL equivalent,
-        // and the standard TIMESTAMP-literal-minus-INTERVAL form has no MySQL equivalent.
-        /* @phpstan-ignore-next-line */
-        $newProductThreshold = _DB_TYPE_ == 'pgsql'
-            ? "(TIMESTAMP '" . pSQL($now) . "' - INTERVAL '" . $nb_days_new_product . " DAY')"
-            : "DATE_SUB('" . pSQL($now) . "', INTERVAL " . $nb_days_new_product . ' DAY)';
+        // A product is new while its creation day is within the last N days
+        $newProductThreshold = "'" . date('Y-m-d 00:00:00', strtotime(sprintf('%+d days', 1 - (int) $nb_days_new_product))) . "'";
 
         $front = true;
         if (!in_array($context->controller->controller_type, ['front', 'modulefront'])) {
@@ -2866,7 +2855,7 @@ class ProductCore extends ObjectModel
                     FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p
                     ' . Shop::addSqlAssociation('product', 'p') . '
                     WHERE product_shop.active = 1
-                    AND product_shop.date_add > ' . $newProductThreshold . '
+                    AND product_shop.date_add >= ' . $newProductThreshold . '
                     ' . ($front ? " AND product_shop.visibility IN ('both', 'catalog')" : '') . '
                     ' . $sql_groups;
 
@@ -2876,7 +2865,7 @@ class ProductCore extends ObjectModel
         $sql->select(
             'p.*, product_shop.*, stock.out_of_stock, COALESCE(stock.quantity, 0) as quantity, pl.description, pl.description_short, pl.link_rewrite, pl.meta_description,
             pl.meta_title, pl.name, pl.available_now, pl.available_later, image_shop.id_image id_image, il.legend, m.name AS manufacturer_name,
-            (product_shop.date_add > ' . $newProductThreshold . ') as new'
+            (product_shop.date_add >= ' . $newProductThreshold . ') as new'
         );
 
         $sql->from('product', 'p');
@@ -2896,7 +2885,7 @@ class ProductCore extends ObjectModel
         if ($front) {
             $sql->where("product_shop.visibility IN ('both', 'catalog')");
         }
-        $sql->where('product_shop.date_add > ' . $newProductThreshold);
+        $sql->where('product_shop.date_add >= ' . $newProductThreshold);
         if (Group::isFeatureActive()) {
             $groups = FrontController::getCurrentCustomerGroups();
             $sql->where('EXISTS(SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_product') . ' cp
@@ -2995,7 +2984,6 @@ class ProductCore extends ObjectModel
 
             $ids_products = rtrim($ids_products, ',');
             // PostgreSQL has no storage engines; MEMORY is a MySQL-only optimization hint.
-            /* @phpstan-ignore-next-line */
             $engineClause = _DB_TYPE_ == 'pgsql' ? '' : ' ENGINE=MEMORY';
             Db::getInstance()->execute('CREATE TEMPORARY TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_reductions') . ' (id_product INT NOT NULL DEFAULT 0, id_product_attribute INT NOT NULL DEFAULT 0)' . $engineClause, false);
             if ($ids_products) {
@@ -3007,8 +2995,7 @@ class ProductCore extends ObjectModel
             JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_group') . ' cg ON (cp.id_category = cg.id_category AND cg.id_group ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id) . ')
             WHERE cp.id_product = p.id_product)';
 
-            // Please keep 2 distinct queries because RAND()/RANDOM() is an awful way to achieve this result
-            /* @phpstan-ignore-next-line */
+            // Please keep 2 distinct queries because RAND() is an awful way to achieve this result
             $randomFunction = _DB_TYPE_ == 'pgsql' ? 'RANDOM()' : 'RAND()';
             $sql = 'SELECT product_shop.id_product, COALESCE(product_attribute_shop.id_product_attribute,0) id_product_attribute
                     FROM
@@ -3025,7 +3012,6 @@ class ProductCore extends ObjectModel
             $result = Db::getInstance()->getRow($sql);
 
             // PostgreSQL doesn't accept the TEMPORARY keyword in DROP TABLE.
-            /* @phpstan-ignore-next-line */
             $dropKeyword = _DB_TYPE_ == 'pgsql' ? 'DROP TABLE' : 'DROP TEMPORARY TABLE';
             Db::getInstance()->execute($dropKeyword . ' ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_reductions'), false);
 
@@ -3035,15 +3021,12 @@ class ProductCore extends ObjectModel
 
             // no group by needed : there's only one attribute with cover=1 for a given id_product + shop
             $nbDaysNewProduct = Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
-            $now = date('Y-m-d') . ' 00:00:00';
-            /* @phpstan-ignore-next-line */
-            $newProductThreshold = _DB_TYPE_ == 'pgsql'
-                ? "(TIMESTAMP '" . pSQL($now) . "' - INTERVAL '" . $nbDaysNewProduct . " DAY')"
-                : "DATE_SUB('" . pSQL($now) . "', INTERVAL " . $nbDaysNewProduct . ' DAY)';
+            // A product is new while its creation day is within the last N days
+            $newProductThreshold = "'" . date('Y-m-d 00:00:00', strtotime(sprintf('%+d days', 1 - (int) $nbDaysNewProduct))) . "'";
             $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock out_of_stock, pl.description, pl.description_short,
                         pl.link_rewrite, pl.meta_description, pl.meta_title, pl.name, pl.available_now, pl.available_later,
                         p.ean13, p.isbn, p.upc, p.mpn, image_shop.id_image id_image, il.legend,
-                        (product_shop.date_add > ' . $newProductThreshold . ') AS new
+                        (product_shop.date_add >= ' . $newProductThreshold . ') AS new
                     FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p
                     LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_lang') . ' pl ON (
                         p.id_product = pl.id_product
@@ -3167,18 +3150,15 @@ class ProductCore extends ObjectModel
         }
 
         $nbDaysNewProduct = Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
-        $now = date('Y-m-d') . ' 00:00:00';
-        /* @phpstan-ignore-next-line */
-        $newProductThreshold = _DB_TYPE_ == 'pgsql'
-            ? "(TIMESTAMP '" . pSQL($now) . "' - INTERVAL '" . $nbDaysNewProduct . " DAY')"
-            : "DATE_SUB('" . pSQL($now) . "', INTERVAL " . $nbDaysNewProduct . ' DAY)';
+        // A product is new while its creation day is within the last N days
+        $newProductThreshold = "'" . date('Y-m-d 00:00:00', strtotime(sprintf('%+d days', 1 - (int) $nbDaysNewProduct))) . "'";
         $sql = '
         SELECT
             p.*, product_shop.*, stock.out_of_stock, COALESCE(stock.quantity, 0) as quantity, pl.description, pl.description_short, pl.available_now, pl.available_later,
             COALESCE(product_attribute_shop.id_product_attribute, 0) id_product_attribute,
             pl.link_rewrite, pl.meta_description, pl.meta_title,
             pl.name, image_shop.id_image id_image, il.legend, m.name AS manufacturer_name,
-            (p.date_add > ' . $newProductThreshold . ') AS new
+            (p.date_add >= ' . $newProductThreshold . ') AS new
         FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p
         ' . Shop::addSqlAssociation('product', 'p') . '
         LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute_shop') . ' product_attribute_shop
@@ -4261,7 +4241,7 @@ class ProductCore extends ObjectModel
     {
         $id_shop = ($shop !== null ? (int) $shop->id : null);
         $sql = (($inner_join) ? ' INNER ' : ' LEFT ')
-            . 'JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'stock_available') . ' stock
+            . 'JOIN ' . _DB_PREFIX_ . 'stock_available stock
             ON (stock.id_product = ' . Db::quoteIdentifier($product_alias) . '.id_product';
 
         if (null !== $product_attribute) {
@@ -4560,15 +4540,12 @@ class ProductCore extends ObjectModel
     public function getAccessories($id_lang, $active = true)
     {
         $nbDaysNewProduct = Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
-        $now = date('Y-m-d') . ' 00:00:00';
-        /* @phpstan-ignore-next-line */
-        $newProductThreshold = _DB_TYPE_ == 'pgsql'
-            ? "(TIMESTAMP '" . pSQL($now) . "' - INTERVAL '" . $nbDaysNewProduct . " DAY')"
-            : "DATE_SUB('" . pSQL($now) . "', INTERVAL " . $nbDaysNewProduct . ' DAY)';
+        // A product is new while its creation day is within the last N days
+        $newProductThreshold = "'" . date('Y-m-d 00:00:00', strtotime(sprintf('%+d days', 1 - (int) $nbDaysNewProduct))) . "'";
         $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, COALESCE(stock.quantity, 0) as quantity, pl.description, pl.description_short, pl.link_rewrite,
                     pl.meta_description, pl.meta_title, pl.name, pl.available_now, pl.available_later,
                     image_shop.id_image id_image, il.legend, m.name as manufacturer_name, cl.name AS category_default, COALESCE(product_attribute_shop.id_product_attribute, 0) id_product_attribute,
-                    (p.date_add > ' . $newProductThreshold . ') AS new
+                    (p.date_add >= ' . $newProductThreshold . ') AS new
                 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'accessory') . '
                 LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p ON p.id_product = id_product_2
                 ' . Shop::addSqlAssociation('product', 'p') . '
@@ -4697,7 +4674,6 @@ class ProductCore extends ObjectModel
         // The conflict target IS the column being "updated": on a genuine primary key conflict
         // id_feature_value can only already equal the value we'd set it to, so this is a no-op
         // update in practice. ON CONFLICT DO NOTHING is the PostgreSQL equivalent.
-        /* @phpstan-ignore-next-line */
         $onConflict = _DB_TYPE_ == 'pgsql'
             ? 'ON CONFLICT (' . Db::quoteIdentifier('id_feature') . ', ' . Db::quoteIdentifier('id_product') . ', ' . Db::quoteIdentifier('id_feature_value') . ') DO NOTHING'
             : 'ON DUPLICATE KEY UPDATE ' . Db::quoteIdentifier('id_feature_value') . ' = ' . (int) $id_feature_value;
@@ -6096,7 +6072,7 @@ class ProductCore extends ObjectModel
         $cart = new Cart((int) $id_cart);
 
         if ($id_customization === 0) {
-            // Backward compatibility: check if there are no products in cart with specific id_customization before returning false
+            // Backward compatibility: check if there are no products in cart with specific `id_customization` before returning false
             $product_customizations = (int) Db::getInstance()->getValue('
                 SELECT COUNT(id_customization) FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_product') . '
                 WHERE id_cart = ' . (int) $id_cart .
@@ -6132,7 +6108,7 @@ class ProductCore extends ObjectModel
         foreach ($result as $row) {
             if ((int) $row['id_module'] && (int) $row['type'] == Product::CUSTOMIZE_TEXTFIELD) {
                 // Hook called only for the module concerned
-                // When a module saves a customization programmatically, it should add its ID in the id_module column
+                // When a module saves a customization programmatically, it should add its ID in the `id_module` column
                 $row['value'] = Hook::exec('displayCustomization', ['customization' => $row], (int) $row['id_module']);
             }
             $customized_datas[(int) $row['id_product']][(int) $row['id_product_attribute']][(int) $cart->id_address_delivery][(int) $row['id_customization']]['datas'][(int) $row['type']][] = $row;
@@ -6443,7 +6419,6 @@ class ProductCore extends ObjectModel
                     return false;
                 }
                 /* Multilingual label name update */
-                // @phpstan-ignore-next-line
                 $onConflictKeyword = _DB_TYPE_ == 'pgsql'
                     ? 'ON CONFLICT (' . Db::quoteIdentifier('id_customization_field') . ', ' . Db::quoteIdentifier('id_lang') . ', ' . Db::quoteIdentifier('id_shop') . ') DO UPDATE SET ' . Db::quoteIdentifier('name') . ' = \'' . pSQL($value) . '\''
                     : 'ON DUPLICATE KEY UPDATE ' . Db::quoteIdentifier('name') . ' = \'' . pSQL($value) . '\'';
@@ -6504,7 +6479,7 @@ class ProductCore extends ObjectModel
         }
 
         // Hide the modules fields in the front-office
-        // When a module adds a customization programmatically, it should set the is_module to 1
+        // When a module adds a customization programmatically, it should set the `is_module` to 1
         $context = Context::getContext();
         $front = isset($context->controller->controller_type) && in_array($context->controller->controller_type, ['front']);
 
@@ -6690,7 +6665,6 @@ class ProductCore extends ObjectModel
     public static function getOldTempProducts()
     {
         // PostgreSQL requires the interval to be a quoted literal, unlike MySQL.
-        /* @phpstan-ignore-next-line */
         $oneDayInterval = _DB_TYPE_ == 'pgsql' ? "INTERVAL '1 DAY'" : 'INTERVAL 1 DAY';
         $sql = 'SELECT id_product FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' WHERE state=' . Product::STATE_TEMP . ' AND date_upd < NOW() - ' . $oneDayInterval;
 
@@ -7654,7 +7628,6 @@ class ProductCore extends ObjectModel
         if ($id_product_attribute) {
             // PostgreSQL's STRING_AGG() takes a single expression (built with CONCAT()) plus a
             // separator, unlike MySQL's GROUP_CONCAT() with multiple expressions and SEPARATOR.
-            /* @phpstan-ignore-next-line */
             $attributeNamesExpr = _DB_TYPE_ == 'pgsql'
                 ? 'STRING_AGG(DISTINCT CONCAT(agl.public_name, \' - \', al.name), \', \')'
                 : 'GROUP_CONCAT(DISTINCT agl.public_name, \' - \', al.name SEPARATOR \', \')';

@@ -476,9 +476,7 @@ class CountryCore extends ObjectModel
         }
 
         if ($sql) {
-            /* @phpstan-ignore-next-line */
             $insertKeyword = _DB_TYPE_ == 'pgsql' ? 'INSERT' : 'INSERT IGNORE';
-            /* @phpstan-ignore-next-line */
             $onConflict = _DB_TYPE_ == 'pgsql' ? ' ON CONFLICT DO NOTHING' : '';
             $sql = $insertKeyword . ' INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module_country') . ' (id_module, id_shop, id_country) VALUES ' . rtrim($sql, ',') . $onConflict;
 
@@ -491,7 +489,7 @@ class CountryCore extends ObjectModel
     /**
      * Adds current Country as a new Object to the database.
      *
-     * @param bool $autoDate Automatically set date_upd and date_add columns
+     * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
      * @return bool Indicates whether the Country has been successfully added

@@ -56,7 +56,7 @@ class AttributeGroupCore extends ObjectModel
     /**
      * Adds current AttributeGroup as a new Object to the database.
      *
-     * @param bool $autoDate Automatically set date_upd and date_add column
+     * @param bool $autoDate Automatically set `date_upd` and `date_add` column
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
      * @return bool Whether the AttributeGroup has been successfully added
@@ -365,7 +365,6 @@ class AttributeGroupCore extends ObjectModel
     {
         // PostgreSQL has no session variables (MySQL's @i trick); renumber via a window
         // function instead, joined back on the primary key.
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'pgsql') {
             return Db::getInstance()->execute('
                 UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute_group') . ' AS target
@@ -377,14 +376,16 @@ class AttributeGroupCore extends ObjectModel
                 WHERE target.id_attribute_group = renumbered.id_attribute_group');
         }
 
+        $return = true;
         Db::getInstance()->execute('SET @i = -1', false);
-
-        return Db::getInstance()->execute(
+        $return = Db::getInstance()->execute(
             '
 				UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute_group') . '
 				SET position = @i:=@i+1
 				ORDER BY position'
         );
+
+        return $return;
     }
 
     /**
@@ -414,7 +415,7 @@ class AttributeGroupCore extends ObjectModel
     public static function getHighestPosition(): int
     {
         $sql = 'SELECT MAX(position)
-				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute_group') . '';
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute_group');
         $position = Db::getInstance()->getValue($sql);
 
         return (is_numeric($position)) ? (int) $position : -1;

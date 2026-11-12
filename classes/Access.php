@@ -61,7 +61,7 @@ class AccessCore extends ObjectModel
             $isCurrentGranted = (bool) Db::getInstance()->getRow('
                 SELECT t.id_authorization_role
                 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'authorization_role') . ' t
-                LEFT JOIN ' . Db::quoteIdentifier($joinTable) . ' j
+                LEFT JOIN ' . $joinTable . ' j
                 ON j.id_authorization_role = t.id_authorization_role
                 WHERE slug = \'' . $currentRole . '\'
                 AND j.id_profile = \'' . (int) $idProfile . '\'
@@ -246,9 +246,7 @@ class AccessCore extends ObjectModel
      */
     public function addAccess($idProfile, $idRole)
     {
-        /* @phpstan-ignore-next-line */
         $insertKeyword = _DB_TYPE_ == 'pgsql' ? 'INSERT' : 'INSERT IGNORE';
-        /* @phpstan-ignore-next-line */
         $onConflict = _DB_TYPE_ == 'pgsql' ? ' ON CONFLICT DO NOTHING' : '';
 
         $sql = '
@@ -288,9 +286,7 @@ class AccessCore extends ObjectModel
      */
     public function addModuleAccess($idProfile, $idRole)
     {
-        /* @phpstan-ignore-next-line */
         $insertKeyword = _DB_TYPE_ == 'pgsql' ? 'INSERT' : 'INSERT IGNORE';
-        /* @phpstan-ignore-next-line */
         $onConflict = _DB_TYPE_ == 'pgsql' ? ' ON CONFLICT DO NOTHING' : '';
 
         $sql = '

@@ -280,7 +280,7 @@ class OrderInvoiceCore extends ObjectModel
         if (isset($product['product_attribute_id']) && $product['product_attribute_id']) {
             $id_image = Db::getInstance()->getValue('
                 SELECT image_shop.id_image
-                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute_image') . ' pai' .
+                FROM ' . _DB_PREFIX_ . 'product_attribute_image pai' .
                 Shop::addSqlAssociation('image', 'pai', true) . '
                 WHERE id_product_attribute = ' . (int) $product['product_attribute_id']);
         }
@@ -288,7 +288,7 @@ class OrderInvoiceCore extends ObjectModel
         if (!isset($id_image) || !$id_image) {
             $id_image = Db::getInstance()->getValue('
                 SELECT image_shop.id_image
-                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image') . ' i' .
+                FROM ' . _DB_PREFIX_ . 'image i' .
                 Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1') . '
                 WHERE i.id_product = ' . (int) $product['product_id']);
         }
@@ -573,7 +573,6 @@ class OrderInvoiceCore extends ObjectModel
     public static function getByDateInterval($date_from, $date_to)
     {
         // DATE_ADD() with a negative interval has no PostgreSQL equivalent; a direct interval subtraction works on both.
-        /* @phpstan-ignore-next-line */
         $dateAddMinusOneDay = _DB_TYPE_ == 'pgsql' ? '(oi.date_add - INTERVAL \'1 DAY\')' : 'DATE_ADD(oi.date_add, INTERVAL -1 DAY)';
         $order_invoice_list = Db::getInstance()->executeS('
             SELECT oi.*
@@ -618,7 +617,6 @@ class OrderInvoiceCore extends ObjectModel
     public static function getByDeliveryDateInterval($date_from, $date_to)
     {
         // DATE_ADD() with a negative interval has no PostgreSQL equivalent; a direct interval subtraction works on both.
-        /* @phpstan-ignore-next-line */
         $deliveryDateMinusOneDay = _DB_TYPE_ == 'pgsql' ? '(oi.delivery_date - INTERVAL \'1 DAY\')' : 'DATE_ADD(oi.delivery_date, INTERVAL -1 DAY)';
         $order_invoice_list = Db::getInstance()->executeS('
             SELECT oi.*

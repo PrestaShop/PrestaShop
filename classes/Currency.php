@@ -448,7 +448,7 @@ class CurrencyCore extends ObjectModel
     public function delete()
     {
         if ($this->id == Currency::getDefaultCurrencyId()) {
-            $result = Db::getInstance()->getRow('SELECT id_currency FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'currency') . ' WHERE id_currency != ' . (int) $this->id . ' AND deleted = 0');
+            $result = Db::getInstance()->getRow('SELECT id_currency FROM ' . _DB_PREFIX_ . 'currency WHERE id_currency != ' . (int) $this->id . ' AND deleted = 0');
             if (empty($result['id_currency'])) {
                 return false;
             }
@@ -774,7 +774,7 @@ class CurrencyCore extends ObjectModel
         }
 
         $sql = 'SELECT *
-				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module_currency') . '
+				FROM ' . _DB_PREFIX_ . 'module_currency
 				WHERE id_module = ' . (int) $idModule . '
 					AND id_shop =' . (int) $idShop;
 
@@ -897,7 +897,7 @@ class CurrencyCore extends ObjectModel
     {
         $cacheId = 'Currency::getIsoCodeById' . pSQL((string) $id);
         if ($forceRefreshCache || !Cache::isStored($cacheId)) {
-            $resultIsoCode = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT iso_code FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'currency') . ' WHERE id_currency = ' . (int) $id);
+            $resultIsoCode = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT iso_code FROM ' . _DB_PREFIX_ . 'currency WHERE id_currency = ' . (int) $id);
             Cache::store($cacheId, $resultIsoCode);
 
             return $resultIsoCode;
@@ -1101,7 +1101,7 @@ class CurrencyCore extends ObjectModel
         if (!isset(self::$countActiveCurrencies[$idShop])) {
             self::$countActiveCurrencies[$idShop] = Db::getInstance()->getValue('
 				SELECT COUNT(DISTINCT c.id_currency) FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'currency') . ' c
-				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'currency_shop') . ' cs ON (cs.id_currency = c.id_currency AND cs.id_shop = ' . (int) $idShop . ')
+				LEFT JOIN ' . _DB_PREFIX_ . 'currency_shop cs ON (cs.id_currency = c.id_currency AND cs.id_shop = ' . (int) $idShop . ')
 				WHERE c.active = 1 AND c.deleted = 0
 			');
         }

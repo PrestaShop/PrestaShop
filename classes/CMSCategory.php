@@ -174,15 +174,9 @@ class CMSCategoryCore extends ObjectModel
             $category['children'][] = CMSCategory::getRecurseCategory($id_lang, $row['id_cms_category'], $active, $links);
         }
 
-        // PostgreSQL, unlike MySQL, doesn't recognize that cl.meta_title/cl.link_rewrite are
-        // functionally dependent on c.id_cms through the join (MySQL allows non-aggregated
-        // columns from joined tables under GROUP BY; PostgreSQL only allows it for the
-        // grouped table's own columns). DISTINCT ON is PostgreSQL's idiomatic equivalent here.
-        /* @phpstan-ignore-next-line */
+        // PostgreSQL has no relaxed GROUP BY on joined columns: keep one row per page with DISTINCT ON
         $dedupeClause = _DB_TYPE_ == 'pgsql' ? 'DISTINCT ON (c.id_cms) ' : '';
-        /* @phpstan-ignore-next-line */
         $groupByClause = _DB_TYPE_ == 'pgsql' ? '' : 'GROUP BY c.id_cms';
-        /* @phpstan-ignore-next-line */
         $orderByClause = _DB_TYPE_ == 'pgsql' ? 'ORDER BY c.id_cms, c.position' : 'ORDER BY c.position';
 
         $sql = 'SELECT ' . $dedupeClause . 'c.id_cms, cl.meta_title, cl.link_rewrite
@@ -370,15 +364,9 @@ class CMSCategoryCore extends ObjectModel
      */
     public function getSubCategories(int $id_lang, bool $active = true)
     {
-        // PostgreSQL, unlike MySQL, doesn't recognize that cl.* are functionally dependent
-        // on c.id_cms_category through the join (MySQL allows non-aggregated columns from
-        // joined tables under GROUP BY; PostgreSQL only allows it for the grouped table's
-        // own columns). DISTINCT ON is PostgreSQL's idiomatic equivalent here.
-        /* @phpstan-ignore-next-line */
+        // PostgreSQL has no relaxed GROUP BY on joined columns: keep one row per category with DISTINCT ON
         $dedupeClause = _DB_TYPE_ == 'pgsql' ? 'DISTINCT ON (c.id_cms_category) ' : '';
-        /* @phpstan-ignore-next-line */
         $groupByClause = _DB_TYPE_ == 'pgsql' ? '' : 'GROUP BY c.id_cms_category';
-        /* @phpstan-ignore-next-line */
         $orderByClause = _DB_TYPE_ == 'pgsql' ? 'ORDER BY c.id_cms_category, position ASC' : 'ORDER BY position ASC';
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('

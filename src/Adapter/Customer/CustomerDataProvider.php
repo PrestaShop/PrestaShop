@@ -78,8 +78,8 @@ class CustomerDataProvider
     {
         $mainSql = 'SELECT cm.*, c.firstname AS cfirstname, c.lastname AS clastname,
             e.firstname AS efirstname, e.lastname AS elastname
-            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_thread') . ' ct
-			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_message') . ' cm
+            FROM ' . _DB_PREFIX_ . 'customer_thread ct
+			LEFT JOIN ' . _DB_PREFIX_ . 'customer_message cm
 				ON ct.id_customer_thread = cm.id_customer_thread
             LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer') . ' c
                 ON ct.id_customer = c.id_customer

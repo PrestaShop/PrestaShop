@@ -80,13 +80,13 @@ class CarrierCore extends ObjectModel
 
     /**
      * @var bool True if the carrier is related to an external module. This needs to go hand-in-hand
-     *           with the external_module_name property below, which contains the name of the module.
+     *           with the `external_module_name` property below, which contains the name of the module.
      *           Fill these two values programatically during configuration of the carrier by the module.
      */
     public $is_module;
 
     /** @var string Name of external module responsible for this Carrier, if filled in by a module, make sure
-     *              that the is_module property is set to true.
+     *              that the `is_module` property is set to true.
      *              Fill these two values programatically during configuration of the carrier by the module.
      */
     public $external_module_name = null;
@@ -223,7 +223,7 @@ class CarrierCore extends ObjectModel
     /**
      * Adds current Carrier as a new Object to the database.
      *
-     * @param bool $autoDate Automatically set date_upd and date_add columns
+     * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
      * @return bool Whether the Carrier has been successfully added
@@ -656,11 +656,8 @@ class CarrierCore extends ObjectModel
         // dependent on c.id_country through the join (MySQL allows non-aggregated columns
         // from joined tables under GROUP BY; PostgreSQL only allows it for the grouped
         // table's own columns). DISTINCT ON is PostgreSQL's idiomatic equivalent here.
-        /* @phpstan-ignore-next-line */
         $dedupeClause = _DB_TYPE_ == 'pgsql' ? 'DISTINCT ON (c.id_country) ' : '';
-        /* @phpstan-ignore-next-line */
         $groupByClause = _DB_TYPE_ == 'pgsql' ? '' : 'GROUP BY c.id_country';
-        /* @phpstan-ignore-next-line */
         $orderByClause = _DB_TYPE_ == 'pgsql' ? 'ORDER BY c.id_country, cl.name ASC' : 'ORDER BY cl.name ASC';
         $countries = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             'SELECT ' . $dedupeClause . 'cl.*, c.*, cl.name AS country, zz.name AS zone

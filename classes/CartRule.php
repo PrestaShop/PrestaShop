@@ -423,7 +423,6 @@ class CartRuleCore extends ObjectModel
         }
 
         // Basic part of the query, we are selecting all cart rules
-        /* @phpstan-ignore-next-line */
         $noCacheKeyword = _DB_TYPE_ == 'pgsql' ? '' : 'SQL_NO_CACHE ';
         $sql = '
             SELECT ' . $noCacheKeyword . '* FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule') . ' cr
@@ -2036,7 +2035,6 @@ class CartRuleCore extends ObjectModel
             return;
         }
 
-        /* @phpstan-ignore-next-line */
         $noCacheKeyword = _DB_TYPE_ == 'pgsql' ? '' : 'SQL_NO_CACHE ';
         $sql = '
 		SELECT ' . $noCacheKeyword . 'cr.*

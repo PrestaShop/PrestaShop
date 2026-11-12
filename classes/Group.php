@@ -289,7 +289,7 @@ class GroupCore extends ObjectModel
      */
     public static function isCurrentlyUsed($table = null, $has_active_column = false)
     {
-        return (bool) (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT COUNT(*) FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'group') . '') > 3);
+        return (bool) (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT COUNT(*) FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'group')) > 3);
     }
 
     /**

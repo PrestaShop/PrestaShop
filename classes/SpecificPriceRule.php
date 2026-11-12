@@ -61,7 +61,7 @@ class SpecificPriceRuleCore extends ObjectModel
     public function delete()
     {
         $this->deleteConditions();
-        Db::getInstance()->execute('DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price') . ' WHERE id_specific_price_rule=' . (int) $this->id);
+        Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'specific_price WHERE id_specific_price_rule=' . (int) $this->id);
 
         return (bool) parent::delete();
     }
@@ -69,7 +69,7 @@ class SpecificPriceRuleCore extends ObjectModel
     public function deleteConditions()
     {
         $ids_condition_group = Db::getInstance()->executeS('SELECT id_specific_price_rule_condition_group
-																		 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price_rule_condition_group') . '
+																		 FROM ' . _DB_PREFIX_ . 'specific_price_rule_condition_group
 																		 WHERE id_specific_price_rule=' . (int) $this->id);
         if ($ids_condition_group) {
             foreach ($ids_condition_group as $row) {
@@ -136,7 +136,7 @@ class SpecificPriceRuleCore extends ObjectModel
             $where .= ' AND id_product IN (' . implode(', ', array_map('intval', $products)) . ')';
         }
 
-        return Db::getInstance()->execute('DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price') . ' WHERE id_specific_price_rule=' . (int) $this->id . $where);
+        return Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'specific_price WHERE id_specific_price_rule=' . (int) $this->id . $where);
     }
 
     /**
@@ -160,8 +160,8 @@ class SpecificPriceRuleCore extends ObjectModel
         $conditions = Db::getInstance()->executeS(
             '
 			SELECT g.*, c.*
-			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price_rule_condition_group') . ' g
-			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price_rule_condition') . ' c
+			FROM ' . _DB_PREFIX_ . 'specific_price_rule_condition_group g
+			LEFT JOIN ' . _DB_PREFIX_ . 'specific_price_rule_condition c
 				ON (c.id_specific_price_rule_condition_group = g.id_specific_price_rule_condition_group)
 			WHERE g.id_specific_price_rule=' . (int) $this->id
         );
@@ -170,11 +170,11 @@ class SpecificPriceRuleCore extends ObjectModel
             foreach ($conditions as &$condition) {
                 if ($condition['type'] == 'attribute') {
                     $condition['id_attribute_group'] = Db::getInstance()->getValue('SELECT id_attribute_group
-																										FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute') . '
+																										FROM ' . _DB_PREFIX_ . 'attribute
 																										WHERE id_attribute=' . (int) $condition['value']);
                 } elseif ($condition['type'] == 'feature') {
                     $condition['id_feature'] = Db::getInstance()->getValue('SELECT id_feature
-																								FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_value') . '
+																								FROM ' . _DB_PREFIX_ . 'feature_value
 																								WHERE id_feature_value=' . (int) $condition['value']);
                 }
                 $conditions_group[(int) $condition['id_specific_price_rule_condition_group']][] = $condition;

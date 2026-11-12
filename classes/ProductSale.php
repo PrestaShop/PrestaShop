@@ -10,7 +10,7 @@
 class ProductSaleCore
 {
     /**
-     * Fill the product_sale SQL table with data from order_detail.
+     * Fill the `product_sale` SQL table with data from `order_detail`.
      *
      * @return bool True on success
      */
@@ -18,16 +18,14 @@ class ProductSaleCore
     {
         // Conflict target is the PRIMARY KEY (id_product); REPLACE's delete+insert semantics
         // are equivalent here to an upsert of every non-key column.
-        /* @phpstan-ignore-next-line */
         $insertKeyword = _DB_TYPE_ == 'pgsql' ? 'INSERT' : 'REPLACE';
-        /* @phpstan-ignore-next-line */
         $onConflict = _DB_TYPE_ == 'pgsql'
             ? 'ON CONFLICT (id_product) DO UPDATE SET quantity = EXCLUDED.quantity, sale_nbr = EXCLUDED.sale_nbr, date_upd = EXCLUDED.date_upd'
             : '';
-        $sql = $insertKeyword . ' INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_sale') . '
+        $sql = $insertKeyword . ' INTO ' . _DB_PREFIX_ . 'product_sale
 				(id_product, quantity, sale_nbr, date_upd)
 				SELECT od.product_id, SUM(od.product_quantity), COUNT(od.product_id), NOW()
-							FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_detail') . ' od GROUP BY od.product_id
+							FROM ' . _DB_PREFIX_ . 'order_detail od GROUP BY od.product_id
 				' . $onConflict;
 
         return Db::getInstance()->execute($sql);
@@ -86,11 +84,8 @@ class ProductSaleCore
         }
 
         $interval = Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
-        $now = date('Y-m-d') . ' 00:00:00';
-        /* @phpstan-ignore-next-line */
-        $newProductThreshold = _DB_TYPE_ == 'pgsql'
-            ? "(TIMESTAMP '" . pSQL($now) . "' - INTERVAL '" . (int) $interval . " DAY')"
-            : "DATE_SUB('" . pSQL($now) . "', INTERVAL " . (int) $interval . ' DAY)';
+        // A product is new while its creation day is within the last N days
+        $newProductThreshold = "'" . date('Y-m-d 00:00:00', strtotime(sprintf('%+d days', 1 - (int) $interval))) . "'";
 
         // no group by needed : there's only one attribute with default_on=1 for a given id_product + shop
         // same for image with cover=1
@@ -101,7 +96,7 @@ class ProductSaleCore
 					m.name AS manufacturer_name, p.id_manufacturer as id_manufacturer,
 					image_shop.id_image id_image, il.legend,
 					ps.quantity AS sales, t.rate, pl.meta_title, pl.meta_description,
-					(p.date_add > ' . $newProductThreshold . ') AS new'
+					(p.date_add >= ' . $newProductThreshold . ') AS new'
             . ' FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_sale') . ' ps
 				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p ON ps.id_product = p.id_product
 				' . Shop::addSqlAssociation('product', 'p', false);
@@ -232,13 +227,12 @@ class ProductSaleCore
      */
     public static function addProductSale($productId, $qty = 1)
     {
-        /* @phpstan-ignore-next-line */
         $onConflict = _DB_TYPE_ == 'pgsql'
-            ? 'ON CONFLICT (id_product) DO UPDATE SET quantity = ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_sale') . '.quantity + ' . (int) $qty . ', sale_nbr = ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_sale') . '.sale_nbr + 1, date_upd = NOW()'
+            ? 'ON CONFLICT (id_product) DO UPDATE SET quantity = ' . _DB_PREFIX_ . 'product_sale.quantity + ' . (int) $qty . ', sale_nbr = ' . _DB_PREFIX_ . 'product_sale.sale_nbr + 1, date_upd = NOW()'
             : ('ON DUPLICATE KEY UPDATE quantity = quantity + ' . (int) $qty . ', sale_nbr = sale_nbr + 1, date_upd = NOW()');
 
         return Db::getInstance()->execute('
-			INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_sale') . '
+			INSERT INTO ' . _DB_PREFIX_ . 'product_sale
 			(id_product, quantity, sale_nbr, date_upd)
 			VALUES (' . (int) $productId . ', ' . (int) $qty . ', 1, NOW())
 			' . $onConflict);
@@ -273,12 +267,11 @@ class ProductSaleCore
     {
         $totalSales = ProductSale::getNbrSales($idProduct);
         if ($totalSales > 1) {
-            /* @phpstan-ignore-next-line */
             $castType = _DB_TYPE_ == 'pgsql' ? 'INTEGER' : 'SIGNED';
 
             return Db::getInstance()->execute(
                 '
-				UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_sale') . '
+				UPDATE ' . _DB_PREFIX_ . 'product_sale
 				SET quantity = CAST(quantity AS ' . $castType . ') - ' . (int) $qty . ', sale_nbr = CAST(sale_nbr AS ' . $castType . ') - 1, date_upd = NOW()
 				WHERE id_product = ' . (int) $idProduct
             );

@@ -94,11 +94,8 @@ class NotificationCore
 
         // PostgreSQL has no SQL_CALC_FOUND_ROWS/FOUND_ROWS(); use a COUNT(*) OVER() window
         // column instead and read the total off the first result row.
-        /* @phpstan-ignore-next-line */
         $isPgsql = _DB_TYPE_ == 'pgsql';
-        /* @phpstan-ignore-next-line */
         $foundRowsSelect = $isPgsql ? '' : 'SQL_CALC_FOUND_ROWS ';
-        /* @phpstan-ignore-next-line */
         $foundRowsColumn = $isPgsql ? ', COUNT(*) OVER() AS total_found_rows' : '';
 
         switch ($type) {
@@ -143,7 +140,6 @@ class NotificationCore
         }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
-        /* @phpstan-ignore-next-line */
         if ($isPgsql) {
             $total = !empty($result) ? (int) $result[0]['total_found_rows'] : 0;
         } else {

@@ -124,7 +124,7 @@ class ProductAttributeCore extends ObjectModel
     /**
      * Adds current ProductAttribute as a new Object to the database.
      *
-     * @param bool $autoDate Automatically set date_upd and date_add column
+     * @param bool $autoDate Automatically set `date_upd` and `date_add` column
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
      * @return bool Whether the ProductAttribute has been successfully added
@@ -371,7 +371,6 @@ class ProductAttributeCore extends ObjectModel
 
         // PostgreSQL has no session variables (MySQL's @i trick); renumber via a window
         // function instead, joined back on the primary key.
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'pgsql') {
             $sql = '
                 UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute') . ' AS target

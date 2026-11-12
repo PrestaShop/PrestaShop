@@ -224,7 +224,6 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $this->addRowAction('view');
         $this->addRowAction('delete');
 
-        /* @phpstan-ignore-next-line */
         $groupConcatMessages = _DB_TYPE_ == 'pgsql' ? 'STRING_AGG(cm.message, \',\')' : 'GROUP_CONCAT(cm.message)';
 
         $this->_select = '
@@ -232,7 +231,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			(
 				SELECT COALESCE(CONCAT(LEFT(e.firstname, 1), \'. \', e.lastname), \'--\')
 				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_message') . ' cm2
-				INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'employee') . ' e
+				INNER JOIN ' . _DB_PREFIX_ . 'employee e
 					ON e.id_employee = cm2.id_employee
 				WHERE cm2.id_employee > 0
 					AND cm2.id_customer_thread = a.id_customer_thread

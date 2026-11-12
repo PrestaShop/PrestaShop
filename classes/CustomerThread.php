@@ -143,8 +143,8 @@ class CustomerThreadCore extends ObjectModel
     public static function getCustomerMessages($id_customer, $read = null, $id_order = null)
     {
         $sql = 'SELECT *
-			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_thread') . ' ct
-			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_message') . ' cm
+			FROM ' . _DB_PREFIX_ . 'customer_thread ct
+			LEFT JOIN ' . _DB_PREFIX_ . 'customer_message cm
 				ON ct.id_customer_thread = cm.id_customer_thread
 			WHERE id_customer = ' . (int) $id_customer;
 
@@ -163,7 +163,7 @@ class CustomerThreadCore extends ObjectModel
         return Db::getInstance()->getValue(
             '
 			SELECT cm.id_customer_thread
-			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_thread') . ' cm
+			FROM ' . _DB_PREFIX_ . 'customer_thread cm
 			WHERE cm.email = \'' . pSQL($email) . '\'
 				AND cm.id_shop = ' . (int) Context::getContext()->shop->id . '
 				AND cm.id_order = ' . (int) $id_order
@@ -175,14 +175,14 @@ class CustomerThreadCore extends ObjectModel
         return Db::getInstance()->executeS('
 			SELECT cl.*, COUNT(*) as total, (
 				SELECT id_customer_thread
-				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_thread') . ' ct2
+				FROM ' . _DB_PREFIX_ . 'customer_thread ct2
 				WHERE status = \'open\' AND ct.id_contact = ct2.id_contact
 				' . Shop::addSqlRestriction() . '
 				ORDER BY date_upd ASC
 				LIMIT 1
 			) as id_customer_thread
-			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_thread') . ' ct
-			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'contact_lang') . ' cl
+			FROM ' . _DB_PREFIX_ . 'customer_thread ct
+			LEFT JOIN ' . _DB_PREFIX_ . 'contact_lang cl
 				ON (cl.id_contact = ct.id_contact AND cl.id_lang = ' . (int) Context::getContext()->language->id . ')
 			WHERE ct.status = \'open\'
 				AND ct.id_contact IS NOT NULL
@@ -198,14 +198,14 @@ class CustomerThreadCore extends ObjectModel
             return (int) Db::getInstance()->getValue(
                 '
 				SELECT COUNT(*)
-				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_thread') . '
+				FROM ' . _DB_PREFIX_ . 'customer_thread
 				WHERE 1=1 ' . Shop::addSqlRestriction()
             );
         } else {
             return (int) Db::getInstance()->getValue(
                 '
 				SELECT COUNT(*)
-				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_thread') . '
+				FROM ' . _DB_PREFIX_ . 'customer_thread
 				WHERE ' . $where . Shop::addSqlRestriction()
             );
         }
@@ -215,7 +215,6 @@ class CustomerThreadCore extends ObjectModel
     {
         // COALESCE requires matching types across arguments in PostgreSQL, unlike MySQL's
         // looser IFNULL; the int/text mix here needs an explicit cast on that dialect only.
-        /* @phpstan-ignore-next-line */
         $coalesceIdOrEmail = _DB_TYPE_ == 'pgsql'
             ? 'COALESCE(ct.id_customer::text, ct.email) = COALESCE(c.id_customer::text, c.email)'
             : 'IFNULL(ct.id_customer, ct.email) = IFNULL(c.id_customer, c.email)';
@@ -223,14 +222,14 @@ class CustomerThreadCore extends ObjectModel
         return Db::getInstance()->executeS('
 			SELECT ct.*, cm.*, cl.name subject, CONCAT(e.firstname, \' \', e.lastname) employee_name,
 				CONCAT(c.firstname, \' \', c.lastname) customer_name, c.firstname
-			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_thread') . ' ct
-			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_message') . ' cm
+			FROM ' . _DB_PREFIX_ . 'customer_thread ct
+			LEFT JOIN ' . _DB_PREFIX_ . 'customer_message cm
 				ON (ct.id_customer_thread = cm.id_customer_thread)
-			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'contact_lang') . ' cl
+			LEFT JOIN ' . _DB_PREFIX_ . 'contact_lang cl
 				ON (cl.id_contact = ct.id_contact AND cl.id_lang = ' . (int) Context::getContext()->language->id . ')
-			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'employee') . ' e
+			LEFT JOIN ' . _DB_PREFIX_ . 'employee e
 				ON e.id_employee = cm.id_employee
-			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer') . ' c
+			LEFT JOIN ' . _DB_PREFIX_ . 'customer c
 				ON (' . $coalesceIdOrEmail . ')
 			WHERE ct.id_customer_thread = ' . (int) $id_customer_thread . '
 			ORDER BY cm.date_add ASC
@@ -243,10 +242,10 @@ class CustomerThreadCore extends ObjectModel
 
         return Db::getInstance()->getValue('
 			SELECT id_customer_thread
-			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_thread') . ' ct
+			FROM ' . _DB_PREFIX_ . 'customer_thread ct
 			WHERE ct.status = \'open\'
 			AND ct.date_upd > (
-				SELECT date_add FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_message') . '
+				SELECT date_add FROM ' . _DB_PREFIX_ . 'customer_message
 				WHERE (id_employee IS NULL OR id_employee = 0)
 					AND id_customer_thread = ' . (int) $id_customer_thread . '
 				ORDER BY date_add DESC LIMIT 1
@@ -263,8 +262,8 @@ class CustomerThreadCore extends ObjectModel
     {
         $sql = 'SELECT cm.*, c.firstname AS cfirstname, c.lastname AS clastname,
                 e.firstname AS efirstname, e.lastname AS elastname
-			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_thread') . ' ct
-			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_message') . ' cm
+			FROM ' . _DB_PREFIX_ . 'customer_thread ct
+			LEFT JOIN ' . _DB_PREFIX_ . 'customer_message cm
 				ON ct.id_customer_thread = cm.id_customer_thread
             LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer') . ' c
                 ON ct.id_customer = c.id_customer

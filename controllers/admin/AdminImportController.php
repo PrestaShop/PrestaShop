@@ -3782,7 +3782,6 @@ class AdminImportControllerCore extends AdminController
 					DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_shop') . '
 					WHERE ' . Db::quoteIdentifier('id_category') . ' NOT IN (' . (int) Configuration::get('PS_HOME_CATEGORY') .
                     ', ' . (int) Configuration::get('PS_ROOT_CATEGORY') . ')');
-                /* @phpstan-ignore-next-line */
                 if (_DB_TYPE_ == 'pgsql') {
                     Db::getInstance()->execute('ALTER SEQUENCE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_id_category_seq') . ' RESTART WITH 3');
                 } else {
@@ -3809,7 +3808,6 @@ class AdminImportControllerCore extends AdminController
                 Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price_priority'));
                 Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_carrier'));
                 Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_product'));
-                /* @phpstan-ignore-next-line */
                 if (_DB_TYPE_ == 'pgsql') {
                     $favoriteProductTableExists = (bool) Db::getInstance()->getValue('SELECT 1 FROM pg_catalog.pg_tables WHERE tablename = \'' . pSQL(_DB_PREFIX_ . 'favorite_product') . '\'');
                 } else {
@@ -4104,7 +4102,6 @@ class AdminImportControllerCore extends AdminController
     {
         if ($this->access('edit')) {
             $match = implode('|', Tools::getValue('type_value'));
-            /* @phpstan-ignore-next-line */
             if (_DB_TYPE_ == 'pgsql') {
                 $insertKeyword = 'INSERT INTO';
                 $idColumn = '';

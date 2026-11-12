@@ -148,12 +148,12 @@ class AttachmentCore extends ObjectModel
         return Db::getInstance()->executeS(
             '
 			SELECT *
-			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attachment') . ' a
-			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attachment_lang') . ' al
+			FROM ' . _DB_PREFIX_ . 'attachment a
+			LEFT JOIN ' . _DB_PREFIX_ . 'attachment_lang al
 				ON (a.id_attachment = al.id_attachment AND al.id_lang = ' . (int) $idLang . ')
 			WHERE a.id_attachment ' . ($include ? 'IN' : 'NOT IN') . ' (
 				SELECT pa.id_attachment
-				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attachment') . ' pa
+				FROM ' . _DB_PREFIX_ . 'product_attachment pa
 				WHERE id_product = ' . (int) $idProduct . '
 			)'
         );
@@ -202,7 +202,7 @@ class AttachmentCore extends ObjectModel
     public static function deleteProductAttachments($idProduct)
     {
         $res = Db::getInstance()->execute('
-		DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attachment') . '
+		DELETE FROM ' . _DB_PREFIX_ . 'product_attachment
 		WHERE id_product = ' . (int) $idProduct);
 
         Product::updateCacheAttachment((int) $idProduct);
@@ -231,7 +231,7 @@ class AttachmentCore extends ObjectModel
     public static function associateProductAttachment(int $productId, int $attachmentId): bool
     {
         $res = Db::getInstance()->execute('
-			INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attachment') . '
+			INSERT INTO ' . _DB_PREFIX_ . 'product_attachment
 				(id_attachment, id_product) VALUES
 				(' . $attachmentId . ', ' . $productId . ')');
 

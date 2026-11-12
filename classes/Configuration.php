@@ -461,14 +461,10 @@ class ConfigurationCore extends ObjectModel
             if (Configuration::hasKey($key, $lang, $idShopGroup, $idShop)) {
                 if (!$lang) {
                     // Update config not linked to lang
-                    // PostgreSQL doesn't support LIMIT on UPDATE queries; the WHERE clause
-                    // (name + shop/shop group restriction) already targets a single row.
-                    /* @phpstan-ignore-next-line */
-                    $limit = _DB_TYPE_ == 'pgsql' ? 0 : 1;
                     $result &= Db::getInstance()->update(self::$definition['table'], [
                         'value' => pSQL($value, $html),
                         'date_upd' => date('Y-m-d H:i:s'),
-                    ], 'name = \'' . pSQL($key) . '\'' . Configuration::sqlRestriction($idShopGroup, $idShop), $limit, true);
+                    ], 'name = \'' . pSQL($key) . '\'' . Configuration::sqlRestriction($idShopGroup, $idShop), 1, true);
                 } else {
                     // Update multi lang
                     $sql = 'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . self::$definition['table'] . '_lang') . ' cl
@@ -505,7 +501,7 @@ class ConfigurationCore extends ObjectModel
                         'SELECT 1 FROM {{ table }} WHERE id_lang = {{ lang }} ' .
                         'AND {{ primary_key_column }} = {{ config_id }}',
                         [
-                            '{{ table }}' => Db::quoteIdentifier(_DB_PREFIX_ . $table),
+                            '{{ table }}' => _DB_PREFIX_ . $table,
                             '{{ lang }}' => (int) $lang,
                             '{{ primary_key_column }}' => self::$definition['primary'],
                             '{{ config_id }}' => $configID,

@@ -80,7 +80,7 @@ class PageCore extends ObjectModel
         if ($value = Db::getInstance()->getValue(
             '
 				SELECT id_page_type
-				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'page_type') . '
+				FROM ' . _DB_PREFIX_ . 'page_type
 				WHERE name = \'' . pSQL($name) . '\''
         )
         ) {

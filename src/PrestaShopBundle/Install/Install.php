@@ -300,7 +300,6 @@ class Install extends AbstractInstall
 
         $allowed_collation = ['utf8mb4_general_ci', 'utf8mb4_unicode_ci'];
         $collation_database = '';
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'mysql') {
             $collation_database = Db::getInstance()->getValue('SELECT @@collation_database');
         }
@@ -309,12 +308,10 @@ class Install extends AbstractInstall
         $sql_loader->setMetaData([
             'PREFIX_' => _DB_PREFIX_,
             'ENGINE_TYPE' => _MYSQL_ENGINE_,
-            /* @phpstan-ignore-next-line */
             'COLLATION' => (empty($collation_database) || !in_array($collation_database, $allowed_collation)) ? '' : 'COLLATE ' . $collation_database,
         ]);
 
         try {
-            /* @phpstan-ignore-next-line */
             $sql_loader->parse_file(_PS_INSTALL_DATA_PATH_ . (_DB_TYPE_ == 'mysql' ? 'db_structure.sql' : 'db_structure.pgsql.sql'));
         } catch (PrestashopInstallerException) {
             $this->setError($this->translator->trans('Database structure file not found', [], 'Install'));
@@ -343,12 +340,10 @@ class Install extends AbstractInstall
         $this->getLogger()->logInfo($truncate ? 'Truncating database' : 'Dropping database tables');
 
         $instance = Db::getInstance();
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'mysql') {
             $instance->execute('SET FOREIGN_KEY_CHECKS=0');
         }
         foreach ($instance->executeS(
-            /* @phpstan-ignore-next-line */
             _DB_TYPE_ == 'mysql'
             ? 'SHOW TABLES'
             : 'SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname=\'public\';'
@@ -359,7 +354,6 @@ class Install extends AbstractInstall
             }
         }
 
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'mysql') {
             $instance->execute('SET FOREIGN_KEY_CHECKS=1');
         }
@@ -530,7 +524,6 @@ class Install extends AbstractInstall
             unset($xml_loader);
 
             // Install custom SQL data (db_data.sql file)
-            /* @phpstan-ignore-next-line */
             $db_data_file = _DB_TYPE_ == 'mysql' ? 'db_data.sql' : 'db_data.pgsql.sql';
             if (file_exists(_PS_INSTALL_DATA_PATH_ . $db_data_file)) {
                 $sql_loader = new SqlLoader();
@@ -557,7 +550,6 @@ class Install extends AbstractInstall
         // XML/db_data.sql content). Left alone, the next auto-generated insert into any of
         // these tables would collide with an already-used id. Resync every serial sequence
         // to its table's current MAX(id) now that the bulk load is done.
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'pgsql') {
             $this->resyncPgsqlSequences();
         }
@@ -1391,12 +1383,10 @@ class Install extends AbstractInstall
         // PostgreSQL sequences always increment by 1 by default and have no session-level
         // auto_increment_increment/auto_increment_offset equivalent, so there is nothing to
         // normalize for that engine.
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'pgsql') {
             return $callback(...$args);
         }
 
-        /* @phpstan-ignore-next-line */
         $db = Db::getInstance();
 
         $backupAiIncrement = $db->executeS('SELECT @@SESSION.auto_increment_increment AS v;', true, false)[0]['v'];

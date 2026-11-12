@@ -54,7 +54,6 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
         /*
          * Select recursivly the subcategories in one SQL request
          */
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'pgsql') {
             $sql = 'WITH RECURSIVE subcategories_tree AS (
                 SELECT id_category, id_parent

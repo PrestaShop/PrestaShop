@@ -162,7 +162,7 @@ class MessageCore extends ObjectModel
         }
 
         $result = Db::getInstance()->execute('
-			INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'message_readed') . ' (id_message , id_employee , date_add) VALUES
+			INSERT INTO ' . _DB_PREFIX_ . 'message_readed (id_message , id_employee , date_add) VALUES
 			(' . (int) $idMessage . ', ' . (int) $idEmployee . ', NOW());
 		');
 

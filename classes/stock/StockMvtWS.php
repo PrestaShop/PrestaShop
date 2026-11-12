@@ -240,12 +240,12 @@ class StockMvtWSCore extends ObjectModelCore
             }
         }
 
-        $query .= 'FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . $this->def['table']) . ' as main ';
+        $query .= 'FROM ' . _DB_PREFIX_ . $this->def['table'] . ' as main ';
 
         if ($filter !== $old_filter || $full) {
-            $query .= 'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'stock') . ' s ON (s.id_stock = main.id_stock) ';
-            $query .= 'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'warehouse') . ' w ON (w.id_warehouse = s.id_warehouse) ';
-            $query .= 'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'currency') . ' c ON (c.id_currency = w.id_currency) ';
+            $query .= 'LEFT JOIN ' . _DB_PREFIX_ . 'stock s ON (s.id_stock = main.id_stock) ';
+            $query .= 'LEFT JOIN ' . _DB_PREFIX_ . 'warehouse w ON (w.id_warehouse = s.id_warehouse) ';
+            $query .= 'LEFT JOIN ' . _DB_PREFIX_ . 'currency c ON (c.id_currency = w.id_currency) ';
         }
 
         if ($join) {

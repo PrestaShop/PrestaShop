@@ -584,7 +584,7 @@ class XmlLoader
 
     public function createEntityConfiguration($identifier, array $data, array $data_lang)
     {
-        if (Db::getInstance()->getValue('SELECT id_configuration FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'configuration') . ' WHERE name = \'' . pSQL($data['name']) . '\'')) {
+        if (Db::getInstance()->getValue('SELECT id_configuration FROM ' . _DB_PREFIX_ . 'configuration WHERE name = \'' . pSQL($data['name']) . '\'')) {
             return;
         }
 
@@ -969,7 +969,6 @@ class XmlLoader
 
         if (null === $tables) {
             $tables = [];
-            /* @phpstan-ignore-next-line */
             if (_DB_TYPE_ == 'pgsql') {
                 $sql = 'SELECT tablename AS "Tables_in_db" FROM pg_catalog.pg_tables WHERE schemaname = \'public\'';
             } else {
@@ -1007,7 +1006,6 @@ class XmlLoader
         $columns = &$this->rawColumnsCache;
         if (!isset($columns[$table])) {
             $columns[$table] = [];
-            /* @phpstan-ignore-next-line */
             if (_DB_TYPE_ == 'pgsql') {
                 $sql = 'SELECT column_name AS "Field",
                     CASE WHEN data_type = \'character varying\' THEN \'varchar(\' || character_maximum_length || \')\' ELSE data_type END AS "Type"

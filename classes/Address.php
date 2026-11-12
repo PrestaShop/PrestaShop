@@ -260,14 +260,14 @@ class AddressCore extends ObjectModel
         // MySQL's multi-table UPDATE...JOIN is rewritten as a portable NOT EXISTS
         // subquery, since the join here is purely a filter ("cart has no order yet").
         // Reset it from all delivery addresses
-        $sql = 'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart') . ' c
+        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart c
             SET id_address_delivery = 0
             WHERE c.id_address_delivery = ' . $this->id . '
             AND NOT EXISTS (SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'orders') . ' o WHERE o.id_cart = c.id_cart)';
         Db::getInstance()->execute($sql);
 
         // Reset it from all invoice addresses
-        $sql = 'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart') . ' c
+        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart c
             SET id_address_invoice = 0
             WHERE c.id_address_invoice = ' . $this->id . '
             AND NOT EXISTS (SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'orders') . ' o WHERE o.id_cart = c.id_cart)';
@@ -456,7 +456,7 @@ class AddressCore extends ObjectModel
 
         static::$addressExists[$id_address] = (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             'SELECT id_address
-            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'address') . ' a
+            FROM ' . _DB_PREFIX_ . 'address a
             WHERE a.id_address = ' . (int) $id_address,
             false
         );
@@ -475,7 +475,7 @@ class AddressCore extends ObjectModel
     {
         $id_address = (int) $id_address;
         $isValid = Db::getInstance()->getValue('
-            SELECT id_address FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'address') . ' a
+            SELECT id_address FROM ' . _DB_PREFIX_ . 'address a
             WHERE a.id_address = ' . $id_address . ' AND a.deleted = 0 AND a.active = 1
         ');
 

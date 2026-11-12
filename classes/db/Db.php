@@ -284,19 +284,16 @@ abstract class DbCore
                 $class = 'DbMySQLi';
             }
         }
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'pgsql') {
             if (extension_loaded('pdo_pgsql')) {
                 $class = 'DbPDO';
             }
         }
 
-        /* @phpstan-ignore-next-line */
         if (empty($class)) {
             throw new PrestaShopException('Cannot select any valid SQL engine.');
         }
 
-        /* @phpstan-ignore-next-line */
         return $class;
     }
 
@@ -392,12 +389,10 @@ abstract class DbCore
      */
     public static function quoteIdentifier($identifier)
     {
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'pgsql') {
             return '"' . str_replace('"', '""', $identifier) . '"';
         }
 
-        /* @phpstan-ignore-next-line */
         return '`' . bqSQL($identifier) . '`';
     }
 
@@ -432,7 +427,6 @@ abstract class DbCore
             throw new PrestaShopDatabaseException('Bad keyword, must be Db::INSERT or Db::INSERT_IGNORE or Db::REPLACE or Db::ON_DUPLICATE_KEY');
         }
 
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'pgsql') {
             $insert_keyword = 'INSERT';
         } elseif ($type == Db::INSERT) {
@@ -445,7 +439,6 @@ abstract class DbCore
             $insert_keyword = 'INSERT';
         }
 
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'pgsql' && in_array($type, [Db::REPLACE, Db::ON_DUPLICATE_KEY], true) && !$conflictColumns) {
             throw new PrestaShopDatabaseException('PostgreSQL requires $conflictColumns to be set for Db::REPLACE or Db::ON_DUPLICATE_KEY');
         }
@@ -497,7 +490,6 @@ abstract class DbCore
         }
         $keys_stringified = implode(', ', $keys);
 
-        /* @phpstan-ignore-next-line */
         if ($keys_stringified === '' && _DB_TYPE_ == 'pgsql') {
             // PostgreSQL has no equivalent of MySQL's `INSERT INTO t () VALUES ()` (an all-default row);
             // the portable form is `INSERT INTO t DEFAULT VALUES`, which only supports a single row.
@@ -509,7 +501,6 @@ abstract class DbCore
             $sql = $insert_keyword . ' INTO ' . static::quoteIdentifier($table) . ' (' . $keys_stringified . ') VALUES ' . implode(', ', $values_stringified);
         }
 
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'pgsql') {
             if ($type == Db::INSERT_IGNORE) {
                 $sql .= ' ON CONFLICT DO NOTHING';
@@ -985,7 +976,6 @@ abstract class DbCore
         }
 
         // A bare '+01:00' string follows the POSIX sign convention on PostgreSQL (west positive): the interval form keeps the ISO sign
-        /* @phpstan-ignore-next-line */
         $sql = _DB_TYPE_ == 'pgsql' ? "SET TIME ZONE INTERVAL '" . $offset . "' HOUR TO MINUTE" : "SET SESSION time_zone = '" . $offset . "'";
         $this->_query($sql);
     }

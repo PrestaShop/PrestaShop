@@ -247,7 +247,6 @@ class SupplyOrderCore extends ObjectModel
         // The "||" operator (not CONCAT(), which treats NULL as an empty string in
         // PostgreSQL) is used so a missing attribute still yields NULL and falls back
         // to the plain product name, matching MySQL's CONCAT()/GROUP_CONCAT() NULL propagation.
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'pgsql') {
             $query->select('
 			s.*,

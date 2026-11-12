@@ -438,7 +438,6 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
                     return ['type' => 'sql', 'value' => 'NULL'];
                 }
                 if (!$value) {
-                    /* @phpstan-ignore-next-line */
                     $value = '0000-00-00';
                 }
 
@@ -1613,7 +1612,7 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
     {
         return Db::getInstance()->executeS('
 		SELECT id_required_field, object_name, field_name
-		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'required_field') . '
+		FROM ' . _DB_PREFIX_ . 'required_field
 		' . (!$all ? 'WHERE object_name = \'' . pSQL($this->getObjectName()) . '\'' : ''));
     }
 
@@ -1632,7 +1631,7 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         } else {
             return (bool) Db::getInstance()->getValue('
             SELECT id_required_field
-            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'required_field') . '
+            FROM ' . _DB_PREFIX_ . 'required_field
             WHERE field_name = \'' . Db::getInstance()->escape($field_name) . '\'
             ' . (!$all ? ' AND object_name = \'' . pSQL($this->getObjectName()) . '\'' : ''));
         }
@@ -1696,7 +1695,7 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
 
         $objectName = $this->getObjectName();
         if (!Db::getInstance()->execute(
-            'DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'required_field')
+            'DELETE FROM ' . _DB_PREFIX_ . 'required_field'
             . " WHERE object_name = '" . Db::getInstance()->escape($objectName) . "'"
         )
         ) {
@@ -1942,10 +1941,53 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
     public static function updateMultishopTable($classname, $data, $where = '')
     {
         $def = ObjectModel::getDefinition($classname);
-        // Bare column names: PostgreSQL forbids alias-qualifying SET target columns, and
-        // PostgreSQL/MySQL UPDATE can only target one table per statement, so the combined
-        // "a JOIN {table}_shop" multi-table update is split into up to two single-table ones
-        // below, sharing $where (always expressed in terms of the "a" alias by every caller).
+        if (_DB_TYPE_ == 'pgsql') {
+            return static::updateMultishopTablePostgreSql($def, $data, $where);
+        }
+
+        $update_data = [];
+        foreach ($data as $field => $value) {
+            if (!isset($def['fields'][$field])) {
+                continue;
+            }
+
+            if (!empty($def['fields'][$field]['shop'])) {
+                if ($value === null && !empty($def['fields'][$field]['allow_null'])) {
+                    $update_data[] = "a.$field = NULL";
+                    $update_data[] = "{$def['table']}_shop.$field = NULL";
+                } else {
+                    $update_data[] = "a.$field = '$value'";
+                    $update_data[] = "{$def['table']}_shop.$field = '$value'";
+                }
+            } else {
+                if ($value === null && !empty($def['fields'][$field]['allow_null'])) {
+                    $update_data[] = "a.$field = NULL";
+                } else {
+                    $update_data[] = "a.$field = '$value'";
+                }
+            }
+        }
+
+        $sql = 'UPDATE ' . _DB_PREFIX_ . $def['table'] . ' a
+				' . Shop::addSqlAssociation($def['table'], 'a', true, null, true) . '
+				SET ' . implode(', ', $update_data) .
+                (!empty($where) ? ' WHERE ' . $where : '');
+
+        return Db::getInstance()->execute($sql);
+    }
+
+    /**
+     * PostgreSQL updates a single table per statement, with unqualified SET columns: the main and shop
+     * tables are updated separately, each restricted to the rows the multi-table update would join.
+     *
+     * @param array $def
+     * @param array $data
+     * @param string $where
+     *
+     * @return bool
+     */
+    protected static function updateMultishopTablePostgreSql(array $def, array $data, string $where): bool
+    {
         $main_update_data = [];
         $shop_update_data = [];
         foreach ($data as $field => $value) {
@@ -1953,38 +1995,32 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
                 continue;
             }
 
-            $isNull = $value === null && !empty($def['fields'][$field]['allow_null']);
-            $main_update_data[] = $isNull ? "$field = NULL" : "$field = '$value'";
+            $assignment = $value === null && !empty($def['fields'][$field]['allow_null']) ? "$field = NULL" : "$field = '$value'";
+            $main_update_data[] = $assignment;
             if (!empty($def['fields'][$field]['shop'])) {
-                $shop_update_data[] = $isNull ? "$field = NULL" : "$field = '$value'";
+                $shop_update_data[] = $assignment;
             }
         }
 
         $table = _DB_PREFIX_ . $def['table'];
+        $primary = 'id_' . $def['table'];
+        $joined_rows = 'SELECT ' . $def['table'] . '_shop.' . $primary . ', ' . $def['table'] . '_shop.id_shop
+			FROM ' . $table . ' a
+			' . Shop::addSqlAssociation($def['table'], 'a', true, null, true) .
+            (!empty($where) ? ' WHERE ' . $where : '');
+
         $result = true;
         if ($main_update_data) {
             $result = Db::getInstance()->execute(
-                'UPDATE ' . $table . ' a
-				SET ' . implode(', ', $main_update_data) .
-                (!empty($where) ? ' WHERE ' . $where : '')
+                'UPDATE ' . $table . ' SET ' . implode(', ', $main_update_data) . '
+				WHERE ' . $primary . ' IN (SELECT joined.' . $primary . ' FROM (' . $joined_rows . ') joined)'
             );
         }
 
         if ($shop_update_data) {
             $result = $result && Db::getInstance()->execute(
-                'UPDATE ' . $table . '_shop
-				SET ' . implode(', ', $shop_update_data) . '
-				WHERE (id_' . $def['table'] . ', id_shop) IN (
-					-- MySQL forbids selecting from the table being updated directly in a
-					-- subquery (Error 1093, target table for update in FROM clause);
-					-- wrapping it in an extra derived table works around that.
-					SELECT * FROM (
-						SELECT ' . $def['table'] . '_shop.id_' . $def['table'] . ', ' . $def['table'] . '_shop.id_shop
-						FROM ' . $table . ' a
-						' . Shop::addSqlAssociation($def['table'], 'a', true, null, true) .
-                        (!empty($where) ? ' WHERE ' . $where : '') . '
-					) AS multishop_tmp
-				)'
+                'UPDATE ' . $table . '_shop SET ' . implode(', ', $shop_update_data) . '
+				WHERE (' . $primary . ', id_shop) IN (' . $joined_rows . ')'
             );
         }
 

@@ -36,7 +36,6 @@ class AbstractMultiShopObjectModelRepository extends AbstractObjectModelReposito
      */
     private static function quoteIdentifier(string $identifier): string
     {
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'pgsql') {
             return '"' . str_replace('"', '""', $identifier) . '"';
         }

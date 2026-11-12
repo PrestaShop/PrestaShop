@@ -533,7 +533,6 @@ class CategoryCore extends ObjectModel
                 // The conflict target is the primary key of the category table: a genuine conflict
                 // can only happen when re-computing the nested tree for an existing id_category, so
                 // the row is simply refreshed with the freshly computed bounds.
-                /* @phpstan-ignore-next-line */
                 $onConflict = _DB_TYPE_ == 'pgsql'
                     ? 'ON CONFLICT (' . Db::quoteIdentifier('id_category') . ') DO UPDATE SET nleft = EXCLUDED.nleft, nright = EXCLUDED.nright'
                     : 'ON DUPLICATE KEY UPDATE nleft=VALUES(nleft), nright=VALUES(nright)';
@@ -1051,19 +1050,14 @@ class CategoryCore extends ObjectModel
             $nbDaysNewProduct = 20;
         }
 
-        $now = date('Y-m-d') . ' 00:00:00';
-        // "date_add > (now - N days)" instead of "DATEDIFF(now, date_add) < N":
-        // DATE_SUB() has no PostgreSQL equivalent, and TIMESTAMP-literal-minus-INTERVAL has no MySQL equivalent.
-        /* @phpstan-ignore-next-line */
-        $newProductThreshold = _DB_TYPE_ == 'pgsql'
-            ? "(TIMESTAMP '" . pSQL($now) . "' - INTERVAL '" . $nbDaysNewProduct . " DAY')"
-            : "DATE_SUB('" . pSQL($now) . "', INTERVAL " . $nbDaysNewProduct . ' DAY)';
+        // A product is new while its creation day is within the last N days
+        $newProductThreshold = "'" . date('Y-m-d 00:00:00', strtotime(sprintf('%+d days', 1 - (int) $nbDaysNewProduct))) . "'";
 
         $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, COALESCE(stock.quantity, 0) AS quantity' . (Combination::isFeatureActive() ? ', COALESCE(product_attribute_shop.id_product_attribute, 0) AS id_product_attribute,
 					product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity' : '') . ', pl.description, pl.description_short, pl.available_now,
 					pl.available_later, pl.link_rewrite, pl.meta_description, pl.meta_title, pl.name, image_shop.id_image id_image,
 					il.legend as legend, m.name AS manufacturer_name, cl.name AS category_default,
-					(product_shop.date_add > ' . $newProductThreshold . ') AS new, product_shop.price AS orderprice, psales.quantity as sales
+					(product_shop.date_add >= ' . $newProductThreshold . ') AS new, product_shop.price AS orderprice, psales.quantity as sales
 				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_product') . ' cp
 				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p
 					ON p.id_product = cp.id_product
@@ -1093,7 +1087,6 @@ class CategoryCore extends ObjectModel
                     . ($idSupplier ? ' AND p.id_supplier = ' . (int) $idSupplier : '');
 
         if ($random === true) {
-            /* @phpstan-ignore-next-line */
             $randomFunction = _DB_TYPE_ == 'pgsql' ? 'RANDOM()' : 'RAND()';
             $sql .= ' ORDER BY ' . $randomFunction . ' LIMIT ' . (int) $randomNumberProducts;
         } elseif ($orderBy !== 'orderprice') {
@@ -1343,9 +1336,7 @@ class CategoryCore extends ObjectModel
 
         // PostgreSQL has no INSERT IGNORE: ON CONFLICT DO NOTHING is the equivalent (no conflict
         // target needed, it applies to any constraint violation on the row being inserted).
-        /* @phpstan-ignore-next-line */
         $insertKeyword = _DB_TYPE_ == 'pgsql' ? 'INSERT INTO' : 'INSERT IGNORE INTO';
-        /* @phpstan-ignore-next-line */
         $onConflictClause = _DB_TYPE_ == 'pgsql' ? ' ON CONFLICT DO NOTHING' : '';
 
         $flag = Db::getInstance()->execute(
@@ -1414,11 +1405,11 @@ class CategoryCore extends ObjectModel
 
         if (!isset(self::$_links[$idCategory . '-' . $idLang . '-' . $idShop])) {
             self::$_links[$idCategory . '-' . $idLang . '-' . $idShop] = Db::getInstance()->getValue('
-			SELECT cl.link_rewrite
-			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_lang') . ' cl
+			SELECT link_rewrite
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_lang') . '
 			WHERE id_lang = ' . (int) $idLang . '
-			' . Shop::addSqlRestrictionOnLang('cl', $idShop) . '
-			AND cl.id_category = ' . (int) $idCategory);
+			' . Shop::addSqlRestrictionOnLang(null, $idShop) . '
+			AND id_category = ' . (int) $idCategory);
         }
 
         return self::$_links[$idCategory . '-' . $idLang . '-' . $idShop];
@@ -1875,7 +1866,7 @@ class CategoryCore extends ObjectModel
     public function updatePosition($way, $position)
     {
         if (!$res = Db::getInstance()->executeS('
-            SELECT cp.id_category, category_shop.position, cp.id_parent
+            SELECT cp.id_category, category_shop.position, category_shop.id_shop, cp.id_parent
             FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' cp
             ' . Shop::addSqlAssociation('category', 'cp') . '
             WHERE cp.id_parent = ' . (int) $this->id_parent . '
@@ -1897,40 +1888,34 @@ class CategoryCore extends ObjectModel
         // < and > statements rather than BETWEEN operator
         // since BETWEEN is treated differently according to databases
         $increment = ($way ? '- 1' : '+ 1');
-        // PostgreSQL has no unsigned integer type (int columns are already signed) and no
-        // CAST(... AS SIGNED); MySQL needs the explicit signed cast so the intermediate
-        // arithmetic below is allowed to go negative before being floored back to 0.
-        /* @phpstan-ignore-next-line */
+        // PostgreSQL has no unsigned integers, hence no SIGNED cast
         $castType = _DB_TYPE_ == 'pgsql' ? 'INTEGER' : 'SIGNED';
 
-        // MySQL's single multi-table UPDATE (category JOIN category_shop, SET on both) has no
-        // PostgreSQL equivalent, so the set of affected rows is resolved here in PHP from $res
-        // (fetched before any write) and reused for two independent single-table UPDATEs below.
-        // This also sidesteps a real ordering hazard: had each UPDATE re-filtered on the live
-        // category_shop.position, the second statement would see values already shifted by the
-        // first one and silently touch the wrong rows.
+        // PostgreSQL updates a single table per statement: the rows the multi-table update joined
+        // are resolved from $res, read before any position is shifted
         $affectedIds = [];
+        $affectedShopRows = [];
         foreach ($res as $category) {
             $matches = $way
                 ? ((int) $category['position'] > (int) $movedCategory['position'] && (int) $category['position'] <= (int) $position)
                 : ((int) $category['position'] < (int) $movedCategory['position'] && (int) $category['position'] >= (int) $position);
             if ($matches) {
                 $affectedIds[] = (int) $category['id_category'];
+                $affectedShopRows[] = '(' . (int) $category['id_category'] . ', ' . (int) $category['id_shop'] . ')';
             }
         }
 
         $result = true;
         if ($affectedIds) {
-            $idsStringified = implode(',', $affectedIds);
             $result = Db::getInstance()->execute(
                 'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_shop') . '
                 SET position = CASE WHEN CAST(position AS ' . $castType . ') ' . $increment . ' > 0 THEN position ' . $increment . ' ELSE 0 END
-                WHERE id_category IN (' . $idsStringified . ')'
+                WHERE (id_category, id_shop) IN (' . implode(', ', $affectedShopRows) . ')'
             ) && Db::getInstance()->execute(
                 'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . '
                 SET position = CASE WHEN CAST(position AS ' . $castType . ') ' . $increment . ' > 0 THEN position ' . $increment . ' ELSE 0 END,
                     date_upd = \'' . date('Y-m-d H:i:s') . '\'
-                WHERE id_category IN (' . $idsStringified . ')'
+                WHERE id_category IN (' . implode(', ', array_unique($affectedIds)) . ')'
             );
         }
 
@@ -1945,8 +1930,8 @@ class CategoryCore extends ObjectModel
             && Db::getInstance()->execute(
                 'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_shop') . '
                 SET position = ' . (int) $position . '
-                WHERE id_category = ' . (int) $movedCategory['id_category']
-                . Shop::addSqlRestriction()
+                WHERE id_category = ' . (int) $movedCategory['id_category'] . '
+                AND id_shop = ' . (int) $movedCategory['id_shop']
             );
         Hook::exec('actionCategoryUpdate', ['category' => new Category($movedCategory['id_category'])]);
 
@@ -2396,7 +2381,6 @@ class CategoryCore extends ObjectModel
         // The conflict target IS the column being updated: on a genuine primary key conflict, the
         // position would be overwritten with the new value regardless. ON CONFLICT DO UPDATE is
         // the PostgreSQL equivalent.
-        /* @phpstan-ignore-next-line */
         $onConflict = _DB_TYPE_ == 'pgsql'
             ? 'ON CONFLICT (' . Db::quoteIdentifier('id_category') . ', ' . Db::quoteIdentifier('id_shop') . ') DO UPDATE SET position = %d'
             : 'ON DUPLICATE KEY UPDATE position = %d';

@@ -146,7 +146,6 @@ class TagCore extends ObjectModel
                 $tagListQuery = ' AND pt.id_tag IN (' . implode(',', array_map('intval', $tagList)) . ')';
                 // PostgreSQL doesn't support MySQL's "DELETE alias FROM table alias" syntax;
                 // a plain single-table DELETE with an alias covers the same case.
-                /* @phpstan-ignore-next-line */
                 if (_DB_TYPE_ == 'pgsql') {
                     Db::getInstance()->execute('DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tag_count') . ' AS pt WHERE 1=1 ' . $tagListQuery);
                 } else {
@@ -156,12 +155,9 @@ class TagCore extends ObjectModel
                 $tagListQuery = '';
             }
 
-            /* @phpstan-ignore-next-line */
             $insertKeyword = _DB_TYPE_ == 'pgsql' ? 'INSERT' : 'REPLACE';
-            /* @phpstan-ignore-next-line */
             $onConflict = _DB_TYPE_ == 'pgsql' ? ' ON CONFLICT (id_group, id_tag) DO UPDATE SET id_lang = EXCLUDED.id_lang, id_shop = EXCLUDED.id_shop, counter = EXCLUDED.counter' : '';
             // "ORDER BY NULL" is a MySQL-only optimizer hint disabling the implicit GROUP BY sort; meaningless in PostgreSQL.
-            /* @phpstan-ignore-next-line */
             $orderByNull = _DB_TYPE_ == 'pgsql' ? '' : ' ORDER BY NULL';
 
             Db::getInstance()->execute($insertKeyword . ' INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tag_count') . ' (id_group, id_tag, id_lang, id_shop, counter)
@@ -231,8 +227,8 @@ class TagCore extends ObjectModel
     {
         if (!$tmp = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
         SELECT t.id_lang, t.name
-        FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tag') . ' t
-        LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_tag') . ' pt ON (pt.id_tag = t.id_tag)
+        FROM ' . _DB_PREFIX_ . 'tag t
+        LEFT JOIN ' . _DB_PREFIX_ . 'product_tag pt ON (pt.id_tag = t.id_tag)
         WHERE pt.id_product=' . (int) $idProduct)) {
             return false;
         }
@@ -298,7 +294,7 @@ class TagCore extends ObjectModel
                 foreach ($array as $idProduct) {
                     $ids[] = '(' . (int) $idProduct . ',' . (int) $this->id . ',' . (int) $this->id_lang . ')';
                 }
-                $result = Db::getInstance()->execute('INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_tag') . ' (id_product, id_tag, id_lang) VALUES ' . implode(',', $ids));
+                $result = Db::getInstance()->execute('INSERT INTO ' . _DB_PREFIX_ . 'product_tag (id_product, id_tag, id_lang) VALUES ' . implode(',', $ids));
                 if (Configuration::get('PS_SEARCH_INDEXATION')) {
                     $result = $result && Search::indexation(false);
                 }
@@ -350,7 +346,7 @@ class TagCore extends ObjectModel
     {
         $removeWhere = 'id_product = ' . (int) $idProduct;
         $selectTagsToRemove = '
-            SELECT id_tag FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_tag') . '
+            SELECT id_tag FROM ' . _DB_PREFIX_ . 'product_tag
             WHERE id_product=' . (int) $idProduct
         ;
         if ($langId) {
@@ -360,8 +356,8 @@ class TagCore extends ObjectModel
 
         $tagsRemoved = Db::getInstance()->executeS($selectTagsToRemove);
         $result = Db::getInstance()->delete('product_tag', $removeWhere);
-        Db::getInstance()->delete('tag', 'NOT EXISTS (SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_tag') . '
-        												WHERE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_tag') . '.id_tag = ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tag') . '.id_tag)');
+        Db::getInstance()->delete('tag', 'NOT EXISTS (SELECT 1 FROM ' . _DB_PREFIX_ . 'product_tag
+        												WHERE ' . _DB_PREFIX_ . 'product_tag.id_tag = ' . _DB_PREFIX_ . 'tag.id_tag)');
         $tagList = [];
         foreach ($tagsRemoved as $tagRemoved) {
             $tagList[] = $tagRemoved['id_tag'];

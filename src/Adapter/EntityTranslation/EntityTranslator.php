@@ -130,7 +130,6 @@ class EntityTranslator implements EntityTranslatorInterface
                 $updateWhere = implode(' AND ', $updateWhere);
                 $updateFields = implode(', ', $updateFields);
 
-                /* @phpstan-ignore-next-line */
                 $limitClause = _DB_TYPE_ == 'pgsql' ? '' : ' LIMIT 1';
                 $sql = 'UPDATE ' . Db::quoteIdentifier($tableNameSql) . "
                     SET $updateFields
@@ -154,7 +153,6 @@ class EntityTranslator implements EntityTranslatorInterface
      */
     protected function shopFieldExists(string $tableNameSql): bool
     {
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'pgsql') {
             $columns = $this->db->executeS(
                 'SELECT column_name AS "Field" FROM information_schema.columns WHERE table_name = \'' . pSQL($tableNameSql) . '\''

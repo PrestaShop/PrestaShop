@@ -111,7 +111,7 @@ final class WebserviceKeyQueryBuilder extends AbstractDoctrineQueryBuilder
         ;
 
         $sqlFilters = (new SqlFilters())
-            ->addFilter('key', 'wa.' . $this->connection->quoteIdentifier('key'), SqlFilters::WHERE_LIKE)
+            ->addFilter('key', 'wa.key', SqlFilters::WHERE_LIKE)
             ->addFilter('active', 'wa.active', SqlFilters::WHERE_STRICT)
             ->addFilter('description', 'wa.description', SqlFilters::WHERE_LIKE)
         ;
@@ -130,6 +130,6 @@ final class WebserviceKeyQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getModifiedOrderBy($orderBy)
     {
-        return 'wa.' . ($orderBy === 'key' ? $this->connection->quoteIdentifier('key') : $orderBy);
+        return 'wa.' . $orderBy;
     }
 }

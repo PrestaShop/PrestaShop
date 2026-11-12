@@ -136,7 +136,6 @@ class StockManager
         // Clamp each line to >= 0 (such a line reserves nothing) by casting to SIGNED before subtracting.
         // @see https://github.com/PrestaShop/PrestaShop/issues/37338
         // PostgreSQL has no SIGNED cast type, its integer columns already are
-        /* @phpstan-ignore-next-line */
         $signedType = _DB_TYPE_ == 'pgsql' ? 'BIGINT' : 'SIGNED';
         // SET names the bare column and the order filter is a subquery: PostgreSQL refuses an
         // aliased SET column and the MySQL UPDATE ... JOIN syntax. Without pending order the sum is NULL,

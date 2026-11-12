@@ -3206,7 +3206,6 @@ class AdminControllerCore extends Controller
             // syntax is not valid in PostgreSQL.
             $limitClause = ' ' . (($shouldLimitSqlResults) ? ' LIMIT ' . (int) $limit . ' OFFSET ' . (int) $start : '');
 
-            /* @phpstan-ignore-next-line */
             if (_DB_TYPE_ == 'pgsql' && ($this->_use_found_rows || isset($this->_filterHaving) || isset($this->_having))) {
                 // PostgreSQL has no SQL_CALC_FOUND_ROWS/FOUND_ROWS(); count the rows the
                 // query would produce (post GROUP BY/HAVING) via a wrapping COUNT(*) subquery.

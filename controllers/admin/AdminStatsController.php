@@ -14,7 +14,6 @@ class AdminStatsControllerCore extends AdminStatsTabController
      */
     private static function sqlLeft($column, $length)
     {
-        /* @phpstan-ignore-next-line */
         $cast = _DB_TYPE_ == 'pgsql' ? '::text' : '';
 
         return 'LEFT(' . $column . $cast . ', ' . (int) $length . ')';
@@ -25,7 +24,6 @@ class AdminStatsControllerCore extends AdminStatsTabController
      */
     private static function sqlDateDiffDays($expr1, $expr2)
     {
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'pgsql') {
             return '((' . $expr1 . ')::date - (' . $expr2 . ')::date)';
         }
@@ -417,14 +415,12 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
     public static function getAverageCustomerAge()
     {
-        /* @phpstan-ignore-next-line */
-        $zeroDateCheck = _DB_TYPE_ == 'mysql' ? " AND birthday != '0000-00-00'" : '';
         $value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             '
 		SELECT AVG(' . self::sqlDateDiffDays("'" . date('Y-m-d') . " 00:00:00'", 'birthday') . ')
 		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer') . ' c
 		WHERE active = 1
-		AND birthday IS NOT NULL' . $zeroDateCheck . ' ' . Shop::addSqlRestriction()
+		AND birthday IS NOT NULL AND birthday != \'0000-00-00\' ' . Shop::addSqlRestriction()
         );
 
         return round($value / 365);

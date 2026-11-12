@@ -6,12 +6,6 @@
 class SpecificPriceCore extends ObjectModel
 {
     public const ORDER_DEFAULT_FROM_QUANTITY = 1;
-    // KNOWN GAP: this "no date" sentinel is a valid MySQL zero-date but PostgreSQL rejects
-    // '0000-00-00 00:00:00' as an invalid timestamp value outright (not just a quoting issue) —
-    // any add()/update() that persists `from`/`to` still holding this value will fail on
-    // PostgreSQL. This constant is also consumed by Order.php and OrderProductRemover.php.
-    // Needs a dedicated fix (e.g. a dialect-aware sentinel or NULL-based "no date" semantics)
-    // rather than a syntax-only rewrite; left untouched here.
     public const ORDER_DEFAULT_DATE = '0000-00-00 00:00:00';
 
     public $id_product;
@@ -599,7 +593,6 @@ class SpecificPriceCore extends ObjectModel
 
         // Conflict target is the UNIQUE KEY on id_product (not the primary key, which also
         // includes the auto-increment id_specific_price_priority and never actually conflicts).
-        /* @phpstan-ignore-next-line */
         $onConflict = _DB_TYPE_ == 'pgsql'
             ? 'ON CONFLICT (id_product) DO UPDATE SET priority = \'' . pSQL(rtrim($value, ';')) . '\''
             : 'ON DUPLICATE KEY UPDATE priority = \'' . pSQL(rtrim($value, ';')) . '\'';
@@ -792,7 +785,7 @@ class SpecificPriceCore extends ObjectModel
         }
 
         return (int) Db::getInstance()->getValue('SELECT id_specific_price
-												FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price') . '
+												FROM ' . _DB_PREFIX_ . 'specific_price
 												WHERE id_product=' . (int) $id_product . ' AND
 													id_product_attribute=' . (int) $id_product_attribute . ' AND
 													id_shop=' . (int) $id_shop . ' AND

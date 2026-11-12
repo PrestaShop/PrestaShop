@@ -347,7 +347,7 @@ class AdminCartRulesControllerCore extends AdminController
         // Add cart rule restrictions
         if (Tools::getValue('cart_rule_unselected') && is_array($unselectedIds = Tools::getValue('cart_rule_unselected')) && count($unselectedIds)) {
             $allCartRuleIds = Db::getInstance()->executeS('
-                SELECT id_cart_rule
+                SELECT id_cart_rule 
                 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule') . '
                 WHERE id_cart_rule != ' . (int) $currentObject->id
             );
@@ -405,21 +405,20 @@ class AdminCartRulesControllerCore extends AdminController
             // And if the new cart rule has restrictions, previously unrestricted cart rules may now be restricted (a mug of coffee is strongly advised to understand this sentence)
             $ruleCombinations = Db::getInstance()->executeS('
 			SELECT cr.id_cart_rule
-			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule') . ' cr
+			FROM ' . _DB_PREFIX_ . 'cart_rule cr
 			WHERE cr.id_cart_rule != ' . (int) $currentObject->id . '
 			AND cr.cart_rule_restriction = 0
 			AND NOT EXISTS (
 				SELECT 1
-				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule_combination') . '
-				WHERE cr.id_cart_rule = ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule_combination') . '.id_cart_rule_2 AND ' . (int) $currentObject->id . ' = id_cart_rule_1
+				FROM ' . _DB_PREFIX_ . 'cart_rule_combination
+				WHERE cr.id_cart_rule = ' . _DB_PREFIX_ . 'cart_rule_combination.id_cart_rule_2 AND ' . (int) $currentObject->id . ' = id_cart_rule_1
 			)
 			AND NOT EXISTS (
 				SELECT 1
-				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule_combination') . '
-				WHERE cr.id_cart_rule = ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_rule_combination') . '.id_cart_rule_1 AND ' . (int) $currentObject->id . ' = id_cart_rule_2
+				FROM ' . _DB_PREFIX_ . 'cart_rule_combination
+				WHERE cr.id_cart_rule = ' . _DB_PREFIX_ . 'cart_rule_combination.id_cart_rule_1 AND ' . (int) $currentObject->id . ' = id_cart_rule_2
 			)
 			');
-            /* @phpstan-ignore-next-line */
             if (_DB_TYPE_ == 'pgsql') {
                 $insertKeyword = 'INSERT INTO';
                 $onConflict = ' ON CONFLICT (id_cart_rule_1, id_cart_rule_2) DO NOTHING';
@@ -530,7 +529,7 @@ class AdminCartRulesControllerCore extends AdminController
                 $products = ['selected' => [], 'unselected' => []];
                 $results = Db::getInstance()->executeS('
 				SELECT DISTINCT name, p.id_product as id
-				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p
+				FROM ' . _DB_PREFIX_ . 'product p
 				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_lang') . ' pl
 					ON (p.' . Db::quoteIdentifier('id_product') . ' = pl.' . Db::quoteIdentifier('id_product') . '
 					AND pl.' . Db::quoteIdentifier('id_lang') . ' = ' . (int) Context::getContext()->language->id . Shop::addSqlRestrictionOnLang('pl') . ')

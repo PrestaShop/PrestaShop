@@ -72,7 +72,6 @@ class GroupReductionCore extends ObjectModel
         }
 
         if (count($values)) {
-            /* @phpstan-ignore-next-line */
             if (_DB_TYPE_ == 'pgsql') {
                 $query = 'INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_group_reduction_cache') . ' AS pgrc (id_product, id_group, reduction)
 				VALUES ' . implode(', ', $values) . ' ON CONFLICT (id_product, id_group) DO UPDATE SET
@@ -213,7 +212,6 @@ class GroupReductionCore extends ObjectModel
 
         $query = '';
 
-        /* @phpstan-ignore-next-line */
         $onConflict = _DB_TYPE_ == 'pgsql'
             ? ' ON CONFLICT (id_product, id_group) DO UPDATE SET reduction = '
             : ' ON DUPLICATE KEY UPDATE reduction = ';

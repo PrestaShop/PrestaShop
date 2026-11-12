@@ -54,7 +54,6 @@ class SmartyCustomCore extends Smarty
      */
     private function replaceLastFlush($type)
     {
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'pgsql') {
             Db::getInstance()->execute('INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'smarty_last_flush') . ' (type, last_flush)
                 VALUES (\'' . pSQL($type) . '\', TO_TIMESTAMP(' . time() . '))
@@ -73,7 +72,6 @@ class SmartyCustomCore extends Smarty
      */
     private function unixTimestampExpr($column)
     {
-        /* @phpstan-ignore-next-line */
         return _DB_TYPE_ == 'pgsql' ? 'EXTRACT(EPOCH FROM ' . $column . ')' : 'UNIX_TIMESTAMP(' . $column . ')';
     }
 
@@ -261,13 +259,9 @@ class SmartyCustomCore extends Smarty
     public function insert_in_lazy_cache($template, $cache_id, $compile_id)
     {
         $template_md5 = md5($template);
-        /* @phpstan-ignore-next-line */
         $isPgsql = _DB_TYPE_ == 'pgsql';
-        /* @phpstan-ignore-next-line */
         $insertKeyword = $isPgsql ? 'INSERT' : 'INSERT IGNORE';
-        /* @phpstan-ignore-next-line */
         $onConflict = $isPgsql ? ' ON CONFLICT (template_hash, cache_id, compile_id) DO NOTHING' : '';
-        /* @phpstan-ignore-next-line */
         $fromUnixtime = $isPgsql ? 'TO_TIMESTAMP(' . time() . ')' : 'FROM_UNIXTIME(' . time() . ')';
 
         $sql = $insertKeyword . ' INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'smarty_lazy_cache') . '

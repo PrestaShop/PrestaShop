@@ -96,7 +96,7 @@ class FeatureCore extends ObjectModel
     /**
      * Adds current Feature as a new Object to the database.
      *
-     * @param bool $autoDate Automatically set date_upd and date_add columns
+     * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
      * @return bool Indicates whether the Feature has been successfully added
@@ -166,16 +166,14 @@ class FeatureCore extends ObjectModel
     /**
      * Deletes current Feature from the database.
      *
-     * @return bool true if delete was successful
+     * @return bool `true` if delete was successful
      *
      * @throws PrestaShopException
      */
     public function delete()
     {
         /* Also delete related attributes */
-        // Only one table is actually deleted from here (feature_value_lang); the join to
-        // feature_value is purely a filter, so this is portable as a single-table DELETE
-        // with a subquery, unlike a genuine multi-table DELETE.
+        // PostgreSQL has no multi-table DELETE: the join was only a filter
         Db::getInstance()->execute('
 			DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_value_lang') . '
 			WHERE id_feature_value IN (
@@ -332,7 +330,6 @@ class FeatureCore extends ObjectModel
     {
         // PostgreSQL has no session variables (MySQL's @i trick); renumber via a window
         // function instead, joined back on the primary key.
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'pgsql') {
             return (bool) Db::getInstance()->execute('
                 UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature') . ' AS target
@@ -377,7 +374,7 @@ class FeatureCore extends ObjectModel
     public static function getHighestPosition(): int
     {
         $sql = 'SELECT MAX(position)
-				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature') . '';
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature');
         $position = Db::getInstance()->getValue($sql);
 
         return (is_numeric($position)) ? (int) $position : -1;

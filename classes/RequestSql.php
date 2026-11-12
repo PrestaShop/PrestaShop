@@ -186,7 +186,6 @@ class RequestSqlCore extends ObjectModel
     public function getTables()
     {
         // MySQL's "SHOW TABLES" has no PostgreSQL equivalent; querying pg_catalog instead.
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'pgsql') {
             $results = Db::getInstance()->executeS('SELECT tablename AS "Tables" FROM pg_catalog.pg_tables WHERE schemaname = \'public\'');
         } else {
@@ -212,7 +211,6 @@ class RequestSqlCore extends ObjectModel
     {
         // MySQL's "DESCRIBE table" has no PostgreSQL equivalent; querying information_schema
         // instead, reshaped to expose the same "Field" and "Type" keys MySQL returns.
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'pgsql') {
             return Db::getInstance()->executeS(
                 'SELECT column_name AS "Field", data_type AS "Type" FROM information_schema.columns

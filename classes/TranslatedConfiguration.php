@@ -117,7 +117,7 @@ class TranslatedConfigurationCore extends Configuration
 		' . $sqlJoin . '
 		WHERE id_configuration IN
 		(	SELECT id_configuration
-			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . $this->def['table'] . '_lang') . '
+			FROM ' . _DB_PREFIX_ . $this->def['table'] . '_lang
 		) ' . $sqlFilter . '
 		' . ($sqlSort != '' ? $sqlSort : '') . '
 		' . ($sqlLimit != '' ? $sqlLimit : '') . '

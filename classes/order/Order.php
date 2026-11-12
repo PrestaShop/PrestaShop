@@ -580,13 +580,14 @@ class OrderCore extends ObjectModel
 
     public function getProductsDetail()
     {
-        // The od.ecotax is a newly added at end as ecotax is used in multiples columns but it's the ecotax value we need
+        // The `od.ecotax` is a newly added at end as ecotax is used in multiples columns but it's the ecotax value we need
         $sql = 'SELECT p.*, ps.*, od.*';
-        $sql .= ' FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_detail') . ' od';
-        $sql .= ' LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p ON (p.id_product = od.product_id)';
-        $sql .= ' LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_shop') . ' ps ON (ps.id_product = p.id_product AND ps.id_shop = od.id_shop)';
-        $sql .= ' WHERE od.id_order = ' . (int) $this->id;
+        $sql .= ' FROM %sorder_detail od';
+        $sql .= ' LEFT JOIN %sproduct p ON (p.id_product = od.product_id)';
+        $sql .= ' LEFT JOIN %sproduct_shop ps ON (ps.id_product = p.id_product AND ps.id_shop = od.id_shop)';
+        $sql .= ' WHERE od.id_order = %d';
         $sql .= ' ORDER BY od.id_order_detail';
+        $sql = sprintf($sql, _DB_PREFIX_, _DB_PREFIX_, _DB_PREFIX_, (int) $this->id);
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }
@@ -1042,7 +1043,6 @@ class OrderCore extends ObjectModel
     public static function getOrdersIdByDate($date_from, $date_to, $id_customer = null, $type = null)
     {
         // DATE_ADD() with a negative interval has no PostgreSQL equivalent; a direct interval subtraction works on both.
-        /* @phpstan-ignore-next-line */
         $dateUpdMinusOneDay = _DB_TYPE_ == 'pgsql' ? '(date_upd - INTERVAL \'1 DAY\')' : 'DATE_ADD(date_upd, INTERVAL -1 DAY)';
         $sql = 'SELECT id_order
                 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'orders') . '
@@ -1236,7 +1236,6 @@ class OrderCore extends ObjectModel
         }
         $today = date('Y-m-d') . ' 00:00:00';
         // TO_DAYS() has no PostgreSQL equivalent; a direct date subtraction gives the same day count.
-        /* @phpstan-ignore-next-line */
         $daysDiffExpr = _DB_TYPE_ == 'pgsql'
             ? '(DATE(\'' . pSQL($today) . '\') - delivery_date::date)'
             : 'TO_DAYS(\'' . pSQL($today) . '\') - TO_DAYS(delivery_date)';

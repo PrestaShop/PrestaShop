@@ -226,9 +226,9 @@ class StateCore extends ObjectModel
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             '
-				SELECT id_zone
-				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'state') . '
-				WHERE id_state = ' . (int) $idState
+			SELECT id_zone
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'state') . '
+			WHERE id_state = ' . (int) $idState
         );
     }
 

@@ -63,7 +63,7 @@ class WebserviceKeyCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT ' . Db::quoteIdentifier('key') . '
-		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'webservice_account') . '
+		FROM ' . _DB_PREFIX_ . 'webservice_account
 		WHERE ' . Db::quoteIdentifier('key') . ' = \'' . pSQL($key) . '\'');
     }
 
@@ -188,7 +188,6 @@ class WebserviceKeyCore extends ObjectModel
                 // PostgreSQL's identity/serial columns reject an explicit NULL (unlike
                 // MySQL's AUTO_INCREMENT, which auto-generates on NULL); the id column
                 // is simply omitted from the INSERT so the sequence default applies.
-                /* @phpstan-ignore-next-line */
                 if (_DB_TYPE_ == 'pgsql') {
                     $sql = 'INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'webservice_permission') . ' (resource, method, id_webservice_account) VALUES ';
                     foreach ($permissions as $permission) {

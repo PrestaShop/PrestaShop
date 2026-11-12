@@ -126,7 +126,7 @@ class CustomerMessageCore extends ObjectModel
             return (int) Db::getInstance()->getValue(
                 '
 				SELECT COUNT(*)
-				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_message') . '
+				FROM ' . _DB_PREFIX_ . 'customer_message
 				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_thread') . ' ct ON (cm.id_customer_thread = ct.id_customer_thread)
 				WHERE 1=1' . Shop::addSqlRestriction()
             );
@@ -134,7 +134,7 @@ class CustomerMessageCore extends ObjectModel
             return (int) Db::getInstance()->getValue(
                 '
 				SELECT COUNT(*)
-				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_message') . ' cm
+				FROM ' . _DB_PREFIX_ . 'customer_message cm
 				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_thread') . ' ct ON (cm.id_customer_thread = ct.id_customer_thread)
 				WHERE ' . $where . Shop::addSqlRestriction()
             );
@@ -169,7 +169,7 @@ class CustomerMessageCore extends ObjectModel
         return (string) Db::getInstance()->getValue(
             '
             SELECT message
-            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_message') . '
+            FROM ' . _DB_PREFIX_ . 'customer_message
             WHERE id_customer_thread = ' . (int) $id_customer_thread . '
             ORDER BY date_add DESC'
         );

@@ -324,7 +324,7 @@ class CustomizationCore extends ObjectModel
         if (!$results = Db::getInstance()->executeS('
 			SELECT id_customization_field, value
 			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field') . ' cf
-			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customized_data') . ' cd ON (cf.id_customization_field = cd.' . Db::quoteIdentifier('index') . ')
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customized_data') . ' cd ON (cf.id_customization_field = cd.index)
 			WHERE id_product = ' . (int) $this->id_product . '
 			AND id_customization = ' . (int) $this->id . '
 			AND cf.type = ' . (int) Product::CUSTOMIZE_TEXTFIELD)) {
@@ -345,7 +345,7 @@ class CustomizationCore extends ObjectModel
         if (!$results = Db::getInstance()->executeS('
 			SELECT id_customization_field, value
 			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field') . ' cf
-			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customized_data') . ' cd ON (cf.id_customization_field = cd.' . Db::quoteIdentifier('index') . ')
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customized_data') . ' cd ON (cf.id_customization_field = cd.index)
 			WHERE id_product = ' . (int) $this->id_product . '
 			AND id_customization = ' . (int) $this->id . '
 			AND cf.type = ' . (int) Product::CUSTOMIZE_FILE)) {

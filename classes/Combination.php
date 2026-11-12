@@ -429,8 +429,8 @@ class CombinationCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT al.*
-			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute_combination') . ' pac
-			JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute_lang') . ' al ON (pac.id_attribute = al.id_attribute AND al.id_lang=' . (int) $idLang . ')
+			FROM ' . _DB_PREFIX_ . 'product_attribute_combination pac
+			JOIN ' . _DB_PREFIX_ . 'attribute_lang al ON (pac.id_attribute = al.id_attribute AND al.id_lang=' . (int) $idLang . ')
 			WHERE pac.id_product_attribute=' . (int) $this->id);
     }
 
@@ -523,9 +523,9 @@ class CombinationCore extends ObjectModel
     {
         return Db::getInstance()->executeS('
 			SELECT a.id_attribute
-			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute_combination') . ' pac
-			JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute') . ' a ON (pac.id_attribute = a.id_attribute)
-			JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute_group') . ' ag ON (ag.id_attribute_group = a.id_attribute_group)
+			FROM ' . _DB_PREFIX_ . 'product_attribute_combination pac
+			JOIN ' . _DB_PREFIX_ . 'attribute a ON (pac.id_attribute = a.id_attribute)
+			JOIN ' . _DB_PREFIX_ . 'attribute_group ag ON (ag.id_attribute_group = a.id_attribute_group)
 			WHERE pac.id_product_attribute=' . (int) $this->id . ' AND ag.is_color_group = 1
 		');
     }

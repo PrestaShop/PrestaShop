@@ -90,7 +90,6 @@ class DatabaseDump
 
         if (count($host_and_maybe_port) === 1) {
             $this->host = $host_and_maybe_port[0];
-            /* @phpstan-ignore-next-line */
             $this->port = _DB_TYPE_ == 'pgsql' ? 5432 : 3306;
         } elseif (count($host_and_maybe_port) === 2) {
             $this->host = $host_and_maybe_port[0];
@@ -189,7 +188,6 @@ class DatabaseDump
      */
     private function buildRestoreCommand(): string
     {
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'pgsql') {
             $parts = array_merge(
                 $this->getPgsqlDefaultParameters('psql'),
@@ -199,7 +197,7 @@ class DatabaseDump
             return implode(' ', $parts);
         }
 
-        $parts = array_merge($this->getMysqlDefaultParameters('mysql'), [escapeshellarg($this->databaseName)]);
+        $parts = array_merge($this->getDefaultParameters('mysql'), [escapeshellarg($this->databaseName)]);
 
         return implode(' ', $parts);
     }
@@ -209,7 +207,6 @@ class DatabaseDump
      */
     private function buildDumpCommand(string $dumpfile, ?string $table = null): string
     {
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'pgsql') {
             $parts = array_merge(
                 $this->getPgsqlDefaultParameters('pg_dump'),
@@ -224,7 +221,7 @@ class DatabaseDump
             return implode(' ', $parts);
         }
 
-        $parts = array_merge($this->getMysqlDefaultParameters('mysqldump'), ['-r', escapeshellarg($dumpfile), escapeshellarg($this->databaseName)]);
+        $parts = array_merge($this->getDefaultParameters('mysqldump'), ['-r', escapeshellarg($dumpfile), escapeshellarg($this->databaseName)]);
         if (null !== $table) {
             $parts[] = escapeshellarg($table);
         }
@@ -236,7 +233,7 @@ class DatabaseDump
     /**
      * @return string[]
      */
-    private function getMysqlDefaultParameters(string $executable): array
+    private function getDefaultParameters(string $executable): array
     {
         $parts = [
             $executable,
@@ -292,7 +289,7 @@ class DatabaseDump
         exec($command, $output, $ret);
 
         if ($ret !== 0) {
-            throw new Exception(sprintf('Unable to exec command: `%s`, output : %s', $command, implode(PHP_EOL, $output)));
+            throw new Exception(sprintf('Unable to exec command: `%s`, output : %s', $command, implode($output)));
         }
 
         return $output;
@@ -314,7 +311,6 @@ class DatabaseDump
      */
     private function removeUnsupportedSettings(string $dumpFile): void
     {
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ != 'pgsql') {
             return;
         }
@@ -337,7 +333,6 @@ class DatabaseDump
      */
     private function listTables(): array
     {
-        /* @phpstan-ignore-next-line */
         $rows = $this->db->executeS(_DB_TYPE_ == 'pgsql'
             ? "SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname = 'public'"
             : 'SHOW TABLES;');
@@ -391,7 +386,6 @@ class DatabaseDump
      */
     private function getTableChecksum(string $table): string
     {
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'pgsql') {
             return $this->getPgsqlTableChecksum($table);
         }

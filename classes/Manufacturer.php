@@ -97,7 +97,7 @@ class ManufacturerCore extends ObjectModel
     /**
      * Deletes current Manufacturer from the database.
      *
-     * @return bool true if delete was successful
+     * @return bool `true` if delete was successful
      *
      * @throws PrestaShopException
      */
@@ -195,7 +195,6 @@ class ManufacturerCore extends ObjectModel
             }
 
             // USE INDEX is a MySQL-only hint; PostgreSQL has no equivalent syntax.
-            /* @phpstan-ignore-next-line */
             $useIndexHint = _DB_TYPE_ == 'mysql' ? ' USE INDEX (product_manufacturer)' : '';
             $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 '
@@ -429,16 +428,13 @@ class ManufacturerCore extends ObjectModel
         }
 
         $nbDaysNewProduct = Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
-        $now = date('Y-m-d') . ' 00:00:00';
-        /* @phpstan-ignore-next-line */
-        $newProductThreshold = _DB_TYPE_ == 'pgsql'
-            ? "(TIMESTAMP '" . pSQL($now) . "' - INTERVAL '" . $nbDaysNewProduct . " DAY')"
-            : "DATE_SUB('" . pSQL($now) . "', INTERVAL " . $nbDaysNewProduct . ' DAY)';
+        // A product is new while its creation day is within the last N days
+        $newProductThreshold = "'" . date('Y-m-d 00:00:00', strtotime(sprintf('%+d days', 1 - (int) $nbDaysNewProduct))) . "'";
         $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, COALESCE(stock.quantity, 0) as quantity'
             . (Combination::isFeatureActive() ? ', product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, COALESCE(product_attribute_shop.id_product_attribute,0) id_product_attribute' : '') . '
 			, pl.description, pl.description_short, pl.link_rewrite, pl.meta_description,
 			pl.meta_title, pl.name, pl.available_now, pl.available_later, image_shop.id_image id_image, il.legend, m.name AS manufacturer_name,
-				(product_shop.date_add > ' . $newProductThreshold . ') AS new, psales.quantity as sales'
+				(product_shop.date_add >= ' . $newProductThreshold . ') AS new, psales.quantity as sales'
             . ' FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p
 			' . Shop::addSqlAssociation('product', 'p') .
             (Combination::isFeatureActive() ? 'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute_shop') . ' product_attribute_shop

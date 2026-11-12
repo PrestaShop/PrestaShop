@@ -184,7 +184,6 @@ class ConnectionCore extends ObjectModel
 
         // A new connection is created if the guest made no actions during 30 minutes
         // "SQL_NO_CACHE" is a MySQL-only optimizer hint dropped for PostgreSQL.
-        /* @phpstan-ignore-next-line */
         $noCacheHint = _DB_TYPE_ == 'pgsql' ? '' : 'SQL_NO_CACHE ';
         $sql = 'SELECT ' . $noCacheHint . 'id_guest
 				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'connections') . '
@@ -240,7 +239,6 @@ class ConnectionCore extends ObjectModel
             $time = 300000;
         }
         // PostgreSQL requires the INTERVAL literal quantity to be a quoted string, unlike MySQL's bare "INTERVAL n SECOND".
-        /* @phpstan-ignore-next-line */
         $timeEndExpr = _DB_TYPE_ == 'pgsql'
             ? 'time_start + INTERVAL \'' . (int) ($time / 1000) . ' seconds\''
             : 'time_start + INTERVAL ' . (int) ($time / 1000) . ' SECOND';
@@ -262,7 +260,6 @@ class ConnectionCore extends ObjectModel
 
         // MySQL's LAST_DAY(DATE_SUB(...)) has no PostgreSQL equivalent; the last day of the
         // month is computed portably as (first day of next month - 1 day).
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'pgsql') {
             $pgIntervals = ['week' => '1 week', 'month' => '1 month', 'year' => '1 year'];
             if (!isset($pgIntervals[$period])) {

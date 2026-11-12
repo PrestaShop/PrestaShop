@@ -97,9 +97,9 @@ class ContactCore extends ObjectModel
 
         return Db::getInstance()->executeS('
             SELECT cl.*
-            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'contact') . ' ct
+            FROM ' . _DB_PREFIX_ . 'contact ct
             ' . Shop::addSqlAssociation('contact', 'ct', false) . '
-            LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'contact_lang') . ' cl
+            LEFT JOIN ' . _DB_PREFIX_ . 'contact_lang cl
                 ON (cl.id_contact = ct.id_contact AND cl.id_lang = ' . (int) Context::getContext()->language->id . ')
             WHERE ct.customer_service = 1
             AND contact_shop.id_shop IN (' . implode(', ', array_map('intval', $shopIds)) . ')

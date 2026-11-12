@@ -310,11 +310,8 @@ class SupplierCore extends ObjectModel
         }
 
         $nbDaysNewProduct = Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
-        $now = date('Y-m-d') . ' 00:00:00';
-        /* @phpstan-ignore-next-line */
-        $newProductThreshold = _DB_TYPE_ == 'pgsql'
-            ? "(TIMESTAMP '" . pSQL($now) . "' - INTERVAL '" . $nbDaysNewProduct . " DAY')"
-            : "DATE_SUB('" . pSQL($now) . "', INTERVAL " . $nbDaysNewProduct . ' DAY)';
+        // A product is new while its creation day is within the last N days
+        $newProductThreshold = "'" . date('Y-m-d 00:00:00', strtotime(sprintf('%+d days', 1 - (int) $nbDaysNewProduct))) . "'";
 
         if (strpos('.', $orderBy) > 0) {
             $orderBy = explode('.', $orderBy);
@@ -341,7 +338,7 @@ class SupplierCore extends ObjectModel
 					image_shop.id_image id_image,
 					il.legend,
 					s.name AS supplier_name,
-					(p.date_add > ' . $newProductThreshold . ') AS new,
+					(p.date_add >= ' . $newProductThreshold . ') AS new,
 					m.name AS manufacturer_name' . (Combination::isFeatureActive() ? ', product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, COALESCE(product_attribute_shop.id_product_attribute,0) id_product_attribute' : '') . '
 				 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p
 				' . Shop::addSqlAssociation('product', 'p') . '

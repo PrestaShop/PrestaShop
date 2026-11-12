@@ -514,7 +514,7 @@ class StockManagerCore implements StockManagerInterface
 
         // check if product is present in a pack
         if (!Pack::isPack($id_product) && $in_pack = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-            'SELECT id_product_pack, quantity FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'pack') . '
+            'SELECT id_product_pack, quantity FROM ' . _DB_PREFIX_ . 'pack
 			WHERE id_product_item = ' . (int) $id_product . '
 			AND id_product_attribute_item = ' . ($id_product_attribute ? (int) $id_product_attribute : '0')
         )) {
@@ -705,7 +705,6 @@ class StockManagerCore implements StockManagerInterface
         // gets all stock_mvt for the given coverage period
         // MySQL's TO_DAYS() has no PostgreSQL equivalent; a plain date subtraction
         // already yields the day difference as an integer in both dialects.
-        /* @phpstan-ignore-next-line */
         $dateDiffExpr = _DB_TYPE_ == 'pgsql'
             ? 'DATE \'' . date('Y-m-d') . '\' - sm.date_add::date'
             : 'TO_DAYS(\'' . date('Y-m-d') . ' 00:00:00\') - TO_DAYS(sm.date_add)';
@@ -811,13 +810,13 @@ class StockManagerCore implements StockManagerInterface
 
                 if (is_array($carriers) && !empty($carriers)) {
                     $stock_quantity += Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT SUM(s.usable_quantity) as quantity
-						FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'stock') . ' s
-						LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'warehouse_carrier') . ' wc ON wc.id_warehouse = s.id_warehouse
-						LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'carrier') . ' c ON wc.id_carrier = c.id_reference
+						FROM ' . _DB_PREFIX_ . 'stock s
+						LEFT JOIN ' . _DB_PREFIX_ . 'warehouse_carrier wc ON wc.id_warehouse = s.id_warehouse
+						LEFT JOIN ' . _DB_PREFIX_ . 'carrier c ON wc.id_carrier = c.id_reference
 						WHERE s.id_product = ' . (int) $id_product . ' AND s.id_product_attribute = ' . (int) $id_product_attribute . ' AND s.id_warehouse = ' . $result['id_warehouse'] . ' AND c.id_carrier IN (' . rtrim($delivery_option[(int) Context::getContext()->cart->id_address_delivery], ',') . ') GROUP BY s.id_product');
                 } else {
                     $stock_quantity += Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT SUM(s.usable_quantity) as quantity
-						FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'stock') . ' s
+						FROM ' . _DB_PREFIX_ . 'stock s
 						WHERE s.id_product = ' . (int) $id_product . ' AND s.id_product_attribute = ' . (int) $id_product_attribute . ' AND s.id_warehouse = ' . $result['id_warehouse'] . ' GROUP BY s.id_product');
                 }
             }

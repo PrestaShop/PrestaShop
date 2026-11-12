@@ -71,7 +71,7 @@ class ShopGroupCore extends ObjectModel
     public function getTotalShops()
     {
         $sql = 'SELECT COUNT(*)
-                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'shop') . ' s
+                FROM ' . _DB_PREFIX_ . 'shop s
                 WHERE id_shop_group=' . (int) $this->id;
 
         return (int) Db::getInstance()->getValue($sql);
@@ -80,7 +80,7 @@ class ShopGroupCore extends ObjectModel
     public static function getShopsFromGroup($id_group)
     {
         $sql = 'SELECT s.id_shop
-                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'shop') . ' s
+                FROM ' . _DB_PREFIX_ . 'shop s
                 WHERE id_shop_group=' . (int) $id_group;
 
         return Db::getInstance()->executeS($sql);
@@ -96,7 +96,7 @@ class ShopGroupCore extends ObjectModel
     public static function getIdByName($name)
     {
         $sql = 'SELECT id_shop_group
-                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'shop_group') . '
+                FROM ' . _DB_PREFIX_ . 'shop_group
                 WHERE name = \'' . pSQL($name) . '\'';
 
         return (int) Db::getInstance()->getValue($sql);
@@ -146,7 +146,7 @@ class ShopGroupCore extends ObjectModel
     {
         return Db::getInstance()->getValue(
             'SELECT id_shop
-            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'shop') . '
+            FROM ' . _DB_PREFIX_ . 'shop
             WHERE name = \'' . pSQL($name) . '\'
             AND id_shop_group = ' . (int) $this->id . '
             ' . ($id_shop ? 'AND id_shop != ' . (int) $id_shop : ''),

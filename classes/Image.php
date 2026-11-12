@@ -81,7 +81,7 @@ class ImageCore extends ObjectModel
     /**
      * Adds current Image as a new Object to the database.
      *
-     * @param bool $autoDate Automatically set date_upd and date_add columns
+     * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
      * @return bool Indicates whether the Image has been successfully added
@@ -167,7 +167,7 @@ class ImageCore extends ObjectModel
     /**
      * Deletes current Image from the database.
      *
-     * @return bool true if delete was successful
+     * @return bool `true` if delete was successful
      *
      * @throws PrestaShopException
      */
@@ -186,7 +186,6 @@ class ImageCore extends ObjectModel
         }
 
         // update positions
-        /* @phpstan-ignore-next-line */
         if (_DB_TYPE_ == 'pgsql') {
             // PostgreSQL has no session variables (MySQL's @position trick); renumber via a
             // window function instead, joined back on the primary key.

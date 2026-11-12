@@ -306,7 +306,7 @@ class HookCore extends ObjectModel
         $cacheId = 'hook_aliases';
         if (!Cache::isStored($cacheId)) {
             $hookAliasList = Db::getInstance()->executeS(
-                'SELECT name, alias FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'hook_alias') . ''
+                'SELECT name, alias FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'hook_alias')
             );
             $hookAliases = [];
             if ($hookAliasList) {
@@ -358,7 +358,7 @@ class HookCore extends ObjectModel
 
         if (!Cache::isStored($cacheId)) {
             $databaseResults = Db::getInstance()->executeS(
-                'SELECT name, alias FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'hook_alias') . ''
+                'SELECT name, alias FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'hook_alias')
             );
             $hooksByAlias = [];
             if ($databaseResults) {
@@ -482,7 +482,6 @@ class HookCore extends ObjectModel
         }
 
         // STRAIGHT_JOIN is a MySQL join-order hint, a plain inner join for PostgreSQL
-        /* @phpstan-ignore-next-line */
         $straightJoin = _DB_TYPE_ == 'pgsql' ? 'INNER JOIN' : 'STRAIGHT_JOIN';
         $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             'SELECT h.id_hook, h.name as h_name, title, description, h.position, hm.position as hm_position, m.id_module, m.name, m.active
@@ -1519,7 +1518,7 @@ class HookCore extends ObjectModel
                 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'hook_alias') . ' ha
                 INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'hook') . ' h ON ha.name = h.name';
         } else {
-            $sql = 'SELECT id_hook, name FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'hook') . '';
+            $sql = 'SELECT id_hook, name FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'hook');
         }
 
         $result = $db->executeS($sql, false);

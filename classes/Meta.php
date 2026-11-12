@@ -128,7 +128,7 @@ class MetaCore extends ObjectModel
      */
     public static function getMetas()
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'meta') . ' ORDER BY page ASC');
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM ' . _DB_PREFIX_ . 'meta ORDER BY page ASC');
     }
 
     /**
@@ -161,8 +161,8 @@ class MetaCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
         		SELECT *
-        		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'meta') . ' m
-        		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'meta_lang') . ' ml ON m.id_meta = ml.id_meta
+        		FROM ' . _DB_PREFIX_ . 'meta m
+        		LEFT JOIN ' . _DB_PREFIX_ . 'meta_lang ml ON m.id_meta = ml.id_meta
         		WHERE (
         			m.page = \'' . pSQL($page) . '\'
         			OR m.page = \'' . pSQL(str_replace('-', '', strtolower($page))) . '\'
@@ -182,8 +182,8 @@ class MetaCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
-		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'meta') . ' m
-		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'meta_lang') . ' ml ON m.id_meta = ml.id_meta
+		FROM ' . _DB_PREFIX_ . 'meta m
+		LEFT JOIN ' . _DB_PREFIX_ . 'meta_lang ml ON m.id_meta = ml.id_meta
 		AND ml.id_lang = ' . (int) $idLang . '
 		' . Shop::addSqlRestrictionOnLang('ml'));
     }

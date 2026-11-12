@@ -231,7 +231,6 @@ class SearchCore
 				WHERE \'TERM\' %s AND active = 1
             ';
 
-            /* @phpstan-ignore-next-line */
             if (_DB_TYPE_ == 'pgsql') {
                 // PostgreSQL's POSIX regex engine spells the word boundary \y
                 $aliasCondition = '~ (\'\\y\' || alias || \'\\y\')';
@@ -560,30 +559,21 @@ class SearchCore
             $alias = 'p.';
         }
         $nbDaysNewProduct = Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
-        $now = date('Y-m-d') . ' 00:00:00';
-        // "p.date_add > (now - N days)" instead of "DATEDIFF(p.date_add, DATE_SUB(now, INTERVAL N DAY)) > 0":
-        // DATE_SUB() has no PostgreSQL equivalent, and TIMESTAMP-literal-minus-INTERVAL has no MySQL equivalent.
-        /* @phpstan-ignore-next-line */
-        $newProductThreshold = _DB_TYPE_ == 'pgsql'
-            ? "(TIMESTAMP '" . pSQL($now) . "' - INTERVAL '" . $nbDaysNewProduct . " DAY')"
-            : "DATE_SUB('" . pSQL($now) . "', INTERVAL " . $nbDaysNewProduct . ' DAY)';
+        // A product is new while its creation day is within the last N days
+        $newProductThreshold = "'" . date('Y-m-d 00:00:00', strtotime(sprintf('%+d days', 1 - (int) $nbDaysNewProduct))) . "'";
 
         // MySQL tolerates non-aggregated joined-table columns (p.*, pl.*, image_shop.*, il.*, m.*) alongside
         // "GROUP BY product_shop.id_product"; PostgreSQL only allows this via DISTINCT ON.
-        /* @phpstan-ignore-next-line */
         $dedupeClause = _DB_TYPE_ == 'pgsql' ? 'DISTINCT ON (product_shop.id_product) ' : '';
-        /* @phpstan-ignore-next-line */
         $groupByClause = _DB_TYPE_ == 'pgsql' ? '' : 'GROUP BY product_shop.id_product';
         // FORCE INDEX is a pure MySQL optimizer hint with no PostgreSQL equivalent (no query hint syntax); safe to drop.
-        /* @phpstan-ignore-next-line */
         $forceIndexIdProduct = _DB_TYPE_ == 'pgsql' ? '' : ' FORCE INDEX (id_product)';
-        /* @phpstan-ignore-next-line */
         $forceIndexPrimary = _DB_TYPE_ == 'pgsql' ? '' : ' FORCE INDEX (PRIMARY)';
 
         $sql = 'SELECT ' . $dedupeClause . 'p.*, product_shop.*, stock.out_of_stock, COALESCE(stock.quantity, 0) as quantity,
 				pl.description_short, pl.available_now, pl.available_later, pl.link_rewrite, pl.name,
 			 image_shop.id_image id_image, il.legend, m.name manufacturer_name ' . $sqlScore . ',
-				p.date_add > ' . $newProductThreshold . ' new' . (Combination::isFeatureActive() ? ', product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, COALESCE(product_attribute_shop.id_product_attribute,0) id_product_attribute' : '') . '
+				p.date_add >= ' . $newProductThreshold . ' new' . (Combination::isFeatureActive() ? ', product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, COALESCE(product_attribute_shop.id_product_attribute,0) id_product_attribute' : '') . '
 				FROM ' . _DB_PREFIX_ . 'product p
 				' . Shop::addSqlAssociation('product', 'p') . '
 				INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_lang') . ' pl ON (
@@ -602,7 +592,6 @@ class SearchCore
 				' . $groupByClause;
 
         if ($order_by !== 'price') {
-            /* @phpstan-ignore-next-line */
             $orderByIdPrefix = (_DB_TYPE_ == 'pgsql' && $order_by) ? 'product_shop.id_product, ' : '';
             $sql .= ($order_by ? ' ORDER BY  ' . $orderByIdPrefix . $alias . $order_by : '') . ($order_way ? ' ' . $order_way : '') . '
 				LIMIT ' . (int) $page_size . ' OFFSET ' . (int) (($page_number - 1) * $page_size);
@@ -1053,9 +1042,7 @@ class SearchCore
                     if (!empty($query_array)) {
                         // PostgreSQL has no INSERT IGNORE: ON CONFLICT DO NOTHING is the equivalent
                         // (no conflict target needed, it applies to any constraint violation on the row).
-                        /* @phpstan-ignore-next-line */
                         $insertKeyword = _DB_TYPE_ == 'pgsql' ? 'INSERT INTO' : 'INSERT IGNORE INTO';
-                        /* @phpstan-ignore-next-line */
                         $onConflictClause = _DB_TYPE_ == 'pgsql' ? ' ON CONFLICT DO NOTHING' : '';
 
                         // The words are inserted...
@@ -1130,7 +1117,6 @@ class SearchCore
         if (is_array($queryArray3) && !empty($queryArray3)) {
             // search_index's PRIMARY KEY is (id_word, id_product); ON CONFLICT needs that pair as the
             // conflict target, and EXCLUDED holds the row that would have been inserted.
-            /* @phpstan-ignore-next-line */
             $onConflict = _DB_TYPE_ == 'pgsql'
                 ? 'ON CONFLICT (id_word, id_product) DO UPDATE SET weight = ' . Db::quoteIdentifier(_DB_PREFIX_ . 'search_index') . '.weight + EXCLUDED.weight'
                 : 'ON DUPLICATE KEY UPDATE weight = weight + VALUES(weight)';
@@ -1190,7 +1176,6 @@ class SearchCore
 
         // STRAIGHT_JOIN is a pure MySQL join-order optimizer hint with no PostgreSQL equivalent; use a
         // plain INNER JOIN for pgsql (same result set, just without the forced join order).
-        /* @phpstan-ignore-next-line */
         $tagStraightJoin = _DB_TYPE_ == 'pgsql' ? 'INNER JOIN' : 'STRAIGHT_JOIN';
 
         if ($count) {
@@ -1213,30 +1198,21 @@ class SearchCore
         }
 
         $nbDaysNewProduct = Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
-        $now = date('Y-m-d') . ' 00:00:00';
-        // "p.date_add > (now - N days)" instead of "DATEDIFF(p.date_add, DATE_SUB(now, INTERVAL N DAY)) > 0":
-        // DATE_SUB() has no PostgreSQL equivalent, and TIMESTAMP-literal-minus-INTERVAL has no MySQL equivalent.
-        /* @phpstan-ignore-next-line */
-        $newProductThreshold = _DB_TYPE_ == 'pgsql'
-            ? "(TIMESTAMP '" . pSQL($now) . "' - INTERVAL '" . $nbDaysNewProduct . " DAY')"
-            : "DATE_SUB('" . pSQL($now) . "', INTERVAL " . $nbDaysNewProduct . ' DAY)';
+        // A product is new while its creation day is within the last N days
+        $newProductThreshold = "'" . date('Y-m-d 00:00:00', strtotime(sprintf('%+d days', 1 - (int) $nbDaysNewProduct))) . "'";
 
         // MySQL tolerates SELECT DISTINCT + non-aggregated joined-table columns (p.*, pl.*, il.*, m.*)
         // alongside "GROUP BY product_shop.id_product"; PostgreSQL only allows this via DISTINCT ON,
         // which also means MAX(image_shop.id_image) (used only to pick a single deterministic value
         // per group) can be selected as a plain column instead.
-        /* @phpstan-ignore-next-line */
         $dedupeClause = _DB_TYPE_ == 'pgsql' ? 'DISTINCT ON (product_shop.id_product) ' : 'DISTINCT ';
-        /* @phpstan-ignore-next-line */
         $imageIdExpr = _DB_TYPE_ == 'pgsql' ? 'image_shop.id_image' : 'MAX(image_shop.id_image)';
-        /* @phpstan-ignore-next-line */
         $groupByClause = _DB_TYPE_ == 'pgsql' ? '' : 'GROUP BY product_shop.id_product';
-        /* @phpstan-ignore-next-line */
         $orderByIdPrefix = _DB_TYPE_ == 'pgsql' ? 'product_shop.id_product, ' : '';
 
         $sql = 'SELECT ' . $dedupeClause . 'p.*, product_shop.*, stock.out_of_stock, COALESCE(stock.quantity, 0) as quantity, pl.description_short, pl.link_rewrite, pl.name, pl.available_now, pl.available_later,
 					' . $imageIdExpr . ' id_image, il.legend, m.name manufacturer_name, 1 position,
-					p.date_add > ' . $newProductThreshold . ' new
+					p.date_add >= ' . $newProductThreshold . ' new
 				FROM
 				' . Db::quoteIdentifier(_DB_PREFIX_ . 'tag') . ' t
 				' . $tagStraightJoin . ' ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_tag') . ' pt ON (pt.id_tag = t.id_tag AND t.id_lang = ' . (int) $id_lang . ')

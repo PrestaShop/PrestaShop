@@ -1205,7 +1205,7 @@ class ShopCore extends ObjectModel
     {
         if (static::$feature_active === null) {
             static::$feature_active = (bool) Db::getInstance()->getValue('SELECT value FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'configuration') . ' WHERE name = \'PS_MULTISHOP_FEATURE_ACTIVE\'')
-                && (Db::getInstance()->getValue('SELECT COUNT(*) FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'shop')) > 1);
+                && (Db::getInstance()->getValue('SELECT COUNT(*) FROM ' . _DB_PREFIX_ . 'shop') > 1);
         }
 
         return static::$feature_active;
@@ -1288,9 +1288,7 @@ class ShopCore extends ObjectModel
 
                     // PostgreSQL has no INSERT IGNORE keyword; ON CONFLICT DO NOTHING achieves the same
                     // "skip silently on conflict" behavior without needing to know the conflicting key.
-                    /* @phpstan-ignore-next-line */
                     $insertKeyword = _DB_TYPE_ == 'pgsql' ? 'INSERT' : 'INSERT IGNORE';
-                    /* @phpstan-ignore-next-line */
                     $onConflict = _DB_TYPE_ == 'pgsql' ? ' ON CONFLICT DO NOTHING' : '';
 
                     $categories = Tools::getValue('categoryBox');
@@ -1375,7 +1373,7 @@ class ShopCore extends ObjectModel
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             'SELECT entity.' . $idColumn . '
             FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . $entity . '_shop') . ' es
-            LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . $entity) . ' entity
+            LEFT JOIN ' . _DB_PREFIX_ . bqSQL($entity) . ' entity
                 ON (entity.' . $idColumn . ' = es.' . $idColumn . ')
             WHERE es.id_shop = ' . (int) $id_shop .
             ($active ? ' AND entity.active = 1' : '') .
