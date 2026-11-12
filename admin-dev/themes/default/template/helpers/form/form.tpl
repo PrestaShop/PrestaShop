@@ -281,13 +281,13 @@
 													{foreach $input.options.query AS $option}
 														{if is_object($option)}
 															{if !in_array($option->$input.options.id, $fields_value[$input.name])}
-																<option value="{$option->$input.options.id|escape:'html':'UTF-8'}">{$option->$input.options.name|escape:'html':'UTF-8'}</option>
+																<option value="{$option->$input.options.id|escape:'html':'UTF-8'}">{$option->$input.options.name|purify}</option>
 															{/if}
 														{elseif $option == "-"}
 															<option value="">-</option>
 														{else}
 															{if !in_array($option[$input.options.id], $fields_value[$input.name])}
-																<option value="{$option[$input.options.id]|escape:'html':'UTF-8'}">{$option[$input.options.name]|escape:'html':'UTF-8'}</option>
+																<option value="{$option[$input.options.id]|escape:'html':'UTF-8'}">{$option[$input.options.name]|purify}</option>
 															{/if}
 														{/if}
 													{/foreach}
@@ -299,13 +299,13 @@
 													{foreach $input.options.query AS $option}
 														{if is_object($option)}
 															{if in_array($option->$input.options.id, $fields_value[$input.name])}
-																<option value="{$option->$input.options.id|escape:'html':'UTF-8'}">{$option->$input.options.name|escape:'html':'UTF-8'}</option>
+																<option value="{$option->$input.options.id|escape:'html':'UTF-8'}">{$option->$input.options.name|purify}</option>
 															{/if}
 														{elseif $option == "-"}
 															<option value="">-</option>
 														{else}
 															{if in_array($option[$input.options.id], $fields_value[$input.name])}
-																<option value="{$option[$input.options.id]|escape:'html':'UTF-8'}">{$option[$input.options.name]|escape:'html':'UTF-8'}</option>
+																<option value="{$option[$input.options.id]|escape:'html':'UTF-8'}">{$option[$input.options.name]|purify}</option>
 															{/if}
 														{/if}
 													{/foreach}
@@ -343,7 +343,7 @@
 																{else}
 																	{if $fields_value[$input.name] == $option[$input.options.options.id]}selected="selected"{/if}
 																{/if}
-															>{$option[$input.options.options.name]|escape:'html':'UTF-8'}</option>
+															>{$option[$input.options.options.name]|purify}</option>
 														{/foreach}
 													</optgroup>
 												{/foreach}
@@ -378,7 +378,7 @@
 																	selected="selected"
 																{/if}
 															{/if}
-														>{$option[$input.options.name]|escape:'html':'UTF-8'}</option>
+														>{$option[$input.options.name]|purify}</option>
 
 													{/if}
 												{/foreach}
@@ -391,7 +391,7 @@
 											{strip}
 											<label>
 											<input type="radio"	name="{$input.name|escape:'html':'UTF-8'}" id="{$value.id}" value="{$value.value|escape:'html':'UTF-8'}"{if $fields_value[$input.name] == $value.value} checked="checked"{/if}{if (isset($input.disabled) && $input.disabled) or (isset($value.disabled) && $value.disabled)} disabled="disabled"{/if}/>
-												{$value.label|escape:'html':'UTF-8'}
+												{$value.label|purify}
 											</label>
 											{/strip}
 										</div>
