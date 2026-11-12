@@ -24,7 +24,6 @@ class ProductResetter
             'product_attribute_lang',
             'product_attribute_shop',
             'product_carrier',
-            'product_country_tax',
             'product_download',
             'product_group_reduction_cache',
             'product_lang',

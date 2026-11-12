@@ -196,7 +196,6 @@ final class ImportEntityDeleter implements ImportEntityDeleterInterface
             'product_carrier',
             'cart_product',
             'product_attachment',
-            'product_country_tax',
             'product_download',
             'product_group_reduction_cache',
             'product_sale',

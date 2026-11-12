@@ -91,20 +91,6 @@ $changes = array(
             '#unsigned' => true,
         ),
     ),
-    'product_country_tax' => array(
-        'id_product' => array(
-            '#type' => 'INT(11)',
-            '#unsigned' => true,
-        ),
-        'id_country' => array(
-            '#type' => 'INT(11)',
-            '#unsigned' => true,
-        ),
-        'id_tax' => array(
-            '#type' => 'INT(11)',
-            '#unsigned' => true,
-        ),
-    ),
     'tax_rule' => array(
         'id_tax_rule' => array(
             '#type' => 'INT(11)',
