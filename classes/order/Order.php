@@ -586,6 +586,7 @@ class OrderCore extends ObjectModel
         $sql .= ' LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p ON (p.id_product = od.product_id)';
         $sql .= ' LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_shop') . ' ps ON (ps.id_product = p.id_product AND ps.id_shop = od.id_shop)';
         $sql .= ' WHERE od.id_order = ' . (int) $this->id;
+        $sql .= ' ORDER BY od.id_order_detail';
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }
