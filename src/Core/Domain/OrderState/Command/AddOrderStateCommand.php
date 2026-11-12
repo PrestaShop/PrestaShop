@@ -51,6 +51,11 @@ class AddOrderStateCommand
      * @var bool
      */
     private $shipped;
+
+    /**
+     * @var bool|null null keeps the historical rule: a state reserves unless it ships
+     */
+    private $reserveProducts;
     /**
      * @var bool
      */
@@ -100,7 +105,8 @@ class AddOrderStateCommand
         bool $shipped,
         bool $paid,
         bool $delivery,
-        array $localizedTemplates
+        array $localizedTemplates,
+        ?bool $reserveProducts = null
     ) {
         $this->setLocalizedNames($localizedNames);
         $this->color = $color;
@@ -114,6 +120,7 @@ class AddOrderStateCommand
         $this->paid = $paid;
         $this->delivery = $delivery;
         $this->localizedTemplates = $localizedTemplates;
+        $this->reserveProducts = $reserveProducts;
     }
 
     /**
@@ -204,6 +211,17 @@ class AddOrderStateCommand
     public function isShipped()
     {
         return $this->shipped;
+    }
+
+    /**
+     * Whether orders in this state hold their products in reserved_quantity. Left unset it follows the
+     * rule that applied before the flag existed: everything reserves except states that ship.
+     *
+     * @return bool
+     */
+    public function reservesProducts(): bool
+    {
+        return $this->reserveProducts ?? !$this->shipped;
     }
 
     /**
