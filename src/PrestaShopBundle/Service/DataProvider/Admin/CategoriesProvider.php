@@ -186,7 +186,7 @@ class CategoriesProvider
 
         // Look it up by module tab attribute, as declared in the categories file
         $moduleCategory = $this->getParentCategoryFromTabAttribute($installedProduct);
-        if (array_key_exists($moduleCategory, $categories['categories']->subMenu)) {
+        if (null !== $moduleCategory && array_key_exists($moduleCategory, $categories['categories']->subMenu)) {
             return $moduleCategory;
         }
 

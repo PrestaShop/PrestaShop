@@ -47,7 +47,6 @@ class OrderWebserviceFieldOrderTest extends TestCase
     private function getWebserviceFields(): array
     {
         $property = new ReflectionProperty(Order::class, 'webserviceParameters');
-        $property->setAccessible(true);
 
         return $property->getValue((new ReflectionClass(Order::class))->newInstanceWithoutConstructor())['fields'];
     }

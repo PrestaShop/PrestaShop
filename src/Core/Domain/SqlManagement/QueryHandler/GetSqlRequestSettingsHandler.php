@@ -56,7 +56,7 @@ final class GetSqlRequestSettingsHandler implements GetSqlRequestSettingsHandler
             2 => CharsetEncoding::ISO_8859_1,
         ];
 
-        if (isset($valuesMapping[$rawValue])) {
+        if (null !== $rawValue && isset($valuesMapping[$rawValue])) {
             return $valuesMapping[$rawValue];
         }
 
