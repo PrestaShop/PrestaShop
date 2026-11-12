@@ -519,7 +519,9 @@ class CartLazyArray extends AbstractLazyArray
     private function presentProduct(array $rawProduct)
     {
         if (isset($rawProduct['attributes']) && is_string($rawProduct['attributes'])) {
-            $rawProduct['attributes'] = $this->cartPresenter->getAttributesArrayFromString($rawProduct['attributes']);
+            $rawProduct['attributes'] = !empty($rawProduct['attributes_array'])
+                ? $rawProduct['attributes_array']
+                : $this->cartPresenter->getAttributesArrayFromString($rawProduct['attributes']);
         }
         $rawProduct['remove_from_cart_url'] = $this->link->getRemoveFromCartURL(
             $rawProduct['id_product'],
