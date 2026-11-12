@@ -14,6 +14,7 @@ use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShopBundle\Form\Admin\Sell\Product\Combination\Feature\CombinationFeaturesType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Details\ReferencesType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductSupplierCollectionType;
+use PrestaShopBundle\Form\Admin\Type\CarrierChoiceType;
 use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -97,6 +98,17 @@ class CombinationFormType extends TranslatorAwareType
             && $this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_COMBINATION_FEATURE_VALUES)
         ) {
             $builder->add('features', CombinationFeaturesType::class);
+        }
+
+        if ($this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_COMBINATION_FEATURE_VALUES)) {
+            $builder->add('carriers', CarrierChoiceType::class, [
+                'expanded' => true,
+                'multiple' => true,
+                'required' => false,
+                'label' => $this->trans('Available carriers', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h3',
+                'label_help_box' => $this->trans('Restrict the carriers available for this combination. If none is selected, the product carriers apply.', 'Admin.Catalog.Help'),
+            ]);
         }
 
         /*

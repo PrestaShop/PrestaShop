@@ -277,6 +277,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         $this->duplicateVirtualProductFiles($oldProductId, $newProductId);
         $this->duplicateImages($oldProductId, $newProductId, $combinationMatching, $shopConstraint);
         $this->duplicateCarriers($oldProductId, $newProductId, $shopIds);
+        $this->duplicateCombinationCarriers($combinationMatching, $shopIds);
         $this->duplicateAttachmentAssociation($oldProductId, $newProductId);
         $this->duplicateStock($oldProductId, $newProductId, $shopIds, $productType, $combinationMatching);
     }
@@ -877,6 +878,33 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
             $shopIds,
             CannotDuplicateProductException::FAILED_DUPLICATE_CARRIERS
         );
+    }
+
+    /**
+     * @param array<int, int> $combinationMatching old combination id => new combination id
+     * @param int[] $shopIds
+     *
+     * @throws CannotDuplicateProductException
+     * @throws CoreException
+     */
+    private function duplicateCombinationCarriers(array $combinationMatching, array $shopIds): void
+    {
+        if (empty($combinationMatching)) {
+            return;
+        }
+
+        $oldCombinationCarriers = $this->getRows(
+            'product_attribute_carrier',
+            ['id_product_attribute' => array_keys($combinationMatching), 'id_shop' => $shopIds],
+            CannotDuplicateProductException::FAILED_DUPLICATE_CARRIERS
+        );
+        $newCombinationCarriers = [];
+        foreach ($oldCombinationCarriers as $oldCombinationCarrier) {
+            $newCombinationCarriers[] = array_merge($oldCombinationCarrier, [
+                'id_product_attribute' => $combinationMatching[(int) $oldCombinationCarrier['id_product_attribute']],
+            ]);
+        }
+        $this->bulkInsert('product_attribute_carrier', $newCombinationCarriers, CannotDuplicateProductException::FAILED_DUPLICATE_CARRIERS);
     }
 
     /**

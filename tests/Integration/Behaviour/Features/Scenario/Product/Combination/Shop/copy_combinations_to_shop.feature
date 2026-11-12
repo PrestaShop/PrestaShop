@@ -139,3 +139,13 @@ Feature: Copy combinations from Back Office (BO) when using multi-shop feature
     And combination "product1SWhite" last stock movements for shop "shop1,shop2" should be:
       | employee   | delta_quantity |
       | Puffin Mummy | 10             |
+
+  Scenario: I copy combinations to another shop their carriers are also copied
+    Given I create carrier "carrier1" with specified properties:
+      | name | Carrier 1 |
+    And I assign combination "product1SBlack" with following carriers for shop "shop1":
+      | carrier1 |
+    When I set following shops for product "product1":
+      | source shop | shop1       |
+      | shops       | shop1,shop2 |
+    Then combination "product1SBlack" should have carriers "[carrier1]" for shop "shop2"
