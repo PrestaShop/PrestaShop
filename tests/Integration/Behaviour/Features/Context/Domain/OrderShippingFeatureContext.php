@@ -6,6 +6,8 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Carrier;
+use Db;
 use Order;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderDeliveryAddressCommand;
@@ -20,6 +22,8 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class OrderShippingFeatureContext extends AbstractDomainFeatureContext
 {
+    private const CARRIER_CHANGE_LOG_PREFIX = 'Order carrier updated';
+
     /**
      * @When I update order :orderReference Tracking number to :trackingNumber and Carrier to :carrier
      *
@@ -41,6 +45,65 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
                 $order->getIdOrderCarrier(),
                 $newCarrierId,
                 $trackingNumber
+            )
+        );
+    }
+
+    /**
+     * @Then order :orderReference should have a logged carrier change from :oldCarrierReference to :newCarrierReference
+     */
+    public function orderShouldHaveALoggedCarrierChange(
+        string $orderReference,
+        string $oldCarrierReference,
+        string $newCarrierReference
+    ): void {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $order = new Order($orderId);
+        $oldCarrier = new Carrier(SharedStorage::getStorage()->get($oldCarrierReference));
+        $newCarrier = new Carrier(SharedStorage::getStorage()->get($newCarrierReference));
+
+        $logs = $this->getOrderLogs($orderId);
+
+        $matching = array_filter($logs, static function (array $log) use ($oldCarrier, $newCarrier): bool {
+            return str_contains($log['message'], '"' . $oldCarrier->name . '"')
+                && str_contains($log['message'], '"' . $newCarrier->name . '"');
+        });
+
+        Assert::assertNotEmpty(
+            $matching,
+            sprintf(
+                'Expected a log of the carrier change from "%s" to "%s" on order %d, got: %s',
+                $oldCarrier->name,
+                $newCarrier->name,
+                $orderId,
+                json_encode(array_column($logs, 'message'))
+            )
+        );
+
+        foreach ($matching as $log) {
+            Assert::assertNotEmpty($log['id_employee'], 'The carrier change was logged without the employee who made it');
+            Assert::assertSame((int) $order->id_shop, (int) $log['id_shop'], 'The carrier change was logged under another shop than the order shop');
+        }
+    }
+
+    /**
+     * @Then order :orderReference should not have a logged carrier change
+     */
+    public function orderShouldNotHaveALoggedCarrierChange(string $orderReference): void
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+
+        $carrierChangeLogs = array_filter(
+            $this->getOrderLogs($orderId),
+            static fn (array $log): bool => str_starts_with($log['message'], self::CARRIER_CHANGE_LOG_PREFIX)
+        );
+
+        Assert::assertEmpty(
+            $carrierChangeLogs,
+            sprintf(
+                'Expected no logged carrier change on order %d, got: %s',
+                $orderId,
+                json_encode(array_column($carrierChangeLogs, 'message'))
             )
         );
     }
@@ -187,5 +250,16 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
         $orderInvoiceAddressId = $orderForViewing->getInvoiceAddress()->getAddressId();
         Assert::assertSame($expectedInvoiceAddressId, $orderInvoiceAddressId);
+    }
+
+    /**
+     * @return array<int, array{message: string, id_employee: string|null, id_shop: string|null}>
+     */
+    private function getOrderLogs(int $orderId): array
+    {
+        return Db::getInstance()->executeS(
+            'SELECT `message`, `id_employee`, `id_shop` FROM `' . _DB_PREFIX_ . 'log`
+            WHERE `object_type` = "Order" AND `object_id` = ' . $orderId
+        );
     }
 }
