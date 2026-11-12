@@ -60,8 +60,9 @@ class ShipmentShippingCostUpdater
             }
 
             $quantity = $shipmentProduct->getQuantity();
-            $unitPriceTaxExcl = (float) ($product['unit_price_tax_excl'] ?? 0);
-            $shipmentTotalProducts += $unitPriceTaxExcl * $quantity;
+            // Tax included, like Cart::getPackageShippingCost()
+            $unitPriceTaxIncl = (float) ($product['unit_price_tax_incl'] ?? 0);
+            $shipmentTotalProducts += $unitPriceTaxIncl * $quantity;
 
             $products[] = [
                 'id_product' => (int) $product['product_id'],
