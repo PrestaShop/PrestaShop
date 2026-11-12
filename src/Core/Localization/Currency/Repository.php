@@ -18,10 +18,10 @@ use PrestaShop\PrestaShop\Core\Localization\Currency\RepositoryInterface as Curr
 class Repository implements CurrencyRepositoryInterface
 {
     /**
-     * Available currencies, indexed by ISO code.
+     * Available currencies, indexed by locale code then ISO code.
      * Lazy loaded.
      *
-     * @var Currency[]
+     * @var array<string, array<string, Currency>>
      */
     protected $currencies;
 
@@ -40,15 +40,15 @@ class Repository implements CurrencyRepositoryInterface
      */
     public function getCurrency($currencyCode, $localeCode)
     {
-        if (!isset($this->currencies[$currencyCode])) {
+        if (!isset($this->currencies[$localeCode][$currencyCode])) {
             $data = $this->dataSource->getLocalizedCurrencyData(
                 new LocalizedCurrencyId($currencyCode, $localeCode)
             );
 
-            $this->currencies[$currencyCode] = $this->createCurrencyFromData($data);
+            $this->currencies[$localeCode][$currencyCode] = $this->createCurrencyFromData($data);
         }
 
-        return $this->currencies[$currencyCode];
+        return $this->currencies[$localeCode][$currencyCode];
     }
 
     /**
