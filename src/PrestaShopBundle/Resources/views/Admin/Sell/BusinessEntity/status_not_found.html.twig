@@ -1,0 +1,17 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% extends '@PrestaShop/base.html.twig' %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/theme' ~ rtl_suffix ~ '.css') }}"/>
+{% endblock %}
+
+{% block body %}
+  <div class="card-block business-entity-status-form p-4">
+    <div class="alert alert-danger" role="alert">
+      <p class="alert-text">{{ errorMessage }}</p>
+    </div>
+  </div>
+{% endblock %}

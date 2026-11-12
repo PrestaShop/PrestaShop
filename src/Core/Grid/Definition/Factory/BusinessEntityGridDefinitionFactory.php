@@ -155,7 +155,7 @@ final class BusinessEntityGridDefinitionFactory extends AbstractGridDefinitionFa
                                     ->setName($this->trans('Edit status', [], 'Admin.Orderscustomers.Feature'))
                                     ->setIcon('autorenew')
                                     ->setOptions([
-                                        'route' => 'admin_business_entities_get_status_form',
+                                        'route' => 'admin_business_entities_status',
                                         'route_param_name' => 'businessEntityId',
                                         'route_param_field' => 'id_business_entity',
                                     ])

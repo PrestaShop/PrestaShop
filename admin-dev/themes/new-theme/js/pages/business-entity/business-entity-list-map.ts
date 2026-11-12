@@ -3,13 +3,7 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 export default {
-  editStatusModal: '#editBusinessEntityStatusModal',
-  editStatusRowLink: '[data-show-modal="edit-business-entity-status"]',
-  editStatusFormContainer: '#editBusinessEntityStatusFormContainer',
-  editStatusForm: '#edit_business_entity_status_form',
-  editStatusFieldPrefix: 'edit_business_entity_status_',
-  editStatusSubmissionErrorClass: 'js-business-entity-status-error',
-  editStatusLoadingError: '#editBusinessEntityStatusError',
-  editStatusSavingError: '#editBusinessEntityStatusSavingError',
-  editStatusSubmitButton: '#submitEditBusinessEntityStatus',
+  editStatusModalId: 'edit-business-entity-status-modal',
+  editStatusRowLink: '.js-edit-business-entity-status',
+  editStatusForm: 'form[name="edit_business_entity_status"]',
 };

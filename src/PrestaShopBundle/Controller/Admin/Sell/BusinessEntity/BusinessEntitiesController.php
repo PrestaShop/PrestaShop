@@ -39,7 +39,6 @@ use PrestaShopBundle\Form\Admin\Sell\BusinessEntity\EditBusinessEntityStatusType
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -246,67 +245,74 @@ class BusinessEntitiesController extends PrestaShopAdminController
         );
     }
 
-    #[AdminSecurity("is_granted('update', 'AdminBusinessEntities')", message: 'You do not have permission to edit this.', jsonResponse: true)]
-    public function getStatusFormAction(int $businessEntityId): Response
+    #[DemoRestricted(redirectRoute: 'admin_business_entities_list')]
+    #[AdminSecurity("is_granted('update', 'AdminBusinessEntities')", message: 'You do not have permission to edit this.', redirectRoute: 'admin_business_entities_list')]
+    public function statusAction(int $businessEntityId, Request $request): Response
     {
+        $isLiteDisplaying = $request->query->has('liteDisplaying');
+
         try {
             /** @var EditableBusinessEntity $businessEntity */
             $businessEntity = $this->dispatchQuery(new GetBusinessEntityForEditing($businessEntityId));
         } catch (BusinessEntityException $e) {
-            return new Response(
-                $this->getErrorMessageForException($e, $this->getErrorMessages()),
-                Response::HTTP_NOT_FOUND
+            if (!$isLiteDisplaying) {
+                $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+                return $this->redirectToRoute('admin_business_entities_list');
+            }
+
+            return $this->render(
+                '@PrestaShop/Admin/Sell/BusinessEntity/status_not_found.html.twig',
+                ['errorMessage' => $this->getErrorMessageForException($e, $this->getErrorMessages())],
+                new Response('', Response::HTTP_NOT_FOUND)
             );
         }
 
         $form = $this->createForm(EditBusinessEntityStatusType::class, [
             EditBusinessEntityStatusType::FIELD_STATUS => $businessEntity->getStatus(),
         ]);
-
-        return $this->render(
-            '@PrestaShop/Admin/Sell/BusinessEntity/Blocks/status_form.html.twig',
-            [
-                'editStatusForm' => $form->createView(),
-                'businessEntityName' => $businessEntity->getName(),
-                'businessEntityId' => $businessEntityId,
-            ]
-        );
-    }
-
-    #[DemoRestricted(redirectRoute: 'admin_business_entities_list')]
-    #[AdminSecurity("is_granted('update', 'AdminBusinessEntities')", message: 'You do not have permission to edit this.', redirectRoute: 'admin_business_entities_list', jsonResponse: true)]
-    public function updateStatusAction(int $businessEntityId, Request $request): JsonResponse
-    {
-        $form = $this->createForm(EditBusinessEntityStatusType::class);
         $form->handleRequest($request);
 
-        if (!$form->isSubmitted() || !$form->isValid()) {
-            return new JsonResponse([
-                'error' => $this->trans('Form contains invalid values', [], 'Admin.Notifications.Error'),
-                'form_errors' => $this->getFormErrorsForJS($form),
-            ], Response::HTTP_BAD_REQUEST);
+        $errorMessage = null;
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $command = new EditBusinessEntityCommand($businessEntityId);
+                $command->setStatus($form->getData()[EditBusinessEntityStatusType::FIELD_STATUS]);
+
+                $this->dispatchCommand($command);
+
+                $this->addFlash('success', $this->trans('Successful update.', [], 'Admin.Notifications.Success'));
+
+                if ($isLiteDisplaying) {
+                    // The modal watches the reloaded form for the success alert the flash leaves
+                    // on it, so the answer has to be that form again rather than the list.
+                    return $this->redirectToRoute('admin_business_entities_status', [
+                        'businessEntityId' => $businessEntityId,
+                        'liteDisplaying' => 1,
+                    ]);
+                }
+
+                return $this->redirectToRoute('admin_business_entities_list');
+            } catch (Exception $e) {
+                // Rendered rather than flashed: the modal never displays the flash bag.
+                $errorMessage = $this->getErrorMessageForException($e, $this->getErrorMessages());
+            }
         }
 
-        $data = $form->getData();
-
-        try {
-            $command = new EditBusinessEntityCommand($businessEntityId);
-            $command->setStatus($data[EditBusinessEntityStatusType::FIELD_STATUS]);
-
-            $this->dispatchCommand($command);
-        } catch (Exception $e) {
-            return new JsonResponse(
-                ['error' => $this->getErrorMessageForException($e, $this->getErrorMessages())],
-                Response::HTTP_BAD_REQUEST
-            );
-        }
-
-        $this->addFlash(
-            'success',
-            $this->trans('Successful update.', [], 'Admin.Notifications.Success')
+        return $this->render(
+            '@PrestaShop/Admin/Sell/BusinessEntity/status.html.twig',
+            [
+                'businessEntityId' => $businessEntityId,
+                'businessEntityName' => $businessEntity->getName(),
+                'editStatusForm' => $form->createView(),
+                'enableSidebar' => true,
+                'errorMessage' => $errorMessage,
+                'help_link' => $this->generateSidebarLink('AdminBusinessEntities'),
+                'layoutTitle' => $this->trans('Edit status', [], 'Admin.Orderscustomers.Feature'),
+                'lightDisplay' => $isLiteDisplaying,
+            ]
         );
-
-        return new JsonResponse(['success' => true]);
     }
 
     #[DemoRestricted(redirectRoute: 'admin_business_entities_list')]

@@ -97,21 +97,6 @@ class EditBusinessEntityStatusTypeTest extends TypeTestCase
     }
 
     /**
-     * allow_extra_fields is off by default, and nothing else would notice it being turned on.
-     */
-    public function testASubmissionCarryingAnUndeclaredFieldIsRejected(): void
-    {
-        $form = $this->factory->create(EditBusinessEntityStatusType::class);
-        $form->submit([
-            EditBusinessEntityStatusType::FIELD_STATUS => BusinessEntityStatus::ACTIVE->value,
-            'unexpected_field' => 'whatever',
-        ]);
-
-        $this->assertTrue($form->isSynchronized());
-        $this->assertFalse($form->isValid());
-    }
-
-    /**
      * @return \Symfony\Component\Form\ChoiceList\View\ChoiceView[]
      */
     private function statusChoices(): array

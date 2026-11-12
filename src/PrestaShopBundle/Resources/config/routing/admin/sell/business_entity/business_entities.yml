@@ -35,19 +35,12 @@ admin_business_entities_edit:
   requirements:
     businessEntityId: \d+
 
-admin_business_entities_get_status_form:
-  path: /{businessEntityId}/status-form
-  methods: [ GET ]
+admin_business_entities_status:
+  path: /{businessEntityId}/status
+  methods: [ GET, POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Sell\BusinessEntity\BusinessEntitiesController::getStatusFormAction
-  requirements:
-    businessEntityId: \d+
-
-admin_business_entities_update_status:
-  path: /{businessEntityId}/update-status
-  methods: [ POST ]
-  defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Sell\BusinessEntity\BusinessEntitiesController::updateStatusAction
+    _controller: PrestaShopBundle\Controller\Admin\Sell\BusinessEntity\BusinessEntitiesController::statusAction
+    _parent: admin_business_entities_list
   requirements:
     businessEntityId: \d+
 

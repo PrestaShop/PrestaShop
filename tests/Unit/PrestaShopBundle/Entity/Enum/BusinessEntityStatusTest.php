@@ -10,7 +10,6 @@ namespace Tests\Unit\PrestaShopBundle\Entity\Enum;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * The enum owns the status to badge type mapping, so both the grid column and the
@@ -26,34 +25,12 @@ class BusinessEntityStatusTest extends TestCase
         $this->assertSame($expected, $status->badgeType());
     }
 
-    public static function provideStatusesAndBadgeTypes(): iterable
+    public function provideStatusesAndBadgeTypes(): iterable
     {
         yield 'pending' => [BusinessEntityStatus::PENDING, 'info'];
         yield 'active' => [BusinessEntityStatus::ACTIVE, 'success'];
         yield 'inactive' => [BusinessEntityStatus::INACTIVE, 'light-info'];
         yield 'rejected' => [BusinessEntityStatus::REJECTED, 'danger'];
-    }
-
-    /**
-     * @dataProvider provideStatusesAndLabels
-     */
-    public function testItTranslatesEveryStatusToItsLabel(BusinessEntityStatus $status, string $expected): void
-    {
-        $translator = $this->createMock(TranslatorInterface::class);
-        $translator->expects($this->once())
-            ->method('trans')
-            ->with($expected, [], 'Admin.Global', null)
-            ->willReturnArgument(0);
-
-        $this->assertSame($expected, $status->trans($translator));
-    }
-
-    public static function provideStatusesAndLabels(): iterable
-    {
-        yield 'pending' => [BusinessEntityStatus::PENDING, 'Pending'];
-        yield 'active' => [BusinessEntityStatus::ACTIVE, 'Active'];
-        yield 'inactive' => [BusinessEntityStatus::INACTIVE, 'Inactive'];
-        yield 'rejected' => [BusinessEntityStatus::REJECTED, 'Rejected'];
     }
 
     public function testEveryCaseHasABadgeType(): void

@@ -910,7 +910,7 @@ class BusinessEntityControllerTest extends GridControllerTestCase
         $this->assertResponseIsSuccessful();
 
         $editStatus = $crawler->filter(sprintf(
-            '%s .dropdown-menu a[data-status-form-url*="/%d/status-form"]',
+            '%s .dropdown-menu a[data-status-form-url*="/%d/status"]',
             $this->getGridSelector(),
             self::$activeBusinessEntityId
         ));
@@ -924,62 +924,48 @@ class BusinessEntityControllerTest extends GridControllerTestCase
             'AC1: the kebab action must read "Edit status"'
         );
 
-        // The JavaScript hooks on this attribute and never on the class, which is built from a
-        // translated label: once "Edit status" is translated the class changes and the modal
-        // would stop opening in that language, with nothing else failing.
-        $this->assertSame('edit-business-entity-status', $editStatus->attr('data-show-modal'));
-        $this->assertSame('#editBusinessEntityStatusModal', $editStatus->attr('data-target'));
+        // The JavaScript hooks on this class and never on the one built from the translated
+        // label, which changes with the language while the hook must not.
+        $this->assertStringContainsString('js-edit-business-entity-status', (string) $editStatus->attr('class'));
+
+        // FormIframeModal is handed its wording through these, and has no wording of its own:
+        // a missing label leaves the dialog without the button, which nothing else would catch.
+        $this->assertSame('Edit status', $editStatus->attr('data-modal-title'));
+        $this->assertSame('Update status', $editStatus->attr('data-confirm-button-label'));
+        $this->assertSame('Cancel', $editStatus->attr('data-cancel-button-label'));
     }
 
-    public function testTheListCarriesTheStatusModalWiredToTheFormFragment(): void
+    /**
+     * FormIframeModal reaches into the loaded page for `form[name="edit_business_entity_status"]`,
+     * and silently does nothing when it finds none: the confirm button would stop submitting with
+     * no error anywhere. The form name comes from the type's block prefix, which a rename changes.
+     */
+    public function testTheStatusPageCarriesTheFormTheModalLooksFor(): void
     {
-        $crawler = $this->client->request('GET', $this->generateGridUrl());
-        $this->assertResponseIsSuccessful();
-
-        $modal = $crawler->filter('#editBusinessEntityStatusModal');
-        $this->assertCount(1, $modal, 'dropping the modal include leaves the kebab action pointing at nothing');
-        $this->assertCount(1, $modal->filter('#editBusinessEntityStatusFormContainer'));
-        $this->assertCount(1, $modal->filter('.skeleton-business-entity-status-modal'));
-
-        // Both alerts are toggled through optional chaining, so renaming either id degrades to a
-        // silent no-op: the merchant gets no message and nothing else turns red.
-        $this->assertCount(1, $modal->filter('#editBusinessEntityStatusError'));
-        $this->assertCount(1, $modal->filter('#editBusinessEntityStatusSavingError'));
-
-        $this->assertSame('Edit status', trim($modal->filter('.modal-title')->text()));
-        $this->assertSame('Cancel', trim($modal->filter('.modal-footer .btn-outline-secondary')->text()));
-        $this->assertSame('Update status', trim($modal->filter('#submitEditBusinessEntityStatus')->text()));
-        $this->assertSame('modal', $modal->filter('.modal-footer .btn-outline-secondary')->attr('data-dismiss'));
-
-        $fragment = $this->client->request('GET', $this->router->generate(
-            'admin_business_entities_get_status_form',
-            ['businessEntityId' => self::$activeBusinessEntityId]
+        $crawler = $this->client->request('GET', $this->router->generate(
+            'admin_business_entities_status',
+            ['businessEntityId' => self::$activeBusinessEntityId, 'liteDisplaying' => 1]
         ));
         $this->assertResponseIsSuccessful();
 
-        // The footer button lives outside the fragment: it only submits while its form attribute
-        // still matches the id the fragment renders, and nothing else would notice them drifting.
-        $this->assertSame(
-            $fragment->filter('form')->attr('id'),
-            $modal->filter('#submitEditBusinessEntityStatus')->attr('form')
-        );
+        $this->assertCount(1, $crawler->filter('form[name="edit_business_entity_status"]'));
     }
 
-    public function testAStatusSubmissionForAnUnknownEntityAnswersWithADomainError(): void
+    public function testAStatusSubmissionForAnUnknownEntityIsNotFound(): void
     {
         $this->client->disableReboot();
 
         $crawler = $this->client->request('GET', $this->router->generate(
-            'admin_business_entities_get_status_form',
-            ['businessEntityId' => self::$activeBusinessEntityId]
+            'admin_business_entities_status',
+            ['businessEntityId' => self::$activeBusinessEntityId, 'liteDisplaying' => 1]
         ));
         $this->assertResponseIsSuccessful();
 
         $this->client->request(
             'POST',
             $this->router->generate(
-                'admin_business_entities_update_status',
-                ['businessEntityId' => self::UNKNOWN_BUSINESS_ENTITY_ID]
+                'admin_business_entities_status',
+                ['businessEntityId' => self::UNKNOWN_BUSINESS_ENTITY_ID, 'liteDisplaying' => 1]
             ),
             ['edit_business_entity_status' => [
                 'status' => BusinessEntityStatus::ACTIVE->value,
@@ -987,48 +973,39 @@ class BusinessEntityControllerTest extends GridControllerTestCase
             ]]
         );
 
-        $this->assertResponseStatusCodeSame(400);
-
-        $payload = json_decode((string) $this->client->getResponse()->getContent(), true);
-
-        // Both 400 branches omit "success", so only the absence of form_errors tells the domain
-        // failure apart from a rejected form.
-        $this->assertArrayNotHasKey(
-            'form_errors',
-            $payload,
-            'a domain failure must not be reported as a form validation failure'
-        );
+        // The entity is read before the form is even built, so the write answers like the read.
+        $this->assertResponseStatusCodeSame(404);
         $this->assertSame(
             'The object cannot be loaded (or found).',
-            $payload['error'] ?? '',
-            'the modal must read the not found message, not a generic one'
+            trim($this->client->getCrawler()->filter('.alert-danger .alert-text')->text()),
+            'the frame must show a rendered message, not a bare sentence'
         );
     }
 
-    public function testTheStatusFormFragmentIsPrefilledWithTheCurrentStatus(): void
+    public function testTheStatusPageIsPrefilledWithTheCurrentStatus(): void
     {
         // Two fixtures holding two different statuses: against a single one, a hard coded
         // pre-selection would satisfy the assertion by coincidence.
-        $this->assertFragmentPreselects(
+        $this->assertStatusPagePreselects(
             self::$activeBusinessEntityId,
             BusinessEntityStatus::ACTIVE,
             self::ACTIVE_COMPANY_NAME
         );
-        $this->assertFragmentPreselects(
+        $this->assertStatusPagePreselects(
             self::$pendingBusinessEntityId,
             BusinessEntityStatus::PENDING,
             self::PENDING_COMPANY_NAME
         );
     }
 
-    private function assertFragmentPreselects(
+    private function assertStatusPagePreselects(
         int $entityId,
         BusinessEntityStatus $expectedStatus,
         string $expectedName
     ): void {
         $crawler = $this->client->request('GET', $this->router->generate(
-            'admin_business_entities_get_status_form',
-            ['businessEntityId' => $entityId]
+            'admin_business_entities_status',
+            ['businessEntityId' => $entityId, 'liteDisplaying' => 1]
         ));
 
         $this->assertResponseIsSuccessful();
@@ -1069,19 +1046,73 @@ class BusinessEntityControllerTest extends GridControllerTestCase
         // a field re-added to the type from slipping back into the modal unnoticed.
         $this->assertCount(
             0,
-            $crawler->filter('#edit_business_entity_status_form input:not([type="hidden"]), #edit_business_entity_status_form textarea'),
+            $crawler->filter('form[name="edit_business_entity_status"] input:not([type="hidden"]),'
+                . ' form[name="edit_business_entity_status"] textarea'),
             'AC2: the modal must offer the status dropdown and nothing else'
         );
     }
 
-    public function testTheStatusFormFragmentOfAnUnknownEntityIsNotFound(): void
+    public function testTheStatusPageOfAnUnknownEntityIsNotFound(): void
     {
-        $this->client->request('GET', $this->router->generate(
-            'admin_business_entities_get_status_form',
-            ['businessEntityId' => self::UNKNOWN_BUSINESS_ENTITY_ID]
+        $crawler = $this->client->request('GET', $this->router->generate(
+            'admin_business_entities_status',
+            ['businessEntityId' => self::UNKNOWN_BUSINESS_ENTITY_ID, 'liteDisplaying' => 1]
         ));
 
         $this->assertResponseStatusCodeSame(404);
+        $this->assertSame(
+            'The object cannot be loaded (or found).',
+            trim($crawler->filter('.alert-danger .alert-text')->text()),
+            'the frame must show a rendered message, not a bare sentence'
+        );
+    }
+
+    /**
+     * The 404 page is a modal body, with no back-office navigation around it: outside the frame the
+     * merchant is sent back where the edit form sends them.
+     */
+    public function testTheStatusPageOfAnUnknownEntityOutsideTheModalRedirectsToTheListing(): void
+    {
+        $this->client->request('GET', $this->router->generate(
+            'admin_business_entities_status',
+            ['businessEntityId' => self::UNKNOWN_BUSINESS_ENTITY_ID]
+        ));
+
+        $this->assertResponseRedirects($this->router->generate('admin_business_entities_list'));
+
+        /** @var Session $session */
+        $session = $this->client->getRequest()->getSession();
+        $messages = $session->getFlashBag()->all();
+        $this->assertArrayHasKey('error', $messages);
+        $this->assertContains(
+            'The object cannot be loaded (or found).',
+            $messages['error'],
+            print_r($messages['error'], true)
+        );
+    }
+
+    /**
+     * The confirm button belongs to the modal. Opened as a page, the same route has to carry a
+     * button of its own, or the form it renders cannot be submitted at all.
+     */
+    public function testTheStatusPageOutsideTheModalCarriesItsOwnSubmitButton(): void
+    {
+        $crawler = $this->client->request('GET', $this->router->generate(
+            'admin_business_entities_status',
+            ['businessEntityId' => self::$activeBusinessEntityId]
+        ));
+        $this->assertResponseIsSuccessful();
+
+        $this->assertCount(
+            1,
+            $crawler->filter('form[name="edit_business_entity_status"] button[type="submit"]'),
+            'the page must offer the button the modal would otherwise provide'
+        );
+        $this->assertCount(
+            1,
+            $crawler->filter('form[name="edit_business_entity_status"] .cancel-btn'),
+            'and a way out that does not go through the browser history'
+        );
     }
 
     public function testUpdatingTheStatusFlashesAndShowsTheNewBadgeInTheList(): void
@@ -1097,11 +1128,7 @@ class BusinessEntityControllerTest extends GridControllerTestCase
 
         $this->submitStatusChange($entityId, BusinessEntityStatus::ACTIVE);
 
-        $this->assertResponseIsSuccessful();
-        $this->assertSame(
-            ['success' => true],
-            json_decode((string) $this->client->getResponse()->getContent(), true)
-        );
+        $this->assertResponseRedirects($this->router->generate('admin_business_entities_list'));
 
         $crawler = $this->client->request('GET', $this->generateGridUrl());
 
@@ -1116,10 +1143,59 @@ class BusinessEntityControllerTest extends GridControllerTestCase
         $row = $crawler->filter(sprintf('%s tbody tr:contains("Status change company")', $this->getGridSelector()));
 
         $this->assertCount(1, $row);
-        $this->assertStringContainsString(
+        $this->assertSame(
             'Active',
-            $row->filter('.column-status')->text(),
+            trim($row->filter('.column-status')->text()),
             'AC4: the listing must reflect the new status'
+        );
+    }
+
+    /**
+     * The modal reloads the lite page after the write, and the layout *consumes* the flash bag
+     * when it renders its alerts: shown there, inside a frame nobody reads, the message would be
+     * gone by the time the merchant is back on the list.
+     */
+    public function testTheSuccessMessageSurvivesTheReloadOfTheModalAndReachesTheList(): void
+    {
+        $this->client->disableReboot();
+
+        $entityId = self::createBusinessEntity(
+            $this->client->getContainer()->get('prestashop.core.command_bus'),
+            'Lite display company',
+            'Lite display legal name',
+            BusinessEntityStatus::PENDING
+        );
+
+        $crawler = $this->client->request('GET', $this->router->generate(
+            'admin_business_entities_status',
+            ['businessEntityId' => $entityId, 'liteDisplaying' => 1]
+        ));
+        $this->assertResponseIsSuccessful();
+
+        $form = $crawler->filter('form[name="edit_business_entity_status"]')->form();
+        $form['edit_business_entity_status[status]'] = BusinessEntityStatus::ACTIVE->value;
+        $this->client->submit($form);
+
+        $crawler = $this->client->followRedirect();
+
+        $this->assertCount(
+            0,
+            $crawler->filter('.alert-success'),
+            'the reloaded modal must not display the alert, which would consume it'
+        );
+        // One write, one success alert: what the modal reads to know it can close.
+        $this->assertSame(
+            '1',
+            $crawler->filter('form[name="edit_business_entity_status"]')->attr('data-alerts-success'),
+            'AC4: the reloaded form must carry exactly the one success alert the modal waits for'
+        );
+
+        $crawler = $this->client->request('GET', $this->generateGridUrl());
+
+        $this->assertStringContainsString(
+            'Successful update.',
+            $crawler->filter('.alert-success .alert-text')->text(),
+            'the message must still be in the bag when the list reloads'
         );
     }
 
@@ -1192,7 +1268,7 @@ class BusinessEntityControllerTest extends GridControllerTestCase
         // sends. AC6 traces status changes: an entry naming none would be noise.
         $this->submitStatusChange($entityId, BusinessEntityStatus::PENDING);
 
-        $this->assertResponseIsSuccessful();
+        $this->assertResponseRedirects($this->router->generate('admin_business_entities_list'));
         $this->assertSame(
             [],
             $this->statusLogEntriesFor($entityId),
@@ -1214,18 +1290,23 @@ class BusinessEntityControllerTest extends GridControllerTestCase
 
         $this->client->request(
             'POST',
-            $this->router->generate('admin_business_entities_update_status', ['businessEntityId' => $entityId]),
+            $this->router->generate('admin_business_entities_status', ['businessEntityId' => $entityId]),
             ['edit_business_entity_status' => ['status' => BusinessEntityStatus::ACTIVE->value]]
         );
 
-        $this->assertResponseStatusCodeSame(400);
-
-        /** @var Session $session */
-        $session = $this->client->getRequest()->getSession();
+        $this->assertResponseIsSuccessful();
         $this->assertArrayNotHasKey(
             'success',
-            $session->getFlashBag()->all(),
+            $this->flashes(),
             'a submission without its token must not report a success'
+        );
+
+        // Root errors belong to the form, not to any field: without form_errors the merchant
+        // reads nothing at all and the modal looks like it did nothing.
+        $this->assertCount(
+            1,
+            $this->client->getCrawler()->filter('.business-entity-status-form .alert-danger'),
+            'a rejected token must be reported in the modal'
         );
 
         $this->assertSame(
@@ -1235,7 +1316,7 @@ class BusinessEntityControllerTest extends GridControllerTestCase
         );
     }
 
-    public function testAnInvalidSubmissionIsRejectedWithTheErrorOfTheFieldAtFault(): void
+    public function testAnInvalidSubmissionIsRejectedWithoutTouchingTheStatus(): void
     {
         $this->client->disableReboot();
 
@@ -1247,30 +1328,35 @@ class BusinessEntityControllerTest extends GridControllerTestCase
         );
 
         $crawler = $this->client->request('GET', $this->router->generate(
-            'admin_business_entities_get_status_form',
+            'admin_business_entities_status',
             ['businessEntityId' => $entityId]
         ));
         $this->assertResponseIsSuccessful();
 
         $this->client->request(
             'POST',
-            $this->router->generate('admin_business_entities_update_status', ['businessEntityId' => $entityId]),
+            $this->router->generate('admin_business_entities_status', ['businessEntityId' => $entityId]),
             ['edit_business_entity_status' => [
                 EditBusinessEntityStatusType::FIELD_STATUS => 'not-a-status',
                 '_token' => $crawler->filter('#edit_business_entity_status__token')->attr('value'),
             ]]
         );
 
-        $this->assertResponseStatusCodeSame(400);
+        // Symfony renders the rejection in place, the way it does on every other admin form.
+        $this->assertResponseIsSuccessful();
+        $form = $this->client->getCrawler()->filter('form[name="edit_business_entity_status"]');
 
-        $payload = json_decode((string) $this->client->getResponse()->getContent(), true);
-
-        $this->assertArrayHasKey(
-            EditBusinessEntityStatusType::FIELD_STATUS,
-            $payload['form_errors'],
-            'the error must name the field at fault so the modal can show it in place'
+        $this->assertSame('1', $form->attr('data-form-submitted'));
+        $this->assertSame(
+            '0',
+            $form->attr('data-form-valid'),
+            'the refused submission must come back as an invalid form'
         );
-        $this->assertNotEmpty($payload['form_errors'][EditBusinessEntityStatusType::FIELD_STATUS][0]);
+        $this->assertSame(
+            '0',
+            $form->attr('data-alerts-success'),
+            'and must not look successful to the modal, which watches this attribute'
+        );
 
         $this->assertSame(
             BusinessEntityStatus::PENDING->value,
@@ -1281,32 +1367,24 @@ class BusinessEntityControllerTest extends GridControllerTestCase
 
     /**
      * The PageVoter of the test environment grants every permission, so a denial never reaches the
-     * listener here and the attribute itself is all there is to check: both actions are only ever
-     * reached by fetch(), which can only read a denial answered as JSON.
+     * listener here and the attributes themselves are all there is to check.
      */
-    public function testBothStatusActionsAreGuardedAndAnswerADenialAsJson(): void
+    public function testTheStatusActionIsGuardedAsAWrite(): void
     {
-        foreach (['getStatusFormAction', 'updateStatusAction'] as $action) {
-            $attributes = (new ReflectionMethod(BusinessEntitiesController::class, $action))
-                ->getAttributes(AdminSecurity::class);
+        $action = new ReflectionMethod(BusinessEntitiesController::class, 'statusAction');
 
-            $this->assertCount(1, $attributes, sprintf('%s must stay guarded', $action));
-            $this->assertStringContainsString(
-                "is_granted('update', 'AdminBusinessEntities')",
-                (string) $attributes[0]->getArguments()[0],
-                sprintf('%s must keep asking for the update permission', $action)
-            );
-            $this->assertTrue(
-                $attributes[0]->newInstance()->hasJSONResponse(),
-                sprintf('%s is only ever reached by fetch(): a denial must come back as JSON', $action)
-            );
-        }
+        $security = $action->getAttributes(AdminSecurity::class);
+        $this->assertCount(1, $security, 'the status action must stay guarded');
+        $this->assertStringContainsString(
+            "is_granted('update', 'AdminBusinessEntities')",
+            (string) $security[0]->getArguments()[0],
+            'reading the form is already a step towards writing: it asks for the update permission'
+        );
 
         $this->assertCount(
             1,
-            (new ReflectionMethod(BusinessEntitiesController::class, 'updateStatusAction'))
-                ->getAttributes(DemoRestricted::class),
-            'the writing action of the pair must stay closed to the demo mode'
+            $action->getAttributes(DemoRestricted::class),
+            'the action writes, so it must stay closed to the demo mode'
         );
     }
 
@@ -1317,38 +1395,42 @@ class BusinessEntityControllerTest extends GridControllerTestCase
             new CannotUpdateBusinessEntityException('Could not update business entity')
         );
 
-        $this->submitStatusChange(self::$activeBusinessEntityId, BusinessEntityStatus::REJECTED);
+        // In the modal, where the layout renders no alert: a flashed message would survive the
+        // request and surface on whatever page the merchant loads next.
+        $this->submitStatusChange(self::$activeBusinessEntityId, BusinessEntityStatus::REJECTED, true);
 
-        $this->assertResponseStatusCodeSame(400);
+        $this->assertResponseIsSuccessful();
 
-        $payload = json_decode((string) $this->client->getResponse()->getContent(), true);
-        $this->assertSame(
+        $this->assertStringContainsString(
             'An error occurred while updating the business entity.',
-            $payload['error'] ?? '',
-            'the modal must read the mapped domain message, not a generic one'
+            (string) $this->client->getResponse()->getContent(),
+            'the merchant must read the mapped domain message, not a generic one'
         );
-
-        /** @var Session $session */
-        $session = $this->client->getRequest()->getSession();
+        $this->assertSame(
+            '0',
+            $this->client->getCrawler()->filter('form[name="edit_business_entity_status"]')->attr('data-alerts-success'),
+            'a rejected update must not leave a success alert on the form the modal watches'
+        );
         $this->assertArrayNotHasKey(
-            'success',
-            $session->getFlashBag()->all(),
-            'a rejected update must not leave a success message behind for the next page'
+            'error',
+            $this->flashes(),
+            'the message belongs to the modal, not to the next page the merchant loads'
         );
     }
 
-    public function testAnInfrastructureFailureDuringAStatusUpdateStaysAJsonError(): void
+    public function testAnInfrastructureFailureDuringAStatusUpdateIsReportedInTheModal(): void
     {
         $this->client->disableReboot();
         $this->substituteBusFailingWith(new RuntimeException('Connection lost'));
 
         $this->submitStatusChange(self::$activeBusinessEntityId, BusinessEntityStatus::REJECTED);
 
-        $this->assertResponseStatusCodeSame(400);
-
-        $payload = json_decode((string) $this->client->getResponse()->getContent(), true);
-        $this->assertIsArray($payload, 'a failure outside the domain must stay a JSON answer, not a 500 page');
-        $this->assertArrayHasKey('error', $payload);
+        $this->assertResponseIsSuccessful();
+        $this->assertCount(
+            1,
+            $this->client->getCrawler()->filter('.business-entity-status-form .alert-danger'),
+            'a failure outside the domain must reach the merchant as a message, not as a 500'
+        );
     }
 
     /**
@@ -1383,17 +1465,36 @@ class BusinessEntityControllerTest extends GridControllerTestCase
 
         $this->submitStatusChange($entityId, BusinessEntityStatus::REJECTED);
 
-        $this->assertResponseIsSuccessful();
+        $this->assertResponseRedirects($this->router->generate('admin_business_entities_list'));
         $this->assertSame(
             1,
             $refusedWrites,
             'the update entry must have reached the failing logger, or this test proves nothing'
         );
+
+        $flashes = $this->flashes();
+        $this->assertArrayHasKey(
+            'success',
+            $flashes,
+            'an unwritable log must not turn a saved edit into a reported failure'
+        );
+        $this->assertArrayNotHasKey('error', $flashes);
         $this->assertSame(
             BusinessEntityStatus::REJECTED->value,
             $this->persistedStatusOf($entityId),
             'the status must stay saved even though its log entry could not be written'
         );
+    }
+
+    /**
+     * @return array<string, array<int, string>>
+     */
+    private function flashes(): array
+    {
+        /** @var Session $session */
+        $session = $this->client->getRequest()->getSession();
+
+        return $session->getFlashBag()->all();
     }
 
     private function persistedStatusOf(int $entityId): string
@@ -1404,15 +1505,15 @@ class BusinessEntityControllerTest extends GridControllerTestCase
         );
     }
 
-    private function submitStatusChange(int $entityId, BusinessEntityStatus $status): Crawler
+    private function submitStatusChange(int $entityId, BusinessEntityStatus $status, bool $inModal = false): Crawler
     {
         $crawler = $this->client->request('GET', $this->router->generate(
-            'admin_business_entities_get_status_form',
-            ['businessEntityId' => $entityId]
+            'admin_business_entities_status',
+            array_filter(['businessEntityId' => $entityId, 'liteDisplaying' => $inModal ? 1 : null])
         ));
         $this->assertResponseIsSuccessful();
 
-        $form = $crawler->filter('#edit_business_entity_status_form')->form();
+        $form = $crawler->filter('form[name="edit_business_entity_status"]')->form();
         $form['edit_business_entity_status[status]'] = $status->value;
 
         return $this->client->submit($form);
@@ -1420,7 +1521,7 @@ class BusinessEntityControllerTest extends GridControllerTestCase
 
     /**
      * The modal reads the entity through the same bus it writes through, so the substitute has to
-     * keep answering the query for the fragment to be rendered at all.
+     * keep answering the query for the status page to be rendered at all.
      */
     private function substituteBusFailingWith(Throwable $failure): void
     {
