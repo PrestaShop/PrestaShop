@@ -1,0 +1,36 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{# Shared by every PDF document type (invoice, credit slip, order return, delivery slip...). #}
+<table style="width: 100%;">
+    <tr>
+        <td style="text-align: center; font-size: 6pt; color: #444; width:100%;">
+            {% if available_in_your_account %}
+                {{ 'An electronic version of this invoice is available in your account. To access it, log in to our website using your e-mail address and password (which you created when placing your first order).'|trans({}, 'Shop.Pdf') }}
+                <br />
+            {% endif %}
+            {{ shop_address|raw }}<br />
+
+            {% if shop_phone or shop_fax %}
+                {{ 'For more assistance, contact Support:'|trans({}, 'Shop.Pdf') }}<br />
+                {% if shop_phone %}
+                    {{ 'Tel: %s'|trans({'%s': shop_phone}, 'Shop.Pdf') }}
+                {% endif %}
+
+                {% if shop_fax %}
+                    {{ 'Fax: %s'|trans({'%s': shop_fax}, 'Shop.Pdf') }}
+                {% endif %}
+                <br />
+            {% endif %}
+
+            {% if shop_details is defined and shop_details %}
+                {{ shop_details }}<br />
+            {% endif %}
+
+            {% if free_text is defined and free_text %}
+                {{ free_text }}<br />
+            {% endif %}
+        </td>
+    </tr>
+</table>

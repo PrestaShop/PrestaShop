@@ -8,10 +8,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\PDF;
 
-use Context;
 use Hook;
 use OrderInvoice;
-use PDF;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\PDF\GeneratedPdf;
 use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
@@ -23,25 +21,25 @@ use Validate;
  */
 final class InvoicePdfGenerator implements PDFGeneratorInterface
 {
+    public function __construct(
+        private readonly PDFGenerator $pdfGenerator
+    ) {
+    }
+
     /**
      * {@inheritdoc}
      */
     public function generatePDF(array $invoiceId): void
     {
-        $this->createPdf($invoiceId)->render();
+        $this->pdfGenerator->generatePDF([$this->getOrderInvoice($invoiceId)]);
     }
 
     public function generatePDFForResponse(array $invoiceId): GeneratedPdf
     {
-        $pdf = $this->createPdf($invoiceId);
-
-        return new GeneratedPdf(
-            $pdf->render(false),
-            $pdf->getFilename()
-        );
+        return $this->pdfGenerator->generatePDFForResponse([$this->getOrderInvoice($invoiceId)]);
     }
 
-    private function createPdf(array $invoiceId): PDF
+    private function getOrderInvoice(array $invoiceId): OrderInvoice
     {
         if (count($invoiceId) !== 1) {
             throw new CoreException(sprintf('"%s" supports generating PDF for single invoice only.', self::class));
@@ -55,6 +53,6 @@ final class InvoicePdfGenerator implements PDFGeneratorInterface
 
         Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => [$orderInvoice]]);
 
-        return new PDF($orderInvoice, PDF::TEMPLATE_INVOICE, Context::getContext()->smarty);
+        return $orderInvoice;
     }
 }
