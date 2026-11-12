@@ -1,0 +1,63 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% trans_default_domain 'Admin.Shopparameters.Feature' %}
+{% form_theme indexationForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
+{% block search_indexation %}
+  {#
+    Action forms must be declared outside the card to avoid being nested inside
+    search_indexation_form (nested forms are invalid HTML). Buttons reference them
+    via the HTML5 `form` attribute.
+  #}
+  <form id="search_indexation_add_missing_form" method="post" action="{{ path('admin_search_indexation_add_missing') }}"></form>
+  <form id="search_indexation_rebuild_form" method="post" action="{{ path('admin_search_indexation_rebuild') }}"></form>
+
+  {{ form_start(indexationForm, {attr: {class: 'form', id: 'search_indexation_form'}, action: path('admin_search_indexation_save')}) }}
+  <div class="card" id="configuration_fieldset_indexation">
+    <h3 class="card-header">
+      <i class="material-icons">settings</i>
+      {{ 'Indexing'|trans }}
+    </h3>
+    <div class="card-body">
+      <div class="alert alert-info" role="alert">
+        <p>
+          {{ 'The "indexed" products have been analyzed by PrestaShop and will appear in the results of a front office search.'|trans }}
+          <br />
+          {{ 'Indexed products'|trans }}
+          <strong>{{ indexedProductsCount }} / {{ totalProductsCount }}</strong>
+        </p>
+        <p>
+          {{ 'Building the product index may take a few minutes.'|trans }}
+          {{ 'If your server stops before the process ends, you can resume the indexing by clicking "%add_missing_products_label%".'|trans({'%add_missing_products_label%': 'Add missing products to the index'|trans}) }}
+        </p>
+        <button type="submit" form="search_indexation_add_missing_form" class="btn btn-link p-0">
+          <i class="material-icons">add_circle_outline</i>
+          {{ 'Add missing products to the index'|trans }}
+        </button>
+        <br />
+        <button type="submit" form="search_indexation_rebuild_form" class="btn btn-link p-0">
+          <i class="material-icons">refresh</i>
+          {{ 'Re-build the entire index'|trans }}
+        </button>
+        <br /><br />
+        <p>
+          {{ 'You can set a cron job that will rebuild your index using the following URL:'|trans }}
+          <br />
+          <a href="{{ cronUrl }}">{{ cronUrl }}</a>
+        </p>
+      </div>
+      <div class="form-wrapper">
+        {{ form_widget(indexationForm) }}
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" id="form-indexation-save-button">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+      </div>
+    </div>
+  </div>
+  {{ form_end(indexationForm) }}
+{% endblock %}

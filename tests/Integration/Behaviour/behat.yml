@@ -691,7 +691,10 @@ default:
         - "%paths.base%/Features/Scenario/Search"
       contexts:
         - Tests\Integration\Behaviour\Features\Context\Domain\AliasFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\Domain\SearchConfigurationFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\Domain\SearchIndexationFeatureContext
         - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
         - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
     extra-property-definition:
       paths:
