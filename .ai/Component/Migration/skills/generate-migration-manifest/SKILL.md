@@ -6,7 +6,7 @@ description: >
   specification. Every subsequent migration step reads from this document to
   know what to create.
 needs: [audit-legacy-controller, audit-object-model]
-produces: "migration-manifest.md — authoritative spec listing all commands, queries, form fields, grid columns, hooks, and sub-resources"
+produces: "migration-manifest.md — authoritative spec listing all commands, queries, form fields, grid columns, hooks, sub-resources, and the behaviour parity checklist"
 subagent: recommended
 ---
 
@@ -21,11 +21,13 @@ subagent: recommended
 6. Section 5 — Grid filters: list each filter with its type (TextFilter, SelectFilter, DateRangeFilter, etc.).
 7. Section 6 — Sub-resources: list any has-many relations (e.g., carrier ranges, carrier zones) that warrant their own commands and repositories.
 8. Section 7 — Hooks: list all legacy hooks with their Symfony equivalents or note "no equivalent yet".
-9. Section 8 — Milestone decision: based on complexity, propose how to split the migration (e.g., listing first / form later, or single sprint for simple pages).
+9. Section 8 — Behaviour parity checklist: one line per behaviour item of the controller audit (see [Migration/CONTEXT.md → Behaviour parity](../../CONTEXT.md#behaviour-parity)). Give each line a status, **port** or **change** (with the reason), the layer that will own it (command handler, validator, form type, data handler, template), and the check that proves it: the boundary input to try on both pages, and the Behat scenario or form test that will cover it.
+10. Section 9 — Milestone decision: based on complexity, propose how to split the migration (e.g., listing first / form later, or single sprint for simple pages).
 
 ## Rules
 
 - This document is the single source of truth — all subsequent migration steps must reference it, not the legacy files
 - Every field discovered during the ObjectModel audit must appear in either a form field or a grid column in the manifest
 - Mark sub-resources explicitly — missing a sub-resource here causes silent data loss in handlers
+- Every behaviour line has a status. A line with no status is an unported behaviour, and it is found in QA months later instead of here; every **change** line is copied into the PR description
 - The milestone decision is per-page judgment — split listing/form into separate PRs when the entity is complex; a single PR is fine for simple entities
