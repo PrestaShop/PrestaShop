@@ -79,7 +79,9 @@ class CustomerFormCore extends AbstractForm
     public function fillFromCustomer(Customer $customer)
     {
         $params = get_object_vars($customer);
-        $params['birthday'] = $customer->birthday === '0000-00-00' ? null : Tools::displayDate($customer->birthday);
+        // A date input reads its value as ISO whatever the shop's locale is, so the stored value is passed
+        // through rather than localised - Tools::displayDate() here left the field blank.
+        $params['birthday'] = $customer->birthday === '0000-00-00' ? null : $customer->birthday;
 
         return $this->fillWith($params);
     }
@@ -124,6 +126,9 @@ class CustomerFormCore extends AbstractForm
         }
 
         // check birthdayField against null case is mandatory.
+        // A date input submits ISO whatever the shop's locale is, and that is already the stored form, so
+        // only the localised format the field used to be filled with still needs converting. A value that
+        // is neither is already reported by the field's own format check.
         $birthdayField = $this->getField('birthday');
         if (!empty($birthdayField)
             && !empty($birthdayField->getValue())
