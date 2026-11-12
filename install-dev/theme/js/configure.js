@@ -3,9 +3,14 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+// Default zxcvbn-ts feedback messages, used as a fallback for keys not translated by PrestaShop.
+let zxcvbnDefaultTranslations = null;
+let zxcvbnTranslationsApplied = false;
+
 // Initialize zxcvbn-ts with language packages
 (function() {
   if (typeof zxcvbnts !== 'undefined' && zxcvbnts.core && zxcvbnts['language-common'] && zxcvbnts['language-en']) {
+    zxcvbnDefaultTranslations = zxcvbnts['language-en'].translations;
     const options = {
       translations: zxcvbnts['language-en'].translations,
       graphs: zxcvbnts['language-common'].adjacencyGraphs,
@@ -87,6 +92,28 @@ function in_array(needle, haystack) {
 }
 
 /**
+ * Feed PrestaShop translations into zxcvbn-ts, so that the library returns feedback messages
+ * already translated. Messages are indexed by zxcvbn-ts keys (topTen, l33t, ...).
+ *
+ * @param {Object} translations the translations read from the feedback container.
+ *
+ * @private
+ */
+function applyZxcvbnTranslations(translations) {
+  if (zxcvbnTranslationsApplied || !zxcvbnDefaultTranslations || !translations) {
+    return;
+  }
+  zxcvbnTranslationsApplied = true;
+
+  zxcvbnts.core.zxcvbnOptions.setOptions({
+    translations: Object.assign({}, zxcvbnDefaultTranslations, {
+      warnings: Object.assign({}, zxcvbnDefaultTranslations.warnings, translations.warnings || {}),
+      suggestions: Object.assign({}, zxcvbnDefaultTranslations.suggestions, translations.suggestions || {}),
+    }),
+  });
+}
+
+/**
  * Check whether the password in $input meets the minimum score and length requirements
  * declared via data-minscore, data-minlength, data-maxlength attributes.
  *
@@ -128,6 +155,8 @@ function watchPasswordStrength(element, submitButtonSelector) {
       $passwordInput.parent().append($('#password-feedback').html());
       $feedbackContainer = $passwordInput.parent().find('.password-strength-feedback');
     }
+
+    applyZxcvbnTranslations($feedbackContainer.data('translations'));
 
     const passwordRequirementsLength = $feedbackContainer.find('.password-requirements-length');
     passwordRequirementsLength.find('span').text(
@@ -193,17 +222,18 @@ function displayFeedback(
 
   $outputContainer.find('.password-strength-text').text(translations[result.score]);
 
-  if (result.feedback.warning !== '') {
-    if (result.feedback.warning in translations) {
-      popoverContent.push(translations[result.feedback.warning]);
-    }
+  if (result.feedback.warning) {
+    popoverContent.push(result.feedback.warning);
   }
 
   result.feedback.suggestions.forEach((suggestion) => {
-    if (suggestion in translations) {
-      popoverContent.push(translations[suggestion]);
-    }
+    popoverContent.push(suggestion);
   });
+
+  // zxcvbn does not always return feedback: never leave the user without a hint on a weak password.
+  if (popoverContent.length === 0 && result.score < $passwordInput.data('minscore')) {
+    popoverContent.push(translations.suggestions.anotherWord);
+  }
 
   popoverBody.html(popoverContent.join('<br>'));
 
