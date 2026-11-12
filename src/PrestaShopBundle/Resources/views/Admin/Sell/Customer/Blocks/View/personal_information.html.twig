@@ -160,6 +160,13 @@
             {{ 'Inactive'|trans({}, 'Admin.Global') }}
           {% endif %}
         </span>
+
+        {% if customerInformation.personalInformation.deleted %}
+          <span class="customer-deleted-status badge badge-danger rounded">
+            <i class="material-icons">delete</i>
+            {{ 'Deleted'|trans({}, 'Admin.Global') }}
+          </span>
+        {% endif %}
       </div>
     </div>
 
