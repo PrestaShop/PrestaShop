@@ -119,7 +119,7 @@ class CarrierFormDataProvider implements FormDataProviderInterface
         $ranges = [];
 
         // We retrieve zones to get the correct zone name
-        $zones = $this->zonesChoiceProvider->getChoices([]);
+        $zones = $this->zonesChoiceProvider->getChoices(['mark_inactive' => true]);
         $zones = array_flip($zones);
 
         // We choose the right symbol for the range in function of the ShippingMethod
