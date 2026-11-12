@@ -42,6 +42,12 @@ services:
       - '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface'
       - '@PrestaShop\PrestaShop\Adapter\Shipment\ShipmentShippingCostUpdater'
       - '@PrestaShop\PrestaShop\Adapter\Configuration'
+      - '@PrestaShop\PrestaShop\Adapter\Order\ProductSaleUpdater'
+
+  PrestaShop\PrestaShop\Adapter\Order\ProductSaleUpdater:
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
 
   prestashop.adapter.order.command_handler.change_order_delivery_address_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\ChangeOrderDeliveryAddressHandler
