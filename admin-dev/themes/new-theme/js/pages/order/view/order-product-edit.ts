@@ -12,11 +12,9 @@ import ConfirmModal from '@components/modal';
 import OrderPricesRefresher from '@pages/order/view/order-prices-refresher';
 
 export interface DisplayedProduct {
-  /* eslint-disable camelcase */
   price_tax_excl: number;
   price_tax_incl: number;
   tax_rate: number;
-  /* eslint-enable camelcase */
   quantity: number;
   location: string;
   availableQuantity: number;
@@ -119,7 +117,6 @@ export default class OrderProductEdit {
     this.shipmentInputs = [];
     if (this.isMultishipmentIsEnabled) {
       this.modalContainer = document.querySelector<HTMLElement>(OrderViewPageMap.editProductModalContainer)!;
-      // eslint-disable-next-line max-len
       this.shipmentQtyCounter = this.modalContainer.querySelector<HTMLElement>(OrderViewPageMap.productModalShipmentQtyHeader)!;
       // eslint-disable-next-line max-len
       this.shipmentInputs = Array.from(this.modalContainer.querySelectorAll<HTMLInputElement>(OrderViewPageMap.productModalShipmentQuantityInput));

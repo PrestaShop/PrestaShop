@@ -2,7 +2,7 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
-// eslint-disable-next-line
+// eslint-disable-next-line no-unused-vars
 function PerformancePage(addServerUrl, removeServerUrl, testServerUrl) {
   this.addServerUrl = addServerUrl;
   this.removeServerUrl = removeServerUrl;
@@ -36,7 +36,7 @@ function PerformancePage(addServerUrl, removeServerUrl, testServerUrl) {
             + `<td>${params.server_port}</td>\n`
             + `<td>${params.server_weight}</td>\n`
             + '<td>\n'
-            // eslint-disable-next-line
+            // eslint-disable-next-line max-len
             + `    <a class="btn btn-default" href="#" onclick="app.removeServer(${params.id});"><i class="material-icons">remove_circle</i> Remove</a>\n`
             + '</td>\n';
     serversTable.appendChild(newRow);
@@ -45,7 +45,7 @@ function PerformancePage(addServerUrl, removeServerUrl, testServerUrl) {
   this.addServer = function () {
     const app = this;
     this.send(this.getAddServerUrl(), 'POST', this.getFormValues(), (results) => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-prototype-builtins
       if (!results.hasOwnProperty('error')) {
         app.createRow(results);
       }
@@ -69,7 +69,7 @@ function PerformancePage(addServerUrl, removeServerUrl, testServerUrl) {
     const app = this;
 
     this.send(this.getTestServerUrl(), 'GET', this.getFormValues(), (results) => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-prototype-builtins
       if (results.hasOwnProperty('error') || results.test === false) {
         app.addClass('is-invalid');
         return;
