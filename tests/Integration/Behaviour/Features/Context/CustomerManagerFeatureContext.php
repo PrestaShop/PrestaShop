@@ -393,6 +393,11 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
      */
     protected function validateAndFormatCustomerGroupData($groupName)
     {
+        // A numeric value is used as the group id as is, so a group that does not exist can be given
+        if (is_numeric($groupName)) {
+            return (int) $groupName;
+        }
+
         /** @var DefaultGroupsProviderInterface $groupProvider */
         $groupProvider = CommonFeatureContext::getContainer()->get('prestashop.adapter.group.provider.default_groups_provider');
         $defaultGroups = $groupProvider->getGroups();
