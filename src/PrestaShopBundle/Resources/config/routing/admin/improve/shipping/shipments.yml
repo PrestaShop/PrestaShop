@@ -1,0 +1,17 @@
+admin_shipments_index:
+  path: /
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Shipping\ShipmentController::indexAction'
+
+admin_shipments_search:
+  path: /
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Shipping\ShipmentController::searchAction'
+
+admin_shipments_generate_delivery_slips_pdf:
+  path: /generate-delivery-slips-pdf
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Shipping\ShipmentController::generateDeliverySlipsPdfAction'
