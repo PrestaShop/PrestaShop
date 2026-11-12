@@ -24,6 +24,7 @@ class LinkCore
 
     protected $ssl_enable;
     protected $urlShopId = null;
+    private array $linkRewrites = [];
 
     // Categories that will not be used for URL rewriting
     protected static $category_disable_rewrite = null;
@@ -1239,18 +1240,20 @@ class LinkCore
             $controller = $context->controller->php_self;
         }
 
+        $idShop = (int) $context->shop->id;
+
         if ($controller == 'product' && isset($params['id_product'])) {
-            return $this->getProductLink((int) $params['id_product'], null, null, null, (int) $idLang);
+            return $this->getProductLink((int) $params['id_product'], $this->getLanguageRewrite('product', (int) $params['id_product'], (int) $idLang, $idShop), null, null, (int) $idLang);
         } elseif ($controller == 'category' && isset($params['id_category'])) {
-            return $this->getCategoryLink((int) $params['id_category'], null, (int) $idLang);
+            return $this->getCategoryLink((int) $params['id_category'], $this->getLanguageRewrite('category', (int) $params['id_category'], (int) $idLang, $idShop), (int) $idLang);
         } elseif ($controller == 'supplier' && isset($params['id_supplier'])) {
-            return $this->getSupplierLink((int) $params['id_supplier'], null, (int) $idLang);
+            return $this->getSupplierLink((int) $params['id_supplier'], Tools::str2url((string) Supplier::getNameById((int) $params['id_supplier'])) ?: null, (int) $idLang);
         } elseif ($controller == 'manufacturer' && isset($params['id_manufacturer'])) {
-            return $this->getManufacturerLink((int) $params['id_manufacturer'], null, (int) $idLang);
+            return $this->getManufacturerLink((int) $params['id_manufacturer'], Tools::str2url((string) Manufacturer::getNameById((int) $params['id_manufacturer'])) ?: null, (int) $idLang);
         } elseif ($controller == 'cms' && isset($params['id_cms'])) {
-            return $this->getCMSLink((int) $params['id_cms'], null, null, (int) $idLang, (int) $context->shop->id);
+            return $this->getCMSLink((int) $params['id_cms'], $this->getLanguageRewrite('cms', (int) $params['id_cms'], (int) $idLang, $idShop), null, (int) $idLang, $idShop);
         } elseif ($controller == 'cms' && isset($params['id_cms_category'])) {
-            return $this->getCMSCategoryLink((int) $params['id_cms_category'], null, (int) $idLang, (int) $context->shop->id);
+            return $this->getCMSCategoryLink((int) $params['id_cms_category'], $this->getLanguageRewrite('cms_category', (int) $params['id_cms_category'], (int) $idLang, $idShop), (int) $idLang, $idShop);
         } elseif (isset($params['fc']) && $params['fc'] == 'module') {
             $module = Validate::isModuleName(Tools::getValue('module')) ? Tools::getValue('module') : '';
             if (!empty($module)) {
@@ -1266,6 +1269,21 @@ class LinkCore
         }
 
         return $this->getPageLink($controller, null, $idLang, $params);
+    }
+
+    private function getLanguageRewrite(string $entity, int $id, int $idLang, int $idShop): ?string
+    {
+        $key = $entity . '_' . $id . '_' . $idShop;
+        if (!isset($this->linkRewrites[$key])) {
+            $query = (new DbQuery())
+                ->select('l.id_lang, l.link_rewrite')
+                ->from($entity . '_lang', 'l')
+                ->where('l.id_' . $entity . ' = ' . $id)
+                ->where('l.id_shop = ' . $idShop);
+            $this->linkRewrites[$key] = array_column(Db::getInstance()->executeS($query) ?: [], 'link_rewrite', 'id_lang');
+        }
+
+        return ($this->linkRewrites[$key][$idLang] ?? '') ?: null;
     }
 
     /**
