@@ -47,6 +47,10 @@ final class EditRootCategoryHandler extends AbstractEditCategoryHandler implemen
 
         $this->updateRootCategoryFromCommandData($category, $command);
 
+        if ($this->affectsDisplayNameCache($command)) {
+            $this->categoryDisplayNameCacheInvalidator->invalidate();
+        }
+
         $this->categoryImageUploader->uploadImages(
             $command->getCategoryId(),
             $command->getCoverImage(),
@@ -116,5 +120,11 @@ final class EditRootCategoryHandler extends AbstractEditCategoryHandler implemen
         if (false === $category->update()) {
             throw new CannotEditCategoryException(sprintf('Failed to edit Category with id "%s".', $category->id));
         }
+    }
+
+    private function affectsDisplayNameCache(EditRootCategoryCommand $command): bool
+    {
+        return null !== $command->getLocalizedNames()
+            || null !== $command->getAssociatedShopIds();
     }
 }

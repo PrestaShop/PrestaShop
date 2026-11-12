@@ -7,11 +7,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Category\NameBuilder;
 
-use Cache;
 use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use Symfony\Contracts\Cache\CacheInterface;
 
 /**
  * Builds category display name if it needs to differ from original category name.
@@ -19,25 +19,14 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 class CategoryDisplayNameBuilder
 {
     /**
-     * @var CategoryRepository
-     */
-    private $categoryRepository;
-
-    /**
-     * @var string
-     */
-    private $breadcrumbSeparator;
-
-    /**
      * @param CategoryRepository $categoryRepository
      * @param string $breadcrumbSeparator
      */
     public function __construct(
-        CategoryRepository $categoryRepository,
-        string $breadcrumbSeparator
+        private CategoryRepository $categoryRepository,
+        private string $breadcrumbSeparator,
+        private CacheInterface $cache
     ) {
-        $this->categoryRepository = $categoryRepository;
-        $this->breadcrumbSeparator = $breadcrumbSeparator;
     }
 
     /**
@@ -92,15 +81,9 @@ class CategoryDisplayNameBuilder
 
         $cacheKey = $this->buildCacheKeyForNameIds($shopId, $languageId);
 
-        //      @todo: consider using Symfony\Component\Cache\Adapter\AdapterInterface instead of legacy Cache
-        if (Cache::isStored($this->buildCacheKeyForNameIds($shopId, $languageId))) {
-            return Cache::retrieve($cacheKey);
-        }
-
-        $duplicateNameIds = $this->categoryRepository->getDuplicateNameIds($shopId, $languageId);
-        Cache::store($cacheKey, $duplicateNameIds);
-
-        return $duplicateNameIds;
+        return $this->cache->get($cacheKey, function () use ($shopId, $languageId) {
+            return $this->categoryRepository->getDuplicateNameIds($shopId, $languageId);
+        });
     }
 
     /**
@@ -116,17 +99,12 @@ class CategoryDisplayNameBuilder
         if (!$useCache) {
             return $this->fetchBreadcrumbs($categoryIds, $languageId);
         }
+
         $cacheKey = $this->buildCacheKeyForBreadcrumbs($shopId, $languageId);
 
-        //      @todo: consider using Symfony\Component\Cache\Adapter\AdapterInterface instead of legacy Cache
-        if (Cache::isStored($this->buildCacheKeyForBreadcrumbs($shopId, $languageId))) {
-            return Cache::retrieve($cacheKey);
-        }
-
-        $duplicateCategoriesBreadcrumbs = $this->fetchBreadcrumbs($categoryIds, $languageId);
-        Cache::store($cacheKey, $duplicateCategoriesBreadcrumbs);
-
-        return $duplicateCategoriesBreadcrumbs;
+        return $this->cache->get($cacheKey, function () use ($categoryIds, $languageId) {
+            return $this->fetchBreadcrumbs($categoryIds, $languageId);
+        });
     }
 
     /**
@@ -221,7 +199,7 @@ class CategoryDisplayNameBuilder
     private function buildCacheKeyForNameIds(ShopId $shopId, LanguageId $langId): string
     {
         return sprintf(
-            'Category::duplicateCategoryNameIds_shop_%s_lang_%s',
+            'Category>duplicateCategoryNameIds_shop_%s_lang_%s',
             $shopId->getValue(),
             $langId->getValue()
         );
@@ -236,7 +214,7 @@ class CategoryDisplayNameBuilder
     private function buildCacheKeyForBreadcrumbs(ShopId $shopId, LanguageId $langId): string
     {
         return sprintf(
-            'Category::duplicateCategoryBreadcrumbs_shop_%s_lang_%s',
+            'Category>duplicateCategoryBreadcrumbs_shop_%s_lang_%s',
             $shopId->getValue(),
             $langId->getValue()
         );
