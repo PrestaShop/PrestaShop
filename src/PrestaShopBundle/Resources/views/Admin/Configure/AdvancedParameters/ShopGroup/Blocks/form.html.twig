@@ -1,0 +1,41 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% form_theme shopGroupForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
+<div class="row">
+  <div class="col-lg-4">
+    {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/Multistore/Blocks/shop_tree.html.twig') }}
+  </div>
+  <div class="col-lg-8">
+    {{ form_start(shopGroupForm) }}
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">store</i>
+        {{ 'Store group'|trans({}, 'Admin.Advparameters.Feature') }}
+      </h3>
+      <div class="card-body">
+        <div class="alert alert-warning" role="alert">
+          <p class="alert-text">
+            {{ 'Warning: Enabling the "share customers" and "share orders" options is not recommended. Once activated and orders are created, you will not be able to disable these options. If you need these options, we recommend using several categories rather than several shops.'|trans({}, 'Admin.Advparameters.Help') }}
+          </p>
+        </div>
+        <div class="form-wrapper">
+          {{ form_errors(shopGroupForm) }}
+          {{ form_widget(shopGroupForm) }}
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="{{ path('admin_shop_groups_index') }}" class="btn btn-outline-secondary">
+          {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+        </a>
+        <button class="btn btn-primary float-right" id="save-button">
+          {{ 'Save'|trans({}, 'Admin.Actions') }}
+        </button>
+      </div>
+    </div>
+    {{ form_end(shopGroupForm) }}
+  </div>
+</div>
