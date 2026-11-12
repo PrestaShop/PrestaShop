@@ -31,7 +31,7 @@ services:
     autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Image\ImageValidator'
-      - '@prestashop.adapter.file.robots_text_file_generator'
+      - '@PrestaShop\PrestaShop\Adapter\File\RobotsTextFileGenerator'
 
   prestashop.adapter.language.command_handler.edit_language_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Language\CommandHandler\EditLanguageHandler'
@@ -47,25 +47,25 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Language\CommandHandler\ToggleLanguageStatusHandler'
     autoconfigure: true
     arguments:
-      - '@prestashop.adapter.file.robots_text_file_generator'
+      - '@PrestaShop\PrestaShop\Adapter\File\RobotsTextFileGenerator'
 
   prestashop.adapter.language.command_handler.bulk_toggle_languages_status_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Language\CommandHandler\BulkToggleLanguagesStatusHandler'
     autoconfigure: true
     arguments:
-      - '@prestashop.adapter.file.robots_text_file_generator'
+      - '@PrestaShop\PrestaShop\Adapter\File\RobotsTextFileGenerator'
 
   prestashop.adapter.language.command_handler.bulk_delete_languages_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Language\CommandHandler\BulkDeleteLanguagesHandler'
     autoconfigure: true
     arguments:
-      - '@prestashop.adapter.file.robots_text_file_generator'
+      - '@PrestaShop\PrestaShop\Adapter\File\RobotsTextFileGenerator'
 
   prestashop.adapter.language.command_handler.delete_language_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Language\CommandHandler\DeleteLanguageHandler'
     autoconfigure: true
     arguments:
-      - '@prestashop.adapter.file.robots_text_file_generator'
+      - '@PrestaShop\PrestaShop\Adapter\File\RobotsTextFileGenerator'
       - '@prestashop.adapter.employee_language_updater'
 
   PrestaShop\PrestaShop\Adapter\Language\ContextLanguageProvider:

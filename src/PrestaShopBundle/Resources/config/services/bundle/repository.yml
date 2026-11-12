@@ -38,7 +38,7 @@ services:
       package: PrestaShop\PrestaShop
       version: 9.0
 
-  PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface: '@prestashop.core.admin.lang.repository'
+  PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface: '@PrestaShopBundle\Entity\Repository\LangRepository'
 
   PrestaShopBundle\Entity\Repository\LogRepository:
     public: false

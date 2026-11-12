@@ -14,7 +14,7 @@ services:
     arguments:
       - "@prestashop.adapter.legacy.configuration"
       - "@filesystem"
-      - "@prestashop.core.admin.lang.repository"
+      - '@PrestaShopBundle\Entity\Repository\LangRepository'
       - "@prestashop.translation.theme.exporter"
 
   prestashop.core.addon.theme.exporter:
