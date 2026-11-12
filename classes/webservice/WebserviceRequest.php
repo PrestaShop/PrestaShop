@@ -1720,7 +1720,12 @@ class WebserviceRequestCore
                     $this->setError(400, 'parameter "' . $fieldName . '" required', 41);
 
                     return false;
-                } elseif ((!isset($fieldProperties['required']) || !$fieldProperties['required']) && property_exists($object, $sqlId)) {
+                } elseif (
+                    (!isset($fieldProperties['required']) || !$fieldProperties['required'])
+                    // A field the client cannot write keeps its stored value
+                    && (!isset($fieldProperties['setter']) || false !== $fieldProperties['setter'])
+                    && property_exists($object, $sqlId)
+                ) {
                     $object->$sqlId = null;
                 }
                 if (isset($fieldProperties['i18n']) && $fieldProperties['i18n']) {

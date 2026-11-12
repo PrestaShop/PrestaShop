@@ -218,6 +218,36 @@ class WebserviceEndpointFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Then /^using Webservice with key "(.*)" to view "(.+)" for reference "(.+)", I store the non empty property "(.+)" as "(.+)"$/
+     */
+    public function storeNonEmptyProperty(string $webserviceKey, string $endpoint, string $reference, string $key, string $storageKey): void
+    {
+        $value = $this->getPropertyValue($webserviceKey, $endpoint, $reference, $key);
+        Assert::assertNotEmpty($value, sprintf('The key %s is empty', $key));
+        SharedStorage::getStorage()->set($storageKey, $value);
+    }
+
+    /**
+     * @Then /^using Webservice with key "(.*)" to view "(.+)" for reference "(.+)", the property "(.+)" should be the stored "(.+)"$/
+     */
+    public function assertPropertyIsStoredValue(string $webserviceKey, string $endpoint, string $reference, string $key, string $storageKey): void
+    {
+        Assert::assertSame(
+            SharedStorage::getStorage()->get($storageKey),
+            $this->getPropertyValue($webserviceKey, $endpoint, $reference, $key)
+        );
+    }
+
+    private function getPropertyValue(string $webserviceKey, string $endpoint, string $reference, string $key): string
+    {
+        $id = (int) SharedStorage::getStorage()->get($reference);
+        $output = $this->whenRequest($webserviceKey, 'GET', $endpoint . '/' . $id);
+        Assert::assertEquals(1, $output->filter('prestashop ' . $key)->count(), sprintf('The key %s has not been found', $key));
+
+        return (string) $output->filter('prestashop ' . $key)->getNode(0)->nodeValue;
+    }
+
+    /**
      * @Then /^I should get (\d+) errors?$/
      */
     public function assertWebserviceErrorCount(int $numErrors): void
@@ -313,6 +343,18 @@ class WebserviceEndpointFeatureContext extends AbstractPrestaShopFeatureContext
 
             $postFields = '<prestashop xmlns:xlink="http://www.w3.org/1999/xlink"><' . $itemNode . '>';
             foreach ($rows as $hash) {
+                // A multilang field is only accepted wrapped in a language node, so the table can carry
+                // an optional "language" column holding the language id to wrap the value with.
+                if (!empty($hash['language'])) {
+                    $postFields .= sprintf('<%s><language id="%d"><![CDATA[%s]]></language></%s>',
+                        $hash['key'],
+                        (int) $hash['language'],
+                        $hash['value'],
+                        $hash['key']
+                    );
+
+                    continue;
+                }
                 $postFields .= sprintf('<%s><![CDATA[%s]]></%s>',
                     $hash['key'],
                     $hash['value'],
