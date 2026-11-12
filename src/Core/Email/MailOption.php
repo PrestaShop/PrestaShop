@@ -27,6 +27,11 @@ final class MailOption
     public const METHOD_NONE = 3;
 
     /**
+     * @var int Option defines that emails should be sent using PHP's mail() function
+     */
+    public const METHOD_PHP_MAIL = 4;
+
+    /**
      * @var int Option defines that emails should be sent in HTML format only
      */
     public const TYPE_HTML = 1;
