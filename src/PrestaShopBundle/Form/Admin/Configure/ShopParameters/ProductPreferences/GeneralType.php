@@ -17,6 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\PositiveOrZero;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -87,6 +88,12 @@ class GeneralType extends TranslatorAwareType
                     'Admin.Shopparameters.Feature'
                 ),
                 'required' => false,
+                // A number of days cannot be negative. The configuration adapter only checks that the
+                // value is an int, so without this a negative one is stored and every consumer then
+                // silently falls back to its own default.
+                'constraints' => [
+                    new PositiveOrZero(),
+                ],
                 'multistore_configuration_key' => 'PS_NB_DAYS_NEW_PRODUCT',
             ])
             ->add('short_description_limit', IntegerType::class, [
