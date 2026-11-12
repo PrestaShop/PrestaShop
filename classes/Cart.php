@@ -252,6 +252,8 @@ class CartCore extends ObjectModel
         if (isset(self::$_totalWeight[$cacheKey])) {
             unset(self::$_totalWeight[$cacheKey]);
         }
+        // The quantity of a product in this cart, memoised by Product::getPriceStatic()
+        Cache::clean('Product::getPriceStatic_*-' . (int) $this->id);
         $this->_products = null;
         $this->_products_with_separated_gifts = null;
     }
@@ -2019,7 +2021,7 @@ class CartCore extends ObjectModel
             // so they remain. We must specifically target the product ID, combination ID and customization ID.
             // If we didn't use these conditions, we would set all cart rows with this product ID to $preservedGifts[$giftKey].
             if (isset($preservedGifts[$giftKey]) && $preservedGifts[$giftKey] > 0) {
-                return Db::getInstance()->execute(
+                $result = Db::getInstance()->execute(
                     'UPDATE `' . _DB_PREFIX_ . 'cart_product`
                     SET `quantity` = ' . (int) $preservedGifts[$giftKey] . '
                     WHERE `id_cart` = ' . (int) $this->id . '
@@ -2027,6 +2029,9 @@ class CartCore extends ObjectModel
                     AND `id_product_attribute` = ' . (int) $id_product_attribute . '
                     AND `id_customization` = 0'
                 );
+                $this->resetProductRelatedStaticCache();
+
+                return $result;
             }
         }
 
@@ -4876,6 +4881,9 @@ class CartCore extends ObjectModel
 
     public function deleteAssociations()
     {
+        // Rows deleted without update(), so the product caches are reset here
+        $this->resetProductRelatedStaticCache();
+
         return Db::getInstance()->execute('
                 DELETE FROM `' . _DB_PREFIX_ . 'cart_product`
                 WHERE `id_cart` = ' . (int) $this->id) !== false;
