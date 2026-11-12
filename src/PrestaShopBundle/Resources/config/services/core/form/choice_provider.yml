@@ -63,7 +63,7 @@ services:
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ContactByIdChoiceProvider:
     arguments:
-      - '@prestashop.adapter.contact.repository'
+      - '@PrestaShop\PrestaShop\Adapter\Contact\Repository\ContactRepository'
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ModuleByNameChoiceProvider:
     arguments:
