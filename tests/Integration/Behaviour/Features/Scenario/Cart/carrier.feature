@@ -110,6 +110,26 @@ Feature: Cart calculation with carriers
     Then cart shipping fees should be 7.7
     Then my cart total should be 163.1 tax included
 
+  Scenario: free shipping by price, cart total below the threshold
+    Given shop configuration for "PS_SHIPPING_FREE_PRICE" is set to 50
+    Given I have an empty default cart
+    Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
+    When I add 1 items of product "product1" in my cart
+    When I select address "address1" in my cart
+    When I select carrier "carrier1" in my cart
+    Then cart shipping fees should be 5.1
+    Then my cart total should be 24.912 tax included
+
+  Scenario: free shipping by price, cart total above the threshold
+    Given shop configuration for "PS_SHIPPING_FREE_PRICE" is set to 50
+    Given I have an empty default cart
+    Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
+    When I add 3 items of product "product1" in my cart
+    When I select address "address1" in my cart
+    When I select carrier "carrier1" in my cart
+    Then cart shipping fees should be 0.0
+    Then my cart total should be 59.436 tax included
+
   Scenario: free carrier in price range
     Given I have an empty default cart
     Given there is a product in the catalog named "product1" with a price of 151.0 and 1000 items in stock
