@@ -12,6 +12,7 @@ use PrestaShop\PrestaShop\Adapter\Discount\Update\DiscountBuilder;
 use PrestaShop\PrestaShop\Adapter\Discount\Update\DiscountConditionsUpdater;
 use PrestaShop\PrestaShop\Adapter\Discount\Validate\DiscountValidator;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
@@ -30,6 +31,7 @@ class AddDiscountHandler implements AddDiscountHandlerInterface
         private readonly DiscountValidator $discountValidator,
         private readonly DiscountConditionsUpdater $discountConditionsUpdater,
         private readonly DiscountTypeRepository $discountTypeRepository,
+        private readonly ShopContext $shopContext,
     ) {
     }
 
@@ -56,12 +58,15 @@ class AddDiscountHandler implements AddDiscountHandlerInterface
         $discount = $this->discountRepository->add($builtCartRule);
         $newDiscountId = new DiscountId((int) $discount->id);
 
+        $shopIds = $this->shopContext->isAllShopContext() ? null : $this->shopContext->getAssociatedShopIds();
+
         $this->discountConditionsUpdater->update(
             $newDiscountId,
             $command->getProductConditions(),
             $command->getCarrierIds() ? array_map(fn (CarrierId $carrierId) => $carrierId->getValue(), $command->getCarrierIds()) : null,
             $command->getCountryIds() ? array_map(fn (CountryId $countryId) => $countryId->getValue(), $command->getCountryIds()) : null,
             $command->getCustomerGroupIds() ? array_map(fn (GroupId $groupId) => $groupId->getValue(), $command->getCustomerGroupIds()) : null,
+            $shopIds,
         );
         $this->discountTypeRepository->setCompatibleTypesForDiscount($newDiscountId->getValue(), $command->getCompatibleDiscountTypeIds() ?? []);
 
