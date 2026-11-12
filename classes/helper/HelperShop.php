@@ -16,8 +16,14 @@ class HelperShopCore extends Helper
             return '';
         }
 
-        $shop_context = Shop::getContext();
         $context = Context::getContext();
+
+        // A controller whose page is unrelated to multistore can opt out of the selector entirely
+        if ($context->controller instanceof AdminController && !$context->controller->display_multishop_selector) {
+            return '';
+        }
+
+        $shop_context = Shop::getContext();
 
         if ($this->noShopSelection()) {
             $current_shop_value = '';
