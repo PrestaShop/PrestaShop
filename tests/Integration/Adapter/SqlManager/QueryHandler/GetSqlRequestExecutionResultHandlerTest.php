@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Adapter\SqlManager\QueryHandler;
 
+use Db;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\AddSqlRequestCommand;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestConstraintException;
@@ -44,6 +45,9 @@ class GetSqlRequestExecutionResultHandlerTest extends KernelTestCase
     {
         DatabaseDump::restoreTables([
             'request_sql',
+            'employee',
+            'employee_session',
+            'api_client',
         ]);
     }
 
@@ -84,6 +88,52 @@ class GetSqlRequestExecutionResultHandlerTest extends KernelTestCase
         /** @var SqlRequestExecutionResult $sqlRequestExecutionResult */
         $sqlRequestExecutionResult = $this->queryBus->handle($query);
         self::assertEquals('*******************', $sqlRequestExecutionResult->getRows()[0]['MyStrongPassword']);
+    }
+
+    /**
+     * @dataProvider getSecretColumns
+     */
+    public function testEveryKnownSecretColumnIsHidden(string $column, string $sql, string $selected): void
+    {
+        // hideSensitiveData() skips a null value, so the column has to hold something to be a test
+        Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'employee` SET `reset_password_token` = \'a-real-secret\' WHERE `id_employee` = 1');
+        Db::getInstance()->insert('employee_session', ['id_employee' => 1, 'token' => 'a-real-secret', 'date_add' => date('Y-m-d H:i:s'), 'date_upd' => date('Y-m-d H:i:s')]);
+        Db::getInstance()->insert('api_client', ['client_id' => 'secret-test', 'client_name' => 'secret-test', 'client_secret' => 'a-real-secret', 'enabled' => 1, 'scopes' => '[]']);
+
+        /** @var SqlRequestId $sqlRequestId */
+        $sqlRequestId = $this->commandBus->handle(new AddSqlRequestCommand('secret_request', $sql));
+        /** @var SqlRequestExecutionResult $result */
+        $result = $this->queryBus->handle(new GetSqlRequestExecutionResult($sqlRequestId->getValue()));
+
+        self::assertEquals(
+            '*******************',
+            $result->getRows()[0][$selected],
+            sprintf('%s (column %s) was returned in clear text', $selected, $column)
+        );
+    }
+
+    public function getSecretColumns(): iterable
+    {
+        yield 'reset token' => [
+            'reset_password_token',
+            'SELECT e.id_employee, e.reset_password_token FROM ps_employee e WHERE e.id_employee = 1;',
+            'reset_password_token',
+        ];
+        yield 'reset token behind an alias' => [
+            'reset_password_token',
+            'SELECT e.id_employee, e.reset_password_token AS session_token FROM ps_employee e WHERE e.id_employee = 1;',
+            'session_token',
+        ];
+        yield 'employee session token' => [
+            'token',
+            'SELECT es.id_employee, es.token FROM ps_employee_session es;',
+            'token',
+        ];
+        yield 'api client secret' => [
+            'client_secret',
+            'SELECT ac.client_id, ac.client_secret FROM ps_api_client ac;',
+            'client_secret',
+        ];
     }
 
     public function testUnauthorizedFunctionInSelect(): void
