@@ -208,6 +208,27 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Then /^the stock quantity of product "(.+)" in my cart should be ([\-\d]+)$/
+     */
+    public function cartProductStockQuantityShouldBe(string $productName, int $stockQuantity): void
+    {
+        $this->checkProductWithNameExists($productName);
+        $productId = (int) $this->getProductWithName($productName)->id;
+        foreach ($this->getCurrentCart()->getProducts(true) as $cartProduct) {
+            if ((int) $cartProduct['id_product'] !== $productId) {
+                continue;
+            }
+            if ($stockQuantity !== (int) $cartProduct['stock_quantity']) {
+                throw new RuntimeException(sprintf('Expects %d, got %d instead', $stockQuantity, $cartProduct['stock_quantity']));
+            }
+
+            return;
+        }
+
+        throw new RuntimeException(sprintf('Product "%s" is not in the cart', $productName));
+    }
+
+    /**
      * @Then /^the remaining available stock for product "(.+)" should be ([\-\d]+)$/
      */
     public function remainingQuantityOfProductNamedShouldBe($productName, $productQuantity)
