@@ -65,9 +65,13 @@
 {/if}
 {$admin_path = "{__PS_BASE_URI__}{basename(_PS_ADMIN_DIR_)}/themes/default/public/"}
 
-{$preloadFilePath = "../public/preload.tpl"}
+{* preload.tpl is a webpack build artifact excluded from git, so a checkout whose admin assets
+   have not been built must still render the page instead of failing on a missing template *}
+{$preloadFilePath = $smarty.const._PS_ADMIN_DIR_|cat:"/themes/default/public/preload.tpl"}
 
-{include file=$preloadFilePath admin_dir=$admin_path}
+{if file_exists($preloadFilePath)}
+  {include file=$preloadFilePath admin_dir=$admin_path}
+{/if}
 
 {if isset($css_files)}
 {foreach from=$css_files key=css_uri item=media}
