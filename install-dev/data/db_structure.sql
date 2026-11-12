@@ -697,7 +697,7 @@ CREATE TABLE `PREFIX_customer_group` (
 /* Customer support private messaging */
 CREATE TABLE `PREFIX_customer_message` (
   `id_customer_message` int(10) unsigned NOT NULL auto_increment,
-  `id_customer_thread` int(11) DEFAULT NULL,
+  `id_customer_thread` int(11) unsigned DEFAULT NULL,
   `id_employee` int(10) unsigned DEFAULT NULL,
   `id_product` int(10) unsigned DEFAULT NULL,
   `message` MEDIUMTEXT NOT NULL,
@@ -753,7 +753,7 @@ CREATE TABLE `PREFIX_customization` (
   `id_product_attribute` int(10) unsigned NOT NULL DEFAULT '0',
   `id_address_delivery` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `id_cart` int(10) unsigned NOT NULL,
-  `id_product` int(10) NOT NULL,
+  `id_product` int(10) unsigned NOT NULL,
   `quantity` int(10) NOT NULL,
   `quantity_refunded` INT NOT NULL DEFAULT '0',
   `quantity_returned` INT NOT NULL DEFAULT '0',
@@ -798,7 +798,7 @@ CREATE TABLE `PREFIX_customized_data` (
   `type` tinyint(1) NOT NULL,
   `index` int(3) NOT NULL,
   `value` varchar(1024) NOT NULL,
-  `id_module` int(10) NOT NULL DEFAULT '0',
+  `id_module` int(10) unsigned NOT NULL DEFAULT '0',
   `price` decimal(20, 6) NOT NULL DEFAULT '0',
   `weight` decimal(20, 6) NOT NULL DEFAULT '0',
   PRIMARY KEY (
@@ -1230,7 +1230,7 @@ CREATE TABLE `PREFIX_module_country` (
 CREATE TABLE `PREFIX_module_currency` (
   `id_module` int(10) unsigned NOT NULL,
   `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
-  `id_currency` int(11) NOT NULL,
+  `id_currency` int(11) unsigned NOT NULL,
   PRIMARY KEY (
     `id_module`, `id_shop`, `id_currency`
   ),
@@ -1331,8 +1331,8 @@ CREATE TABLE `PREFIX_orders` (
 
 /* Order tax detail */
 CREATE TABLE `PREFIX_order_detail_tax` (
-  `id_order_detail` int(11) NOT NULL,
-  `id_tax` int(11) NOT NULL,
+  `id_order_detail` int(11) unsigned NOT NULL,
+  `id_tax` int(11) unsigned NOT NULL,
   `unit_amount` DECIMAL(16, 6) NOT NULL DEFAULT '0.00',
   `total_amount` DECIMAL(16, 6) NOT NULL DEFAULT '0.00',
   KEY (`id_order_detail`),
@@ -1342,7 +1342,7 @@ CREATE TABLE `PREFIX_order_detail_tax` (
 /* list of invoice */
 CREATE TABLE `PREFIX_order_invoice` (
   `id_order_invoice` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `id_order` int(11) NOT NULL,
+  `id_order` int(11) unsigned NOT NULL,
   `number` int(11) NOT NULL,
   `delivery_number` int(11) NOT NULL,
   `delivery_date` datetime,
@@ -1366,9 +1366,9 @@ CREATE TABLE `PREFIX_order_invoice` (
 
 /* global invoice tax */
 CREATE TABLE IF NOT EXISTS `PREFIX_order_invoice_tax` (
-  `id_order_invoice` int(11) NOT NULL,
+  `id_order_invoice` int(11) unsigned NOT NULL,
   `type` varchar(15) NOT NULL,
-  `id_tax` int(11) NOT NULL,
+  `id_tax` int(11) unsigned NOT NULL,
   `amount` decimal(10, 6) NOT NULL DEFAULT '0.000000',
   KEY `id_tax` (`id_tax`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
@@ -1377,7 +1377,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_order_invoice_tax` (
 CREATE TABLE `PREFIX_order_detail` (
   `id_order_detail` int(10) unsigned NOT NULL auto_increment,
   `id_order` int(10) unsigned NOT NULL,
-  `id_order_invoice` int(11) DEFAULT NULL,
+  `id_order_invoice` int(11) unsigned DEFAULT NULL,
   `id_warehouse` int(10) unsigned DEFAULT '0',
   `id_shop` int(11) unsigned NOT NULL,
   `product_id` int(10) unsigned NOT NULL,
@@ -1650,7 +1650,7 @@ CREATE TABLE `PREFIX_order_payment` (
   `card_expiration` CHAR(7) NULL,
   `card_holder` VARCHAR(254) NULL,
   `date_add` DATETIME NOT NULL,
-  `id_employee` INT NULL,
+  `id_employee` INT UNSIGNED NULL,
   PRIMARY KEY (`id_order_payment`),
   KEY `order_reference`(`order_reference`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
@@ -2238,20 +2238,20 @@ CREATE TABLE `PREFIX_memcached_servers` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
 CREATE TABLE `PREFIX_product_country_tax` (
-  `id_product` int(11) NOT NULL,
-  `id_country` int(11) NOT NULL,
-  `id_tax` int(11) NOT NULL,
+  `id_product` int(11) unsigned NOT NULL,
+  `id_country` int(11) unsigned NOT NULL,
+  `id_tax` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id_product`, `id_country`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
 CREATE TABLE `PREFIX_tax_rule` (
   `id_tax_rule` int(11) NOT NULL AUTO_INCREMENT,
   `id_tax_rules_group` int(11) NOT NULL,
-  `id_country` int(11) NOT NULL,
-  `id_state` int(11) NOT NULL,
+  `id_country` int(11) unsigned NOT NULL,
+  `id_state` int(11) unsigned NOT NULL,
   `zipcode_from` VARCHAR(12) NOT NULL,
   `zipcode_to` VARCHAR(12) NOT NULL,
-  `id_tax` int(11) NOT NULL,
+  `id_tax` int(11) unsigned NOT NULL,
   `behavior` int(11) NOT NULL,
   `description` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`id_tax_rule`),
@@ -2274,7 +2274,7 @@ CREATE TABLE `PREFIX_tax_rules_group` (
 
 CREATE TABLE `PREFIX_specific_price_priority` (
   `id_specific_price_priority` INT NOT NULL AUTO_INCREMENT,
-  `id_product` INT NOT NULL,
+  `id_product` INT UNSIGNED NOT NULL,
   `priority` VARCHAR(80) NOT NULL,
   PRIMARY KEY (
     `id_specific_price_priority`, `id_product`
@@ -2730,7 +2730,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_risk_lang` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
 CREATE TABLE `PREFIX_category_shop` (
-  `id_category` int(11) NOT NULL,
+  `id_category` int(11) unsigned NOT NULL,
   `id_shop` int(11) NOT NULL,
   `position` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_category`, `id_shop`)
@@ -2738,7 +2738,7 @@ CREATE TABLE `PREFIX_category_shop` (
 
 CREATE TABLE `PREFIX_module_preference` (
   `id_module_preference` int(11) NOT NULL auto_increment,
-  `id_employee` int(11) NOT NULL,
+  `id_employee` int(11) unsigned NOT NULL,
   `module` varchar(191) NOT NULL,
   `interest` tinyint(1) DEFAULT NULL,
   `favorite` tinyint(1) DEFAULT NULL,
@@ -2748,7 +2748,7 @@ CREATE TABLE `PREFIX_module_preference` (
 
 CREATE TABLE `PREFIX_tab_module_preference` (
   `id_tab_module_preference` int(11) NOT NULL auto_increment,
-  `id_employee` int(11) NOT NULL,
+  `id_employee` int(11) unsigned NOT NULL,
   `id_tab` int(11) NOT NULL,
   `module` varchar(191) NOT NULL,
   PRIMARY KEY (`id_tab_module_preference`),
@@ -3004,7 +3004,7 @@ CREATE TABLE `PREFIX_shop` (
   `id_shop_group` INT          NOT NULL,
   `name`          VARCHAR(64)  NOT NULL,
   `color`         VARCHAR(50)  NOT NULL,
-  `id_category`   INT          NOT NULL,
+  `id_category`   INT UNSIGNED NOT NULL,
   `theme_name`    VARCHAR(255) NOT NULL,
   `active`        TINYINT(1) NOT NULL,
   `deleted`       TINYINT(1) NOT NULL,
@@ -3042,8 +3042,8 @@ CREATE TABLE `PREFIX_shop_group` (
 
 CREATE TABLE `PREFIX_module_history` (
   `id`          INT AUTO_INCREMENT NOT NULL,
-  `id_employee` INT      NOT NULL,
-  `id_module`   INT      NOT NULL,
+  `id_employee` INT UNSIGNED NOT NULL,
+  `id_module`   INT UNSIGNED NOT NULL,
   `date_add`    DATETIME NOT NULL,
   `date_upd`    DATETIME NOT NULL,
   PRIMARY KEY (`id`)
@@ -3080,11 +3080,11 @@ CREATE TABLE `PREFIX_api_client` (
 
 CREATE TABLE `PREFIX_stock_mvt` (
   `id_stock_mvt`        BIGINT AUTO_INCREMENT NOT NULL,
-  `id_stock`            INT                      NOT NULL,
-  `id_order`            INT            DEFAULT NULL,
-  `id_supply_order`     INT            DEFAULT 0,
-  `id_stock_mvt_reason` INT                      NOT NULL,
-  `id_employee`         INT                      NOT NULL,
+  `id_stock`            INT UNSIGNED             NOT NULL,
+  `id_order`            INT UNSIGNED   DEFAULT NULL,
+  `id_supply_order`     INT UNSIGNED   DEFAULT 0,
+  `id_stock_mvt_reason` INT UNSIGNED             NOT NULL,
+  `id_employee`         INT UNSIGNED             NOT NULL,
   `employee_lastname`   VARCHAR(255)   DEFAULT NULL,
   `employee_firstname`  VARCHAR(255)   DEFAULT NULL,
   `physical_quantity`   INT UNSIGNED NOT NULL,
@@ -3110,8 +3110,8 @@ CREATE TABLE `PREFIX_access` (
 
 CREATE TABLE `PREFIX_shipment` (
   `id_shipment` int(10) AUTO_INCREMENT NOT NULL,
-  `id_order` int(10) NOT NULL,
-  `id_carrier` int(10) NOT NULL,
+  `id_order` int(10) unsigned NOT NULL,
+  `id_carrier` int(10) unsigned NOT NULL,
   `id_delivery_address` int(10) DEFAULT NULL,
   `shipping_cost_tax_excl` NUMERIC(20, 6) DEFAULT '0.000000',
   `shipping_cost_tax_incl` NUMERIC(20, 6) DEFAULT '0.000000',
@@ -3129,7 +3129,7 @@ CREATE TABLE `PREFIX_shipment` (
 CREATE TABLE `PREFIX_shipment_product` (
   `id_shipment_product` INT AUTO_INCREMENT NOT NULL,
   `id_shipment` int(10) NOT NULL,
-  `id_order_detail` int(10) NOT NULL,
+  `id_order_detail` int(10) unsigned NOT NULL,
   `quantity` int(10) DEFAULT NULL,
   PRIMARY KEY (id_shipment_product)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
