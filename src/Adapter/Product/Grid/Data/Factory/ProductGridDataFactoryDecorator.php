@@ -10,6 +10,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory;
 
 use Currency;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
@@ -119,6 +120,7 @@ class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
         ShopRepository $shopRepository,
         ProductRepository $productRepository,
         private ProductPackRepository $productPackRepository,
+        private Configuration $configuration,
     ) {
         $this->productGridDataFactory = $productGridDataFactory;
 
@@ -165,9 +167,54 @@ class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
      *
      * @return array
      */
+    /**
+     * The grid reads product_lang with the employee's language, so a shop whose data is written in
+     * another language shows nothing to fall back on and every row ends up as "N/A". Read the missing
+     * names once, in the shop's default language, before that happens.
+     *
+     * Only the rows that came back without a name are looked up, so a shop whose data is complete pays
+     * nothing, and a page that needs it pays one query rather than a join on every row.
+     *
+     * @param array<int, array<string, mixed>> $products
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    protected function fillNamesMissingInTheEmployeeLanguage(array $products, ShopSearchCriteriaInterface $searchCriteria): array
+    {
+        $missingIds = [];
+        foreach ($products as $product) {
+            if (empty($product['name']) && !empty($product['id_product'])) {
+                $missingIds[] = (int) $product['id_product'];
+            }
+        }
+
+        if (empty($missingIds)) {
+            return $products;
+        }
+
+        $defaultLanguageId = $this->configuration->getInt('PS_LANG_DEFAULT');
+        $shopConstraint = $searchCriteria->getShopConstraint();
+        $shopId = null !== $shopConstraint->getShopId() ? $shopConstraint->getShopId()->getValue() : null;
+
+        $names = $this->productRepository->getProductNames($missingIds, $defaultLanguageId, $shopId);
+        if (empty($names)) {
+            return $products;
+        }
+
+        foreach ($products as $i => $product) {
+            $productId = (int) ($product['id_product'] ?? 0);
+            if (empty($product['name']) && !empty($names[$productId])) {
+                $products[$i]['name'] = $names[$productId];
+            }
+        }
+
+        return $products;
+    }
+
     private function applyModification(array $products, ShopSearchCriteriaInterface $searchCriteria): array
     {
         $currency = new Currency($this->defaultCurrencyId);
+        $products = $this->fillNamesMissingInTheEmployeeLanguage($products, $searchCriteria);
         foreach ($products as $i => $product) {
             if (empty($product['name'])) {
                 $products[$i]['name'] = $this->translator->trans('N/A', [], 'Admin.Global');
