@@ -140,6 +140,24 @@ class OrderQueryBuilderTest extends KernelTestCase
     /**
      * @return int[]
      */
+    /**
+     * @dataProvider provideJoinOrderCases
+     */
+    public function testAnUnfilteredPageIsReadFromOrders(array $filters, string $orderBy, bool $expectStraightJoin): void
+    {
+        $sql = $this->queryBuilder->getSearchQueryBuilder($this->createSearchCriteria($filters, $orderBy, 'desc', 50, 0))->getSQL();
+
+        $this->assertSame($expectStraightJoin, str_contains($sql, 'STRAIGHT_JOIN'));
+    }
+
+    public static function provideJoinOrderCases(): iterable
+    {
+        yield 'no filter, newest first' => [[], 'id_order', true];
+        yield 'no filter, by date' => [[], 'date_add', true];
+        yield 'no filter, by customer' => [[], 'customer', false];
+        yield 'country filter' => [['country_name' => 1], 'id_order', false];
+    }
+
     private function fetchOrderIds(SearchCriteriaInterface $criteria): array
     {
         $rows = $this->queryBuilder
