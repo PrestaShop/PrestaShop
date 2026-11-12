@@ -119,7 +119,7 @@
     "mocha": "^11.8.0",
     "mochawesome": "^7.1.4",
     "mysql2": "^3.24.6",
-    "semver": "^7.8.5"
+    "semver": "^7.8.6"
   },
   "devDependencies": {
     "@types/chai": "^5.2.3",
