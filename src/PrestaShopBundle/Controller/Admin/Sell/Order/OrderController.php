@@ -58,9 +58,11 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrd
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
+use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductSearchEmptyPhraseException;
@@ -1118,11 +1120,11 @@ class OrderController extends PrestaShopAdminController
         CurrencyDataProvider $currencyDataProvider,
         FeatureFlagStateCheckerInterface $featureFlagStateChecker,
     ): Response {
-        /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->dispatchQuery(new GetOrderForViewing($orderId, QuerySorting::DESC));
+        /** @var OrderProductsForViewing $previousProductsForViewing */
+        $previousProductsForViewing = $this->dispatchQuery(GetOrderProductsForViewing::all($orderId, QuerySorting::DESC));
 
         $previousProducts = [];
-        foreach ($orderForViewing->getProducts()->getProducts() as $orderProductForViewing) {
+        foreach ($previousProductsForViewing->getProducts() as $orderProductForViewing) {
             $previousProducts[$orderProductForViewing->getOrderDetailId()] = $orderProductForViewing;
         }
 
@@ -1219,8 +1221,8 @@ class OrderController extends PrestaShopAdminController
     public function getProductPricesAction(int $orderId): Response
     {
         try {
-            $orderForViewing = $this->dispatchQuery(new GetOrderForViewing($orderId));
-            $productsForViewing = $orderForViewing->getProducts();
+            /** @var OrderProductsForViewing $productsForViewing */
+            $productsForViewing = $this->dispatchQuery(GetOrderProductsForViewing::all($orderId));
             $productList = $productsForViewing->getProducts();
 
             $result = [];
