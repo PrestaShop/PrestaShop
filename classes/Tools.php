@@ -523,7 +523,8 @@ class ToolsCore
      */
     public static function extractHost($url)
     {
-        $parsed = parse_url($url);
+        // Browsers read a backslash as a slash in http(s) URLs, parse_url() does not.
+        $parsed = parse_url(str_replace('\\', '/', $url));
         if (!is_array($parsed)) {
             return $url;
         }

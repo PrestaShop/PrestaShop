@@ -385,6 +385,9 @@ class ToolsTest extends TestCase
             ['example.com/', ''],
             ['/blah/bleh', ''],
             ['/plop.html', ''],
+            ['http://evil.com\\@example.com/', 'evil.com'],
+            ['https://evil.com\\@example.com/foo', 'evil.com'],
+            ['http:\\\\evil.com/', 'evil.com'],
         ];
     }
 
@@ -397,6 +400,17 @@ class ToolsTest extends TestCase
     public function testExtractUrlDomain(string $url, string $expectedDomain): void
     {
         $this->assertSame($expectedDomain, Tools::extractHost($url));
+    }
+
+    public function testUrlBelongsToShopRejectsBackslashInAuthority(): void
+    {
+        $serverName = $_SERVER['SERVER_NAME'] ?? null;
+        $_SERVER['SERVER_NAME'] = 'example.com';
+
+        $this->assertTrue(Tools::urlBelongsToShop('https://example.com/my-account?foo=a\\b'));
+        $this->assertFalse(Tools::urlBelongsToShop('https://evil.com\\@example.com/'));
+
+        $_SERVER['SERVER_NAME'] = $serverName;
     }
 
     public function providerRoundHelper(): array
