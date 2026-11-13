@@ -106,6 +106,9 @@ class CartCore extends ObjectModel
     protected static $cachePackageList = [];
     protected static $cacheDeliveryOptionList = [];
 
+    /** @var array<int, Order> Orders placed from this cart, by cart ID */
+    private array $ordersKeepingPrices = [];
+
     /**
      * @deprecated Since 9.0 and will be removed in 10.0
      */
@@ -2328,7 +2331,9 @@ class CartCore extends ObjectModel
         $value = $withTaxes ? $amount->getTaxIncluded() : $amount->getTaxExcluded();
 
         // Round it, return it
-        return Tools::ps_round($value, $computePrecision);
+        $order = $this->getOrderKeepingPrices($keepOrderPrices);
+
+        return Tools::ps_round($value, $computePrecision, null !== $order ? (int) $order->round_mode : null);
     }
 
     /**
@@ -2344,11 +2349,10 @@ class CartCore extends ObjectModel
      */
     public function newCalculator($products, $cartRules, $id_carrier = null, $computePrecision = null, bool $keepOrderPrices = false)
     {
-        $orderId = null;
-        if ($keepOrderPrices) {
-            $orderId = Order::getIdByCartId($this->id);
-            $orderId = (int) $orderId ?: null;
-        }
+        $order = $this->getOrderKeepingPrices($keepOrderPrices);
+        $orderId = null !== $order ? (int) $order->id : null;
+        // An existing order keeps the rounding it was placed with
+        $priceRoundMode = null !== $order ? (int) $order->round_mode : null;
         $container = (new ContainerFinder(Context::getContext()))->getContainer();
         $calculator = new Calculator(
             $this,
@@ -2356,6 +2360,7 @@ class CartCore extends ObjectModel
             $computePrecision,
             $orderId,
             $container->get(FeatureFlagStateCheckerInterface::class),
+            $priceRoundMode,
         );
 
         /** @var PriceCalculator $priceCalculator */
@@ -2364,7 +2369,7 @@ class CartCore extends ObjectModel
         // set cart rows (products)
         $useEcotax = $this->configuration->get('PS_USE_ECOTAX');
         $precision = Context::getContext()->getComputingPrecision();
-        $configRoundType = $this->configuration->get('PS_ROUND_TYPE');
+        $configRoundType = null !== $order ? (int) $order->round_type : $this->configuration->get('PS_ROUND_TYPE');
         $roundTypes = [
             Order::ROUND_TOTAL => CartRow::ROUND_MODE_TOTAL,
             Order::ROUND_LINE => CartRow::ROUND_MODE_LINE,
@@ -2388,7 +2393,8 @@ class CartCore extends ObjectModel
                 $useEcotax,
                 $precision,
                 $roundType,
-                $orderId
+                $orderId,
+                $priceRoundMode
             );
             $calculator->addCartRow($cartRow);
         }
@@ -2399,6 +2405,28 @@ class CartCore extends ObjectModel
         }
 
         return $calculator;
+    }
+
+    /**
+     * Order placed from this cart, when its saved prices and rounding must be kept
+     */
+    private function getOrderKeepingPrices(bool $keepOrderPrices): ?Order
+    {
+        if (!$keepOrderPrices) {
+            return null;
+        }
+
+        $cartId = (int) $this->id;
+        if (!isset($this->ordersKeepingPrices[$cartId])) {
+            $orderId = (int) Order::getIdByCartId($cartId);
+            if ($orderId <= 0) {
+                return null;
+            }
+            // Only an existing order is kept: it stays linked to this cart, while a missing one may be created later
+            $this->ordersKeepingPrices[$cartId] = new Order($orderId);
+        }
+
+        return $this->ordersKeepingPrices[$cartId];
     }
 
     /**

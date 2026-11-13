@@ -68,7 +68,7 @@ class OrderDetailUpdater
         DecimalNumber $priceTaxExcluded,
         DecimalNumber $priceTaxIncluded
     ): void {
-        [$roundType, $computingPrecision, $taxAddress] = $this->prepareOrderContext($order);
+        [$roundType, $roundMode, $computingPrecision, $taxAddress] = $this->prepareOrderContext($order);
 
         try {
             $ecotax = new DecimalNumber((string) $orderDetail->ecotax);
@@ -93,6 +93,7 @@ class OrderDetailUpdater
                 $precisePriceTaxExcluded,
                 $precisePriceTaxIncluded,
                 $roundType,
+                $roundMode,
                 $computingPrecision
             );
         } finally {
@@ -117,7 +118,7 @@ class OrderDetailUpdater
         DecimalNumber $priceTaxIncluded,
         int $customizationId = 0
     ): void {
-        [$roundType, $computingPrecision, $taxAddress] = $this->prepareOrderContext($order);
+        [$roundType, $roundMode, $computingPrecision, $taxAddress] = $this->prepareOrderContext($order);
 
         try {
             $this->applyUpdatesForProduct(
@@ -127,6 +128,7 @@ class OrderDetailUpdater
                 $priceTaxExcluded,
                 $priceTaxIncluded,
                 $roundType,
+                $roundMode,
                 $computingPrecision,
                 $taxAddress,
                 $customizationId
@@ -141,7 +143,7 @@ class OrderDetailUpdater
      */
     public function updateOrderDetailsTaxes(Order $order): void
     {
-        [$roundType, $computingPrecision, $taxAddress] = $this->prepareOrderContext($order);
+        [$roundType, $roundMode, $computingPrecision, $taxAddress] = $this->prepareOrderContext($order);
 
         try {
             $orderDetailsData = $order->getProducts();
@@ -160,13 +162,13 @@ class OrderDetailUpdater
                         $unitAmount = $totalAmount = 0;
                         switch ($roundType) {
                             case Order::ROUND_ITEM:
-                                $unitAmount = (float) Tools::ps_round($amount, $computingPrecision);
+                                $unitAmount = (float) Tools::ps_round($amount, $computingPrecision, $roundMode);
                                 $totalAmount = $unitAmount * $orderDetail->product_quantity;
 
                                 break;
                             case Order::ROUND_LINE:
                                 $unitAmount = $amount;
-                                $totalAmount = Tools::ps_round($unitAmount * $orderDetail->product_quantity, $computingPrecision);
+                                $totalAmount = Tools::ps_round($unitAmount * $orderDetail->product_quantity, $computingPrecision, $roundMode);
 
                                 break;
                             case Order::ROUND_TOTAL:
@@ -208,7 +210,7 @@ class OrderDetailUpdater
      */
     public function updateOrderDetailTaxTableOnly(Order $order): void
     {
-        list($roundType, $computingPrecision, $taxAddress) = $this->prepareOrderContext($order);
+        list($roundType, $roundMode, $computingPrecision, $taxAddress) = $this->prepareOrderContext($order);
 
         try {
             $orderDetailsData = $order->getProducts();
@@ -227,12 +229,12 @@ class OrderDetailUpdater
                         $totalAmount = 0;
                         switch ($roundType) {
                             case Order::ROUND_ITEM:
-                                $unitAmount = (float) Tools::ps_round($amount, $computingPrecision);
+                                $unitAmount = (float) Tools::ps_round($amount, $computingPrecision, $roundMode);
                                 $totalAmount = $unitAmount * $orderDetail->product_quantity;
                                 break;
                             case Order::ROUND_LINE:
                                 $unitAmount = $amount;
-                                $totalAmount = Tools::ps_round($unitAmount * $orderDetail->product_quantity, $computingPrecision);
+                                $totalAmount = Tools::ps_round($unitAmount * $orderDetail->product_quantity, $computingPrecision, $roundMode);
                                 break;
                             case Order::ROUND_TOTAL:
                                 $unitAmount = $amount;
@@ -263,7 +265,7 @@ class OrderDetailUpdater
     private function prepareOrderContext(Order $order): array
     {
         $shopConstraint = ShopConstraint::shop((int) $order->id_shop);
-        $roundType = (int) $this->shopConfiguration->get('PS_ROUND_TYPE', null, $shopConstraint);
+        $roundType = (int) $order->round_type;
         $taxAddressType = $this->shopConfiguration->get('PS_TAX_ADDRESS_TYPE', null, $shopConstraint);
         $taxAddress = new Address($order->{$taxAddressType});
         $country = new Country($taxAddress->id_country);
@@ -281,7 +283,7 @@ class OrderDetailUpdater
             ->setShop($shop)
         ;
 
-        return [$roundType, $computingPrecision, $taxAddress];
+        return [$roundType, (int) $order->round_mode, $computingPrecision, $taxAddress];
     }
 
     /**
@@ -289,6 +291,7 @@ class OrderDetailUpdater
      * @param DecimalNumber $priceTaxExcluded
      * @param DecimalNumber $priceTaxIncluded
      * @param int $roundType
+     * @param int $roundMode
      * @param int $computingPrecision
      *
      * @throws OrderException
@@ -298,6 +301,7 @@ class OrderDetailUpdater
         DecimalNumber $priceTaxExcluded,
         DecimalNumber $priceTaxIncluded,
         int $roundType,
+        int $roundMode,
         int $computingPrecision
     ): void {
         $floatPriceTaxExcluded = (float) (string) $priceTaxExcluded;
@@ -312,15 +316,15 @@ class OrderDetailUpdater
 
                 break;
             case Order::ROUND_LINE:
-                $orderDetail->total_price_tax_excl = Tools::ps_round($floatPriceTaxExcluded * $orderDetail->product_quantity, $computingPrecision);
-                $orderDetail->total_price_tax_incl = Tools::ps_round($floatPriceTaxIncluded * $orderDetail->product_quantity, $computingPrecision);
+                $orderDetail->total_price_tax_excl = Tools::ps_round($floatPriceTaxExcluded * $orderDetail->product_quantity, $computingPrecision, $roundMode);
+                $orderDetail->total_price_tax_incl = Tools::ps_round($floatPriceTaxIncluded * $orderDetail->product_quantity, $computingPrecision, $roundMode);
 
                 break;
 
             case Order::ROUND_ITEM:
             default:
-                $orderDetail->product_price = $orderDetail->unit_price_tax_excl = Tools::ps_round($floatPriceTaxExcluded, $computingPrecision);
-                $orderDetail->unit_price_tax_incl = Tools::ps_round($floatPriceTaxIncluded, $computingPrecision);
+                $orderDetail->product_price = $orderDetail->unit_price_tax_excl = Tools::ps_round($floatPriceTaxExcluded, $computingPrecision, $roundMode);
+                $orderDetail->unit_price_tax_incl = Tools::ps_round($floatPriceTaxIncluded, $computingPrecision, $roundMode);
                 $orderDetail->total_price_tax_excl = $orderDetail->unit_price_tax_excl * $orderDetail->product_quantity;
                 $orderDetail->total_price_tax_incl = $orderDetail->unit_price_tax_incl * $orderDetail->product_quantity;
 
@@ -339,6 +343,7 @@ class OrderDetailUpdater
      * @param DecimalNumber $priceTaxExcluded
      * @param DecimalNumber $priceTaxIncluded
      * @param int $roundType
+     * @param int $roundMode
      * @param int $computingPrecision
      * @param Address $taxAddress
      *
@@ -351,6 +356,7 @@ class OrderDetailUpdater
         DecimalNumber $priceTaxExcluded,
         DecimalNumber $priceTaxIncluded,
         int $roundType,
+        int $roundMode,
         int $computingPrecision,
         Address $taxAddress,
         int $customizationId = 0
@@ -385,6 +391,7 @@ class OrderDetailUpdater
                 $precisePriceTaxExcluded,
                 $precisePriceTaxIncluded,
                 $roundType,
+                $roundMode,
                 $computingPrecision
             );
         }

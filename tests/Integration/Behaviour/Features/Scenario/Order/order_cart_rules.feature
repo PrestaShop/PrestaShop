@@ -878,3 +878,50 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 137.800 |
       | total_shipping_tax_excl  | 7.000   |
       | total_shipping_tax_incl  | 7.420   |
+
+  @restore-cart-rules-before-scenario
+  Scenario: Cart rule amounts still add up to the order total discounts after the order is edited
+    Given there is a cart rule "VOUCHER_A" with following properties:
+      | name[en-US]           | Voucher A |
+      | code                  | VOUCHER_A |
+      | discount_amount       | 10        |
+      | discount_currency     | usd       |
+      | discount_includes_tax | true      |
+    And there is a cart rule "VOUCHER_B" with following properties:
+      | name[en-US]           | Voucher B |
+      | code                  | VOUCHER_B |
+      | discount_amount       | 10        |
+      | discount_currency     | usd       |
+      | discount_includes_tax | true      |
+    And I create an empty cart "dummy_cart_two_vouchers" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart_two_vouchers"
+    And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart_two_vouchers"
+    And I use a voucher "VOUCHER_A" on the cart "dummy_cart_two_vouchers"
+    And I use a voucher "VOUCHER_B" on the cart "dummy_cart_two_vouchers"
+    And I add order "bo_order_two_vouchers" with the following details:
+      | cart                | dummy_cart_two_vouchers    |
+      | message             |                            |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting bank wire payment |
+    # Each voucher is 10 / 1.06 = 9.433962 tax excluded, the order total is rounded once: 18.867925 -> 18.87
+    Then order "bo_order_two_vouchers" should have 2 cart rules
+    And order "bo_order_two_vouchers" should have cart rule "Voucher A" with amount "$9.43"
+    And order "bo_order_two_vouchers" should have cart rule "Voucher B" with amount "$9.43"
+    And order "bo_order_two_vouchers" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 18.870 |
+      | total_discounts_tax_incl | 20.000 |
+    And the cart rules of order "bo_order_two_vouchers" should add up to its total discounts
+    When I edit product "Mug The best is yet to come" to order "bo_order_two_vouchers" with following products details:
+      | amount | 3     |
+      | price  | 11.90 |
+    Then order "bo_order_two_vouchers" should have 2 cart rules
+    And order "bo_order_two_vouchers" should have cart rule "Voucher A" with amount "$9.43"
+    And order "bo_order_two_vouchers" should have cart rule "Voucher B" with amount "$9.43"
+    And order "bo_order_two_vouchers" should have following details:
+      | total_products           | 35.700 |
+      | total_products_wt        | 37.840 |
+      | total_discounts_tax_excl | 18.870 |
+      | total_discounts_tax_incl | 20.000 |
+    And the cart rules of order "bo_order_two_vouchers" should add up to its total discounts
