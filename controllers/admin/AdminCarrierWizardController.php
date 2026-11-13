@@ -793,9 +793,7 @@ class AdminCarrierWizardControllerCore extends AdminController
                     $this->changeGroups((int) $new_carrier->id);
 
                     // Copy default carrier
-                    if (Configuration::get('PS_CARRIER_DEFAULT') == $current_carrier->id) {
-                        Configuration::updateValue('PS_CARRIER_DEFAULT', (int) $new_carrier->id);
-                    }
+                    Carrier::reassignDefaultCarrier((int) $current_carrier->id, (int) $new_carrier->id);
 
                     // Call of hooks
                     Hook::exec('actionCarrierUpdate', [
