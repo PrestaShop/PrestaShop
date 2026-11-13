@@ -38,11 +38,17 @@
 									<td width="5%">&nbsp;</td>
 									<td width="80%">
 										{$order_detail.product_name}
+										{if !empty($order_detail.location)}
+											<br /><span class="small">{l s='Stock location: %s' sprintf=[$order_detail.location|escape:'html':'UTF-8'] d='Shop.Pdf' pdf='true'}</span>
+										{/if}
 									</td>
 								</tr>
 							</table>
 						{else}
 							{$order_detail.product_name}
+							{if !empty($order_detail.location)}
+								<br /><span class="small">{l s='Stock location: %s' sprintf=[$order_detail.location|escape:'html':'UTF-8'] d='Shop.Pdf' pdf='true'}</span>
+							{/if}
 						{/if}
 					</td>
 					<td class="product center">
