@@ -95,6 +95,13 @@ class TitleController extends PrestaShopAdminController
     ): Response {
         try {
             $titleForm = $titleFormBuilder->getFormFor((int) $titleId);
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            return $this->redirectToRoute('admin_title_index');
+        }
+
+        try {
             $titleForm->handleRequest($request);
             $result = $titleFormHandler->handleFor((int) $titleId, $titleForm);
             if ($result->isSubmitted() && $result->isValid()) {

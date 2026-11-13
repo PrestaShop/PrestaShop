@@ -167,8 +167,14 @@ class ImageSettingsController extends PrestaShopAdminController
         try {
             /** @var EditableImageType $editableImageType */
             $editableImageType = $this->dispatchQuery(new GetImageTypeForEditing($imageTypeId));
-
             $form = $formBuilder->getFormFor($imageTypeId);
+        } catch (Exception $e) {
+            $this->addFlash('error', $e->getMessage());
+
+            return $this->redirectToRoute('admin_image_settings_index');
+        }
+
+        try {
             $form->handleRequest($request);
 
             $result = $formHandler->handleFor($imageTypeId, $form);

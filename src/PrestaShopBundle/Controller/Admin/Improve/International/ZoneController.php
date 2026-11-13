@@ -144,8 +144,14 @@ class ZoneController extends PrestaShopAdminController
         try {
             /** @var EditableZone $editableZone */
             $editableZone = $this->dispatchQuery(new GetZoneForEditing($zoneId));
-
             $zoneForm = $formBuilder->getFormFor($zoneId);
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            return $this->redirectToRoute('admin_zones_index');
+        }
+
+        try {
             $zoneForm->handleRequest($request);
 
             $result = $formHandler->handleFor($zoneId, $zoneForm);

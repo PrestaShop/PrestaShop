@@ -164,8 +164,14 @@ class CountryController extends PrestaShopAdminController
         try {
             /** @var CountryForEditing $editableCountry */
             $editableCountry = $this->dispatchQuery(new GetCountryForEditing($countryId));
-
             $countryForm = $countryFormBuilder->getFormFor($countryId);
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            return $this->redirectToRoute('admin_countries_index');
+        }
+
+        try {
             $countryForm->handleRequest($request);
             $result = $countryFormHandler->handleFor($countryId, $countryForm);
 

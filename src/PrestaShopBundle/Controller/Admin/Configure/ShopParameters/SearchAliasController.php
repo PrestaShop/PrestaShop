@@ -100,8 +100,14 @@ class SearchAliasController extends PrestaShopAdminController
              * @var AliasForEditing $editableAlias
              */
             $editableAlias = $this->dispatchQuery(new GetAliasesBySearchTermForEditing($searchTerm));
-
             $form = $formBuilder->getFormFor($searchTerm);
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            return $this->redirectToRoute('admin_search_alias_index');
+        }
+
+        try {
             $form->handleRequest($request);
             $result = $formHandler->handleFor($searchTerm, $form);
 

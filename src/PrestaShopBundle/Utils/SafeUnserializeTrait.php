@@ -25,10 +25,6 @@ trait SafeUnserializeTrait
 
         try {
             $token = unserialize($serializedToken);
-        } catch (ErrorException $e) {
-            if (0x37313BC !== $e->getCode()) {
-                return null;
-            }
         } catch (Throwable) {
             return null;
         } finally {
