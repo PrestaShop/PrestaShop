@@ -255,6 +255,47 @@ class BackUrlRedirectResponseListenerTest extends TestCase
         ];
     }
 
+    /**
+     * @dataProvider getRelativeBackUrlsToTest
+     */
+    public function testRelativeBackUrlIsResolvedAgainstAdminFolder(string $backUrl, string $expectedTarget): void
+    {
+        $this->testBackUrlUpdates(
+            Request::create(
+                'http://localhost.org/admin-dev/index.php/sell/customers/4655/edit',
+                'POST',
+                [],
+                [],
+                [],
+                [
+                    'SCRIPT_NAME' => '/admin-dev/index.php',
+                    'SCRIPT_FILENAME' => '/var/www/admin-dev/index.php',
+                ]
+            ),
+            'http://localhost.org/admin-dev/index.php/sell/customers/',
+            $backUrl,
+            $expectedTarget
+        );
+    }
+
+    public function getRelativeBackUrlsToTest(): iterable
+    {
+        yield 'relative legacy url is resolved against the admin folder' => [
+            'index.php?controller=AdminGroups&id_group=5&viewgroup',
+            '/admin-dev/index.php?controller=AdminGroups&id_group=5&viewgroup',
+        ];
+
+        yield 'root relative url is kept' => [
+            '/admin-dev/index.php?controller=AdminGroups&id_group=5&viewgroup',
+            '/admin-dev/index.php?controller=AdminGroups&id_group=5&viewgroup',
+        ];
+
+        yield 'absolute url is kept' => [
+            'http://localhost.org/admin-dev/index.php?controller=AdminGroups&id_group=5&viewgroup',
+            'http://localhost.org/admin-dev/index.php?controller=AdminGroups&id_group=5&viewgroup',
+        ];
+    }
+
     public function testWhenEmployeeIsNotConnected()
     {
         $expectedUrl = 'http://localhost.dev';
