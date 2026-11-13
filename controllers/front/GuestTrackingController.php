@@ -180,4 +180,23 @@ class GuestTrackingControllerCore extends FrontController
     {
         return $this->context->link->getPageLink('guest-tracking');
     }
+
+    /**
+     * Initializes a set of commonly used variables related to the current page, available for use
+     * in the template. @see FrontController::assignGeneralPurposeVariables for more information.
+     *
+     * @return array
+     */
+    public function getTemplateVarPage(): array
+    {
+        $page = parent::getTemplateVarPage();
+
+        // WHY: this page is reached through links that carry a "back" parameter, so it exists under
+        // one URL per page of the shop. The canonical collapses them only once a crawler is allowed
+        // to read it, which is why the robots.txt directives for these pages were dropped in favour
+        // of this - a page excluded by robots.txt can still be indexed from its inbound links.
+        $page['meta']['robots'] = 'noindex';
+
+        return $page;
+    }
 }
