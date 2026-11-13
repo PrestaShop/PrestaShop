@@ -21,6 +21,8 @@ use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageImageUploadingE
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Image\Deleter\NoPictureThumbnailDeleter;
+use PrestaShop\PrestaShop\Core\Image\Exception\ImageException;
 
 /**
  * Encapsulates common legacy behavior for adding/editing language
@@ -40,6 +42,10 @@ abstract class AbstractLanguageHandler extends AbstractObjectModelHandler
         ) {
             return;
         }
+
+        $this->removeNoPictureThumbnails($isoCode, _PS_IMG_DIR_ . 'p/', CopyingNoPictureException::PRODUCT_IMAGE_COPY_ERROR);
+        $this->removeNoPictureThumbnails($isoCode, _PS_IMG_DIR_ . 'c/', CopyingNoPictureException::CATEGORY_IMAGE_COPY_ERROR);
+        $this->removeNoPictureThumbnails($isoCode, _PS_IMG_DIR_ . 'm/', CopyingNoPictureException::BRAND_IMAGE_COPY_ERROR);
 
         if (!ImageManager::resize($temporaryImage, _PS_IMG_DIR_ . 'p/' . $isoCode->getValue() . '.jpg')) {
             throw new CopyingNoPictureException(sprintf('An error occurred while copying "No Picture" image to product directory'), CopyingNoPictureException::PRODUCT_IMAGE_COPY_ERROR);
@@ -75,6 +81,15 @@ abstract class AbstractLanguageHandler extends AbstractObjectModelHandler
 
         unlink($noPictureImagePath);
         unlink($temporaryImage);
+    }
+
+    private function removeNoPictureThumbnails(IsoCode $isoCode, string $directory, int $errorCode): void
+    {
+        try {
+            (new NoPictureThumbnailDeleter())->delete($isoCode->getValue(), $directory);
+        } catch (ImageException $e) {
+            throw new CopyingNoPictureException($e->getMessage(), $errorCode, $e);
+        }
     }
 
     /**
