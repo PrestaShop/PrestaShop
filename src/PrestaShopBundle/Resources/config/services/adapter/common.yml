@@ -3,6 +3,8 @@ services:
     public: true
     autowire: true
 
+  PrestaShop\PrestaShop\Adapter\Combination: ~
+
   PrestaShop\PrestaShop\Adapter\Configuration: ~
 
   prestashop.adapter.legacy.configuration:

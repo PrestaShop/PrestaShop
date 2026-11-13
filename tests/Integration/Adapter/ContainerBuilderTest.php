@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Module\Banner\Repository\FrontRepository;
+use PrestaShop\PrestaShop\Adapter\Combination;
 use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
 use PrestaShopBundle\Exception\ServiceContainerException;
@@ -31,6 +32,13 @@ class ContainerBuilderTest extends TestCase
         $entityManager = $container->get('doctrine.orm.entity_manager');
         $this->assertNotNull($entityManager);
         $this->assertInstanceOf(EntityManagerInterface::class, $entityManager);
+    }
+
+    public function testFrontContainerContainsCombinationAdapter(): void
+    {
+        $container = ContainerBuilder::getContainer('front', true);
+
+        $this->assertInstanceOf(Combination::class, $container->get(Combination::class));
     }
 
     /**

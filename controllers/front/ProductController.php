@@ -3,6 +3,7 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+use PrestaShop\PrestaShop\Adapter\Combination as CombinationAdapter;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\Manufacturer\ManufacturerPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductLazyArray;
@@ -1796,7 +1797,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     /**
      * {@inheritdoc}
      *
-     * Indicates if the provided combination exists and belongs to the product
+     * Indicates if the provided combination belongs to the product and if the combination
+     * and all its attributes are associated with the current shop
      *
      * @param int $productAttributeId
      * @param int $productId
@@ -1805,15 +1807,15 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     protected function isValidCombination(int $productAttributeId, int $productId)
     {
-        if ($productAttributeId > 0 && $productId > 0) {
-            $combination = new Combination($productAttributeId);
-
-            return
-                Validate::isLoadedObject($combination)
-                && $combination->id_product == $productId;
+        if ($productAttributeId <= 0 || $productId <= 0) {
+            return false;
         }
 
-        return false;
+        return $this->get(CombinationAdapter::class)->isCombinationAndAttributesAssociatedToShop(
+            $productAttributeId,
+            $productId,
+            (int) $this->context->shop->id
+        );
     }
 
     /**
