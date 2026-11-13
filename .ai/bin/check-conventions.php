@@ -24,7 +24,8 @@ declare(strict_types=1);
  * Three sections:
  *   1. the .ai/ files to read: the root CONTEXT.md, then each Domain or Component
  *      CONTEXT.md whose "## Layers" table declares a changed path or that a path-scoped
- *      rule of .ai/rules/ names for it (its `paths` frontmatter), and the cross-cutting
+ *      rule of .ai/rules/ names for it (its `paths` frontmatter), the .ai/ files of a module
+ *      such a rule names (modules/ps_apiresources/.ai/CONTEXT.md...), and the cross-cutting
  *      guides the diff calls for. The .ai/ folder is read from the base ref.
  *   2. PR hygiene (root CONTEXT.md, "PR hygiene"), on the diff.
  *   3. Coding standards (root CONTEXT.md, "Coding standards") a script can decide, on the
@@ -337,12 +338,15 @@ function globToRegex(string $glob): string
 }
 
 /**
- * Rule => [regexes, targets], from the `paths` frontmatter of every .ai/rules/*.md. A target is a
- * context the rule's body names (Component/X, Domain/X) or a root guide (MULTISTORE.md...).
+ * Rule => [regexes, targets, external], from the `paths` frontmatter of every .ai/rules/*.md. A
+ * target is a context the rule's body names (Component/X, Domain/X) or a root guide (MULTISTORE.md...).
+ * External files are the `.ai/` files of another root the body names, such as
+ * `modules/ps_apiresources/.ai/CONTEXT.md`: listed as they are, since they live outside the core
+ * history (a composer-installed module, often a symlink to a separate clone).
  *
  * @param array<string, string> $docs
  *
- * @return array<string, array{0: string[], 1: string[]}>
+ * @return array<string, array{0: string[], 1: string[], 2: string[]}>
  */
 function pathRules(array $docs): array
 {
@@ -366,7 +370,8 @@ function pathRules(array $docs): array
                 $targets[$guide] = true;
             }
         }
-        $rules[$path] = [array_map('globToRegex', $globs[1]), array_keys($targets)];
+        preg_match_all('#`([A-Za-z0-9_./-]+/\.ai/[A-Za-z0-9_./-]+\.md)`#', $parts[2], $external);
+        $rules[$path] = [array_map('globToRegex', $globs[1]), array_keys($targets), array_values(array_unique($external[1]))];
     }
 
     return $rules;
@@ -420,7 +425,7 @@ function contextsToRead(array $files, array $docs, array $allAiFiles): array
             }
         }
         // The path-scoped rules of .ai/rules/ declare their own paths, beyond the Layers tables.
-        foreach ($rules as $rule => [$regexes, $targets]) {
+        foreach ($rules as $rule => [$regexes, $targets, $external]) {
             if (!array_filter($regexes, fn (string $regex): bool => (bool) preg_match($regex, $path))) {
                 continue;
             }
@@ -430,6 +435,9 @@ function contextsToRead(array $files, array $docs, array $allAiFiles): array
                 } else {
                     $ruleGuides['.ai/' . $target] = basename($rule) . ' matches ' . $path;
                 }
+            }
+            foreach ($external as $file) {
+                $ruleGuides[$file] ??= basename($rule) . ' matches ' . $path . ' (outside the core repository)';
             }
         }
         foreach (array_keys($matched) as $context) {
