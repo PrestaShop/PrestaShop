@@ -408,12 +408,7 @@ class SpecificPriceCore extends ObjectModel
      */
     final protected static function couldHaveSpecificPrice($idProduct)
     {
-        if (self::$_hasGlobalProductRules === null) {
-            $queryHasGlobalRule = 'SELECT 1 FROM `' . _DB_PREFIX_ . 'specific_price` WHERE id_product = 0';
-            $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($queryHasGlobalRule);
-            self::$_hasGlobalProductRules = !empty($row);
-        }
-        if (self::$_hasGlobalProductRules) {
+        if (self::hasGlobalProductRules()) {
             return true;
         }
 
@@ -424,6 +419,55 @@ class SpecificPriceCore extends ObjectModel
         }
 
         return self::$_couldHaveSpecificPriceCache[$idProduct];
+    }
+
+    /**
+     * Loads in one query whether each of the given products could have a specific price,
+     * for the products couldHaveSpecificPrice() has not resolved yet.
+     *
+     * @param array<int|string> $productIds
+     */
+    public static function prefetchCouldHaveSpecificPrice(array $productIds): void
+    {
+        if (!SpecificPrice::isFeatureActive() || self::hasGlobalProductRules()) {
+            return;
+        }
+
+        $idsToLoad = [];
+        foreach ($productIds as $productId) {
+            $productId = (int) $productId;
+            if ($productId > 0 && !array_key_exists($productId, self::$_couldHaveSpecificPriceCache)) {
+                $idsToLoad[$productId] = $productId;
+            }
+        }
+        // A single product costs couldHaveSpecificPrice() the same one query.
+        if (count($idsToLoad) < 2) {
+            return;
+        }
+
+        $rows = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            'SELECT DISTINCT `id_product` FROM `' . _DB_PREFIX_ . 'specific_price` WHERE `id_product` IN (' . implode(',', $idsToLoad) . ')'
+        );
+        foreach ($idsToLoad as $productId) {
+            self::$_couldHaveSpecificPriceCache[$productId] = false;
+        }
+        foreach ($rows ?: [] as $row) {
+            self::$_couldHaveSpecificPriceCache[(int) $row['id_product']] = true;
+        }
+    }
+
+    /**
+     * Whether the specific_price table holds a rule for every product (id_product = 0).
+     */
+    private static function hasGlobalProductRules(): bool
+    {
+        if (self::$_hasGlobalProductRules === null) {
+            $queryHasGlobalRule = 'SELECT 1 FROM `' . _DB_PREFIX_ . 'specific_price` WHERE id_product = 0';
+            $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($queryHasGlobalRule);
+            self::$_hasGlobalProductRules = !empty($row);
+        }
+
+        return self::$_hasGlobalProductRules;
     }
 
     /**
