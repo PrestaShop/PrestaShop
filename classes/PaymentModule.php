@@ -1345,16 +1345,7 @@ abstract class PaymentModuleCore extends Module
                         null, null, null, null, _PS_MAIL_DIR_, false, (int) $order->id_shop
                     );
                 }
-
-                $values['tax_incl'] = $order->total_products_wt - $total_reduction_value_ti;
-                $values['tax_excl'] = $order->total_products - $total_reduction_value_tex;
-                if (1 == $voucher->free_shipping) {
-                    $values['tax_incl'] += $order->total_shipping_tax_incl;
-                    $values['tax_excl'] += $order->total_shipping_tax_excl;
-                }
             }
-            $total_reduction_value_ti += $values['tax_incl'];
-            $total_reduction_value_tex += $values['tax_excl'];
 
             $order->addCartRule($cartRule->id, $cartRule->name, $values, 0, $cartRule->free_shipping);
 
