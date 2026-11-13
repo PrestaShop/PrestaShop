@@ -21,6 +21,11 @@ class BulkProductException extends ProductException
      */
     protected $bulkExceptions = [];
 
+    /**
+     * @var array<int, mixed>
+     */
+    private array $successfulResults = [];
+
     public function addException(ProductId $productId, ProductException $exception): void
     {
         $this->bulkExceptions[$productId->getValue()] = $exception;
@@ -32,5 +37,21 @@ class BulkProductException extends ProductException
     public function getBulkExceptions(): array
     {
         return $this->bulkExceptions;
+    }
+
+    /**
+     * @param array<int, mixed> $successfulResults
+     */
+    public function setSuccessfulResults(array $successfulResults): void
+    {
+        $this->successfulResults = $successfulResults;
+    }
+
+    /**
+     * @return array<int, mixed>
+     */
+    public function getSuccessfulResults(): array
+    {
+        return $this->successfulResults;
     }
 }

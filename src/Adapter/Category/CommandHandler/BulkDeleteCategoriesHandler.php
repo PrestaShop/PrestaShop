@@ -38,11 +38,21 @@ final class BulkDeleteCategoriesHandler extends AbstractDeleteCategoryHandler im
             }
 
             if ($category->isRootCategoryForAShop()) {
-                throw new CannotDeleteRootCategoryForShopException(sprintf('Shop\'s root category with id %s cannot be deleted.', var_export($categoryId->getValue(), true)));
+                throw new CannotDeleteRootCategoryForShopException(
+                    sprintf('Shop\'s root category with id %s cannot be deleted.', var_export($categoryId->getValue(), true)),
+                    0,
+                    null,
+                    $categoryId
+                );
             }
 
             if (!$category->delete()) {
-                throw new FailedToDeleteCategoryException(sprintf('Failed to delete category with id %s', var_export($categoryId->getValue(), true)));
+                throw new FailedToDeleteCategoryException(
+                    sprintf('Failed to delete category with id %s', var_export($categoryId->getValue(), true)),
+                    0,
+                    null,
+                    $categoryId
+                );
             }
 
             $deletedCategoryIdsByParent[(int) $category->id_parent][] = $categoryId->getValue();
