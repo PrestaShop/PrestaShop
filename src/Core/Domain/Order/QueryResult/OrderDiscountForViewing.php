@@ -34,12 +34,21 @@ class OrderDiscountForViewing
         int $orderCartRuleId,
         string $name,
         DecimalNumber $amountRaw,
-        string $amountFormatted
+        string $amountFormatted,
+        private readonly bool $productRestricted = false,
     ) {
         $this->orderCartRuleId = $orderCartRuleId;
         $this->name = $name;
         $this->amountFormatted = $amountFormatted;
         $this->amountRaw = $amountRaw;
+    }
+
+    /**
+     * True when the cart rule reduces a single product rather than the order
+     */
+    public function isProductRestricted(): bool
+    {
+        return $this->productRestricted;
     }
 
     /**
