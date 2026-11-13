@@ -124,6 +124,7 @@ class AdminImportControllerCore extends AdminController
                     'location' => ['label' => $this->trans('Stock location', [], 'Admin.Catalog.Feature')],
                     'weight' => ['label' => $this->trans('Impact on weight', [], 'Admin.Catalog.Feature')],
                     'default_on' => ['label' => $this->trans('Default (0 = No, 1 = Yes)', [], 'Admin.Advparameters.Feature')],
+                    'active' => ['label' => $this->trans('Active (0/1)', [], 'Admin.Advparameters.Feature')],
                     'available_date' => ['label' => $this->trans('Combination availability date', [], 'Admin.Advparameters.Feature')],
                     'image_position' => [
                         'label' => $this->trans('Choose among product images by position (1,2,3...)', [], 'Admin.Advparameters.Feature'),
@@ -135,6 +136,9 @@ class AdminImportControllerCore extends AdminController
                         'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default store will be used.', [], 'Admin.Advparameters.Help'),
                     ],
                 ];
+                if (!Product::isCombinationStatusEnabled()) {
+                    unset($this->available_fields['active']);
+                }
 
                 self::$default_values = [
                     'reference' => '',
@@ -2530,6 +2534,14 @@ class AdminImportControllerCore extends AdminController
                     }
                 }
             }
+        }
+
+        if (isset($info['active']) && $info['active'] !== '' && $id_product_attribute && !$validateOnly) {
+            $combination = new Combination((int) $id_product_attribute);
+            $combination->active = (bool) $info['active'];
+            $combination->id_shop_list = $id_shop_list;
+            $combination->setFieldsToUpdate(['active' => true]);
+            $combination->update();
         }
 
         $product->checkDefaultAttributes();
