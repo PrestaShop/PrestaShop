@@ -382,6 +382,11 @@
 #header_quick {
   @extend .hidden-xs;
   @extend .hidden-sm;
+
+  #quick-access-container > .dropdown-menu {
+    max-height: calc(100vh - var(--#{$cdk}header-height) - var(--#{$cdk}size-16));
+    overflow-y: auto;
+  }
 }
 
 #ajax_running {

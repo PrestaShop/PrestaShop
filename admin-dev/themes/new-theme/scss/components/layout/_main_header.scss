@@ -162,6 +162,11 @@ $header-text-color: var(--#{$cdk}white) !default;
 
     .quick-accesses {
       height: 100%;
+
+      > .dropdown-menu {
+        max-height: calc(100vh - var(--#{$cdk}header-height) - var(--#{$cdk}size-16));
+        overflow-y: auto;
+      }
     }
 
     #quick_select {
