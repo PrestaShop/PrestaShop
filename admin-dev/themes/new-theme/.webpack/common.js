@@ -169,6 +169,7 @@ module.exports = {
     tax_rules: './js/pages/tax-rules',
     tax_rules_form: './js/pages/tax-rules/form',
     tax_rules_group: './js/pages/tax-rules-group',
+    tax_rules_group_form: './js/pages/tax-rules-group/form',
     theme: './scss/theme.scss',
     themes: './js/pages/themes',
     title: './js/pages/title',
