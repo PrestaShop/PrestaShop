@@ -4183,12 +4183,26 @@ class ProductCore extends ObjectModel
              * it will get us the quantity products in all the packs, if there are some in the cart, not just standard products.
              */
             $cartProduct = $cart->getProductQuantity($idProduct, $idProductAttribute, $idCustomization);
-            if (!empty($cartProduct['deep_quantity']) && !Order::getIdByCartId($cart->id)) {
+            if (!empty($cartProduct['deep_quantity']) && !self::cartHasOrder((int) $cart->id)) {
                 $nbProductInCart = $cartProduct['deep_quantity'];
             }
         }
 
         return $availableQuantity - $nbProductInCart;
+    }
+
+    /**
+     * Cached for the request, unlike Order::getIdByCartId() which must stay fresh for duplicate order checks:
+     * here a stale answer only affects the displayed stock. Order::add() flushes it.
+     */
+    private static function cartHasOrder(int $cartId): bool
+    {
+        $cacheKey = 'Product::cartHasOrder_' . $cartId . '_' . md5(Shop::addSqlRestriction());
+        if (!Cache::isStored($cacheKey)) {
+            Cache::store($cacheKey, (bool) Order::getIdByCartId($cartId));
+        }
+
+        return Cache::retrieve($cacheKey);
     }
 
     /**
