@@ -4184,7 +4184,7 @@ class ProductCore extends ObjectModel
              * it will get us the quantity products in all the packs, if there are some in the cart, not just standard products.
              */
             $cartProduct = $cart->getProductQuantity($idProduct, $idProductAttribute, $idCustomization);
-            if (!empty($cartProduct['deep_quantity']) && !Order::getIdByCartId($cart->id)) {
+            if (!empty($cartProduct['deep_quantity']) && !Order::getIdByCartId((int) $cart->id)) {
                 $nbProductInCart = $cartProduct['deep_quantity'];
             }
         }
