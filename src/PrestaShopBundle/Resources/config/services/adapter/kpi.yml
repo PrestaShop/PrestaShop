@@ -17,6 +17,7 @@ services:
       - '@translator'
       - '@prestashop.adapter.legacy.kpi_configuration'
       - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminStats", true, {"ajax": 1, "action": "getKpi", "kpi": "main_country"})'
+      - "@=service('prestashop.adapter.legacy.context').getContext().employee.id_lang"
 
   prestashop.adapter.kpi.translations:
     class: PrestaShop\PrestaShop\Adapter\Kpi\TranslationsKpi
@@ -61,6 +62,7 @@ services:
       - '@translator'
       - '@prestashop.adapter.legacy.kpi_configuration'
       - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminStats", true, {"ajax": 1, "action": "getKpi", "kpi": "customer_main_gender"})'
+      - "@=service('prestashop.adapter.legacy.context').getContext().employee.id_lang"
 
   prestashop.adapter.kpi.average_customer_age:
     class: 'PrestaShop\PrestaShop\Adapter\Kpi\AverageCustomerAgeKpi'
@@ -68,6 +70,7 @@ services:
       - '@translator'
       - '@prestashop.adapter.legacy.kpi_configuration'
       - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminStats", true, {"ajax": 1, "action": "getKpi", "kpi": "avg_customer_age"})'
+      - "@=service('prestashop.adapter.legacy.context').getContext().employee.id_lang"
 
   prestashop.adapter.kpi.order_per_customer:
     class: 'PrestaShop\PrestaShop\Adapter\Kpi\OrdersPerCustomerKpi'
