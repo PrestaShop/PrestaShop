@@ -32,6 +32,11 @@ final class MainCountryKpi implements KpiInterface
     private $sourceLink;
 
     /**
+     * @var int
+     */
+    private $employeeIdLang;
+
+    /**
      * @param TranslatorInterface $translator
      * @param ConfigurationInterface $configuration
      * @param string $sourceLink a link to refresh KPI
@@ -39,11 +44,13 @@ final class MainCountryKpi implements KpiInterface
     public function __construct(
         TranslatorInterface $translator,
         ConfigurationInterface $configuration,
-        $sourceLink
+        $sourceLink,
+        int $employeeIdLang
     ) {
         $this->translator = $translator;
         $this->configuration = $configuration;
         $this->sourceLink = $sourceLink;
+        $this->employeeIdLang = $employeeIdLang;
     }
 
     /**
@@ -61,12 +68,13 @@ final class MainCountryKpi implements KpiInterface
         $kpi->title = $this->translator->trans('Main Country', [], 'Admin.International.Feature');
         $kpi->subtitle = $this->translator->trans('30 Days', [], 'Admin.Global');
 
-        if (false !== $mainCountry) {
-            $kpi->value = $mainCountry;
+        if (isset($mainCountry[$this->employeeIdLang])) {
+            $kpi->value = $mainCountry[$this->employeeIdLang];
         }
 
         $kpi->source = $this->sourceLink;
-        $kpi->refresh = $this->configuration->get('MAIN_COUNTRY_EXPIRE') < time();
+        $mainCountryExpire = $this->configuration->get('MAIN_COUNTRY_EXPIRE');
+        $kpi->refresh = ($mainCountryExpire[$this->employeeIdLang] ?? false) < time();
 
         return $kpi->generate();
     }
