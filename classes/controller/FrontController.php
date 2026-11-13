@@ -351,10 +351,10 @@ class FrontControllerCore extends Controller
         if (isset($_GET['logout']) || ($this->context->customer->logged && Customer::isBanned($this->context->customer->id))) {
             $this->context->customer->logout();
 
-            Tools::redirect(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null);
+            Tools::redirect($this->getLogoutRedirectUrl(Tools::getDomains()));
         } elseif (isset($_GET['mylogout'])) {
             $this->context->customer->mylogout();
-            Tools::redirect(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null);
+            Tools::redirect($this->getLogoutRedirectUrl(Tools::getDomains()));
         }
 
         /*
@@ -708,6 +708,47 @@ class FrontControllerCore extends Controller
     protected function redirect()
     {
         Tools::redirect($this->redirect_after);
+    }
+
+    /**
+     * Keep only the path and query of a referrer from a configured shop domain.
+     *
+     * @param array $shopDomains Domain information returned by Tools::getDomains()
+     */
+    protected function getLogoutRedirectUrl(array $shopDomains): string
+    {
+        $referrer = $_SERVER['HTTP_REFERER'] ?? '';
+        if (!is_string($referrer)
+            || $referrer === ''
+            || preg_match('/[\x00-\x20\x7f\\\\]|%(?![a-f0-9]{2})/i', $referrer)
+        ) {
+            return $this->context->link->getPageLink('index');
+        }
+
+        $parts = parse_url($referrer);
+        if (!is_array($parts)
+            || empty($parts['host'])
+            || (isset($parts['scheme']) && !in_array(strtolower($parts['scheme']), ['http', 'https'], true))
+        ) {
+            return $this->context->link->getPageLink('index');
+        }
+
+        foreach (array_keys($shopDomains) as $domain) {
+            // Configured domains have no scheme and may include a port; http:// is only used to parse the hostname.
+            $host = parse_url('http://' . $domain, PHP_URL_HOST);
+            if (!is_string($host) || strcasecmp($parts['host'], $host) !== 0) {
+                continue;
+            }
+
+            // An absolute URL avoids Tools::redirect() interpreting a friendly path as a controller name.
+            $shopUrlParts = parse_url($this->context->link->getBaseLink());
+            $shopOrigin = $shopUrlParts['scheme'] . '://' . $shopUrlParts['host']
+                . (isset($shopUrlParts['port']) ? ':' . $shopUrlParts['port'] : '');
+
+            return $shopOrigin . ($parts['path'] ?? '/') . (isset($parts['query']) ? '?' . $parts['query'] : '');
+        }
+
+        return $this->context->link->getPageLink('index');
     }
 
     public function redirectWithNotifications()
