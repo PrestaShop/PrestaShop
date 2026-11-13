@@ -124,3 +124,43 @@ services:
     autowire: true
     tags:
       - 'console.command'
+
+  PrestaShopBundle\Command\InstallModuleCommand:
+    autowire: true
+    tags:
+      - 'console.command'
+
+  PrestaShopBundle\Command\UninstallModuleCommand:
+    autowire: true
+    tags:
+      - 'console.command'
+
+  PrestaShopBundle\Command\EnableModuleCommand:
+    autowire: true
+    tags:
+      - 'console.command'
+
+  PrestaShopBundle\Command\DisableModuleCommand:
+    autowire: true
+    tags:
+      - 'console.command'
+
+  PrestaShopBundle\Command\ResetModuleCommand:
+    autowire: true
+    tags:
+      - 'console.command'
+
+  PrestaShopBundle\Command\UpgradeModuleCommand:
+    autowire: true
+    tags:
+      - 'console.command'
+
+  PrestaShopBundle\Command\DeleteModuleCommand:
+    autowire: true
+    tags:
+      - 'console.command'
+
+  PrestaShopBundle\Command\ConfigureModuleCommand:
+    autowire: true
+    tags:
+      - 'console.command'
