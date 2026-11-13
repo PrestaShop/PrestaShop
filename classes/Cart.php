@@ -970,7 +970,7 @@ class CartCore extends ObjectModel
             $row['ecotax'] = (float) $row['ecotax_attr'];
         }
 
-        $row['stock_quantity'] = (int) $row['quantity'];
+        $row['stock_quantity'] = (int) $row['quantity_available'];
         // for compatibility with 1.2 themes
         $row['quantity'] = $productQuantity;
 
