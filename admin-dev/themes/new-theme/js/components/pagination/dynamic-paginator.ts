@@ -72,12 +72,15 @@ export default class DynamicPaginator {
 
   private totalInPage: number;
 
+  private storageKey: string;
+
   /**
    * @param {String} containerSelector
    * @param {Object} paginationService
    * @param {Object} renderer
    * @param {Number|null} startingPage If provided it will load the provided page data on page load
    * @param {Object|null} selectorsMap If provided it will override css selectors used for all the actions.
+   * @param {String} storageKey If provided the selected limit is persisted in localStorage under this key and restored on load.
    */
   constructor(
     containerSelector: string,
@@ -85,16 +88,19 @@ export default class DynamicPaginator {
     renderer: RendererType,
     startingPage = 0,
     selectorsMap = {},
+    storageKey = '',
   ) {
     this.$paginationContainer = $(containerSelector);
     this.paginationService = paginationService;
     this.renderer = renderer;
     this.selectorsMap = {};
+    this.storageKey = storageKey;
     this.setSelectorsMap(selectorsMap);
     this.pagesCount = 0;
     this.total = 0;
     this.totalInPage = 0;
     this.init();
+    this.restoreLimit();
     this.currentPage = startingPage;
     if (startingPage > 0) {
       this.paginate(startingPage);
@@ -182,9 +188,59 @@ export default class DynamicPaginator {
       'change',
       this.selectorsMap.limitSelect,
       () => {
+        this.persistLimit();
         this.paginate(1);
       },
     );
+  }
+
+  /**
+   * Persists the selected limit so it survives a page reload.
+   *
+   * WHY: this list is paginated client-side and, unlike the server-side grids, has no
+   * cookie-backed limit. Without this the limit select falls back to the server-rendered
+   * default on every reload (issue #43246). No-op unless a storageKey was provided.
+   *
+   * @private
+   */
+  private persistLimit(): void {
+    if (this.storageKey === '') {
+      return;
+    }
+
+    try {
+      localStorage.setItem(this.storageKey, String(this.getLimit()));
+    } catch {
+      // localStorage may be unavailable (private mode, quota); the limit just won't persist
+    }
+  }
+
+  /**
+   * Restores a previously persisted limit into the select before the first fetch.
+   *
+   * @private
+   */
+  private restoreLimit(): void {
+    if (this.storageKey === '') {
+      return;
+    }
+
+    let storedLimit: string | null = null;
+    try {
+      storedLimit = localStorage.getItem(this.storageKey);
+    } catch {
+      return;
+    }
+
+    if (storedLimit === null || !/^\d+$/.test(storedLimit)) {
+      return;
+    }
+
+    const $limitSelect = this.$paginationContainer.find(this.selectorsMap.limitSelect);
+
+    if ($limitSelect.find(`option[value="${storedLimit}"]`).length > 0) {
+      $limitSelect.val(storedLimit);
+    }
   }
 
   /**
