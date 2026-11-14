@@ -104,3 +104,14 @@ Feature: Add product pack in cart
     Then I should have 2 different products in my cart
     Then the remaining available stock for product "product6" should be 0
     Then the remaining available stock for product "product5" should be 0
+
+  Scenario: Check packs in the cart count against the pack stock if configuration is set to STOCK_TYPE_PACK_BOTH
+    Given I have an empty default cart
+    Given specific shop configuration for "pack stock type" is set to decrement both packs and products
+    Given there is a product in the catalog named "product5" with a price of 23.86 and 50 items in stock
+    Given there is a product in the catalog named "product6" with a price of 12.34 and 5 items in stock
+    Given product "product6" is a pack containing 5 items of product "product5"
+    When I add 3 items of product "product6" in my cart
+    Then the remaining available stock for product "product6" should be 2
+    Then I am not allowed to add 3 items of product "product6" in my cart
+    Then my cart should contain 3 units of product "product6", excluding items in pack
