@@ -79,6 +79,11 @@ class ZoneCore extends ObjectModel
     public function delete()
     {
         if (parent::delete()) {
+            // Removed from some shops only: the zone still exists, so do its carriers, countries and states.
+            if ($this->hasMultishopEntries()) {
+                return true;
+            }
+
             // Delete regarding delivery preferences
             $result = Db::getInstance()->delete('carrier_zone', 'id_zone = ' . (int) $this->id);
             $result = $result && Db::getInstance()->delete('delivery', 'id_zone = ' . (int) $this->id);
