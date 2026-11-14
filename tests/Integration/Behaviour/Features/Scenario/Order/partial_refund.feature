@@ -860,3 +860,33 @@ Feature: Refund Order from Back Office (BO)
       | total_refunded_tax_excl     | 11.9   |
       | total_refunded_tax_incl     | 12.610000 |
     And there is 1 more "Mug The best is yet to come" in stock
+
+  @order-refund
+  @order-partial-refund
+  Scenario: Partial refund of shipping keeps the tax rate the order was charged
+    Given I add new tax "us-shipping-tax-10" with following properties:
+      | name       | US shipping tax (10%) |
+      | rate       | 10                    |
+      | is_enabled | true                  |
+    And I add the tax rule group "us-shipping-tax-group" for the tax "us-shipping-tax-10" with the following conditions:
+      | name    | US shipping tax (10%) |
+      | country | US                    |
+    And a carrier "default_carrier" with name "My carrier" exists
+    And I set tax rule "us-shipping-tax-group" for carrier "default_carrier" I get a new carrier referenced as "default_carrier"
+    And I select carrier "default_carrier" for cart "dummy_cart"
+    And I add order "bo_order_refund" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Processing in progress     |
+    And I edit tax "us-shipping-tax-10" with following properties:
+      | rate | 20 |
+    When I issue a partial refund on "bo_order_refund" without restock with credit slip without voucher on following products:
+      | product_name                | quantity | amount |
+      | Mug Today is a good day     | 1        | 8      |
+      | shipping_refund             |          | 5      |
+    Then "bo_order_refund" has 1 credit slips
+    And "bo_order_refund" last credit slip is:
+      | shipping_cost_amount    | 5.5 |
+      | total_shipping_tax_excl | 5.0 |
+      | total_shipping_tax_incl | 5.5 |
