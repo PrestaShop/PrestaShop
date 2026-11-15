@@ -9,21 +9,21 @@ declare(strict_types=1);
 namespace Tests\Unit\PrestaShopBundle\EventSubscriber;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Mutation\BackOfficeMutationLogger;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
-use PrestaShopBundle\EventSubscriber\AdminActivityScopeSubscriber;
-use PrestaShopBundle\Service\Log\AdminActivityScope;
+use PrestaShopBundle\EventSubscriber\BackOfficeMutationScopeSubscriber;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-final class AdminActivityScopeSubscriberTest extends TestCase
+final class BackOfficeMutationScopeSubscriberTest extends TestCase
 {
     public function testSubscribedEvents(): void
     {
         self::assertSame(
             [KernelEvents::CONTROLLER => 'onKernelController'],
-            AdminActivityScopeSubscriber::getSubscribedEvents()
+            BackOfficeMutationScopeSubscriber::getSubscribedEvents()
         );
     }
 
@@ -36,7 +36,7 @@ final class AdminActivityScopeSubscriberTest extends TestCase
             }
         };
 
-        $subscriber = new AdminActivityScopeSubscriber();
+        $subscriber = new BackOfficeMutationScopeSubscriber();
         $subscriber->onKernelController(
             $this->createControllerEvent(
                 [$controller, 'testAction'],
@@ -46,7 +46,7 @@ final class AdminActivityScopeSubscriberTest extends TestCase
         );
 
         self::assertTrue(
-            $request->attributes->get(AdminActivityScope::REQUEST_ATTRIBUTE)
+            $request->attributes->get(BackOfficeMutationLogger::REQUEST_ATTRIBUTE)
         );
     }
 
@@ -59,7 +59,7 @@ final class AdminActivityScopeSubscriberTest extends TestCase
             }
         };
 
-        $subscriber = new AdminActivityScopeSubscriber();
+        $subscriber = new BackOfficeMutationScopeSubscriber();
         $subscriber->onKernelController(
             $this->createControllerEvent(
                 [$controller, 'testAction'],
@@ -69,7 +69,7 @@ final class AdminActivityScopeSubscriberTest extends TestCase
         );
 
         self::assertFalse(
-            $request->attributes->has(AdminActivityScope::REQUEST_ATTRIBUTE)
+            $request->attributes->has(BackOfficeMutationLogger::REQUEST_ATTRIBUTE)
         );
     }
 
@@ -82,7 +82,7 @@ final class AdminActivityScopeSubscriberTest extends TestCase
             }
         };
 
-        $subscriber = new AdminActivityScopeSubscriber();
+        $subscriber = new BackOfficeMutationScopeSubscriber();
         $subscriber->onKernelController(
             $this->createControllerEvent(
                 [$controller, 'testAction'],
@@ -92,8 +92,22 @@ final class AdminActivityScopeSubscriberTest extends TestCase
         );
 
         self::assertFalse(
-            $request->attributes->has(AdminActivityScope::REQUEST_ATTRIBUTE)
+            $request->attributes->has(BackOfficeMutationLogger::REQUEST_ATTRIBUTE)
         );
+    }
+
+    public function testInvokableAdminControllerIsMarkedForMutationLogging(): void
+    {
+        $request = new Request();
+        $controller = new class() extends PrestaShopAdminController {
+            public function __invoke(): void
+            {
+            }
+        };
+        (new BackOfficeMutationScopeSubscriber())->onKernelController(
+            $this->createControllerEvent($controller, $request, HttpKernelInterface::MAIN_REQUEST)
+        );
+        self::assertTrue($request->attributes->get(BackOfficeMutationLogger::REQUEST_ATTRIBUTE));
     }
 
     private function createControllerEvent(

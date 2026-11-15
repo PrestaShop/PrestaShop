@@ -6,27 +6,52 @@
 
 namespace Tests\Unit\Core\Form\IdentifiableObject\Handler;
 
+use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\ActivityLog\AdminActivity;
-use PrestaShop\PrestaShop\Core\ActivityLog\AdminActivityLoggerInterface;
-use PrestaShop\PrestaShop\Core\ActivityLog\AdminActivityType;
+use PrestaShop\PrestaShop\Core\Context\Employee;
+use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertiesFormDataPersister;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerFactory;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Mutation\BackOfficeMutationLogger;
+use PrestaShop\PrestaShop\Core\Mutation\MutationTracker;
+use PrestaShopBundle\Entity\MutationAction;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\FormConfigInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\ResolvedFormTypeInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class FormHandlerFactoryActivityLogTest extends TestCase
+class FormHandlerFactoryMutationLogTest extends TestCase
 {
-    public function testFactoryForwardsActivityLogObjectTypeToCreatedHandler(): void
+    public function testFactoryForwardsMutationTableToCreatedHandler(): void
     {
         $hookDispatcher = $this->createMock(HookDispatcherInterface::class);
         $translator = $this->createMock(TranslatorInterface::class);
         $persister = $this->createMock(ExtraPropertiesFormDataPersister::class);
-        $activityLogger = $this->createMock(AdminActivityLoggerInterface::class);
+        $tracker = $this->createMock(MutationTracker::class);
+        $legacyLogger = $this->createMock(LoggerInterface::class);
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager->method('isOpen')->willReturn(true);
+        $requestStack = new RequestStack();
+        $request = new Request();
+        $request->attributes->set(BackOfficeMutationLogger::REQUEST_ATTRIBUTE, true);
+        $requestStack->push($request);
+        $translator->method('trans')->willReturnArgument(0);
+        $technicalLogger = $this->createMock(LoggerInterface::class);
+        $technicalLogger->expects($this->never())->method('error');
+        $mutationLogger = new BackOfficeMutationLogger(
+            $tracker,
+            new EmployeeContext($this->createMock(Employee::class), []),
+            $requestStack,
+            $translator,
+            $legacyLogger,
+            $technicalLogger,
+            $entityManager,
+        );
         $dataHandler = $this->createMock(FormDataHandlerInterface::class);
 
         $dataHandler
@@ -35,27 +60,19 @@ class FormHandlerFactoryActivityLogTest extends TestCase
             ->with(['name' => 'Test'])
             ->willReturn(42);
 
-        $activityLogger
-            ->expects($this->once())
-            ->method('log')
-            ->with($this->callback(function (AdminActivity $activity): bool {
-                $this->assertSame(AdminActivityType::CREATE, $activity->getType());
-                $this->assertSame('Product', $activity->getObjectType());
-                $this->assertSame(42, $activity->getObjectId());
-                $this->assertSame(42, $activity->getLogObjectId());
-
-                return true;
-            }));
+        $legacyLogger->expects($this->once())->method('info');
+        $tracker->expects($this->once())->method('addMutationForEmployee')
+            ->with('product', 42, MutationAction::CREATE, '');
 
         $factory = new FormHandlerFactory(
             $hookDispatcher,
             $translator,
             false,
             $persister,
-            $activityLogger
+            $mutationLogger
         );
 
-        $handler = $factory->create($dataHandler, 'Product');
+        $handler = $factory->create($dataHandler, 'product');
         $handler->handle($this->createValidForm());
     }
 

@@ -6,3 +6,8 @@ services:
 
   PrestaShop\PrestaShop\Core\Mutation\:
     resource: "%kernel.project_dir%/src/Core/Mutation/*"
+
+  PrestaShop\PrestaShop\Core\Mutation\BackOfficeMutationLogger:
+    arguments:
+      $legacyLogger: '@prestashop.adapter.legacy.logger'
+      $logger: '@logger'

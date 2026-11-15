@@ -16,8 +16,6 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Url\ProductPreviewProvider;
-use PrestaShop\PrestaShop\Core\ActivityLog\AdminActivity;
-use PrestaShop\PrestaShop\Core\ActivityLog\AdminActivityType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkUpdateProductStatusCommand;
@@ -56,6 +54,7 @@ use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Controller\BulkActionsTrait;
 use PrestaShopBundle\Entity\AdminFilter;
+use PrestaShopBundle\Entity\MutationAction;
 use PrestaShopBundle\Entity\ProductDownload;
 use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
 use PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoryFilterType;
@@ -542,12 +541,7 @@ class ProductController extends PrestaShopAdminController
 
             $this->dispatchCommand(new DeleteProductCommand($productId, $shopConstraint));
 
-            $this->logAdminActivity(new AdminActivity(
-                AdminActivityType::DELETE,
-                'Product',
-                $productId,
-                $productId
-            ));
+            $this->recordMutation('product', $productId, MutationAction::DELETE);
 
             $this->addFlash(
                 'success',
@@ -577,12 +571,7 @@ class ProductController extends PrestaShopAdminController
 
             $this->dispatchCommand(new DeleteProductCommand($productId, $shopConstraint));
 
-            $this->logAdminActivity(new AdminActivity(
-                AdminActivityType::DELETE,
-                'Product',
-                $productId,
-                $productId
-            ));
+            $this->recordMutation('product', $productId, MutationAction::DELETE);
 
             $this->addFlash(
                 'success',
@@ -612,12 +601,7 @@ class ProductController extends PrestaShopAdminController
 
             $this->dispatchCommand(new DeleteProductCommand($productId, $shopConstraint));
 
-            $this->logAdminActivity(new AdminActivity(
-                AdminActivityType::DELETE,
-                'Product',
-                $productId,
-                $productId
-            ));
+            $this->recordMutation('product', $productId, MutationAction::DELETE);
 
             $this->addFlash(
                 'success',
@@ -1300,12 +1284,12 @@ class ProductController extends PrestaShopAdminController
                     $shopConstraint
                 )
             );
-            $this->logBulkDuplicateActivities($duplicatedProductIds);
+            $this->recordBulkDuplicateMutations($duplicatedProductIds);
         } catch (Exception $e) {
             if ($e instanceof BulkProductException) {
                 /** @var array<int, ProductId> $successfulResults */
                 $successfulResults = $e->getSuccessfulResults();
-                $this->logBulkDuplicateActivities($successfulResults);
+                $this->recordBulkDuplicateMutations($successfulResults);
 
                 return $this->jsonBulkErrors($e);
             } else {
@@ -1332,13 +1316,7 @@ class ProductController extends PrestaShopAdminController
                 $productId,
                 $shopConstraint
             ));
-            $this->logAdminActivity(new AdminActivity(
-                AdminActivityType::DUPLICATE,
-                'Product',
-                $productId,
-                0,
-                $newProductId->getValue()
-            ));
+            $this->recordMutation('product', $newProductId->getValue(), MutationAction::CREATE, ['source_id' => $productId]);
             $this->addFlash(
                 'success',
                 $this->trans('Successful duplication', [], 'Admin.Notifications.Success')
@@ -1366,14 +1344,14 @@ class ProductController extends PrestaShopAdminController
 
         try {
             $this->dispatchCommand(new BulkDeleteProductCommand($productIds, $shopConstraint));
-            $this->logBulkDeleteActivities($productIds);
+            $this->recordBulkDeleteMutations($productIds);
             $this->addFlash(
                 'success',
                 $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             if ($e instanceof BulkProductException) {
-                $this->logBulkDeleteActivities(array_diff(
+                $this->recordBulkDeleteMutations(array_diff(
                     $productIds,
                     array_keys($e->getBulkExceptions())
                 ));
@@ -1390,40 +1368,24 @@ class ProductController extends PrestaShopAdminController
     /**
      * @param int[] $productIds
      */
-    private function logBulkDeleteActivities(array $productIds): void
+    private function recordBulkDeleteMutations(array $productIds): void
     {
-        $activities = [];
         foreach ($productIds as $productId) {
-            $activities[] = new AdminActivity(
-                AdminActivityType::DELETE,
-                'Product',
-                $productId,
-                $productId,
-                bulk: true
-            );
+            $this->recordMutation('product', $productId, MutationAction::DELETE, ['bulk' => true]);
         }
-
-        $this->logAdminActivities($activities);
     }
 
     /**
      * @param array<int, ProductId> $duplicatedProductIds
      */
-    private function logBulkDuplicateActivities(array $duplicatedProductIds): void
+    private function recordBulkDuplicateMutations(array $duplicatedProductIds): void
     {
-        $activities = [];
         foreach ($duplicatedProductIds as $sourceProductId => $newProductId) {
-            $activities[] = new AdminActivity(
-                AdminActivityType::DUPLICATE,
-                'Product',
-                $sourceProductId,
-                0,
-                $newProductId->getValue(),
-                bulk: true
-            );
+            $this->recordMutation('product', $newProductId->getValue(), MutationAction::CREATE, [
+                'source_id' => $sourceProductId,
+                'bulk' => true,
+            ]);
         }
-
-        $this->logAdminActivities($activities);
     }
 
     /**
@@ -1469,7 +1431,7 @@ class ProductController extends PrestaShopAdminController
             $command = new UpdateProductCommand($productId, $shopConstraint);
             $command->setActive($isEnabled);
             $this->dispatchCommand($command);
-            $this->logProductStatusActivity($productId, $isEnabled);
+            $this->recordProductStatusMutation($productId, $isEnabled);
             $this->addFlash('success', $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success'));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -1493,7 +1455,7 @@ class ProductController extends PrestaShopAdminController
             $command = new UpdateProductCommand($productId, $shopConstraint);
             $command->setActive($newStatus);
             $this->dispatchCommand($command);
-            $this->logProductStatusActivity($productId, $newStatus);
+            $this->recordProductStatusMutation($productId, $newStatus);
         } catch (Exception $e) {
             return $this->json([
                 'status' => false,
@@ -1528,10 +1490,10 @@ class ProductController extends PrestaShopAdminController
                     $shopConstraint
                 )
             );
-            $this->logBulkProductStatusActivities($productIds, $newStatus);
+            $this->recordBulkProductStatusMutations($productIds, $newStatus);
         } catch (Exception $e) {
             if ($e instanceof BulkProductException) {
-                $this->logBulkProductStatusActivities(array_diff(
+                $this->recordBulkProductStatusMutations(array_diff(
                     $productIds,
                     array_keys($e->getBulkExceptions())
                 ), $newStatus);
@@ -1545,34 +1507,19 @@ class ProductController extends PrestaShopAdminController
         return $this->json(['success' => true]);
     }
 
-    private function logProductStatusActivity(int $productId, bool $isEnabled, bool $bulk = false): void
+    private function recordProductStatusMutation(int $productId, bool $isEnabled): void
     {
-        $this->logAdminActivity(new AdminActivity(
-            $isEnabled ? AdminActivityType::ACTIVATE : AdminActivityType::DEACTIVATE,
-            'Product',
-            $productId,
-            $productId,
-            bulk: $bulk
-        ));
+        $this->recordMutation('product', $productId, MutationAction::UPDATE, ['active' => $isEnabled]);
     }
 
     /**
      * @param int[] $productIds
      */
-    private function logBulkProductStatusActivities(array $productIds, bool $isEnabled): void
+    private function recordBulkProductStatusMutations(array $productIds, bool $isEnabled): void
     {
-        $activities = [];
         foreach ($productIds as $productId) {
-            $activities[] = new AdminActivity(
-                $isEnabled ? AdminActivityType::ACTIVATE : AdminActivityType::DEACTIVATE,
-                'Product',
-                $productId,
-                $productId,
-                bulk: true
-            );
+            $this->recordMutation('product', $productId, MutationAction::UPDATE, ['active' => $isEnabled, 'bulk' => true]);
         }
-
-        $this->logAdminActivities($activities);
     }
 
     /**

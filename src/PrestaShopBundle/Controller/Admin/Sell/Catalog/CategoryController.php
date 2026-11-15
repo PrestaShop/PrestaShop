@@ -11,8 +11,6 @@ use Exception;
 use ImageManager;
 use PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider;
 use PrestaShop\PrestaShop\Adapter\Category\CategoryViewDataProvider;
-use PrestaShop\PrestaShop\Core\ActivityLog\AdminActivity;
-use PrestaShop\PrestaShop\Core\ActivityLog\AdminActivityType;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDisableCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkEnableCategoriesCommand;
@@ -48,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
+use PrestaShopBundle\Entity\MutationAction;
 use PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
@@ -567,14 +566,14 @@ class CategoryController extends PrestaShopAdminController
                 );
 
                 $this->dispatchCommand($command);
-                $this->logBulkCategoryDeleteActivities($categoryIds);
+                $this->recordBulkCategoryDeleteMutations($categoryIds);
 
                 $this->addFlash(
                     'success',
                     $this->trans('The selection has been successfully deleted.', [], 'Admin.Notifications.Success')
                 );
             } catch (CategoryException $e) {
-                $this->logBulkCategoryDeleteActivities(
+                $this->recordBulkCategoryDeleteMutations(
                     $this->getSuccessfulCategoryIdsBeforeFailure($categoryIds, $e)
                 );
                 $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -611,12 +610,7 @@ class CategoryController extends PrestaShopAdminController
                 );
 
                 $this->dispatchCommand($command);
-                $this->logAdminActivity(new AdminActivity(
-                    AdminActivityType::DELETE,
-                    'Category',
-                    $categoryId,
-                    $categoryId
-                ));
+                $this->recordMutation('category', $categoryId, MutationAction::DELETE);
 
                 $this->addFlash('success', $this->trans('Successful deletion', [], 'Admin.Notifications.Success'));
             } catch (CategoryException $e) {
@@ -815,20 +809,11 @@ class CategoryController extends PrestaShopAdminController
     /**
      * @param int[] $categoryIds
      */
-    private function logBulkCategoryDeleteActivities(array $categoryIds): void
+    private function recordBulkCategoryDeleteMutations(array $categoryIds): void
     {
-        $activities = [];
         foreach ($categoryIds as $categoryId) {
-            $activities[] = new AdminActivity(
-                AdminActivityType::DELETE,
-                'Category',
-                $categoryId,
-                $categoryId,
-                bulk: true
-            );
+            $this->recordMutation('category', $categoryId, MutationAction::DELETE, ['bulk' => true]);
         }
-
-        $this->logAdminActivities($activities);
     }
 
     /**

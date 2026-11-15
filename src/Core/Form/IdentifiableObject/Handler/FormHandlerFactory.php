@@ -6,10 +6,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler;
 
-use PrestaShop\PrestaShop\Core\ActivityLog\AdminActivityLoggerInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertiesFormDataPersister;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Mutation\BackOfficeMutationLogger;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -38,9 +38,9 @@ final class FormHandlerFactory implements FormHandlerFactoryInterface
     private $extraPropertiesFormDataPersister;
 
     /**
-     * @var AdminActivityLoggerInterface|null
+     * @var BackOfficeMutationLogger|null
      */
-    private $adminActivityLogger;
+    private $mutationLogger;
 
     /**
      * @param HookDispatcherInterface $hookDispatcher
@@ -53,13 +53,13 @@ final class FormHandlerFactory implements FormHandlerFactoryInterface
         TranslatorInterface $translator,
         $isDemoModeEnabled,
         ExtraPropertiesFormDataPersister $extraPropertiesFormDataPersister,
-        ?AdminActivityLoggerInterface $adminActivityLogger = null
+        ?BackOfficeMutationLogger $mutationLogger = null
     ) {
         $this->hookDispatcher = $hookDispatcher;
         $this->translator = $translator;
         $this->isDemoModeEnabled = $isDemoModeEnabled;
         $this->extraPropertiesFormDataPersister = $extraPropertiesFormDataPersister;
-        $this->adminActivityLogger = $adminActivityLogger;
+        $this->mutationLogger = $mutationLogger;
     }
 
     /**
@@ -67,7 +67,7 @@ final class FormHandlerFactory implements FormHandlerFactoryInterface
      */
     public function create(
         FormDataHandlerInterface $dataHandler,
-        ?string $activityLogObjectType = null
+        ?string $mutationTable = null
     ) {
         return new FormHandler(
             $dataHandler,
@@ -75,8 +75,8 @@ final class FormHandlerFactory implements FormHandlerFactoryInterface
             $this->translator,
             $this->isDemoModeEnabled,
             $this->extraPropertiesFormDataPersister,
-            $this->adminActivityLogger,
-            $activityLogObjectType
+            $this->mutationLogger,
+            $mutationTable
         );
     }
 }

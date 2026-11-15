@@ -6,13 +6,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler;
 
-use PrestaShop\PrestaShop\Core\ActivityLog\AdminActivity;
-use PrestaShop\PrestaShop\Core\ActivityLog\AdminActivityLoggerInterface;
-use PrestaShop\PrestaShop\Core\ActivityLog\AdminActivityType;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\ValueObject\CreatedApiClient;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertiesFormDataPersister;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Mutation\BackOfficeMutationLogger;
+use PrestaShopBundle\Entity\MutationAction;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
@@ -49,14 +48,14 @@ final class FormHandler implements FormHandlerInterface
     private $extraPropertiesFormDataPersister;
 
     /**
-     * @var AdminActivityLoggerInterface|null
+     * @var BackOfficeMutationLogger|null
      */
-    private $adminActivityLogger;
+    private $mutationLogger;
 
     /**
      * @var string|null
      */
-    private $activityLogObjectType;
+    private $mutationTable;
 
     /**
      * @param FormDataHandlerInterface $dataHandler
@@ -64,8 +63,8 @@ final class FormHandler implements FormHandlerInterface
      * @param TranslatorInterface $translator
      * @param bool $isDemoModeEnabled
      * @param ExtraPropertiesFormDataPersister $extraPropertiesFormDataPersister
-     * @param AdminActivityLoggerInterface|null $adminActivityLogger
-     * @param string|null $activityLogObjectType
+     * @param BackOfficeMutationLogger|null $mutationLogger
+     * @param string|null $mutationTable
      */
     public function __construct(
         FormDataHandlerInterface $dataHandler,
@@ -73,16 +72,16 @@ final class FormHandler implements FormHandlerInterface
         TranslatorInterface $translator,
         $isDemoModeEnabled,
         ExtraPropertiesFormDataPersister $extraPropertiesFormDataPersister,
-        ?AdminActivityLoggerInterface $adminActivityLogger = null,
-        ?string $activityLogObjectType = null
+        ?BackOfficeMutationLogger $mutationLogger = null,
+        ?string $mutationTable = null
     ) {
         $this->dataHandler = $dataHandler;
         $this->hookDispatcher = $hookDispatcher;
         $this->translator = $translator;
         $this->isDemoModeEnabled = $isDemoModeEnabled;
         $this->extraPropertiesFormDataPersister = $extraPropertiesFormDataPersister;
-        $this->adminActivityLogger = $adminActivityLogger;
-        $this->activityLogObjectType = $activityLogObjectType;
+        $this->mutationLogger = $mutationLogger;
+        $this->mutationTable = $mutationTable;
     }
 
     /**
@@ -166,8 +165,8 @@ final class FormHandler implements FormHandlerInterface
             'form_data' => &$data,
         ]);
 
-        $this->logAdminActivity(
-            AdminActivityType::UPDATE,
+        $this->recordMutation(
+            MutationAction::UPDATE,
             $id
         );
 
@@ -205,9 +204,9 @@ final class FormHandler implements FormHandlerInterface
             'form_data' => &$data,
         ]);
 
-        $this->logAdminActivity(
-            AdminActivityType::CREATE,
-            (int) $id
+        $this->recordMutation(
+            MutationAction::CREATE,
+            $entityId
         );
 
         return FormHandlerResult::createWithId($id);
@@ -254,21 +253,14 @@ final class FormHandler implements FormHandlerInterface
         return null;
     }
 
-    private function logAdminActivity(
-        AdminActivityType $operationType,
+    private function recordMutation(
+        MutationAction $operationType,
         ?int $objectId
     ): void {
-        if (null === $this->adminActivityLogger || null === $this->activityLogObjectType || null === $objectId) {
+        if (null === $this->mutationLogger || null === $this->mutationTable || null === $objectId) {
             return;
         }
 
-        $this->adminActivityLogger->log(
-            new AdminActivity(
-                $operationType,
-                $this->activityLogObjectType,
-                $objectId,
-                $objectId
-            )
-        );
+        $this->mutationLogger->record($this->mutationTable, $objectId, $operationType);
     }
 }

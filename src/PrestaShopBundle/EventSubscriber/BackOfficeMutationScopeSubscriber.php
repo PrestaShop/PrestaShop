@@ -8,16 +8,16 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\EventSubscriber;
 
+use PrestaShop\PrestaShop\Core\Mutation\BackOfficeMutationLogger;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
-use PrestaShopBundle\Service\Log\AdminActivityScope;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Marks Back Office requests so activity logging can be enabled only for BO operations.
+ * Marks Back Office requests so mutation logging can be enabled only for BO operations.
  */
-class AdminActivityScopeSubscriber implements EventSubscriberInterface
+class BackOfficeMutationScopeSubscriber implements EventSubscriberInterface
 {
     public static function getSubscribedEvents(): array
     {
@@ -35,13 +35,13 @@ class AdminActivityScopeSubscriber implements EventSubscriberInterface
         $controller = $event->getController();
         $controllerInstance = is_array($controller) ? $controller[0] : $controller;
 
-        // Activity logging is enabled only for main requests handled by a Back Office controller.
+        // Mutation logging is enabled only for main requests handled by a Back Office controller.
         if (!$controllerInstance instanceof PrestaShopAdminController) {
             return;
         }
 
         $event->getRequest()->attributes->set(
-            AdminActivityScope::REQUEST_ATTRIBUTE,
+            BackOfficeMutationLogger::REQUEST_ATTRIBUTE,
             true
         );
     }

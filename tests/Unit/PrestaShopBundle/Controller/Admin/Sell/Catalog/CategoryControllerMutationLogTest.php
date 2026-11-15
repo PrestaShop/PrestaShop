@@ -8,17 +8,20 @@ namespace Tests\Unit\PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\ActivityLog\AdminActivity;
-use PrestaShop\PrestaShop\Core\ActivityLog\AdminActivityType;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotDeleteRootCategoryForShopException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\FailedToDeleteCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShopBundle\Controller\Admin\Sell\Catalog\CategoryController;
+use PrestaShopBundle\Entity\MutationAction;
 use ReflectionMethod;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 
-class CategoryControllerActivityLogTest extends TestCase
+class CategoryControllerMutationLogTest extends TestCase
 {
     public function testBulkDeleteBuildsOneActivityPerCategory(): void
     {
@@ -26,11 +29,11 @@ class CategoryControllerActivityLogTest extends TestCase
 
         $this->invokePrivateMethod(
             $controller,
-            'logBulkCategoryDeleteActivities',
+            'recordBulkCategoryDeleteMutations',
             [[10, 20]]
         );
 
-        $activities = $controller->getLoggedActivities();
+        $activities = $controller->getLoggedMutations();
 
         $this->assertCount(2, $activities);
         $this->assertActivity($activities[0], 10);
@@ -114,50 +117,92 @@ class CategoryControllerActivityLogTest extends TestCase
         ];
     }
 
+    #[DataProvider('deleteFlows')]
+    public function testDeleteFlowRecordsOnlySuccessfulCategories(bool $bulk, ?int $failedId, array $successfulIds): void
+    {
+        $form = $this->createMock(FormInterface::class);
+        $form->method('handleRequest')->willReturnSelf();
+        $form->method('isSubmitted')->willReturn(true);
+        $form->method('getData')->willReturn([
+            'categories_to_delete_parent' => 2,
+            'categories_to_delete' => $bulk ? [10, 20, 30, 40] : [10],
+            'delete_mode' => 'associate_only',
+        ]);
+        $configuration = $this->createMock(ConfigurationInterface::class);
+        $configuration->method('get')->willReturn(2);
+        $controller = $this->getMockBuilder(CategoryController::class)->onlyMethods([
+            'createForm', 'getConfiguration', 'dispatchCommand', 'recordMutation',
+            'trans', 'addFlash', 'redirectToRoute', 'getErrorMessageForException',
+        ])->getMock();
+        $controller->method('createForm')->willReturn($form);
+        $controller->method('getConfiguration')->willReturn($configuration);
+        $controller->method('trans')->willReturnArgument(0);
+        $controller->method('redirectToRoute')->willReturn(new RedirectResponse('/categories'));
+        $controller->method('getErrorMessageForException')->willReturn('Delete failed');
+        if (null !== $failedId) {
+            $exception = 0 === $failedId
+                ? new class('Unknown failure') extends CategoryException {}
+            : new CategoryNotFoundException(new CategoryId($failedId), 'Not found');
+            $controller->expects($this->once())->method('dispatchCommand')->willThrowException($exception);
+        } else {
+            $controller->expects($this->once())->method('dispatchCommand');
+        }
+        $recorded = [];
+        $controller->expects($this->exactly(count($successfulIds)))->method('recordMutation')
+            ->willReturnCallback(static function (...$arguments) use (&$recorded): void { $recorded[] = $arguments; });
+        $controller->{$bulk ? 'bulkDeleteAction' : 'deleteAction'}(new Request());
+        $expected = [];
+        foreach ($successfulIds as $id) {
+            $expected[] = $bulk
+                ? ['category', $id, MutationAction::DELETE, ['bulk' => true]]
+                : ['category', $id, MutationAction::DELETE, []];
+        }
+        $this->assertSame($expected, $recorded);
+    }
+
+    public static function deleteFlows(): iterable
+    {
+        yield 'single success' => [false, null, [10]];
+        yield 'single failure' => [false, 10, []];
+        yield 'bulk success' => [true, null, [10, 20, 30, 40]];
+        yield 'bulk partial success' => [true, 30, [10, 20]];
+        yield 'bulk first failure' => [true, 10, []];
+        yield 'bulk unknown failure' => [true, 0, []];
+    }
+
     private function invokePrivateMethod(
         CategoryController $controller,
         string $methodName,
         array $arguments
     ): mixed {
         $method = new ReflectionMethod(CategoryController::class, $methodName);
-        $method->setAccessible(true);
 
         return $method->invokeArgs($controller, $arguments);
     }
 
-    private function assertActivity(AdminActivity $activity, int $categoryId): void
+    private function assertActivity(array $mutation, int $categoryId): void
     {
-        $this->assertSame(AdminActivityType::DELETE, $activity->getType());
-        $this->assertSame('Category', $activity->getObjectType());
-        $this->assertSame($categoryId, $activity->getObjectId());
-        $this->assertSame($categoryId, $activity->getLogObjectId());
-        $this->assertNull($activity->getNewObjectId());
-        $this->assertTrue($activity->isBulk());
+        $this->assertSame(['category', $categoryId, MutationAction::DELETE, ['bulk' => true]], $mutation);
     }
 }
 
 class TestableCategoryController extends CategoryController
 {
     /**
-     * @var AdminActivity[]
+     * @var array[]
      */
-    private array $loggedActivities = [];
+    private array $loggedMutations = [];
 
-    /**
-     * @param AdminActivity[] $activities
-     */
-    protected function logAdminActivities(array $activities): void
+    protected function recordMutation(string $table, int $id, MutationAction $action, array $details = []): void
     {
-        foreach ($activities as $activity) {
-            $this->loggedActivities[] = $activity;
-        }
+        $this->loggedMutations[] = [$table, $id, $action, $details];
     }
 
     /**
-     * @return AdminActivity[]
+     * @return array[]
      */
-    public function getLoggedActivities(): array
+    public function getLoggedMutations(): array
     {
-        return $this->loggedActivities;
+        return $this->loggedMutations;
     }
 }

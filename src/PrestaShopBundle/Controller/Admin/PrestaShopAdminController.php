@@ -8,8 +8,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin;
 
-use PrestaShop\PrestaShop\Core\ActivityLog\AdminActivity;
-use PrestaShop\PrestaShop\Core\ActivityLog\AdminActivityLoggerInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Configuration\IniConfiguration;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
@@ -34,7 +32,9 @@ use PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenterInterface;
 use PrestaShop\PrestaShop\Core\Help\Documentation;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
+use PrestaShop\PrestaShop\Core\Mutation\BackOfficeMutationLogger;
 use PrestaShop\PrestaShop\Core\Security\Permission;
+use PrestaShopBundle\Entity\MutationAction;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -72,7 +72,7 @@ class PrestaShopAdminController extends AbstractController
             GridPositionUpdaterInterface::class => GridPositionUpdaterInterface::class,
             FeatureFlagStateCheckerInterface::class => FeatureFlagStateCheckerInterface::class,
             EnvironmentInterface::class => EnvironmentInterface::class,
-            AdminActivityLoggerInterface::class => AdminActivityLoggerInterface::class,
+            BackOfficeMutationLogger::class => BackOfficeMutationLogger::class,
         ];
     }
 
@@ -147,19 +147,12 @@ class PrestaShopAdminController extends AbstractController
         return $this->container->get(CommandBusInterface::class)->handle($query);
     }
 
-    protected function logAdminActivity(AdminActivity $activity): void
-    {
-        $this->container->get(AdminActivityLoggerInterface::class)->log($activity);
-    }
-
     /**
-     * @param AdminActivity[] $activities
+     * @param array{source_id?: int, active?: bool, bulk?: bool} $details
      */
-    protected function logAdminActivities(array $activities): void
+    protected function recordMutation(string $table, int $id, MutationAction $action, array $details = []): void
     {
-        foreach ($activities as $activity) {
-            $this->logAdminActivity($activity);
-        }
+        $this->container->get(BackOfficeMutationLogger::class)->record($table, $id, $action, $details);
     }
 
     protected function presentGrid(GridInterface $grid): array
