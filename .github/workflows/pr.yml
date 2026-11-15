@@ -13,12 +13,10 @@ jobs:
     steps:
       - name: Check is merge PR
         id: check-is-merge
+        env:
+          PR_BODY: ${{ toJSON(github.event.pull_request.body) }}
         run: |
-          description=$(
-          cat <<"EOF"
-          ${{ toJSON(github.event.pull_request.body) }}
-          EOF
-          )
+          description="$PR_BODY"
           if [[ $description =~ \|?[[:space:]]*Category\?[[:space:]]*\|[[:space:]]*ME([[:space:]]|(\\[rn]))+ ]]; then
               echo "isMerge=true" >> $GITHUB_OUTPUT
           fi
