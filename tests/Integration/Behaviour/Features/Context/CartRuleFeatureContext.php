@@ -249,6 +249,20 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Then cart rule :cartRuleReference should have a quantity of :quantity
+     */
+    public function assertCartRuleQuantity(string $cartRuleReference, int $quantity): void
+    {
+        // Read from the database directly, the CartRule object may come from the object cache
+        $storedQuantity = CommonFeatureContext::getContainer()->get('doctrine.dbal.default_connection')->fetchOne(
+            'SELECT `quantity` FROM `' . _DB_PREFIX_ . 'cart_rule` WHERE `id_cart_rule` = :cartRuleId',
+            ['cartRuleId' => $this->referenceToId($cartRuleReference)]
+        );
+
+        Assert::assertSame($quantity, (int) $storedQuantity, 'Unexpected cart rule quantity');
+    }
+
+    /**
      * @When I restrict following carriers :carrierReferences for cart rule :cartRuleReference
      *
      * @param string $cartRuleReference

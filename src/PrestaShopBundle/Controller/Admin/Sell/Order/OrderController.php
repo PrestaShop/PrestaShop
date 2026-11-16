@@ -1110,7 +1110,7 @@ class OrderController extends PrestaShopAdminController
      *
      * @return Response
      */
-    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
     public function addProductAction(
         int $orderId,
         Request $request,

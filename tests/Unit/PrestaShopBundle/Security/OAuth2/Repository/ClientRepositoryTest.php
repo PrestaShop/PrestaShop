@@ -8,11 +8,13 @@ namespace Tests\Unit\PrestaShopBundle\Security\OAuth2\Repository;
 
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\Entity\ApiClient;
 use PrestaShopBundle\Security\OAuth2\Repository\ClientRepository;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
 use Symfony\Component\Security\Core\User\InMemoryUser;
 use Symfony\Component\Security\Core\User\InMemoryUserProvider;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class ClientRepositoryTest extends TestCase
 {
@@ -55,6 +57,44 @@ class ClientRepositoryTest extends TestCase
     {
         $response = $this->clientRepository->validateClient('myclientid', 'myclientsecret', $grantType);
         $this->assertSame($valid, $response);
+    }
+
+    /**
+     * @dataProvider apiClientProvider
+     */
+    public function testOnlyAnEnabledApiClientCanGetAToken(bool $enabled, bool $expected): void
+    {
+        $clientRepository = $this->buildClientRepositoryForApiClient($enabled);
+
+        $this->assertSame($expected, $clientRepository->getClientEntity('myclientid') instanceof ClientEntityInterface);
+        $this->assertSame($expected, $clientRepository->validateClient('myclientid', 'myclientsecret', 'client_credentials'));
+    }
+
+    public function apiClientProvider(): iterable
+    {
+        yield 'enabled client' => [true, true];
+        yield 'disabled client' => [false, false];
+    }
+
+    private function buildClientRepositoryForApiClient(bool $enabled): ClientRepository
+    {
+        $apiClient = new ApiClient();
+        $apiClient
+            ->setClientId('myclientid')
+            ->setClientName('myclientname')
+            ->setClientSecret('myclientsecret')
+            ->setLifetime(3600)
+            ->setEnabled($enabled)
+        ;
+        $userProvider = $this->createMock(UserProviderInterface::class);
+        $userProvider->method('loadUserByIdentifier')->with('myclientid')->willReturn($apiClient);
+
+        return new ClientRepository(
+            $userProvider,
+            new UserPasswordHasher(new PasswordHasherFactory([
+                ApiClient::class => ['algorithm' => 'plaintext', 'ignore_case' => false],
+            ]))
+        );
     }
 
     public function userDataProvider(): iterable

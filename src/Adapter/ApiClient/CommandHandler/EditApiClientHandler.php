@@ -17,6 +17,7 @@ use PrestaShop\PrestaShop\Core\Domain\ApiClient\CommandHandler\EditApiClientComm
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\Exception\ApiClientConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\Exception\ApiClientNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\Exception\CannotUpdateApiClientException;
+use PrestaShop\PrestaShop\Core\Security\OAuth2\ApiClientScopeDelegationValidator;
 use PrestaShopBundle\Entity\Repository\ApiClientRepository;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -25,7 +26,8 @@ class EditApiClientHandler implements EditApiClientCommandHandlerInterface
 {
     public function __construct(
         private readonly ApiClientRepository $repository,
-        private readonly ValidatorInterface $validator
+        private readonly ValidatorInterface $validator,
+        private readonly ApiClientScopeDelegationValidator $scopeDelegationValidator
     ) {
     }
 
@@ -54,6 +56,7 @@ class EditApiClientHandler implements EditApiClientCommandHandlerInterface
         }
 
         if (!is_null($command->getScopes())) {
+            $this->scopeDelegationValidator->assertCanGrant($command->getScopes());
             $apiClient->setScopes($command->getScopes());
         }
 

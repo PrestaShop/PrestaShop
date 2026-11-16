@@ -67,6 +67,7 @@ if (!empty($_FILES) && isset($_FILES['file']) && $_FILES['file']['size']) {
     if (isset($info['extension'])
             && in_array(mb_strtolower($info['extension']), $ext)
             && in_array(mime_content_type($_FILES['file']['tmp_name']), $mime)
+            && (mb_strtolower($info['extension']) !== 'svg' || Validate::isCleanSVG(file_get_contents($_FILES['file']['tmp_name'])))
     ) {
         $tempFile = $_FILES['file']['tmp_name'];
 

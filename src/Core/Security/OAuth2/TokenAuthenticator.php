@@ -94,18 +94,40 @@ class TokenAuthenticator extends AbstractAuthenticator
             throw new CustomUserMessageAuthenticationException(json_encode('Invalid credentials'));
         }
 
+        $apiClient = $this->findApiClient($jwtTokenUser);
+
         // Specific check for external authorization server (PrestashopAuthorisationServer is the only internal implementation)
         if (!$authorizationServer instanceof PrestashopAuthorisationServer) {
             if (empty($jwtTokenUser->getExternalIssuer())) {
                 $this->logger->error('TokenAuthenticator: No external issuer specified');
                 throw new CustomUserMessageAuthenticationException(json_encode('No external issuer specified'));
             }
-            $this->autoSaveApiClient($jwtTokenUser);
+            $apiClient ??= $this->autoSaveApiClient($jwtTokenUser);
+        }
+
+        // Access tokens are self-contained JWTs that stay valid until they expire, so the only way to cut the access
+        // of a client that was deleted or disabled after the token was issued is to check it on every request
+        if (null === $apiClient) {
+            $this->logger->error('TokenAuthenticator: Unknown API client');
+            throw new CustomUserMessageAuthenticationException(json_encode('Unknown API client'));
+        }
+        if (!$apiClient->isEnabled()) {
+            $this->logger->error('TokenAuthenticator: API client is disabled');
+            throw new CustomUserMessageAuthenticationException(json_encode('API client is disabled'));
         }
 
         // Returns passport purely based on JWT token here, we set a specific loader that returns the
         // user object directly since it was already resolved by our authorization server
         return new SelfValidatingPassport(new UserBadge($jwtTokenUser->getUserIdentifier(), fn () => $jwtTokenUser));
+    }
+
+    private function findApiClient(JwtTokenUser $jwtTokenUser): ?ApiClient
+    {
+        try {
+            return $this->apiClientRepository->getByClientId($jwtTokenUser->getUserIdentifier(), $jwtTokenUser->getExternalIssuer());
+        } catch (NoResultException) {
+            return null;
+        }
     }
 
     /**
@@ -115,21 +137,19 @@ class TokenAuthenticator extends AbstractAuthenticator
      *
      * @param JwtTokenUser $jwtTokenUser
      */
-    private function autoSaveApiClient(JwtTokenUser $jwtTokenUser): void
+    private function autoSaveApiClient(JwtTokenUser $jwtTokenUser): ApiClient
     {
-        try {
-            $this->apiClientRepository->getByClientId($jwtTokenUser->getUserIdentifier(), $jwtTokenUser->getExternalIssuer());
-        } catch (NoResultException) {
-            $apiClient = new ApiClient();
-            $apiClient
-                ->setClientId($jwtTokenUser->getUserIdentifier())
-                ->setClientName($jwtTokenUser->getUserIdentifier())
-                ->setExternalIssuer($jwtTokenUser->getExternalIssuer())
-                ->setLifetime(3600)
-                ->setEnabled(true)
-            ;
-            $this->apiClientRepository->save($apiClient);
-        }
+        $apiClient = new ApiClient();
+        $apiClient
+            ->setClientId($jwtTokenUser->getUserIdentifier())
+            ->setClientName($jwtTokenUser->getUserIdentifier())
+            ->setExternalIssuer($jwtTokenUser->getExternalIssuer())
+            ->setLifetime(3600)
+            ->setEnabled(true)
+        ;
+        $this->apiClientRepository->save($apiClient);
+
+        return $apiClient;
     }
 
     private function getAuthorizationServer(Request $request): ?AuthorisationServerInterface

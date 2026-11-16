@@ -184,7 +184,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
             }
             $this->database_name = $parameters['parameters']['database_name'];
             $this->database_login = $parameters['parameters']['database_user'];
-            $this->database_password = $parameters['parameters']['database_password'];
+            // The stored database password is never sent back to the browser, it has to be typed again
             $this->database_engine = $parameters['parameters']['database_engine'];
             $this->database_prefix = substr(str_shuffle(str_repeat('0123456789abcdefghijklmnopqrstuvwxyz', mt_rand(1,10))), 0, 5).'_';
 

@@ -64,7 +64,23 @@ class ThemeValidatorTest extends TestCase
         $this->assertFalse($isValid, self::NOTICE . sprintf('expected isValid to return false when theme is invalid, got %s', gettype($isValid)));
     }
 
-    private function getTheme(string $name = 'valid'): Theme
+    /**
+     * @dataProvider provideInvalidThemeNames
+     */
+    public function testIsValidWithAThemeNameThatIsNotAFolderName(string $themeName): void
+    {
+        $this->assertFalse($this->validator->isValid($this->getTheme('valid', $themeName)));
+    }
+
+    public static function provideInvalidThemeNames(): iterable
+    {
+        yield 'parent segment' => ['../minimalValidTheme'];
+        yield 'nested path' => ['themes/minimalValidTheme'];
+        yield 'absolute path' => ['/tmp/minimalValidTheme'];
+        yield 'too short' => ['ab'];
+    }
+
+    private function getTheme(string $name = 'valid', ?string $themeName = null): Theme
     {
         $options = ['valid', 'missfiles', 'missconfig'];
 
@@ -82,6 +98,9 @@ class ThemeValidatorTest extends TestCase
 
         $config = (new Parser())->parse(file_get_contents($themeConfigFile));
         $config['directory'] = $themeDir;
+        if (null !== $themeName) {
+            $config['name'] = $themeName;
+        }
         $config['physical_uri'] = '/';
 
         $theme = new Theme($config);

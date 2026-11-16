@@ -44,13 +44,32 @@ class UploadControllerCore extends GetFileController
             INNER JOIN ' . _DB_PREFIX_ . 'customization cu ON c.id_cart = cu.id_cart
             INNER JOIN ' . _DB_PREFIX_ . 'customized_data cd ON cd.id_customization = cu.id_customization
             LEFT JOIN ' . _DB_PREFIX_ . 'orders o ON c.id_cart = o.id_cart
-            WHERE (c.id_customer = ' . (int) $this->context->cart->id_customer . '
-            AND c.id_guest = ' . (int) $this->context->cart->id_guest . '
-            OR o.reference = "' . pSQL(Tools::getValue('reference')) . '")
+            WHERE (' . $this->getOwnershipCondition() . ')
             AND cd.type = ' . Product::CUSTOMIZE_FILE . '
             AND (cd.value = "' . $this->filename . '" OR CONCAT(cd.value, "_small") = "' . $this->filename . '")');
 
         return (bool) $isCustomization;
+    }
+
+    /**
+     * A customization file may be served to the owner of the cart it was uploaded in, or to whoever
+     * proves ownership of the order placed with that cart by providing both its reference and its
+     * secure key (order detail and guest tracking pages). The reference alone is not a secret: it is
+     * printed in emails and shown on the guest tracking page, so it must never unlock the file by itself.
+     */
+    private function getOwnershipCondition(): string
+    {
+        $cartOwnerCondition = '(c.id_customer = ' . (int) $this->context->cart->id_customer . '
+            AND c.id_guest = ' . (int) $this->context->cart->id_guest . ')';
+
+        $reference = (string) Tools::getValue('reference');
+        $secureKey = (string) Tools::getValue('secure_key');
+        if ($reference === '' || !Validate::isMd5($secureKey)) {
+            return $cartOwnerCondition;
+        }
+
+        return $cartOwnerCondition . '
+            OR (o.reference = "' . pSQL($reference) . '" AND o.secure_key = "' . pSQL($secureKey) . '")';
     }
 
     public function postProcess(): void
