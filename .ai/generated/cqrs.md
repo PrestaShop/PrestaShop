@@ -1,5 +1,5 @@
 # CQRS Index (generated 2026-10-20)
-# 385 commands · 135 queries · 64 top-level domains
+# 391 commands · 135 queries · 65 top-level domains
 #
 # Sub-domain shown in [brackets] when command/query lives below the top-level domain dir.
 
@@ -201,6 +201,15 @@
 ## CreditSlip
 ### Queries
 - GetCreditSlipIdsByDateRange
+
+## Csp
+### Commands
+- AddCspRuleCommand
+- AllowCspSourceCommand
+- BulkRevokeCspSourceCommand
+- ClearCspLogCommand
+- RecordCspViolationCommand
+- RevokeCspSourceCommand
 
 ## Currency
 ### Commands
