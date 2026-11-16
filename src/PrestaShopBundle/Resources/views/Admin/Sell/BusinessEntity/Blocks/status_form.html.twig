@@ -22,7 +22,7 @@
   {{ form_row(editStatusForm.status) }}
 {% endset %}
 
-{{ form_start(editStatusForm) }}
+{{ form_start(editStatusForm, statusUpdated is defined and statusUpdated ? {attr: {'data-status-updated': '1'}} : {}) }}
   {% if lightDisplay|default(false) %}
     <div class="business-entity-status-form p-4">
       {{ statusFormBody }}

@@ -285,17 +285,15 @@ class BusinessEntitiesController extends PrestaShopAdminController
                 $this->addFlash('success', $this->trans('Successful update.', [], 'Admin.Notifications.Success'));
 
                 if ($isLiteDisplaying) {
-                    // The modal watches the reloaded form for the success alert the flash leaves
-                    // on it, so the answer has to be that form again rather than the list.
                     return $this->redirectToRoute('admin_business_entities_status', [
                         'businessEntityId' => $businessEntityId,
                         'liteDisplaying' => 1,
+                        'statusUpdated' => 1,
                     ]);
                 }
 
                 return $this->redirectToRoute('admin_business_entities_list');
             } catch (Exception $e) {
-                // Rendered rather than flashed: the modal never displays the flash bag.
                 $errorMessage = $this->getErrorMessageForException($e, $this->getErrorMessages());
             }
         }
@@ -311,6 +309,7 @@ class BusinessEntitiesController extends PrestaShopAdminController
                 'help_link' => $this->generateSidebarLink('AdminBusinessEntities'),
                 'layoutTitle' => $this->trans('Edit status', [], 'Admin.Orderscustomers.Feature'),
                 'lightDisplay' => $isLiteDisplaying,
+                'statusUpdated' => $isLiteDisplaying && $request->query->has('statusUpdated'),
             ]
         );
     }

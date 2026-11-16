@@ -1183,11 +1183,10 @@ class BusinessEntityControllerTest extends GridControllerTestCase
             $crawler->filter('.alert-success'),
             'the reloaded modal must not display the alert, which would consume it'
         );
-        // One write, one success alert: what the modal reads to know it can close.
         $this->assertSame(
             '1',
-            $crawler->filter('form[name="edit_business_entity_status"]')->attr('data-alerts-success'),
-            'AC4: the reloaded form must carry exactly the one success alert the modal waits for'
+            $crawler->filter('form[name="edit_business_entity_status"]')->attr('data-status-updated'),
+            'AC4: the reloaded form must carry the marker the modal closes on'
         );
 
         $crawler = $this->client->request('GET', $this->generateGridUrl());
@@ -1196,6 +1195,38 @@ class BusinessEntityControllerTest extends GridControllerTestCase
             'Successful update.',
             $crawler->filter('.alert-success .alert-text')->text(),
             'the message must still be in the bag when the list reloads'
+        );
+    }
+
+    public function testAPendingSuccessMessageDoesNotMarkTheFormAsUpdated(): void
+    {
+        $this->client->disableReboot();
+
+        $entityId = self::createBusinessEntity(
+            $this->client->getContainer()->get('prestashop.core.command_bus'),
+            'Pending flash company',
+            'Pending flash legal name',
+            BusinessEntityStatus::PENDING
+        );
+
+        $this->submitStatusChange($entityId, BusinessEntityStatus::ACTIVE);
+
+        $crawler = $this->client->request('GET', $this->router->generate(
+            'admin_business_entities_status',
+            ['businessEntityId' => $entityId, 'liteDisplaying' => 1]
+        ));
+        $this->assertResponseIsSuccessful();
+
+        $form = $crawler->filter('form[name="edit_business_entity_status"]');
+
+        $this->assertGreaterThan(
+            0,
+            (int) $form->attr('data-alerts-success'),
+            'the pending message must still be there, or this test proves nothing'
+        );
+        $this->assertNull(
+            $form->attr('data-status-updated'),
+            'the modal must not close on a message this request did not write'
         );
     }
 

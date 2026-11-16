@@ -40,9 +40,7 @@ export default class EditStatusManager {
       closeButtonLabel: link.dataset.cancelButtonLabel,
       closeOnConfirm: false,
       onFormLoaded: (_form: HTMLFormElement, _formData: FormData, dataAttributes: DOMStringMap | null): void => {
-        // A count, not a flag: this page leaves the flash bag untouched, so a second submission
-        // would answer "2" and the strict comparison of the other modals would never close.
-        if (dataAttributes && Number(dataAttributes.alertsSuccess) > 0) {
+        if (dataAttributes?.statusUpdated === '1') {
           modal.showLoading();
           window.location.reload();
         }
