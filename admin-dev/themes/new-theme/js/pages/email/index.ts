@@ -10,6 +10,10 @@ import DkimConfigurationToggler from '@pages/email/dkim-configuration-toggler';
 const {$} = window;
 
 $(() => {
+  window.prestashop.component.initComponents([
+    'MultistoreConfigField',
+  ]);
+
   const emailLogsGrid = new window.prestashop.component.Grid('email_logs');
 
   emailLogsGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());

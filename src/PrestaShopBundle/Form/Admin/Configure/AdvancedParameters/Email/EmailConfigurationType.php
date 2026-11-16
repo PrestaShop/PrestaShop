@@ -8,6 +8,7 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email;
 
 use PrestaShop\PrestaShop\Core\Email\MailOption;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -58,8 +59,10 @@ class EmailConfigurationType extends TranslatorAwareType
                 'help' => $this->trans('Where customers send messages from the order page.', 'Admin.Advparameters.Help'),
                 'choices' => $this->contactsChoiceProvider->getChoices(),
                 'choice_translation_domain' => false,
+                'multistore_configuration_key' => 'PS_MAIL_EMAIL_MESSAGE',
             ])
             ->add('mail_method', ChoiceType::class, [
+                'label' => $this->trans('Mail method:', 'Admin.Advparameters.Feature'),
                 'attr' => [
                     'class' => 'js-email-method',
                     'data-smtp-mail-method' => MailOption::METHOD_SMTP,
@@ -67,11 +70,14 @@ class EmailConfigurationType extends TranslatorAwareType
                 'expanded' => true,
                 'multiple' => false,
                 'choices' => $this->mailMethodChoiceProvider->getChoices(),
+                'multistore_configuration_key' => 'PS_MAIL_METHOD',
             ])
             ->add('subject_prefix', SwitchType::class, [
                 'label' => $this->trans('Enable the store name as a prefix in the email\'s subject', 'Admin.Advparameters.Feature'),
+                'multistore_configuration_key' => 'PS_MAIL_SUBJECT_PREFIX',
             ])
             ->add('mail_type', ChoiceType::class, [
+                'label' => $this->trans('Select the type of email content', 'Admin.International.Feature'),
                 'expanded' => true,
                 'multiple' => false,
                 'choices' => [
@@ -80,9 +86,11 @@ class EmailConfigurationType extends TranslatorAwareType
                     $this->trans('Both', 'Admin.Advparameters.Feature') => MailOption::TYPE_BOTH,
                     $this->trans('Both, with text format automatically generated', 'Admin.Advparameters.Feature') => MailOption::TYPE_BOTH_AUTOMATIC_TEXT,
                 ],
+                'multistore_configuration_key' => 'PS_MAIL_TYPE',
             ])
             ->add('log_emails', SwitchType::class, [
                 'label' => $this->trans('Log Emails', 'Admin.Advparameters.Feature'),
+                'multistore_configuration_key' => 'PS_LOG_EMAILS',
             ])
             ->add('dkim_enable', SwitchType::class, [
                 'attr' => ['class' => 'js-dkim-enable'],
@@ -92,8 +100,17 @@ class EmailConfigurationType extends TranslatorAwareType
                 ],
                 'label' => $this->trans('DKIM signing', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('Enable DKIM, fill in the fields and give it a try. If no email is sent, check logs.', 'Admin.Advparameters.Help'),
+                'multistore_configuration_key' => 'PS_MAIL_DKIM_ENABLE',
             ])
             ->add('smtp_config', SmtpConfigurationType::class)
             ->add('dkim_config', DkimConfigurationType::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }
