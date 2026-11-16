@@ -68,6 +68,30 @@ class EmailSendingTest {
       <string>$('#form_dkim_config_domain').val(),
     );
 
+    const overrideFields: Record<string, string> = {
+      mail_method: '#form_multistore_mail_method',
+      smtp_server: '#form_smtp_config_multistore_server',
+      smtp_username: '#form_smtp_config_multistore_username',
+      smtp_password: '#form_smtp_config_multistore_password',
+      smtp_port: '#form_smtp_config_multistore_port',
+      smtp_encryption: '#form_smtp_config_multistore_encryption',
+      dkim_enable: '#form_multistore_dkim_enable',
+      dkim_key: '#form_dkim_config_multistore_key',
+      dkim_domain: '#form_dkim_config_multistore_domain',
+      dkim_selector: '#form_dkim_config_multistore_selector',
+    };
+
+    Object.entries(overrideFields).forEach(([field, selector]) => {
+      const $checkbox = $(selector);
+      let override = '';
+
+      if ($checkbox.length) {
+        override = $checkbox.is(':checked') ? '1' : '0';
+      }
+
+      $(`#test_email_sending_multistore_${field}`).val(override);
+    });
+
     const $testEmailSendingForm = $(event.currentTarget).closest('form');
 
     this.resetMessages();
