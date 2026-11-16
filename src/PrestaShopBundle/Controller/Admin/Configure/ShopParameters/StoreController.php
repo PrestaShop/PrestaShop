@@ -322,6 +322,26 @@ class StoreController extends PrestaShopAdminController
                     ],
                     'Admin.Notifications.Error',
                 ),
+                StoreConstraintException::INVALID_LATITUDE => $this->trans(
+                    'The %s field is not valid',
+                    [
+                        sprintf(
+                            '"%s"',
+                            $this->trans('Latitude', [], 'Admin.Shopparameters.Feature')
+                        ),
+                    ],
+                    'Admin.Notifications.Error',
+                ),
+                StoreConstraintException::INVALID_LONGITUDE => $this->trans(
+                    'The %s field is not valid',
+                    [
+                        sprintf(
+                            '"%s"',
+                            $this->trans('Longitude', [], 'Admin.Shopparameters.Feature')
+                        ),
+                    ],
+                    'Admin.Notifications.Error',
+                ),
             ],
             MemoryLimitException::class => $this->trans(
                 'Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings.',

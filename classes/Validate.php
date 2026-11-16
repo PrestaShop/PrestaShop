@@ -1336,15 +1336,22 @@ class ValidateCore
     }
 
     /**
-     * Check for Latitude/Longitude.
+     * Check for Latitude/Longitude: a decimal number with up to 8 decimals between -$maxAbsoluteValue and
+     * $maxAbsoluteValue, -180 to 180 by default (a longitude), -90 to 90 for a latitude.
      *
      * @param string|null $data Coordinate to validate
+     * @param int|float $maxAbsoluteValue Highest absolute value accepted: 90 for a latitude, 180 for a longitude
      *
      * @return bool Validity is ok or not
      */
-    public static function isCoordinate($data)
+    public static function isCoordinate($data, $maxAbsoluteValue = 180)
     {
-        return $data === null || preg_match('/^\-?[0-9]{1,8}\.[0-9]{1,8}$/s', $data);
+        if ($data === null) {
+            return true;
+        }
+
+        return (bool) preg_match('/^\-?[0-9]{1,3}\.[0-9]{1,8}$/s', (string) $data)
+            && abs((float) $data) <= $maxAbsoluteValue;
     }
 
     /**

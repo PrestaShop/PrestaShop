@@ -59,6 +59,7 @@ final class EditStoreHandler implements EditStoreHandlerInterface
         }
 
         $this->storeValidator->assertStateCountryConsistency((int) $store->id_country, $store->id_state);
+        $this->storeValidator->assertCoordinates($command->getLatitude(), $command->getLongitude());
 
         if (null !== $command->getCity()) {
             $store->city = $command->getCity();
