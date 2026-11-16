@@ -7,6 +7,7 @@
 namespace PrestaShop\PrestaShop\Core\Import\File;
 
 use PrestaShop\PrestaShop\Core\Import\ImportDirectory;
+use PrestaShop\PrestaShop\Core\Security\PharDetector;
 use PrestaShopBundle\Exception\FileUploadException;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\File;
@@ -29,15 +30,23 @@ final class FileUploader
     private $importDirectory;
 
     /**
+     * @var PharDetector
+     */
+    private $pharDetector;
+
+    /**
      * @param TranslatorInterface $translator
      * @param ImportDirectory $importDirectory
+     * @param PharDetector|null $pharDetector
      */
     public function __construct(
         TranslatorInterface $translator,
-        ImportDirectory $importDirectory
+        ImportDirectory $importDirectory,
+        ?PharDetector $pharDetector = null
     ) {
         $this->translator = $translator;
         $this->importDirectory = $importDirectory;
+        $this->pharDetector = $pharDetector ?? new PharDetector();
     }
 
     /**
@@ -112,6 +121,8 @@ final class FileUploader
 
         if (!preg_match('#([^\.]*?)\.(csv|xls[xt]?|o[dt]s)$#is', $uploadedFile->getClientOriginalName())) {
             $error = $this->translator->trans('The extension of your file should be ".csv".', [], 'Admin.Advparameters.Notification');
+        } elseif ($this->pharDetector->isPhar($uploadedFile->getPathname())) {
+            $error = $this->translator->trans('The uploaded file is not a valid import file.', [], 'Admin.Advparameters.Notification');
         }
 
         return $error;

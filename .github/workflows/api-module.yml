@@ -66,6 +66,11 @@ jobs:
       - name: Composer Install
         run: COMPOSER_PROCESS_TIMEOUT=600 composer install --ansi --prefer-dist --no-interaction --no-progress
 
+      # API clients can only grant the scopes they hold, the module tests must use a client holding them.
+      # Remove this step (and the patch file) once ps_apiresources includes this change in its tests.
+      - name: Patch ps_apiresources tests
+        run: patch -p1 -d modules/ps_apiresources -i ../../tests/Resources/patches/ps_apiresources-api-client-scopes.patch
+
       # After Composer, which empties the folders of the themes it installs
       - name: Cache built assets
         id: assets

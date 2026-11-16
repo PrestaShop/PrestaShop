@@ -29,9 +29,15 @@ class WebserviceKeyFeatureContext extends AbstractDomainFeatureContext
     {
         $data = $node->getRowsHash();
 
-        $data['shop_association'] = [
-            SharedStorage::getStorage()->get($data['shop_association']),
-        ];
+        $shopReferences = PrimitiveUtils::castStringArrayIntoArray((string) $data['shop_association']);
+        $data['shop_association'] = array_values(array_filter(array_map(static function (string $shopReference): ?int {
+            $shopReference = trim($shopReference);
+            if (empty($shopReference)) {
+                return null;
+            }
+
+            return (int) SharedStorage::getStorage()->get($shopReference);
+        }, $shopReferences)));
         $data['permissions'] = [];
         foreach ($data as $key => $value) {
             if (substr($key, 0, 11) !== 'permission_') {

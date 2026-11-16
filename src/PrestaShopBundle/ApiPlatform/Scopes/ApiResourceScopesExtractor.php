@@ -13,10 +13,13 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Metadata\Resource\Factory\AttributesResourceNameCollectionFactory;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\Factory\ResourceNameCollectionFactoryInterface;
+use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
+use Error;
 use PrestaShop\PrestaShop\Core\EnvironmentInterface;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Version;
 use PrestaShopBundle\ApiPlatform\ExperimentalEndpointsCheckerTrait;
+use PrestaShopBundle\ApiPlatform\Metadata\Resource\Factory\UnsupportedApiResourceTrait;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -32,6 +35,7 @@ use Psr\Container\ContainerInterface;
 class ApiResourceScopesExtractor implements ApiResourceScopesExtractorInterface
 {
     use ExperimentalEndpointsCheckerTrait;
+    use UnsupportedApiResourceTrait;
 
     public function __construct(
         private readonly ResourceMetadataCollectionFactoryInterface $resourceMetadataCollectionFactory,
@@ -124,7 +128,15 @@ class ApiResourceScopesExtractor implements ApiResourceScopesExtractorInterface
     {
         $scopes = [];
         foreach ($resourceExtractor->create() as $resourceName) {
-            $resourceMetadata = $this->resourceMetadataCollectionFactory->create($resourceName);
+            try {
+                $resourceMetadata = $this->createResourceMetadata($resourceName);
+            } catch (Error $error) {
+                // A resource written for a newer core is ignored, like by UnsupportedApiResourceMetadataCollectionFactoryDecorator
+                if (!$this->isUnsupportedApiResource($error)) {
+                    throw $error;
+                }
+                continue;
+            }
             foreach ($resourceMetadata as $resource) {
                 $scopes = array_merge($scopes, $this->getScopesByResources($resource));
             }
@@ -220,5 +232,13 @@ class ApiResourceScopesExtractor implements ApiResourceScopesExtractorInterface
         }
 
         return false;
+    }
+
+    /**
+     * @throws Error when an attribute of the resource uses an operation class or argument this core doesn't have
+     */
+    private function createResourceMetadata(string $resourceClass): ResourceMetadataCollection
+    {
+        return $this->resourceMetadataCollectionFactory->create($resourceClass);
     }
 }

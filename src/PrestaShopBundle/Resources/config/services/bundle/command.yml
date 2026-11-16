@@ -95,6 +95,7 @@ services:
       $translationCatalogueExporter: '@prestashop.translation.export.translation_catalogue'
       $filesystem: '@filesystem'
       $moduleDir: '%prestashop.module_dir%'
+      $zipExtractor: '@PrestaShop\PrestaShop\Core\Security\SafeZipExtractor'
     tags:
       - 'console.command'
 

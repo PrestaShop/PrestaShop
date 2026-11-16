@@ -14,6 +14,7 @@ use PrestaShop\PrestaShop\Core\Image\ImageFormatConfigurationInterface;
 use PrestaShopException;
 use Shop;
 use Tools;
+use Validate;
 
 /**
  * Class LogoUploader used to manage upload of Shop logos and favicon.
@@ -88,6 +89,10 @@ class LogoUploader
 
             if (!$tmpName || !move_uploaded_file($files[$fieldName]['tmp_name'], $tmpName)) {
                 throw new PrestaShopException(sprintf('Upload of temporary file to %s has failed.', $tmpName));
+            }
+
+            if (ImageManager::isSvgMimeType($files[$fieldName]['type']) && !Validate::isCleanSVG(file_get_contents($tmpName))) {
+                throw new PrestaShopException('The SVG file contains forbidden content.');
             }
 
             if (ImageManager::isSvgMimeType($files[$fieldName]['type'])) {

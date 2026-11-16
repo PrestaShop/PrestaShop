@@ -1095,7 +1095,7 @@ parameters:
 		-
 			message: '#^Class PrestaShopException is forbidden, No legacy calls inside the prestashop bundle\. Please create an interface and an adapter if you need to\.$#'
 			identifier: disallowed.class
-			count: 7
+			count: 8
 			path: src/Core/Shop/LogoUploader.php
 
 		-
@@ -1119,7 +1119,7 @@ parameters:
 		-
 			message: '#^Namespace ImageManager is forbidden, No legacy calls inside the prestashop bundle\. Please create an interface and an adapter if you need to\.$#'
 			identifier: disallowed.namespace
-			count: 8
+			count: 9
 			path: src/Core/Shop/LogoUploader.php
 
 		-
@@ -1136,6 +1136,12 @@ parameters:
 
 		-
 			message: '#^Namespace Tools is forbidden, No legacy calls inside the prestashop bundle\. Please create an interface and an adapter if you need to\.$#'
+			identifier: disallowed.namespace
+			count: 2
+			path: src/Core/Shop/LogoUploader.php
+
+		-
+			message: '#^Namespace Validate is forbidden, No legacy calls inside the prestashop bundle\. Please create an interface and an adapter if you need to\.$#'
 			identifier: disallowed.namespace
 			count: 2
 			path: src/Core/Shop/LogoUploader.php
@@ -1231,6 +1237,12 @@ parameters:
 			path: src/Core/Translation/Storage/Provider/Definition/ThemeProviderDefinition.php
 
 		-
+			message: '#^Method PrestaShopBundle\\ApiPlatform\\Metadata\\Resource\\Factory\\UnsupportedApiResourceMetadataCollectionFactoryDecorator\:\:createFromAttributes\(\) has Error in PHPDoc @throws tag but it''s not thrown\.$#'
+			identifier: throws.unusedType
+			count: 1
+			path: src/PrestaShopBundle/ApiPlatform/Metadata/Resource/Factory/UnsupportedApiResourceMetadataCollectionFactoryDecorator.php
+
+		-
 			message: '#^Class PrestaShopBundle\\ApiPlatform\\Normalizer\\CQRSApiNormalizer extends @final class Symfony\\Component\\Serializer\\Normalizer\\ObjectNormalizer\.$#'
 			identifier: class.extendsFinalByPhpDoc
 			count: 1
@@ -1241,6 +1253,18 @@ parameters:
 			identifier: arguments.count
 			count: 1
 			path: src/PrestaShopBundle/ApiPlatform/Normalizer/CQRSApiNormalizer.php
+
+		-
+			message: '#^Method PrestaShopBundle\\ApiPlatform\\Scopes\\ApiResourceScopesExtractor\:\:createResourceMetadata\(\) has Error in PHPDoc @throws tag but it''s not thrown\.$#'
+			identifier: throws.unusedType
+			count: 1
+			path: src/PrestaShopBundle/ApiPlatform/Scopes/ApiResourceScopesExtractor.php
+
+		-
+			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/PrestaShopBundle/ApiPlatform/Serializer/CQRSApiSerializer.php
 
 		-
 			message: '#^Class PrestaShopBundle\\Command\\AboutCommand extends @final class Symfony\\Bundle\\FrameworkBundle\\Command\\AboutCommand\.$#'

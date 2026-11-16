@@ -16,6 +16,11 @@ class FileSystem
     public const DEFAULT_MODE_FOLDER = 0755;
 
     /**
+     * Mode for folders only the owner can read and write, such as a temporary extraction folder
+     */
+    public const PRIVATE_MODE_FOLDER = 0700;
+
+    /**
      * Default mode for files
      */
     public const DEFAULT_MODE_FILE = 0644;

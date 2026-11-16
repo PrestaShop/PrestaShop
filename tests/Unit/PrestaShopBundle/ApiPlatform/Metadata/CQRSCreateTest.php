@@ -9,11 +9,13 @@ declare(strict_types=1);
 namespace Tests\Unit\PrestaShopBundle\ApiPlatform\Metadata;
 
 use ApiPlatform\Exception\InvalidArgumentException;
+use ApiPlatform\Metadata\CollectionOperationInterface;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShopBundle\ApiPlatform\Metadata\CQRSCommand;
 use PrestaShopBundle\ApiPlatform\Metadata\CQRSCreate;
+use PrestaShopBundle\ApiPlatform\Metadata\CQRSCreateCollection;
 use PrestaShopBundle\ApiPlatform\Processor\CommandProcessor;
 
 class CQRSCreateTest extends TestCase
@@ -611,5 +613,24 @@ class CQRSCreateTest extends TestCase
         $this->assertNotNull($caughtException);
         $this->assertInstanceOf(InvalidArgumentException::class, $caughtException);
         $this->assertEquals('Specifying an extra property defaultValues and a defaultValues argument that are different is invalid', $caughtException->getMessage());
+    }
+
+    public function testCollectionOperation(): void
+    {
+        $operation = new CQRSCreateCollection(
+            uriTemplate: '/parents/{parentId}/rows',
+            CQRSCommand: 'Command',
+            CQRSQuery: 'Query',
+            scopes: ['parent_write'],
+        );
+        $this->assertInstanceOf(CollectionOperationInterface::class, $operation);
+        $this->assertEquals(CommandProcessor::class, $operation->getProcessor());
+        $this->assertEquals(CQRSCreate::METHOD_POST, $operation->getMethod());
+        $this->assertEquals('/parents/{parentId}/rows', $operation->getUriTemplate());
+        // Same settings as the item operation
+        $this->assertEquals(
+            (new CQRSCreate(CQRSCommand: 'Command', CQRSQuery: 'Query', scopes: ['parent_write']))->getExtraProperties(),
+            $operation->getExtraProperties()
+        );
     }
 }

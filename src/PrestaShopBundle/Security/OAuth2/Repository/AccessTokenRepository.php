@@ -48,7 +48,8 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
 
     public function isAccessTokenRevoked($tokenId): bool
     {
-        // @ToDo: check if AccessToken is revoked
+        // Issued tokens are not persisted so they cannot be revoked individually, the access of a deleted or
+        // disabled API client is cut by TokenAuthenticator which checks the client on every request
         return false;
     }
 }

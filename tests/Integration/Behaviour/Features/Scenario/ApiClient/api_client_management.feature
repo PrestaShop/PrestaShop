@@ -273,3 +273,59 @@ Feature: Api Client Management
     Then I should get an error that "secret" is invalid
     # The previous valid secret is still the current one
     And secret value "18c7b983c2eaa22a111609ce2b1c43518c7b983c2eaa22a111609ce2b1c43518c7b983c2" is valid for api client "AC-13"
+
+  @reset-api-client-context-after-scenario
+  Scenario: An api client cannot grant scopes it does not hold
+    Given I create an api client "AC-limited" with following properties:
+      | clientName  | Padawan                 |
+      | clientId    | padawan                 |
+      | enabled     | true                    |
+      | description | limited scopes          |
+      | scopes      | product_read, hook_read |
+      | lifetime    | 3600                    |
+    And I am logged in as api client with id "padawan"
+    When I create an api client "AC-17" with following properties:
+      | clientName  | Youngling     |
+      | clientId    | youngling     |
+      | enabled     | true          |
+      | description | subset scopes |
+      | scopes      | product_read  |
+      | lifetime    | 3600          |
+    Then api client "AC-17" should have the following properties:
+      | clientName | Youngling    |
+      | clientId   | youngling    |
+      | scopes     | product_read |
+    When I create an api client "AC-18" with following properties:
+      | clientName  | Vader                    |
+      | clientId    | dark-side                |
+      | enabled     | true                     |
+      | description | extra scope              |
+      | scopes      | product_read, hook_write |
+      | lifetime    | 3600                     |
+    Then I should get an error that scopes cannot be granted
+    When I edit api client "AC-17" with the following values:
+      | scopes | product_read, hook_write |
+    Then I should get an error that scopes cannot be granted
+    And api client "AC-17" should have the following properties:
+      | scopes | product_read |
+    When I edit api client "AC-limited" with the following values:
+      | scopes | product_read, hook_read, hook_write |
+    Then I should get an error that scopes cannot be granted
+    And api client "AC-limited" should have the following properties:
+      | scopes | product_read, hook_read |
+    When I edit api client "AC-17" with the following values:
+      | scopes | product_read, hook_read |
+    Then api client "AC-17" should have the following properties:
+      | scopes | product_read, hook_read |
+    # Outside an api client context (Back Office) no delegation restriction applies
+    When I am not logged in as an api client
+    And I create an api client "AC-18" with following properties:
+      | clientName  | Vader                    |
+      | clientId    | dark-side                |
+      | enabled     | true                     |
+      | description | extra scope              |
+      | scopes      | product_read, hook_write |
+      | lifetime    | 3600                     |
+    Then api client "AC-18" should have the following properties:
+      | clientId | dark-side                |
+      | scopes   | product_read, hook_write |

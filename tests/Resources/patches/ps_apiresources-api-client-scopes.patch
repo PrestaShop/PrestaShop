@@ -1,0 +1,11 @@
+--- a/tests/Integration/ApiPlatform/ApiClientEndpointTest.php
++++ b/tests/Integration/ApiPlatform/ApiClientEndpointTest.php
+@@ -32,7 +32,7 @@
+     {
+         parent::setUpBeforeClass();
+         // Pre-create the API Client with the needed scopes, this way we reduce the number of created API Clients
+-        self::createApiClient(['api_client_write', 'api_client_read']);
++        self::createApiClient(['api_client_write', 'api_client_read', 'hook_read']);
+     }
+ 
+     public static function getProtectedEndpoints(): iterable

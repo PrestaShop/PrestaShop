@@ -69,7 +69,8 @@ Breaking changes are only allowed in major versions. See [ADR 0017](https://gith
 | Behavior | Behat | `tests/Integration/Behaviour/` |
 | UI | Playwright | `tests/UI/` |
 
-- **New behavior / bug fix must come with a test.** Add or adjust a unit test on the class actually touched; prefer Behat for command/handler behavior; if an existing E2E covers the area, unskip it and re-run rather than leaving a `@todo`/skip in place.
+- **New behavior / bug fix must come with a test.** Add or adjust a test on the class actually touched (unit when the class lends itself to it, integration otherwise); prefer Behat for command/handler behavior; if an existing E2E covers the area, unskip it and re-run rather than leaving a `@todo`/skip in place.
+- **Tests never shape the production code.** Do not add a constructor parameter, an injected closure, a widened visibility or a dependency only so a test can reach the code: a seam the production code itself benefits from (an injected clock, a filesystem, a repository interface) is design, a parameter only the test passes is not. A class that is not suited to unit tests (cache clearing, file locks, kernel boot…) gets an integration test instead; when no test is realistic, the PR says why and how the change was verified.
 
 ## PR hygiene
 
@@ -80,6 +81,8 @@ Common slips unrelated to the feature itself — check before pushing:
 - **Keep lists alphabetically sorted** (interface members, imports where applicable, enum-like lists) — not all of this is caught by php-cs-fixer.
 - **Squash noise commits** (review fixups, reverts) so history stays readable.
 - **Target the lowest applicable branch** (`9.2.x` for bug fixes, `develop` for features) — see Branching & Versioning above.
+
+`php .ai/bin/check-conventions.php <target branch>` checks a branch diff before pushing: the context files it falls under, the slips above that a script can see, and the coding standards of the added code.
 
 ## Skills
 

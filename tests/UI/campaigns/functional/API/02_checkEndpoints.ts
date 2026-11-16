@@ -379,6 +379,12 @@ describe('API : Check endpoints', async () => {
     // @todo: add tests
     '/products/{productId}/default-supplier: PUT',
     // @todo: add tests
+    '/products/{productId}/feature-values: DELETE',
+    // @todo: add tests
+    '/products/{productId}/feature-values: GET',
+    // @todo: add tests
+    '/products/{productId}/feature-values: PUT',
+    // @todo: add tests
     '/products/{productId}/generate-combinations: POST',
     // tests/UI/campaigns/functional/API/02_endpoints/product/05_getProductIdImages.ts
     '/products/{productId}/images: GET',

@@ -280,17 +280,26 @@ class OrderConfirmationControllerCore extends FrontController
         }
 
         $order = new PaymentFree();
-        $order->validateOrder(
-            $cart->id,
-            (int) Configuration::get('PS_OS_PAYMENT'),
-            0,
-            $this->trans('Free order', [], 'Admin.Orderscustomers.Feature'),
-            null,
-            [],
-            null,
-            false,
-            $cart->secure_key
-        );
+        try {
+            $order->validateOrder(
+                $cart->id,
+                (int) Configuration::get('PS_OS_PAYMENT'),
+                0,
+                $this->trans('Free order', [], 'Admin.Orderscustomers.Feature'),
+                null,
+                [],
+                null,
+                false,
+                $cart->secure_key
+            );
+            $orderId = (int) $order->currentOrder;
+        } catch (PrestaShopException $e) {
+            // A concurrent request may have placed the order meanwhile: show that confirmation instead of failing
+            $orderId = (int) Order::getIdByCartId((int) $cart->id);
+            if ($orderId === 0) {
+                throw $e;
+            }
+        }
 
         /*
          * Redirect back to this page to display the order confirmation.
@@ -304,7 +313,7 @@ class OrderConfirmationControllerCore extends FrontController
             [
                 'id_cart' => (int) $cart->id,
                 'id_module' => '-1',
-                'id_order' => (int) $order->currentOrder,
+                'id_order' => $orderId,
                 'key' => $cart->secure_key,
             ]
         ));
