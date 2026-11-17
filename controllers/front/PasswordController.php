@@ -46,7 +46,13 @@ class PasswordControllerCore extends FrontController
 
     protected function sendRenewPasswordLink(): void
     {
-        if (!($email = $this->IDNConverter->emailToUtf8(trim(Tools::getValue('email')))) || !Validate::isEmail($email)) {
+        $email = Tools::getValue('email');
+
+        if (!is_string($email)) {
+            $email = '';
+        }
+
+        if (!($email = $this->IDNConverter->emailToUtf8(trim($email))) || !Validate::isEmail($email)) {
             $this->errors[] = $this->trans('Invalid email address.', [], 'Shop.Notifications.Error');
         } else {
             $customer = new Customer();
