@@ -216,24 +216,24 @@ class EmailDataConfiguratorTest extends KernelTestCase
         self::assertSame('global-password', LegacyConfiguration::getGlobalValue('PS_MAIL_PASSWD'));
     }
 
-    public function provideContexts(): iterable
+    public static function provideContexts(): iterable
     {
         yield 'shop' => [false];
         yield 'shop group' => [true];
     }
 
-    public function provideOverrideResets(): iterable
+    public static function provideOverrideResets(): iterable
     {
-        foreach ($this->provideContexts() as $context => [$groupContext]) {
+        foreach (self::provideContexts() as $context => [$groupContext]) {
             yield $context . ', absent flag' => [$groupContext, []];
             yield $context . ', false flag' => [$groupContext, ['multistore_password' => false]];
             yield $context . ', null flag' => [$groupContext, ['multistore_password' => null]];
         }
     }
 
-    public function provideExistingPasswords(): iterable
+    public static function provideExistingPasswords(): iterable
     {
-        foreach ($this->provideContexts() as $context => [$groupContext]) {
+        foreach (self::provideContexts() as $context => [$groupContext]) {
             yield $context . ', nonempty password' => [$groupContext, 'local-password'];
             yield $context . ', zero password' => [$groupContext, '0'];
         }
