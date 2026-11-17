@@ -6,6 +6,8 @@ services:
 
   PrestaShop\PrestaShop\Adapter\WithdrawalRequest\QueryHandler\GetOrderWithdrawalEligibilityHandler: ~
 
+  PrestaShop\PrestaShop\Adapter\WithdrawalRequest\QueryHandler\GetWithdrawalRequestForViewingHandler: ~
+
   PrestaShop\PrestaShop\Adapter\WithdrawalRequest\CommandHandler\SubmitWithdrawalRequestHandler: ~
 
   PrestaShop\PrestaShop\Adapter\WithdrawalRequest\CommandHandler\UpdateWithdrawalRequestStatusHandler: ~
