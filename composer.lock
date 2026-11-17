@@ -5385,12 +5385,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_apiresources.git",
-                "reference": "f3de310c50ebb81d75c567299e7c4ac92b11e734"
+                "reference": "3e353982c65616a03f148fd93fced123ffc07d11"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/f3de310c50ebb81d75c567299e7c4ac92b11e734",
-                "reference": "f3de310c50ebb81d75c567299e7c4ac92b11e734",
+                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/3e353982c65616a03f148fd93fced123ffc07d11",
+                "reference": "3e353982c65616a03f148fd93fced123ffc07d11",
                 "shasum": ""
             },
             "require": {
