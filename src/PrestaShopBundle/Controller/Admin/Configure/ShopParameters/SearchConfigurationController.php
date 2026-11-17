@@ -139,6 +139,8 @@ class SearchConfigurationController extends PrestaShopAdminController
         #[Autowire(service: 'logger')]
         LoggerInterface $logger,
     ): RedirectResponse {
+        ini_set('max_execution_time', '7200');
+
         try {
             $this->dispatchCommand(new SearchIndexationCommand(false, $this->getShopContext()->getShopConstraint()));
             $this->addFlash('success', $this->trans('The index was successfully updated.', [], 'Admin.Shopparameters.Notification'));
@@ -155,6 +157,8 @@ class SearchConfigurationController extends PrestaShopAdminController
         #[Autowire(service: 'logger')]
         LoggerInterface $logger,
     ): RedirectResponse {
+        ini_set('max_execution_time', '7200');
+
         try {
             $this->dispatchCommand(new SearchIndexationCommand(true, $this->getShopContext()->getShopConstraint()));
             $this->addFlash('success', $this->trans('The index was successfully rebuilt.', [], 'Admin.Shopparameters.Notification'));
@@ -173,13 +177,13 @@ class SearchConfigurationController extends PrestaShopAdminController
         #[Autowire(service: 'logger')]
         LoggerInterface $logger,
     ): Response {
-        if (!hash_equals($this->getCronToken($cookieKey), (string) $request->query->get('token'))) {
+        if (!hash_equals($this->getCronToken($cookieKey), (string) $request->get('token'))) {
             return new Response('Forbidden', Response::HTTP_FORBIDDEN);
         }
 
-        $idShop = $request->query->getInt('id_shop');
+        $idShop = (int) $request->get('id_shop', 0);
         $shopConstraint = $idShop > 0 ? ShopConstraint::shop($idShop) : ShopConstraint::allShops();
-        $full = (bool) $request->query->get('full', false);
+        $full = (bool) $request->get('full', false);
 
         ini_set('max_execution_time', '7200');
 

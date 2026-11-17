@@ -24,6 +24,18 @@ Feature: Count the products of the search index from Back Office (BO)
     Then no searchable product should be counted for a shop that does not exist
 
   Scenario: Inactive products and catalog-only products are not counted
-    Given I remember how many searchable products the default shop has
-    When I deactivate one searchable product and make another one visible in the catalog only
-    Then the searchable products of the default shop should decrease by exactly 2
+    Then the default shop should have 19 searchable products
+    When I add product "disabledProduct" with following information:
+      | name[en-US] | disabled product |
+      | type        | standard         |
+    And I add product "catalogOnlyProduct" with following information:
+      | name[en-US] | catalog only product |
+      | type        | standard             |
+    And I update product "catalogOnlyProduct" with following values:
+      | visibility | catalog |
+    And I add product "searchableProduct" with following information:
+      | name[en-US] | searchable product |
+      | type        | standard           |
+    And I enable product "catalogOnlyProduct"
+    And I enable product "searchableProduct"
+    Then the default shop should have 20 searchable products

@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Search\Repository;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception as DBALException;
 
@@ -43,7 +44,7 @@ final class IndexedProductsRepository
             )
             ->where($qb->expr()->in('ps.visibility', ':visibilities'))
             ->andWhere('ps.active = 1')
-            ->setParameter('visibilities', ['both', 'search'], Connection::PARAM_STR_ARRAY);
+            ->setParameter('visibilities', ['both', 'search'], ArrayParameterType::STRING);
 
         if (null !== $shopId) {
             $qb->setParameter('shopId', $shopId);

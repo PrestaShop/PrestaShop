@@ -20,8 +20,6 @@ class SearchIndexationFeatureContext extends AbstractDomainFeatureContext
 {
     private const NON_EXISTENT_SHOP_ID = 999;
 
-    private ?int $searchableProductsCountBefore = null;
-
     /**
      * @BeforeFeature @restore-search-index-before-feature
      *
@@ -102,38 +100,11 @@ class SearchIndexationFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given I remember how many searchable products the default shop has
+     * @Then the default shop should have :count searchable products
      */
-    public function rememberSearchableProductsCount(): void
+    public function assertSearchableProductsCount(string $count): void
     {
-        $this->searchableProductsCountBefore = $this->getIndexedProductsCount($this->getDefaultShopId())->getTotal();
-    }
-
-    /**
-     * @When I deactivate one searchable product and make another one visible in the catalog only
-     */
-    public function deactivateOneAndHideAnotherProduct(): void
-    {
-        $shopId = $this->getDefaultShopId();
-        $productIds = Db::getInstance()->executeS(
-            'SELECT id_product FROM ' . _DB_PREFIX_ . "product_shop WHERE id_shop = $shopId AND active = 1 AND visibility IN ('both', 'search') ORDER BY id_product ASC LIMIT 2"
-        );
-        Assert::assertCount(2, $productIds, 'Fixtures should contain at least two searchable products');
-
-        Db::getInstance()->update('product_shop', ['active' => 0], 'id_product = ' . (int) $productIds[0]['id_product'] . " AND id_shop = $shopId");
-        Db::getInstance()->update('product_shop', ['visibility' => 'catalog'], 'id_product = ' . (int) $productIds[1]['id_product'] . " AND id_shop = $shopId");
-    }
-
-    /**
-     * @Then the searchable products of the default shop should decrease by exactly 2
-     */
-    public function assertSearchableProductsCountDecreasedByTwo(): void
-    {
-        Assert::assertNotNull($this->searchableProductsCountBefore, 'The searchable products count should have been remembered first');
-
-        $count = $this->getIndexedProductsCount($this->getDefaultShopId());
-
-        Assert::assertSame($this->searchableProductsCountBefore - 2, $count->getTotal());
+        Assert::assertSame((int) $count, $this->getIndexedProductsCount($this->getDefaultShopId())->getTotal());
     }
 
     private function getIndexedProductsCount(int $shopId): IndexedProductsCount
