@@ -7,6 +7,7 @@
 namespace PrestaShop\PrestaShop\Core\Email;
 
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -29,11 +30,11 @@ final class EmailDataConfigurator extends AbstractMultistoreConfiguration
             'mail_type' => (int) $this->configuration->get('PS_MAIL_TYPE', false, $shopConstraint),
             'log_emails' => (bool) $this->configuration->get('PS_LOG_EMAILS', false, $shopConstraint),
             'smtp_config' => [
-                'domain' => $this->configuration->get('PS_MAIL_DOMAIN', false, $shopConstraint),
+                'domain' => (string) $this->configuration->get('PS_MAIL_DOMAIN', false, $shopConstraint),
                 'server' => $this->configuration->get('PS_MAIL_SERVER', false, $shopConstraint),
-                'username' => $this->configuration->get('PS_MAIL_USER', false, $shopConstraint),
-                'password' => $this->configuration->get('PS_MAIL_PASSWD', false, $shopConstraint),
-                'encryption' => $this->configuration->get('PS_MAIL_SMTP_ENCRYPTION', false, $shopConstraint),
+                'username' => (string) $this->configuration->get('PS_MAIL_USER', false, $shopConstraint),
+                'password' => (string) $this->configuration->get('PS_MAIL_PASSWD', false, $shopConstraint),
+                'encryption' => (string) $this->configuration->get('PS_MAIL_SMTP_ENCRYPTION', false, $shopConstraint),
                 'port' => $this->configuration->get('PS_MAIL_SMTP_PORT', false, $shopConstraint),
             ],
             'dkim_enable' => (bool) $this->configuration->get('PS_MAIL_DKIM_ENABLE', false, $shopConstraint),
@@ -56,19 +57,9 @@ final class EmailDataConfigurator extends AbstractMultistoreConfiguration
             $smtpConfig = $this->normalizeMultistoreFlags($config['smtp_config'] ?? []);
             $dkimConfig = $this->normalizeMultistoreFlags($config['dkim_config'] ?? []);
             $isScoped = $this->multistoreFeature->isUsed() && !$this->shopContext->isAllShopContext();
-            $passwordOverride = MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . 'password';
 
-            if (array_key_exists('password', $smtpConfig) && (!$isScoped || isset($smtpConfig[$passwordOverride]))) {
-                $smtpConfig['password'] = (string) $smtpConfig['password'];
-
-                // Blank preserves an existing password, but a new override must allow an intentionally empty value.
-                if ('' === $smtpConfig['password']
-                    && ($isScoped
-                        ? $this->configuration->has('PS_MAIL_PASSWD', $shopConstraint->clone(true))
-                        : '' !== (string) $this->configuration->get('PS_MAIL_PASSWD', false, $shopConstraint))
-                ) {
-                    unset($smtpConfig['password']);
-                }
+            if ($this->shouldPreserveExistingPassword($smtpConfig, $isScoped, $shopConstraint)) {
+                unset($smtpConfig['password']);
             }
 
             $this->updateConfigurationValue('PS_MAIL_EMAIL_MESSAGE', 'send_emails_to', $config, $shopConstraint);
@@ -110,11 +101,11 @@ final class EmailDataConfigurator extends AbstractMultistoreConfiguration
 
         if (isset($config['smtp_config'])) {
             $this->buildNestedResolver([
-                'domain' => ['string', 'bool'],
+                'domain' => 'string',
                 'server' => ['string', 'bool', 'null'],
-                'username' => ['string', 'bool'],
-                'password' => ['string', 'bool'],
-                'encryption' => ['string', 'bool'],
+                'username' => 'string',
+                'password' => 'string',
+                'encryption' => 'string',
                 'port' => ['string', 'int', 'bool', 'null'],
             ])->resolve($config['smtp_config']);
         }
@@ -142,6 +133,23 @@ final class EmailDataConfigurator extends AbstractMultistoreConfiguration
             ->setAllowedTypes('dkim_enable', 'bool')
             ->setAllowedTypes('smtp_config', 'array')
             ->setAllowedTypes('dkim_config', 'array');
+    }
+
+    private function shouldPreserveExistingPassword(array $smtpConfig, bool $isScoped, ?ShopConstraint $shopConstraint): bool
+    {
+        if (!array_key_exists('password', $smtpConfig) || '' !== $smtpConfig['password']) {
+            return false;
+        }
+
+        if ($isScoped) {
+            // Preserve only an active existing override; unchecked and new overrides must reach the writer.
+            $passwordOverride = MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . 'password';
+
+            return isset($smtpConfig[$passwordOverride])
+                && $this->configuration->has('PS_MAIL_PASSWD', $shopConstraint->clone(true));
+        }
+
+        return '' !== (string) $this->configuration->get('PS_MAIL_PASSWD', false, $shopConstraint);
     }
 
     /**
