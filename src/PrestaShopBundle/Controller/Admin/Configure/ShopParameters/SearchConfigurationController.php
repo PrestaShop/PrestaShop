@@ -17,6 +17,7 @@ use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -55,7 +56,7 @@ class SearchConfigurationController extends PrestaShopAdminController
         );
     }
 
-    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_search_preferences_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_search_preferences_index')]
     public function processIndexationFormAction(
         Request $request,
         #[Autowire(service: 'prestashop.admin.search_preferences.indexation.form_handler')]
@@ -81,7 +82,7 @@ class SearchConfigurationController extends PrestaShopAdminController
         );
     }
 
-    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_search_preferences_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_search_preferences_index')]
     public function processSearchOptionsFormAction(
         Request $request,
         #[Autowire(service: 'prestashop.admin.search_preferences.search_options.form_handler')]
@@ -107,7 +108,7 @@ class SearchConfigurationController extends PrestaShopAdminController
         );
     }
 
-    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_search_preferences_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_search_preferences_index')]
     public function processWeightFormAction(
         Request $request,
         #[Autowire(service: 'prestashop.admin.search_preferences.weight.form_handler')]
@@ -133,26 +134,32 @@ class SearchConfigurationController extends PrestaShopAdminController
         );
     }
 
-    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_search_preferences_index')]
-    public function addMissingToIndexAction(): RedirectResponse
-    {
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_search_preferences_index')]
+    public function addMissingToIndexAction(
+        #[Autowire(service: 'logger')]
+        LoggerInterface $logger,
+    ): RedirectResponse {
         try {
             $this->dispatchCommand(new SearchIndexationCommand(false, $this->getShopContext()->getShopConstraint()));
             $this->addFlash('success', $this->trans('The index was successfully updated.', [], 'Admin.Shopparameters.Notification'));
-        } catch (SearchIndexationException) {
+        } catch (SearchIndexationException $e) {
+            $logger->error('Failed to add missing products to the search index: ' . $e->getMessage());
             $this->addFlash('error', $this->trans('An error occurred while indexing products.', [], 'Admin.Shopparameters.Notification'));
         }
 
         return $this->redirectToRoute('admin_search_preferences_index');
     }
 
-    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_search_preferences_index')]
-    public function rebuildIndexAction(): RedirectResponse
-    {
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_search_preferences_index')]
+    public function rebuildIndexAction(
+        #[Autowire(service: 'logger')]
+        LoggerInterface $logger,
+    ): RedirectResponse {
         try {
             $this->dispatchCommand(new SearchIndexationCommand(true, $this->getShopContext()->getShopConstraint()));
             $this->addFlash('success', $this->trans('The index was successfully rebuilt.', [], 'Admin.Shopparameters.Notification'));
-        } catch (SearchIndexationException) {
+        } catch (SearchIndexationException $e) {
+            $logger->error('Failed to rebuild the search index: ' . $e->getMessage());
             $this->addFlash('error', $this->trans('An error occurred while rebuilding the index.', [], 'Admin.Shopparameters.Notification'));
         }
 
@@ -163,6 +170,8 @@ class SearchConfigurationController extends PrestaShopAdminController
         Request $request,
         #[Autowire(param: 'cookie_key')]
         string $cookieKey,
+        #[Autowire(service: 'logger')]
+        LoggerInterface $logger,
     ): Response {
         if (!hash_equals($this->getCronToken($cookieKey), (string) $request->query->get('token'))) {
             return new Response('Forbidden', Response::HTTP_FORBIDDEN);
@@ -176,9 +185,13 @@ class SearchConfigurationController extends PrestaShopAdminController
 
         try {
             $this->dispatchCommand(new SearchIndexationCommand($full, $shopConstraint));
-        } catch (SearchIndexationInvalidContextException) {
+        } catch (SearchIndexationInvalidContextException $e) {
+            $logger->warning('Search indexation cron called for an unknown shop: ' . $e->getMessage());
+
             return new Response('Unknown shop', Response::HTTP_BAD_REQUEST);
-        } catch (SearchIndexationException) {
+        } catch (SearchIndexationException $e) {
+            $logger->error('Search indexation cron failed: ' . $e->getMessage());
+
             return new Response('Indexation failed', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 

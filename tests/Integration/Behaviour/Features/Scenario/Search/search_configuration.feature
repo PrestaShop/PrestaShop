@@ -1,6 +1,7 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s alias --tags search_configuration
 @restore-search-configuration-before-feature
 @restore-shops-after-feature
+@restore-search-configuration-after-feature
 @clear-cache-before-feature
 @search_configuration
 Feature: Configure the search from Back Office (BO)
