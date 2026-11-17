@@ -178,7 +178,7 @@ class ConfigurationTest extends KernelTestCase
             $this->configuration->remove($key);
             $this->setScopeIsolationValues($key, true, $withGroupOverride, false);
             LegacyConfiguration::resetStaticCache();
-            // Isolate strict inheritance from the separate current-shop interference bug.
+            // Use all-shops context to test strict inheritance independently of the current shop.
             LegacyShop::setContext(LegacyShop::CONTEXT_ALL);
 
             $constraint = $this->getExplicitShopConstraint($scope, false);
@@ -186,10 +186,7 @@ class ConfigurationTest extends KernelTestCase
             $this->assertSame($inheritedValues, $this->configuration->get($key, null, $constraint));
 
             $strictValues = $this->configuration->get($key, null, $constraint->clone(true));
-            // Do not prescribe a new missing-value representation: only forbid inherited values.
-            foreach ($inheritedValues as $langId => $inheritedValue) {
-                $this->assertNotSame($inheritedValue, is_array($strictValues) ? ($strictValues[$langId] ?? null) : $strictValues);
-            }
+            $this->assertSame(array_fill_keys(array_keys($inheritedValues), false), $strictValues);
         } finally {
             LegacyShop::setContext($context ?? LegacyShop::CONTEXT_ALL, $contextId);
             $this->configuration->remove($key);

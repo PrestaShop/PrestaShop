@@ -154,7 +154,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
             $productId->getValue(),
             $this->getCombinationName($query->getCombinationId()),
             $this->getDetails($combination),
-            $this->getPrices($combination, $product),
+            $this->getPrices($combination, $product, $shopConstraint),
             $this->getStock($combination),
             $images,
             $this->getCoverUrl($images, $productId, $shopConstraint),
@@ -199,14 +199,15 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
     /**
      * @param Combination $combination
      * @param Product $product
+     * @param ShopConstraint $shopConstraint
      *
      * @return CombinationPrices
      */
-    private function getPrices(Combination $combination, Product $product): CombinationPrices
+    private function getPrices(Combination $combination, Product $product, ShopConstraint $shopConstraint): CombinationPrices
     {
-        $taxEnabled = (bool) $this->configuration->get('PS_TAX', null, ShopConstraint::allShops());
-        $ecoTaxGroupId = (int) $this->configuration->get('PS_ECOTAX_TAX_RULES_GROUP_ID', null, ShopConstraint::allShops());
-        $defaultCountryId = (int) $this->configuration->get('PS_COUNTRY_DEFAULT', null, ShopConstraint::allShops());
+        $taxEnabled = (bool) $this->configuration->get('PS_TAX', null, $shopConstraint);
+        $ecoTaxGroupId = (int) $this->configuration->get('PS_ECOTAX_TAX_RULES_GROUP_ID', null, $shopConstraint);
+        $defaultCountryId = (int) $this->configuration->get('PS_COUNTRY_DEFAULT', null, $shopConstraint);
         $defaultCountryId = new CountryId($defaultCountryId);
 
         $productTaxRulesGroupId = new TaxRulesGroupId((int) $product->id_tax_rules_group);

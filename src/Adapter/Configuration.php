@@ -78,8 +78,14 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
      * Returns constant defined by given $key if exists or check directly into PrestaShop
      * \Configuration.
      *
+     * Non-strict reads inherit from shop to shop group to global; strict reads only use the requested scope.
+     * Missing scalar values return null in strict mode, or $default in non-strict mode.
+     * Keys recognized as multilingual return an array indexed by the selected language IDs, with false for
+     * each translation missing after the allowed inheritance. In strict mode, missing translations are
+     * false even when an inherited value exists. The $default argument is not applied to multilingual values.
+     *
      * @param string $key
-     * @param mixed $default The default value if the parameter key does not exist
+     * @param mixed $default Fallback for missing scalar values in non-strict mode
      * @param ShopConstraint|null $shopConstraint This parameter should always be given, if not, a ShopConstraint will
      *                                            be built based on the current shop context
      *
@@ -122,7 +128,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
         }
 
         if (ConfigurationLegacy::hasKey($key)) {
-            return ConfigurationLegacy::get($key, null, 0, 0);
+            return ConfigurationLegacy::getGlobalValue($key);
         }
 
         return $default;
@@ -443,7 +449,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
         }
 
         if (ConfigurationLegacy::hasKey($key)) {
-            return ConfigurationLegacy::get($key, null, 0, 0);
+            return ConfigurationLegacy::getGlobalValue($key);
         }
 
         return null;
