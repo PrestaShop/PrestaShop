@@ -391,7 +391,7 @@ class CountryCore extends ObjectModel
 			WHERE `id_country` = ' . (int) $idCountry));
         }
 
-        return Cache::retrieve($key);
+        return (bool) Cache::retrieve($key);
     }
 
     /**
