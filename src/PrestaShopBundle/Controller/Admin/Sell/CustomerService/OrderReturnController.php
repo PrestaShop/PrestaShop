@@ -89,6 +89,7 @@ class OrderReturnController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_merchandise_returns_index')]
+    #[DemoRestricted(redirectRoute: 'admin_merchandise_returns_index')]
     public function editAction(
         int $orderReturnId,
         Request $request,

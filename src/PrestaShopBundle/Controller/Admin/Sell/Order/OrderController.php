@@ -208,6 +208,7 @@ class OrderController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_orders_index')]
     public function placeAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.cart_summary_form_handler')] FormHandlerInterface $formHandler
@@ -362,6 +363,7 @@ class OrderController extends PrestaShopAdminController
      * @return BinaryFileResponse|RedirectResponse
      */
     #[AdminSecurity("is_granted('read', 'AdminOrders')", message: 'You do not have permission to view this.', redirectRoute: 'admin_orders_index')]
+    #[DemoRestricted(redirectRoute: 'admin_orders_index')]
     public function generateShipmentsDeliverySlipPdfAction(
         Request $request,
         int $orderId,
@@ -400,6 +402,7 @@ class OrderController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
+    #[DemoRestricted(redirectRoute: 'admin_orders_index')]
     public function changeOrdersStatusAction(Request $request)
     {
         $changeOrdersStatusForm = $this->createForm(ChangeOrdersStatusType::class);
@@ -755,6 +758,7 @@ class OrderController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
+    #[DemoRestricted(redirectRoute: 'admin_orders_index')]
     public function mergeShipmentAction(int $orderId, Request $request, #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.merge_shipment_form_builder')] FormBuilderInterface $formBuilder): RedirectResponse
     {
         try {
@@ -820,6 +824,7 @@ class OrderController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
+    #[DemoRestricted(redirectRoute: 'admin_orders_index')]
     public function editShipmentAction(int $orderId, int $shipmentId, Request $request, #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.edit_shipment_form_builder')] FormBuilderInterface $formBuilder): RedirectResponse
     {
         $form = $formBuilder->getFormFor($orderId, [], ['method' => 'PUT']);
@@ -865,6 +870,7 @@ class OrderController extends PrestaShopAdminController
      * @param Request $request
      */
     #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
+    #[DemoRestricted(redirectRoute: 'admin_orders_index')]
     public function fulfillShipmentAction(int $orderId, int $shipmentId, Request $request, #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.fulfill_shipment_form_builder')] FormBuilderInterface $formBuilder): RedirectResponse
     {
         $form = $formBuilder->getFormFor($orderId);
@@ -892,6 +898,7 @@ class OrderController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
+    #[DemoRestricted(redirectRoute: 'admin_orders_index')]
     public function splitShipmentAction(int $orderId, int $shipmentId, Request $request): RedirectResponse
     {
         try {
@@ -989,6 +996,7 @@ class OrderController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
+    #[DemoRestricted(redirectRoute: 'admin_orders_index')]
     public function partialRefundAction(
         int $orderId,
         Request $request,
@@ -1023,6 +1031,7 @@ class OrderController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_orders_index')]
     public function standardRefundAction(
         int $orderId,
         Request $request,
@@ -1057,6 +1066,7 @@ class OrderController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_orders_index')]
     public function returnProductAction(
         int $orderId,
         Request $request,
@@ -1111,6 +1121,7 @@ class OrderController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
+    #[DemoRestricted(redirectRoute: 'admin_orders_index')]
     public function addProductAction(
         int $orderId,
         Request $request,
@@ -1322,6 +1333,7 @@ class OrderController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
+    #[DemoRestricted(redirectRoute: 'admin_orders_index')]
     public function updateShippingAction(int $orderId, Request $request): RedirectResponse
     {
         $form = $this->createForm(UpdateOrderShippingType::class, [], [
@@ -1390,6 +1402,7 @@ class OrderController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
+    #[DemoRestricted(redirectRoute: 'admin_orders_index')]
     public function updateInvoiceNoteAction(int $orderId, int $orderInvoiceId, Request $request): RedirectResponse
     {
         try {
@@ -1418,6 +1431,7 @@ class OrderController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
+    #[DemoRestricted(redirectRoute: 'admin_orders_index')]
     public function updateProductAction(
         int $orderId,
         int $orderDetailId,
@@ -1508,6 +1522,7 @@ class OrderController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
+    #[DemoRestricted(redirectRoute: 'admin_orders_index')]
     public function addCartRuleAction(int $orderId, Request $request): RedirectResponse
     {
         $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class, [], [
@@ -1553,6 +1568,7 @@ class OrderController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
+    #[DemoRestricted(redirectRoute: 'admin_orders_index')]
     public function updateStatusAction(int $orderId, Request $request): RedirectResponse
     {
         $form = $this->formFactory->createNamed(
@@ -1588,6 +1604,7 @@ class OrderController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
+    #[DemoRestricted(redirectRoute: 'admin_orders_index')]
     public function updateStatusFromListAction(int $orderId, Request $request): RedirectResponse
     {
         $this->handleOrderStatusUpdate($orderId, $request->request->getInt('value'));
@@ -1602,6 +1619,7 @@ class OrderController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', 'AdminOrders')", message: 'You do not have permission to edit this.', redirectQueryParamsToKeep: ['orderId'], redirectRoute: 'admin_orders_view')]
+    #[DemoRestricted(redirectRoute: 'admin_orders_index')]
     public function addPaymentAction(
         int $orderId,
         Request $request,
@@ -1680,6 +1698,7 @@ class OrderController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
+    #[DemoRestricted(redirectRoute: 'admin_orders_index')]
     public function duplicateOrderCartAction(int $orderId)
     {
         $cartId = $this->dispatchCommand(new DuplicateOrderCartCommand($orderId))->getValue();
@@ -1771,6 +1790,7 @@ class OrderController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
+    #[DemoRestricted(redirectRoute: 'admin_orders_index')]
     public function changeCustomerAddressAction(Request $request): RedirectResponse
     {
         $orderId = $request->query->get('orderId');
@@ -1822,6 +1842,7 @@ class OrderController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
+    #[DemoRestricted(redirectRoute: 'admin_orders_index')]
     public function changeCurrencyAction(int $orderId, Request $request): RedirectResponse
     {
         $changeOrderCurrencyForm = $this->createForm(ChangeOrderCurrencyType::class);
@@ -1858,6 +1879,7 @@ class OrderController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
+    #[DemoRestricted(redirectRoute: 'admin_orders_index')]
     public function resendEmailAction(int $orderId, int $orderStatusId, int $orderHistoryId): RedirectResponse
     {
         try {
@@ -1885,6 +1907,7 @@ class OrderController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
+    #[DemoRestricted(redirectRoute: 'admin_orders_index')]
     public function deleteProductAction(int $orderId, int $orderDetailId): JsonResponse
     {
         try {
@@ -2024,6 +2047,7 @@ class OrderController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to generate this.')]
+    #[DemoRestricted(redirectRoute: 'admin_orders_index')]
     public function generateInvoiceAction(int $orderId): RedirectResponse
     {
         try {
@@ -2047,6 +2071,7 @@ class OrderController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
+    #[DemoRestricted(redirectRoute: 'admin_orders_index')]
     public function sendProcessOrderEmailAction(Request $request): JsonResponse
     {
         try {
@@ -2070,6 +2095,7 @@ class OrderController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
+    #[DemoRestricted(redirectRoute: 'admin_orders_index')]
     public function cancellationAction(
         int $orderId,
         Request $request,
@@ -2102,6 +2128,7 @@ class OrderController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_orders_index')]
     public function configureProductPaginationAction(Request $request): JsonResponse
     {
         $numPerPage = (int) $request->request->get('numPerPage');
@@ -2170,6 +2197,7 @@ class OrderController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
+    #[DemoRestricted(redirectRoute: 'admin_orders_index')]
     public function setInternalNoteAction($orderId, Request $request)
     {
         $internalNoteForm = $this->createForm(InternalNoteType::class);

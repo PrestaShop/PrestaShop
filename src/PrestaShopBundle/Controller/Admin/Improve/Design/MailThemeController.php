@@ -27,6 +27,7 @@ use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\GenerateMailsType;
 use PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\TranslateMailsBodyType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use PrestaShopBundle\Service\TranslationService;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\Form;
@@ -91,6 +92,7 @@ class MailThemeController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_mail_theme_index')]
     public function generateMailsAction(Request $request): Response
     {
         $generateThemeMailsForm = $this->createForm(GenerateMailsType::class);
@@ -181,6 +183,7 @@ class MailThemeController extends PrestaShopAdminController
      * @throws Exception
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_mail_theme_index')]
+    #[DemoRestricted(redirectRoute: 'admin_mail_theme_index')]
     public function saveConfigurationAction(
         Request $request,
         #[Autowire(service: 'prestashop.admin.mail_theme.form_handler')]
@@ -341,6 +344,7 @@ class MailThemeController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to update this.')]
+    #[DemoRestricted(redirectRoute: 'admin_mail_theme_index')]
     public function translateBodyAction(
         Request $request,
         #[Autowire(service: 'prestashop.service.translation')]

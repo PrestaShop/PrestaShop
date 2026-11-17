@@ -25,6 +25,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\AttributeGroupFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -69,6 +70,7 @@ class AttributeGroupController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message: 'You do not have permission to create this.')]
+    #[DemoRestricted(redirectRoute: 'admin_attribute_groups_index')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\AttributeGroupFormBuilder')]
@@ -106,6 +108,7 @@ class AttributeGroupController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to update this.')]
+    #[DemoRestricted(redirectRoute: 'admin_attribute_groups_index')]
     public function editAction(
         Request $request,
         int $attributeGroupId,
@@ -191,6 +194,7 @@ class AttributeGroupController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_attribute_groups_index')]
+    #[DemoRestricted(redirectRoute: 'admin_attribute_groups_index')]
     public function updatePositionAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.grid.attribute_group.position_definition')]
@@ -221,6 +225,7 @@ class AttributeGroupController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_attribute_groups_index')]
+    #[DemoRestricted(redirectRoute: 'admin_attribute_groups_index')]
     public function deleteAction($attributeGroupId)
     {
         try {
@@ -245,6 +250,7 @@ class AttributeGroupController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to delete this.', redirectRoute: 'admin_attributes_edit', redirectQueryParamsToKeep: ['attributeGroupId', 'attributeId'])]
+    #[DemoRestricted(redirectRoute: 'admin_attribute_groups_index')]
     public function deleteTextureImageAction($attributeGroupId, $attributeId)
     {
         try {
@@ -272,6 +278,7 @@ class AttributeGroupController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_attribute_groups_index')]
+    #[DemoRestricted(redirectRoute: 'admin_attribute_groups_index')]
     public function bulkDeleteAction(Request $request)
     {
         try {

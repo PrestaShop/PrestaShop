@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\AddressFilters;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Address\RequiredFieldsAddressType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -89,6 +90,7 @@ class AddressController extends PrestaShopAdminController
      * @throws Exception
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_addresses_index')]
+    #[DemoRestricted(redirectRoute: 'admin_addresses_index')]
     public function saveRequiredFieldsAction(Request $request): RedirectResponse
     {
         $addressRequiredFieldsForm = $this->getRequiredFieldsForm();
@@ -116,6 +118,7 @@ class AddressController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_addresses_index')]
+    #[DemoRestricted(redirectRoute: 'admin_addresses_index')]
     public function deleteAction(Request $request, int $addressId): RedirectResponse
     {
         try {
@@ -141,6 +144,7 @@ class AddressController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_addresses_index', message: 'You do not have permission to delete this.')]
+    #[DemoRestricted(redirectRoute: 'admin_addresses_index')]
     public function deleteBulkAction(Request $request): RedirectResponse
     {
         $addressIds = $this->getBulkAddressesFromRequest($request);
@@ -208,6 +212,7 @@ class AddressController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_addresses_index', message: 'You do not have permission to create this.')]
+    #[DemoRestricted(redirectRoute: 'admin_addresses_index')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.address_form_builder')]
@@ -292,6 +297,7 @@ class AddressController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_addresses_index')]
+    #[DemoRestricted(redirectRoute: 'admin_addresses_index')]
     public function editAction(
         int $addressId,
         Request $request,
@@ -364,6 +370,7 @@ class AddressController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
+    #[DemoRestricted(redirectRoute: 'admin_addresses_index')]
     public function editOrderAddressAction(
         int $orderId,
         string $addressType,
@@ -460,6 +467,7 @@ class AddressController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_orders_index')]
+    #[DemoRestricted(redirectRoute: 'admin_addresses_index')]
     public function editCartAddressAction(
         int $cartId,
         string $addressType,

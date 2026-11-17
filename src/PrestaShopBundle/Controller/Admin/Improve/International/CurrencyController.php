@@ -102,6 +102,7 @@ class CurrencyController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_currencies_index', message: 'You need permission to create this.')]
+    #[DemoRestricted(redirectRoute: 'admin_currencies_index')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.builder.currency_form_builder')]
@@ -139,6 +140,7 @@ class CurrencyController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_currencies_index', message: 'You need permission to edit this.')]
+    #[DemoRestricted(redirectRoute: 'admin_currencies_index')]
     public function editAction(
         int $currencyId,
         Request $request,

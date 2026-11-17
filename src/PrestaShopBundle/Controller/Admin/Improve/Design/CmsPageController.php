@@ -161,6 +161,7 @@ class CmsPageController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'], message: 'You do not have permission to add this.')]
+    #[DemoRestricted(redirectRoute: 'admin_cms_pages_index')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.adapter.shop.url.cms_provider')]
@@ -224,6 +225,7 @@ class CmsPageController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'], message: 'You do not have permission to edit this.')]
+    #[DemoRestricted(redirectRoute: 'admin_cms_pages_index')]
     public function editAction(
         Request $request,
         int $cmsPageId,
@@ -310,6 +312,7 @@ class CmsPageController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'], message: 'You do not have permission to add this.')]
+    #[DemoRestricted(redirectRoute: 'admin_cms_pages_index')]
     public function createCmsCategoryAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cms_page_category_form_builder')]
@@ -359,6 +362,7 @@ class CmsPageController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'], message: 'You do not have permission to edit this.')]
+    #[DemoRestricted(redirectRoute: 'admin_cms_pages_index')]
     public function editCmsCategoryAction(
         int $cmsCategoryId,
         Request $request,

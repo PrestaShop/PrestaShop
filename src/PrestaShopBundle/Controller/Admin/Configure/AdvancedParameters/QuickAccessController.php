@@ -58,6 +58,7 @@ class QuickAccessController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_quick_accesses_index')]
+    #[DemoRestricted(redirectRoute: 'admin_quick_accesses_index')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.quick_access_form_builder')]
@@ -95,6 +96,7 @@ class QuickAccessController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_quick_accesses_index')]
+    #[DemoRestricted(redirectRoute: 'admin_quick_accesses_index')]
     public function editAction(
         int $quickAccessId,
         Request $request,

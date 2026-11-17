@@ -27,6 +27,7 @@ use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\DeleteImageTypeType;
 use PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\RegenerateThumbnailsType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -84,6 +85,7 @@ class ImageSettingsController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_image_settings_index')]
     public function saveSettingsAction(
         Request $request,
         #[Autowire(service: 'prestashop.admin.image_settings.form_handler')]
@@ -117,6 +119,7 @@ class ImageSettingsController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_image_settings_index')]
+    #[DemoRestricted(redirectRoute: 'admin_image_settings_index')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.image_type_form_builder')]
@@ -156,6 +159,7 @@ class ImageSettingsController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_image_settings_index')]
+    #[DemoRestricted(redirectRoute: 'admin_image_settings_index')]
     public function editAction(
         int $imageTypeId,
         Request $request,
@@ -202,6 +206,7 @@ class ImageSettingsController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_image_settings_index')]
+    #[DemoRestricted(redirectRoute: 'admin_image_settings_index')]
     public function deleteAction(Request $request, int $imageTypeId): RedirectResponse
     {
         try {
@@ -231,6 +236,7 @@ class ImageSettingsController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_image_settings_index')]
+    #[DemoRestricted(redirectRoute: 'admin_image_settings_index')]
     public function bulkDeleteAction(Request $request): RedirectResponse
     {
         $ids = $this->getBulkIdsFromRequest($request);
@@ -271,6 +277,7 @@ class ImageSettingsController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_image_settings_index')]
+    #[DemoRestricted(redirectRoute: 'admin_image_settings_index')]
     public function regenerateThumbnailsAction(Request $request): RedirectResponse
     {
         try {

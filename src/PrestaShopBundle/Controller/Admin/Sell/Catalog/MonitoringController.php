@@ -29,6 +29,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\Monitoring\ProductWithoutPriceFilt
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -150,6 +151,7 @@ class MonitoringController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_monitorings_index', message: 'You do not have permission to delete this.')]
+    #[DemoRestricted(redirectRoute: 'admin_monitorings_index')]
     public function deleteBulkAction(Request $request): RedirectResponse
     {
         $gridIdentifiers = $this->identifySearchableGrid($request);

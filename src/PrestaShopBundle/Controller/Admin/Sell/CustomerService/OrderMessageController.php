@@ -23,6 +23,7 @@ use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderMessageFilters;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -73,6 +74,7 @@ class OrderMessageController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_order_messages_index')]
+    #[DemoRestricted(redirectRoute: 'admin_order_messages_index')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.order_message_form_builder')]
@@ -119,6 +121,7 @@ class OrderMessageController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_order_messages_index')]
+    #[DemoRestricted(redirectRoute: 'admin_order_messages_index')]
     public function editAction(
         int $orderMessageId,
         Request $request,
@@ -166,6 +169,7 @@ class OrderMessageController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_order_messages_index')]
+    #[DemoRestricted(redirectRoute: 'admin_order_messages_index')]
     public function deleteAction(int $orderMessageId): RedirectResponse
     {
         try {
@@ -187,6 +191,7 @@ class OrderMessageController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_order_messages_index')]
+    #[DemoRestricted(redirectRoute: 'admin_order_messages_index')]
     public function bulkDeleteAction(Request $request): RedirectResponse
     {
         try {

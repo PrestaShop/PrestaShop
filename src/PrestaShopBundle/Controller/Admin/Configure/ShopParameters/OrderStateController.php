@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\OrderStatesFilters;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Controller\Attribute\AllShopContext;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -100,6 +101,7 @@ class OrderStateController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_order_states')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.order_state_form_builder')]
@@ -146,6 +148,7 @@ class OrderStateController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_order_states')]
     public function editAction(
         int $orderStateId,
         Request $request,
@@ -200,6 +203,7 @@ class OrderStateController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_order_states')]
     public function createOrderReturnStateAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.order_return_state_form_builder')]
@@ -237,6 +241,7 @@ class OrderStateController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_order_states')]
     public function editOrderReturnStateAction(
         int $orderReturnStateId,
         Request $request,
@@ -283,6 +288,7 @@ class OrderStateController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_order_states')]
+    #[DemoRestricted(redirectRoute: 'admin_order_states')]
     public function deleteOrderReturnStateAction(Request $request, int $orderReturnStateId): RedirectResponse
     {
         try {
@@ -301,6 +307,7 @@ class OrderStateController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_order_states', message: 'You do not have permission to delete this.')]
+    #[DemoRestricted(redirectRoute: 'admin_order_states')]
     public function deleteOrderReturnStateBulkAction(Request $request): RedirectResponse
     {
         $orderReturnStateIds = $this->getBulkOrderReturnStatesFromRequest($request);
@@ -319,6 +326,7 @@ class OrderStateController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_order_states', message: 'You do not have permission to edit this.')]
+    #[DemoRestricted(redirectRoute: 'admin_order_states')]
     public function toggleDeliveryAction(int $orderStateId): RedirectResponse
     {
         try {
@@ -342,6 +350,7 @@ class OrderStateController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_order_states', message: 'You do not have permission to edit this.')]
+    #[DemoRestricted(redirectRoute: 'admin_order_states')]
     public function toggleInvoiceAction(int $orderStateId): RedirectResponse
     {
         try {
@@ -365,6 +374,7 @@ class OrderStateController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_order_states', message: 'You do not have permission to edit this.')]
+    #[DemoRestricted(redirectRoute: 'admin_order_states')]
     public function toggleSendEmailAction(int $orderStateId): RedirectResponse
     {
         try {
@@ -388,6 +398,7 @@ class OrderStateController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_order_states')]
+    #[DemoRestricted(redirectRoute: 'admin_order_states')]
     public function deleteAction(Request $request, int $orderStateId): RedirectResponse
     {
         try {
@@ -406,6 +417,7 @@ class OrderStateController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_order_states', message: 'You do not have permission to delete this.')]
+    #[DemoRestricted(redirectRoute: 'admin_order_states')]
     public function deleteBulkAction(Request $request): RedirectResponse
     {
         $orderStateIds = $this->getBulkOrderStatesFromRequest($request);

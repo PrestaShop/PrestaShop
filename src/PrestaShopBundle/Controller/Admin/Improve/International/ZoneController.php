@@ -94,6 +94,7 @@ class ZoneController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_zones_index', message: 'You need permission to create new zone.')]
+    #[DemoRestricted(redirectRoute: 'admin_zones_index')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.zone_form_builder')]
@@ -133,6 +134,7 @@ class ZoneController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_zones_index', message: 'You need permission to edit this.')]
+    #[DemoRestricted(redirectRoute: 'admin_zones_index')]
     public function editAction(
         int $zoneId,
         Request $request,

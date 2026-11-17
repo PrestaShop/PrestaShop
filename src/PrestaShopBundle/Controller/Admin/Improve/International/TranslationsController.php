@@ -20,6 +20,7 @@ use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Controller\Attribute\AllShopContext;
 use PrestaShopBundle\Exception\InvalidModuleException;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use PrestaShopBundle\Translation\Exporter\ThemeExporter;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -131,6 +132,7 @@ class TranslationsController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_international_translation_overview')]
     public function modifyTranslationsAction(
         Request $request,
         #[Autowire(service: 'prestashop.adapter.translation_route_finder')]
@@ -157,6 +159,7 @@ class TranslationsController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_international_translation_overview')]
     public function addUpdateLanguageAction(
         Request $request,
         #[Autowire(service: 'prestashop.admin.translations_settings.add_update_language.form_handler')]
@@ -298,6 +301,7 @@ class TranslationsController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_international_translation_overview')]
     public function copyLanguageAction(
         Request $request,
         #[Autowire(service: 'prestashop.admin.translations_settings.copy_language.form_handler')]

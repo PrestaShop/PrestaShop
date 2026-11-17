@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\StoreFilters;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Controller\BulkActionsTrait;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -175,6 +176,7 @@ class StoreController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_stores_index')]
     public function toggleStatusAction(int $storeId): RedirectResponse
     {
         try {
@@ -192,6 +194,7 @@ class StoreController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_stores_index')]
     public function deleteAction(int $storeId): RedirectResponse
     {
         try {
@@ -206,6 +209,7 @@ class StoreController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_stores_index')]
     public function bulkDeleteAction(Request $request): RedirectResponse
     {
         try {
@@ -223,12 +227,14 @@ class StoreController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_stores_index')]
     public function bulkEnableAction(Request $request): RedirectResponse
     {
         return $this->bulkUpdateStatus($request, true);
     }
 
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_stores_index')]
     public function bulkDisableAction(Request $request): RedirectResponse
     {
         return $this->bulkUpdateStatus($request, false);

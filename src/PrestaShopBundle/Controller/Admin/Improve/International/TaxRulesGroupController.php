@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\TaxRulesGroupFilters;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -85,6 +86,7 @@ class TaxRulesGroupController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_tax_rules_groups_index')]
+    #[DemoRestricted(redirectRoute: 'admin_tax_rules_groups_index')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.tax_rules_group_form_builder')]
@@ -125,6 +127,7 @@ class TaxRulesGroupController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_tax_rules_groups_index')]
+    #[DemoRestricted(redirectRoute: 'admin_tax_rules_groups_index')]
     public function editAction(
         Request $request,
         int $taxRulesGroupId,
@@ -279,6 +282,7 @@ class TaxRulesGroupController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_tax_rules_groups_index')]
+    #[DemoRestricted(redirectRoute: 'admin_tax_rules_groups_index')]
     public function createTaxRuleAction(
         Request $request,
         int $taxRulesGroupId,
@@ -333,6 +337,7 @@ class TaxRulesGroupController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_tax_rules_groups_index')]
+    #[DemoRestricted(redirectRoute: 'admin_tax_rules_groups_index')]
     public function editTaxRuleAction(
         Request $request,
         int $taxRulesGroupId,
@@ -393,6 +398,7 @@ class TaxRulesGroupController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_tax_rules_groups_index')]
+    #[DemoRestricted(redirectRoute: 'admin_tax_rules_groups_index')]
     public function deleteTaxRuleAction(int $taxRulesGroupId, int $taxRuleId): JsonResponse
     {
         try {
@@ -415,6 +421,7 @@ class TaxRulesGroupController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_tax_rules_groups_index')]
+    #[DemoRestricted(redirectRoute: 'admin_tax_rules_groups_index')]
     public function bulkDeleteTaxRulesAction(Request $request): RedirectResponse
     {
         $taxRuleIds = $this->getBulkTaxRulesFromRequest($request);
@@ -456,6 +463,7 @@ class TaxRulesGroupController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_tax_rules_groups_index')]
+    #[DemoRestricted(redirectRoute: 'admin_tax_rules_groups_index')]
     public function deleteAction(int $taxRulesGroupId): RedirectResponse
     {
         try {
@@ -479,6 +487,7 @@ class TaxRulesGroupController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_tax_rules_groups_index')]
+    #[DemoRestricted(redirectRoute: 'admin_tax_rules_groups_index')]
     public function toggleStatusAction(int $taxRulesGroupId): RedirectResponse
     {
         try {
@@ -510,6 +519,7 @@ class TaxRulesGroupController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_tax_rules_groups_index')]
+    #[DemoRestricted(redirectRoute: 'admin_tax_rules_groups_index')]
     public function bulkEnableStatusAction(Request $request): RedirectResponse
     {
         $taxRulesGroupIds = $this->getBulkTaxRulesGroupFromRequest($request);
@@ -535,6 +545,7 @@ class TaxRulesGroupController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_tax_rules_groups_index')]
+    #[DemoRestricted(redirectRoute: 'admin_tax_rules_groups_index')]
     public function bulkDisableStatusAction(Request $request): RedirectResponse
     {
         $taxRulesGroupIds = $this->getBulkTaxRulesGroupFromRequest($request);
@@ -560,6 +571,7 @@ class TaxRulesGroupController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_tax_rules_groups_index')]
+    #[DemoRestricted(redirectRoute: 'admin_tax_rules_groups_index')]
     public function bulkDeleteAction(Request $request): RedirectResponse
     {
         $taxRulesGroupIds = $this->getBulkTaxRulesGroupFromRequest($request);

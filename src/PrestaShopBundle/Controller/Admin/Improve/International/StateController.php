@@ -180,6 +180,7 @@ class StateController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_states_index')]
+    #[DemoRestricted(redirectRoute: 'admin_states_index')]
     public function editAction(
         int $stateId,
         Request $request,
@@ -232,6 +233,7 @@ class StateController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_states_index', message: 'You do not have permission to create this.')]
+    #[DemoRestricted(redirectRoute: 'admin_states_index')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.state_form_builder')]
@@ -301,6 +303,7 @@ class StateController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_states_index', message: 'You do not have permission to delete this.')]
+    #[DemoRestricted(redirectRoute: 'admin_states_index')]
     public function deleteBulkAction(Request $request): RedirectResponse
     {
         $stateIds = $this->getBulkStatesFromRequest($request);

@@ -50,6 +50,7 @@ use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Controller\BulkActionsTrait;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -100,6 +101,7 @@ class CartController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_carts_index')]
     public function deleteCartAction(
         int $cartId,
         IniConfiguration $iniConfiguration,
@@ -122,6 +124,7 @@ class CartController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_carts_index')]
     public function bulkDeleteCartAction(
         Request $request,
         IniConfiguration $iniConfiguration,
@@ -263,6 +266,7 @@ class CartController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
+    #[DemoRestricted(redirectRoute: 'admin_carts_index')]
     public function createAction(
         Request $request,
         IniConfiguration $iniConfiguration
@@ -289,6 +293,7 @@ class CartController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
+    #[DemoRestricted(redirectRoute: 'admin_carts_index')]
     public function editAddressesAction(
         int $cartId,
         Request $request,
@@ -320,6 +325,7 @@ class CartController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
+    #[DemoRestricted(redirectRoute: 'admin_carts_index')]
     public function editCurrencyAction(
         int $cartId,
         Request $request,
@@ -347,6 +353,7 @@ class CartController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
+    #[DemoRestricted(redirectRoute: 'admin_carts_index')]
     public function editLanguageAction(
         int $cartId,
         Request $request,
@@ -374,6 +381,7 @@ class CartController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
+    #[DemoRestricted(redirectRoute: 'admin_carts_index')]
     public function editCarrierAction(
         Request $request,
         int $cartId,
@@ -402,6 +410,7 @@ class CartController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_carts_index')]
     public function updateDeliverySettingsAction(
         Request $request,
         int $cartId,
@@ -438,6 +447,7 @@ class CartController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
+    #[DemoRestricted(redirectRoute: 'admin_carts_index')]
     public function addCartRuleAction(
         Request $request,
         int $cartId,
@@ -465,6 +475,7 @@ class CartController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
+    #[DemoRestricted(redirectRoute: 'admin_carts_index')]
     public function deleteCartRuleAction(
         int $cartId,
         int $cartRuleId,
@@ -491,6 +502,7 @@ class CartController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
+    #[DemoRestricted(redirectRoute: 'admin_carts_index')]
     public function addProductAction(
         Request $request,
         int $cartId,
@@ -536,6 +548,7 @@ class CartController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
+    #[DemoRestricted(redirectRoute: 'admin_carts_index')]
     public function editProductPriceAction(
         Request $request,
         int $cartId,
@@ -572,6 +585,7 @@ class CartController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
+    #[DemoRestricted(redirectRoute: 'admin_carts_index')]
     public function editProductQuantityAction(
         Request $request,
         int $cartId,
@@ -614,6 +628,7 @@ class CartController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")]
+    #[DemoRestricted(redirectRoute: 'admin_carts_index')]
     public function deleteProductAction(
         Request $request,
         int $cartId,

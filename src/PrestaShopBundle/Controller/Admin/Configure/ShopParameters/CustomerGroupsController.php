@@ -13,6 +13,7 @@ use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerGroupsFilters;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,6 +54,7 @@ class CustomerGroupsController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_customer_groups_index', message: 'You need permission to create this.')]
+    #[DemoRestricted(redirectRoute: 'admin_customer_groups_index')]
     public function createAction(LegacyContext $legacyContext): Response
     {
         return $this->redirect(
@@ -74,6 +76,7 @@ class CustomerGroupsController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_customer_groups_index', message: 'You need permission to edit this.')]
+    #[DemoRestricted(redirectRoute: 'admin_customer_groups_index')]
     public function editAction(
         int $groupId,
         LegacyContext $legacyContext,

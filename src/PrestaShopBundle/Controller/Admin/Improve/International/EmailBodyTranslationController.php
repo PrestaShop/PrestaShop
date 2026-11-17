@@ -22,6 +22,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\EmailBodyTemplateFilters;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\EmailBodyTemplateEditType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,6 +54,7 @@ class EmailBodyTranslationController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_international_translations_show_settings')]
+    #[DemoRestricted(redirectRoute: 'admin_email_body_translation_index', redirectQueryParamsToKeep: ['locale'])]
     public function editAction(
         Request $request,
         string $locale,

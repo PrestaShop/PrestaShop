@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintE
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageSizeException;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -75,6 +76,7 @@ class ImageController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to red or update this.')]
+    #[DemoRestricted(redirectRoute: 'admin_products_images_for_shop', redirectQueryParamsToKeep: ['productId', 'shopId'])]
     public function productShopImagesAction(int $productId, Request $request): JsonResponse
     {
         if ($request->isMethod(Request::METHOD_POST)) {
@@ -105,6 +107,7 @@ class ImageController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to update this.')]
+    #[DemoRestricted(redirectRoute: 'admin_products_images_for_shop', redirectQueryParamsToKeep: ['productId', 'shopId'])]
     public function addImageAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.product_image_form_builder')]
@@ -145,6 +148,7 @@ class ImageController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to update this.')]
+    #[DemoRestricted(redirectRoute: 'admin_products_images_for_shop', redirectQueryParamsToKeep: ['productId', 'shopId'])]
     public function updateImageAction(
         Request $request,
         int $productImageId,
@@ -182,6 +186,7 @@ class ImageController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.')]
+    #[DemoRestricted(redirectRoute: 'admin_products_images_for_shop', redirectQueryParamsToKeep: ['productId', 'shopId'])]
     public function deleteImageAction(int $productImageId): JsonResponse
     {
         try {

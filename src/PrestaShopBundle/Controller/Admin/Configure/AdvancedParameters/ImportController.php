@@ -48,6 +48,7 @@ class ImportController extends PrestaShopAdminController
      * @return RedirectResponse|Response
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_import')]
     public function importAction(
         Request $request,
         ImportDirectory $importDir,

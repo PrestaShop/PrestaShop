@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -63,6 +64,7 @@ class CombinationController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_products_combinations', redirectQueryParamsToKeep: ['productId'])]
     public function editAction(
         Request $request,
         int $combinationId,
@@ -213,6 +215,7 @@ class CombinationController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_products_combinations', redirectQueryParamsToKeep: ['productId'])]
     public function bulkEditFormAction(
         Request $request,
         int $productId,
@@ -240,6 +243,7 @@ class CombinationController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_products_combinations', redirectQueryParamsToKeep: ['productId'])]
     public function bulkEditAction(
         Request $request,
         int $productId,
@@ -420,6 +424,7 @@ class CombinationController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_products_combinations', redirectQueryParamsToKeep: ['productId'])]
     public function deleteAction(int $combinationId, ?int $shopId): JsonResponse
     {
         try {
@@ -446,6 +451,7 @@ class CombinationController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_products_combinations', redirectQueryParamsToKeep: ['productId'])]
     public function bulkDeleteAction(Request $request, int $productId, ?int $shopId): JsonResponse
     {
         $combinationIds = $request->request->get('combinationIds');
@@ -505,6 +511,7 @@ class CombinationController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_products_combinations', redirectQueryParamsToKeep: ['productId'])]
     public function updateCombinationFromListingAction(
         int $productId,
         Request $request,
@@ -551,6 +558,7 @@ class CombinationController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_products_combinations', redirectQueryParamsToKeep: ['productId'])]
     public function generateCombinationsAction(int $productId, ?int $shopId, Request $request): JsonResponse
     {
         $requestAttributeGroups = $request->request->all('attributes');

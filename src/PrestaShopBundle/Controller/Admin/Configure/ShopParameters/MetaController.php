@@ -101,6 +101,7 @@ class MetaController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message: 'You do not have permission to add this.')]
+    #[DemoRestricted(redirectRoute: 'admin_metas_index')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.builder.meta_form_builder')]
@@ -137,6 +138,7 @@ class MetaController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectRoute: 'admin_metas_index')]
+    #[DemoRestricted(redirectRoute: 'admin_metas_index')]
     public function editAction(
         int $metaId,
         Request $request,

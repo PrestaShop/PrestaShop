@@ -51,6 +51,7 @@ class TagController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_tags_index')]
+    #[DemoRestricted(redirectRoute: 'admin_tags_index')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.tag_form_builder')]
@@ -88,6 +89,7 @@ class TagController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_tags_index')]
+    #[DemoRestricted(redirectRoute: 'admin_tags_index')]
     public function editAction(
         Request $request,
         int $tagId,

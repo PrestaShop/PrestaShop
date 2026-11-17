@@ -123,6 +123,7 @@ class CategoryController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message: 'You do not have permission to create this.', redirectRoute: 'admin_categories_index')]
+    #[DemoRestricted(redirectRoute: 'admin_categories_index')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.category_form_builder')]
@@ -184,6 +185,7 @@ class CategoryController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message: 'You do not have permission to create this.', redirectRoute: 'admin_categories_index')]
+    #[DemoRestricted(redirectRoute: 'admin_categories_index')]
     public function createRootAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.root_category_form_builder')]
@@ -233,6 +235,7 @@ class CategoryController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectRoute: 'admin_categories_index')]
+    #[DemoRestricted(redirectRoute: 'admin_categories_index')]
     public function editAction(
         int $categoryId,
         Request $request,
@@ -316,6 +319,7 @@ class CategoryController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectRoute: 'admin_categories_index')]
+    #[DemoRestricted(redirectRoute: 'admin_categories_index')]
     public function editRootAction(
         int $categoryId,
         Request $request,
@@ -394,6 +398,7 @@ class CategoryController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectRoute: 'admin_categories_edit', redirectQueryParamsToKeep: ['categoryId'])]
+    #[DemoRestricted(redirectRoute: 'admin_categories_index')]
     public function deleteCoverImageAction(Request $request, $categoryId)
     {
         try {
@@ -421,6 +426,7 @@ class CategoryController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectRoute: 'admin_categories_edit', redirectQueryParamsToKeep: ['categoryId'])]
+    #[DemoRestricted(redirectRoute: 'admin_categories_index')]
     public function deleteThumbnailImageAction(Request $request, $categoryId)
     {
         try {
@@ -447,6 +453,7 @@ class CategoryController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to update this.')]
+    #[DemoRestricted(redirectRoute: 'admin_categories_index')]
     public function toggleStatusAction($categoryId)
     {
         if ($this->isDemoModeEnabled()) {
@@ -664,6 +671,7 @@ class CategoryController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_categories_index')]
+    #[DemoRestricted(redirectRoute: 'admin_categories_index')]
     public function updatePositionAction(Request $request)
     {
         try {

@@ -71,6 +71,7 @@ class WebserviceController extends PrestaShopAdminController
      * @return Response|RedirectResponse
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_webservice_keys_index')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.webservice_key_form_builder')]
@@ -113,6 +114,7 @@ class WebserviceController extends PrestaShopAdminController
      * @return Response|RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_webservice_keys_index')]
+    #[DemoRestricted(redirectRoute: 'admin_webservice_keys_index')]
     public function editAction(
         int $webserviceKeyId,
         Request $request,

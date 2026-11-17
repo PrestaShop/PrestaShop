@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Shop\ShopContextInterface;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Form\Admin\Improve\Design\HookModuleType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -162,6 +163,7 @@ class PositionsController extends PrestaShopAdminController
      * Display and process the "Hook a module" form.
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message: 'Access denied.')]
+    #[DemoRestricted(redirectRoute: 'admin_modules_positions')]
     public function hookModuleAction(
         Request $request,
         #[Autowire(service: 'prestashop.adapter.legacy.module')]
@@ -220,6 +222,7 @@ class PositionsController extends PrestaShopAdminController
      * Display and process the "Edit hooked module" form.
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'Access denied.')]
+    #[DemoRestricted(redirectRoute: 'admin_modules_positions')]
     public function editHookedModuleAction(
         Request $request,
         #[Autowire(service: 'prestashop.adapter.legacy.module')]
@@ -322,6 +325,7 @@ class PositionsController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller')~'_')", message: 'Access denied.')]
+    #[DemoRestricted(redirectRoute: 'admin_modules_positions')]
     public function unhookAction(
         Request $request,
         #[Autowire(service: 'prestashop.adapter.legacy.module')]
@@ -403,6 +407,7 @@ class PositionsController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')~'_')", message: 'Access denied.')]
+    #[DemoRestricted(redirectRoute: 'admin_modules_positions')]
     public function toggleStatusAction(Request $request)
     {
         $hookId = (int) $request->request->get('hookId');

@@ -83,6 +83,7 @@ class SupplierController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_suppliers_index', message: 'You do not have permission to add this.')]
+    #[DemoRestricted(redirectRoute: 'admin_suppliers_index')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.supplier_form_builder')]
@@ -249,6 +250,7 @@ class SupplierController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_suppliers_index', message: 'You do not have permission to edit this.')]
+    #[DemoRestricted(redirectRoute: 'admin_suppliers_index')]
     public function editAction(
         Request $request,
         int $supplierId,
@@ -418,6 +420,7 @@ class SupplierController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectRoute: 'admin_suppliers_edit', redirectQueryParamsToKeep: ['supplierId'])]
+    #[DemoRestricted(redirectRoute: 'admin_suppliers_index')]
     public function deleteLogoImageAction(Request $request, int $supplierId): RedirectResponse
     {
         try {

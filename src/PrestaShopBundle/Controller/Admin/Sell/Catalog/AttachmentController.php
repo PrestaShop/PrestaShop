@@ -67,6 +67,7 @@ class AttachmentController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_attachments_index', message: 'You do not have permission to create this.')]
+    #[DemoRestricted(redirectRoute: 'admin_attachments_index')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.attachment_form_builder')]
@@ -116,6 +117,7 @@ class AttachmentController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_attachments_index', message: 'You do not have permission to edit this.')]
+    #[DemoRestricted(redirectRoute: 'admin_attachments_index')]
     public function editAction(
         int $attachmentId,
         Request $request,
@@ -211,6 +213,7 @@ class AttachmentController extends PrestaShopAdminController
      * Delete attachments in bulk action.
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_attachments_index', message: 'You do not have permission to delete this.')]
+    #[DemoRestricted(redirectRoute: 'admin_attachments_index')]
     public function deleteBulkAction(Request $request): RedirectResponse
     {
         $attachmentIds = $this->getBulkAttachmentsFromRequest($request);

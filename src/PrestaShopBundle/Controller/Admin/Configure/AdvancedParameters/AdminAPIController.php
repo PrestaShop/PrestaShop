@@ -28,6 +28,7 @@ use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ApiClientFilters;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -52,6 +53,7 @@ class AdminAPIController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('update', 'AdminAdminAPI')")]
+    #[DemoRestricted(redirectRoute: 'admin_api_index')]
     public function processConfigurationAction(
         ApiClientFilters $apiClientFilters,
         Request $request,
@@ -80,6 +82,7 @@ class AdminAPIController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('create', 'AdminAdminAPI')", redirectRoute: 'admin_api_index')]
+    #[DemoRestricted(redirectRoute: 'admin_api_index')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.api_client_form_builder')]
@@ -120,6 +123,7 @@ class AdminAPIController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('update', 'AdminAdminAPI')", redirectRoute: 'admin_api_index')]
+    #[DemoRestricted(redirectRoute: 'admin_api_index')]
     public function editAction(
         Request $request,
         int $apiClientId,
@@ -157,6 +161,7 @@ class AdminAPIController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('update', 'AdminAdminAPI')", redirectRoute: 'admin_api_clients_edit')]
+    #[DemoRestricted(redirectRoute: 'admin_api_index')]
     public function regenerateSecretAction(int $apiClientId): RedirectResponse
     {
         try {
@@ -173,6 +178,7 @@ class AdminAPIController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('update', 'AdminAdminAPI')", redirectRoute: 'admin_api_index')]
+    #[DemoRestricted(redirectRoute: 'admin_api_index')]
     public function toggleStatusAction(int $apiClientId): JsonResponse
     {
         /** @var EditableApiClient $editableApiClient */
@@ -196,6 +202,7 @@ class AdminAPIController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('delete', 'AdminAdminAPI')", message: 'You do not have permission to delete this.', redirectRoute: 'admin_api_index')]
+    #[DemoRestricted(redirectRoute: 'admin_api_index')]
     public function deleteAction(int $apiClientId): RedirectResponse
     {
         try {

@@ -118,6 +118,7 @@ class CustomerController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_customers_index')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.customer_form_builder')]
@@ -193,6 +194,7 @@ class CustomerController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_customers_index')]
+    #[DemoRestricted(redirectRoute: 'admin_customers_index')]
     public function editAction(
         int $customerId,
         Request $request,
@@ -375,6 +377,7 @@ class CustomerController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_customers_index')]
+    #[DemoRestricted(redirectRoute: 'admin_customers_index')]
     public function setPrivateNoteAction(int $customerId, Request $request): RedirectResponse
     {
         $privateNoteForm = $this->createForm(PrivateNoteType::class);
@@ -415,6 +418,7 @@ class CustomerController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_customers_index')]
+    #[DemoRestricted(redirectRoute: 'admin_customers_index')]
     public function transformGuestToCustomerAction(
         int $customerId,
         Request $request,
@@ -450,6 +454,7 @@ class CustomerController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_customers_index')]
+    #[DemoRestricted(redirectRoute: 'admin_customers_index')]
     public function setRequiredFieldsAction(Request $request): RedirectResponse
     {
         $requiredFieldsForm = $this->getRequiredFieldsForm();
@@ -555,6 +560,7 @@ class CustomerController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_customers_index', message: 'You do not have permission to edit this.')]
+    #[DemoRestricted(redirectRoute: 'admin_customers_index')]
     public function toggleStatusAction(int $customerId): JsonResponse
     {
         try {
@@ -588,6 +594,7 @@ class CustomerController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_customers_index', message: 'You do not have permission to edit this.')]
+    #[DemoRestricted(redirectRoute: 'admin_customers_index')]
     public function toggleNewsletterSubscriptionAction(int $customerId): JsonResponse
     {
         try {
@@ -623,6 +630,7 @@ class CustomerController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_customers_index', message: 'You do not have permission to edit this.')]
+    #[DemoRestricted(redirectRoute: 'admin_customers_index')]
     public function togglePartnerOfferSubscriptionAction(int $customerId): JsonResponse
     {
         try {
@@ -656,6 +664,7 @@ class CustomerController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_customers_index', message: 'You do not have permission to delete this.')]
+    #[DemoRestricted(redirectRoute: 'admin_customers_index')]
     public function deleteBulkAction(Request $request): RedirectResponse
     {
         $form = $this->createForm(DeleteCustomersType::class);
@@ -696,6 +705,7 @@ class CustomerController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_customers_index', message: 'You do not have permission to delete this.')]
+    #[DemoRestricted(redirectRoute: 'admin_customers_index')]
     public function deleteAction(Request $request): RedirectResponse
     {
         $form = $this->createForm(DeleteCustomersType::class);
@@ -731,6 +741,7 @@ class CustomerController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_customers_index', message: 'You do not have permission to edit this.')]
+    #[DemoRestricted(redirectRoute: 'admin_customers_index')]
     public function enableBulkAction(Request $request): RedirectResponse
     {
         $customerIds = array_map(function ($customerId) {
@@ -758,6 +769,7 @@ class CustomerController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_customers_index', message: 'You do not have permission to edit this.')]
+    #[DemoRestricted(redirectRoute: 'admin_customers_index')]
     public function disableBulkAction(Request $request): RedirectResponse
     {
         try {

@@ -9,6 +9,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,6 +43,7 @@ class OrderPreferencesController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectRoute: 'admin_order_preferences')]
+    #[DemoRestricted(redirectRoute: 'admin_order_preferences')]
     public function processGeneralFormAction(
         Request $request,
         #[Autowire(service: 'prestashop.admin.order_preferences.general.form_handler')]
@@ -55,6 +57,7 @@ class OrderPreferencesController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectRoute: 'admin_order_preferences')]
+    #[DemoRestricted(redirectRoute: 'admin_order_preferences')]
     public function processGiftOptionsFormAction(
         Request $request,
         #[Autowire(service: 'prestashop.admin.order_preferences.gift_options.form_handler')]

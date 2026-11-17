@@ -151,6 +151,7 @@ class LogsController extends PrestaShopAdminController
      * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_logs_index')]
+    #[DemoRestricted(redirectRoute: 'admin_logs_index')]
     public function deleteAllAction(
         LogRepository $logRepository,
     ): RedirectResponse {

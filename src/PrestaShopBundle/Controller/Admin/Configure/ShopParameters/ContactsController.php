@@ -57,6 +57,7 @@ class ContactsController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message: 'You do not have permission to add this.', redirectRoute: 'admin_contacts_index')]
+    #[DemoRestricted(redirectRoute: 'admin_contacts_index')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.contact_form_builder')]
@@ -94,6 +95,7 @@ class ContactsController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectRoute: 'admin_contacts_index')]
+    #[DemoRestricted(redirectRoute: 'admin_contacts_index')]
     public function editAction(
         int $contactId,
         Request $request,

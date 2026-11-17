@@ -9,6 +9,7 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Shipping;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,6 +47,7 @@ class PreferencesController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectRoute: 'admin_shipping_preferences')]
+    #[DemoRestricted(redirectRoute: 'admin_shipping_preferences')]
     public function processCarrierOptionsFormAction(
         Request $request,
         #[Autowire(service: 'prestashop.admin.shipping_preferences.handling.form_handler')]
@@ -87,6 +89,7 @@ class PreferencesController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectRoute: 'admin_shipping_preferences')]
+    #[DemoRestricted(redirectRoute: 'admin_shipping_preferences')]
     public function processHandlingFormAction(
         Request $request,
         #[Autowire(service: 'prestashop.admin.shipping_preferences.handling.form_handler')]

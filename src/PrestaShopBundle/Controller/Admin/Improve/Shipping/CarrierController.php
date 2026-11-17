@@ -103,6 +103,7 @@ class CarrierController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_carriers_index')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.carrier_form_builder')]
@@ -132,6 +133,7 @@ class CarrierController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_carriers_index')]
     public function editAction(
         int $carrierId,
         Request $request,

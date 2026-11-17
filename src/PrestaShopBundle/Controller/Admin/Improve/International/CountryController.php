@@ -114,6 +114,7 @@ class CountryController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_countries_index', message: 'You need permission to create new country.')]
+    #[DemoRestricted(redirectRoute: 'admin_countries_index')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.country_form_builder')]
@@ -153,6 +154,7 @@ class CountryController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_countries_index', message: 'You need permission to edit this.')]
+    #[DemoRestricted(redirectRoute: 'admin_countries_index')]
     public function editAction(
         int $countryId,
         Request $request,

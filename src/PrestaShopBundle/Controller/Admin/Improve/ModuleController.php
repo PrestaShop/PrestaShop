@@ -21,6 +21,7 @@ use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Entity\ModuleHistory;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Twig\Layout\MenuLink;
 use Symfony\Component\Form\Util\ServerParams;
@@ -99,6 +100,7 @@ class ModuleController extends ModuleAbstractController
      * @return Response
      */
     #[AdminSecurity("is_granted('read', 'ADMINMODULESSF_') || is_granted('create', 'ADMINMODULESSF_') || is_granted('update', 'ADMINMODULESSF_') || is_granted('delete', 'ADMINMODULESSF_')")]
+    #[DemoRestricted(redirectRoute: 'admin_module_manage')]
     public function configureModuleAction(
         string $module_name,
         LegacyContext $legacyContext,

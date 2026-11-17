@@ -121,6 +121,7 @@ class ManufacturerController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_manufacturers_index')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.manufacturer_form_builder')]
@@ -200,6 +201,7 @@ class ManufacturerController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_manufacturers_index')]
+    #[DemoRestricted(redirectRoute: 'admin_manufacturers_index')]
     public function editAction(
         Request $request,
         int $manufacturerId,
@@ -429,6 +431,7 @@ class ManufacturerController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectQueryParamsToKeep: ['manufacturerId'], redirectRoute: 'admin_manufacturers_edit')]
+    #[DemoRestricted(redirectRoute: 'admin_manufacturers_index')]
     public function deleteLogoImageAction(Request $request, int $manufacturerId): RedirectResponse
     {
         try {
@@ -545,6 +548,7 @@ class ManufacturerController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_manufacturers_index')]
     public function createAddressAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.manufacturer_address_form_builder')]
@@ -592,6 +596,7 @@ class ManufacturerController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_manufacturers_index')]
+    #[DemoRestricted(redirectRoute: 'admin_manufacturers_index')]
     public function editAddressAction(
         Request $request,
         int $addressId,

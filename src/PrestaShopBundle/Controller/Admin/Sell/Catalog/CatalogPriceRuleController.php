@@ -174,6 +174,7 @@ class CatalogPriceRuleController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_catalog_price_rules_index')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.catalog_price_rule_form_builder')]
@@ -212,6 +213,7 @@ class CatalogPriceRuleController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_catalog_price_rules_index')]
     public function editAction(
         Request $request,
         int $catalogPriceRuleId,

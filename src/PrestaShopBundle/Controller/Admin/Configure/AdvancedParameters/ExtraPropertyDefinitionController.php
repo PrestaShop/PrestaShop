@@ -83,6 +83,7 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
      *
      * @return Response|RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_extra_property_definitions_index')]
     #[AdminSecurity("is_granted('create', 'AdminExtraPropertyDefinitions')")]
     public function createAction(
         Request $request,
@@ -159,6 +160,7 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
      * @return Response|RedirectResponse
      */
     #[AdminSecurity("is_granted('update', 'AdminExtraPropertyDefinitions')", redirectRoute: 'admin_extra_property_definitions_index')]
+    #[DemoRestricted(redirectRoute: 'admin_extra_property_definitions_index')]
     public function editAction(
         int $extraPropertyDefinitionId,
         Request $request,

@@ -16,6 +16,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryResult\Configurabl
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Controller\Attribute\AllShopContext;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -66,6 +67,7 @@ class PermissionController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_permissions_index')]
     public function updateTabPermissionsAction(Request $request): JsonResponse
     {
         if ($this->isDemoModeEnabled()) {
@@ -100,6 +102,7 @@ class PermissionController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_permissions_index')]
     public function updateModulePermissionsAction(Request $request): JsonResponse
     {
         if ($this->isDemoModeEnabled()) {

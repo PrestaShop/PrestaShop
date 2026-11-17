@@ -103,6 +103,7 @@ class TaxController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_taxes_index')]
+    #[DemoRestricted(redirectRoute: 'admin_taxes_index')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.tax_form_builder')]
@@ -159,6 +160,7 @@ class TaxController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_taxes_index')]
+    #[DemoRestricted(redirectRoute: 'admin_taxes_index')]
     public function editAction(
         Request $request,
         int $taxId,

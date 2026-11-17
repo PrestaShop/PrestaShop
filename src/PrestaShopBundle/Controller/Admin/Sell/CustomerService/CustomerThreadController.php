@@ -27,6 +27,7 @@ use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Form\Admin\CustomerService\CustomerThread\ForwardCustomerThreadType;
 use PrestaShopBundle\Form\Admin\Sell\CustomerService\ReplyToCustomerThreadType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -113,6 +114,7 @@ class CustomerThreadController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_customer_threads_index')]
+    #[DemoRestricted(redirectRoute: 'admin_customer_threads')]
     public function replyAction(Request $request, $customerThreadId)
     {
         $replyToCustomerThreadForm = $this->createForm(ReplyToCustomerThreadType::class);
@@ -169,6 +171,7 @@ class CustomerThreadController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_customer_threads_index')]
+    #[DemoRestricted(redirectRoute: 'admin_customer_threads')]
     public function updateStatusFromViewAction(int $customerThreadId, Request $request)
     {
         $this->handleCustomerThreadStatusUpdate($customerThreadId, $request->request->get('newStatus'));
@@ -187,6 +190,7 @@ class CustomerThreadController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_customer_threads')]
+    #[DemoRestricted(redirectRoute: 'admin_customer_threads')]
     public function updateStatusFromListAction(int $customerThreadId, Request $request): RedirectResponse
     {
         $this->handleCustomerThreadStatusUpdate($customerThreadId, $request->request->get('value'));
@@ -203,6 +207,7 @@ class CustomerThreadController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_customer_threads_index')]
+    #[DemoRestricted(redirectRoute: 'admin_customer_threads')]
     public function forwardAction(Request $request, $customerThreadId)
     {
         $forwardCustomerThreadForm = $this->createForm(ForwardCustomerThreadType::class);
@@ -280,6 +285,7 @@ class CustomerThreadController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_customer_threads')]
+    #[DemoRestricted(redirectRoute: 'admin_customer_threads')]
     public function deleteAction(int $customerThreadId): RedirectResponse
     {
         try {
@@ -302,6 +308,7 @@ class CustomerThreadController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_customer_threads')]
+    #[DemoRestricted(redirectRoute: 'admin_customer_threads')]
     public function bulkDeleteAction(Request $request): RedirectResponse
     {
         $customerThreadId = $this->getBulkCustomerThreadsFromRequest($request);

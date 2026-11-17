@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\Security\Session\EmployeeFilters;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Controller\Attribute\AllShopContext;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -85,6 +86,7 @@ class SecurityController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_security')]
+    #[DemoRestricted(redirectRoute: 'admin_security')]
     public function processGeneralFormAction(
         Request $request,
         #[Autowire(service: 'prestashop.adapter.security.general.form_handler')]
@@ -105,6 +107,7 @@ class SecurityController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_security')]
+    #[DemoRestricted(redirectRoute: 'admin_security')]
     public function processPasswordPolicyFormAction(
         Request $request,
         #[Autowire(service: 'prestashop.adapter.security.password_policy.form_handler')]
@@ -260,6 +263,7 @@ class SecurityController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_security_sessions_employee_list')]
+    #[DemoRestricted(redirectRoute: 'admin_security')]
     public function deleteEmployeeSessionAction(int $sessionId): RedirectResponse
     {
         try {
@@ -283,6 +287,7 @@ class SecurityController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_security_sessions_customer_list')]
+    #[DemoRestricted(redirectRoute: 'admin_security')]
     public function deleteCustomerSessionAction(int $sessionId): RedirectResponse
     {
         try {
@@ -306,6 +311,7 @@ class SecurityController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_security')]
     public function bulkDeleteCustomerSessionAction(Request $request): RedirectResponse
     {
         $sessionIds = $request->request->all('security_session_customer_bulk');
@@ -331,6 +337,7 @@ class SecurityController extends PrestaShopAdminController
      * @return RedirectResponse
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_security')]
     public function bulkDeleteEmployeeSessionAction(Request $request): RedirectResponse
     {
         $sessionIds = $request->request->all('security_session_employee_bulk');

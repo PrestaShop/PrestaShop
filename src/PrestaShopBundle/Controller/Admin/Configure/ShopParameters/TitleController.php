@@ -48,6 +48,7 @@ class TitleController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message: 'You need permission to create this.', redirectRoute: 'admin_title_index')]
+    #[DemoRestricted(redirectRoute: 'admin_title_index')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.title_form_builder')]
@@ -85,6 +86,7 @@ class TitleController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You need permission to edit this.', redirectRoute: 'admin_title_index')]
+    #[DemoRestricted(redirectRoute: 'admin_title_index')]
     public function editAction(
         int $titleId,
         Request $request,

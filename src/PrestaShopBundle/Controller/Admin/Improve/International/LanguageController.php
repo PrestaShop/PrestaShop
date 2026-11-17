@@ -82,6 +82,7 @@ class LanguageController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_languages_index')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.language_form_builder')]
@@ -121,6 +122,7 @@ class LanguageController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_languages_index')]
+    #[DemoRestricted(redirectRoute: 'admin_languages_index')]
     public function editAction(
         int $languageId,
         Request $request,

@@ -123,6 +123,7 @@ class SqlManagerController extends PrestaShopAdminController
      * @return Response|RedirectResponse
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message: 'You do not have permission to create this.', redirectRoute: 'admin_sql_requests_index')]
+    #[DemoRestricted(redirectRoute: 'admin_sql_requests_index')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.builder.sql_request_form_builder')]

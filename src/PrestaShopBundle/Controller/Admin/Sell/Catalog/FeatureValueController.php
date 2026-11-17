@@ -29,6 +29,7 @@ use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Controller\BulkActionsTrait;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -82,6 +83,7 @@ class FeatureValueController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_feature_values_index', redirectQueryParamsToKeep: ['featureId'])]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.feature_value_form_builder')]
@@ -142,6 +144,7 @@ class FeatureValueController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_feature_values_index', redirectQueryParamsToKeep: ['featureId'])]
     public function editAction(
         int $featureId,
         int $featureValueId,
@@ -231,6 +234,7 @@ class FeatureValueController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_feature_values_index', redirectQueryParamsToKeep: ['featureId'])]
     public function deleteAction(int $featureId, int $featureValueId): Response
     {
         try {
@@ -253,6 +257,7 @@ class FeatureValueController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_feature_values_index', redirectQueryParamsToKeep: ['featureId'])]
     public function bulkDeleteAction(int $featureId, Request $request): Response
     {
         try {
@@ -312,6 +317,7 @@ class FeatureValueController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_feature_values_index', redirectQueryParamsToKeep: ['featureId'])]
     public function updatePositionAction(
         int $featureId,
         Request $request,

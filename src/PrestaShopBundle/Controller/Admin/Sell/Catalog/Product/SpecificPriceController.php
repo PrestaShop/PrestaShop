@@ -22,6 +22,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterf
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,6 +57,7 @@ class SpecificPriceController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_products_specific_prices_list', redirectQueryParamsToKeep: ['productId'])]
     public function createAction(
         Request $request,
         int $productId,
@@ -93,6 +95,7 @@ class SpecificPriceController extends PrestaShopAdminController
      * @return Response
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_products_specific_prices_list', redirectQueryParamsToKeep: ['productId'])]
     public function editAction(
         Request $request,
         int $specificPriceId,
@@ -131,6 +134,7 @@ class SpecificPriceController extends PrestaShopAdminController
      * @return JsonResponse
      */
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")]
+    #[DemoRestricted(redirectRoute: 'admin_products_specific_prices_list', redirectQueryParamsToKeep: ['productId'])]
     public function deleteAction(int $specificPriceId): JsonResponse
     {
         try {
