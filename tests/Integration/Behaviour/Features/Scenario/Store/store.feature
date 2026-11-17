@@ -176,6 +176,43 @@ Feature: store management
       | latitude  | 48 |
       | longitude | -2 |
 
+  Scenario: Coordinates out of the geographic bounds raise an error
+    When I add store "storeOutOfRangeLatitude" using command with the following properties:
+      | name[en-US]     | Out of range     |
+      | address1[en-US] | 1 rue de la paix |
+      | city            | Paris            |
+      | latitude        | 10000            |
+      | longitude       | 2.3522           |
+      | country         | France           |
+    Then I should get a store constraint error with code "INVALID_LATITUDE"
+    When I add store "storeOutOfRangeLongitude" using command with the following properties:
+      | name[en-US]     | Out of range     |
+      | address1[en-US] | 1 rue de la paix |
+      | city            | Paris            |
+      | latitude        | 48.8566          |
+      | longitude       | -180.5           |
+      | country         | France           |
+    Then I should get a store constraint error with code "INVALID_LONGITUDE"
+    When I add store "storeBounds" using command with the following properties:
+      | name[en-US]     | Bounds           |
+      | address1[en-US] | 1 rue de la paix |
+      | city            | Paris            |
+      | latitude        | -90              |
+      | longitude       | 180              |
+      | country         | France           |
+    Then store "storeBounds" should have the following properties:
+      | latitude  | -90 |
+      | longitude | 180 |
+    When I edit store "storeBounds" with the following properties:
+      | latitude | 200 |
+    Then I should get a store constraint error with code "INVALID_LATITUDE"
+    When I edit store "storeBounds" with the following properties:
+      | longitude | 10000 |
+    Then I should get a store constraint error with code "INVALID_LONGITUDE"
+    And store "storeBounds" should have the following properties:
+      | latitude  | -90 |
+      | longitude | 180 |
+
   Scenario: Add and edit the shop association of a store
     When I add store "storeShops" using command with the following properties:
       | name[en-US]      | Multistore store |

@@ -15,5 +15,7 @@ class StoreConstraintException extends StoreException
     public const INVALID_STATE = 51;
     public const STATE_COUNTRY_MISMATCH = 52;
     public const STATE_NOT_IN_COUNTRY = 53;
+    public const INVALID_LATITUDE = 60;
+    public const INVALID_LONGITUDE = 61;
     public const INVALID_SHOP_ASSOCIATION = 120;
 }

@@ -157,6 +157,34 @@ class ValidateCoreTest extends TestCase
         yield 'relative' => [false, 'track.php?num=@'];
     }
 
+    /**
+     * @dataProvider isCoordinateDataProvider
+     */
+    public function testIsCoordinate(bool $expected, ?string $coordinate, int $maxAbsoluteValue = 180): void
+    {
+        $this->assertSame($expected, Validate::isCoordinate($coordinate, $maxAbsoluteValue));
+    }
+
+    public static function isCoordinateDataProvider(): iterable
+    {
+        yield 'null' => [true, null];
+        yield 'zero' => [true, '0.00000000'];
+        yield 'regular' => [true, '48.85660000'];
+        yield 'negative' => [true, '-2.3522'];
+        yield 'lower bound' => [true, '-180.00000000'];
+        yield 'upper bound' => [true, '180.00000000'];
+        yield 'above the bound' => [false, '180.00000001'];
+        yield 'below the bound' => [false, '-180.00000001'];
+        yield 'latitude upper bound' => [true, '90.00000000', 90];
+        yield 'latitude above its bound' => [false, '90.00000001', 90];
+        yield 'latitude below its bound' => [false, '-90.5', 90];
+        yield 'too many digits' => [false, '10000.00000000'];
+        yield 'too many decimals' => [false, '1.123456789'];
+        yield 'no decimal point' => [false, '48'];
+        yield 'not a number' => [false, 'abc'];
+        yield 'empty' => [false, ''];
+    }
+
     public function isIp2LongDataProvider()
     {
         return [

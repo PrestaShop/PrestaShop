@@ -73,7 +73,7 @@
         "prestashop/hummingbird": "^2.1",
         "prestashop/pagesnotfound": "^4",
         "prestashop/productcomments": "^9.0",
-        "prestashop/ps_apiresources": "dev-api-generic-follow-ups",
+        "prestashop/ps_apiresources": "dev-os-165-store-create-edit",
         "prestashop/ps_banner": "^3",
         "prestashop/ps_bestsellers": "^2.0",
         "prestashop/ps_brandlist": "^1.0",
@@ -222,7 +222,7 @@
         },
         "ps_apiresources": {
             "type": "vcs",
-            "url": "https://github.com/jolelievre/ps_apiresources"
+            "url": "https://github.com/PrestaShop/ps_apiresources"
         }
     },
     "minimum-stability": "dev",

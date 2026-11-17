@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "785a2c4de43920fedcf234772f995f98",
+    "content-hash": "10d929168eb2239fd26d1c0102f9b032",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -5381,16 +5381,16 @@
         },
         {
             "name": "prestashop/ps_apiresources",
-            "version": "dev-api-generic-follow-ups",
+            "version": "dev-os-165-store-create-edit",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jolelievre/ps_apiresources.git",
-                "reference": "6e2962c2f4d056edb84a7e4cb691435ef74a1a8f"
+                "url": "https://github.com/PrestaShop/ps_apiresources.git",
+                "reference": "3e353982c65616a03f148fd93fced123ffc07d11"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jolelievre/ps_apiresources/zipball/6e2962c2f4d056edb84a7e4cb691435ef74a1a8f",
-                "reference": "6e2962c2f4d056edb84a7e4cb691435ef74a1a8f",
+                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/3e353982c65616a03f148fd93fced123ffc07d11",
+                "reference": "3e353982c65616a03f148fd93fced123ffc07d11",
                 "shasum": ""
             },
             "require": {
@@ -5474,9 +5474,9 @@
             "description": "PrestaShop - API Resources",
             "homepage": "https://github.com/PrestaShop/ps_apiresources",
             "support": {
-                "source": "https://github.com/jolelievre/ps_apiresources/tree/api-generic-follow-ups"
+                "source": "https://github.com/PrestaShop/ps_apiresources/tree/os-165-store-create-edit"
             },
-            "time": "2026-10-31T12:15:54+00:00"
+            "time": "2026-11-16T15:41:51+00:00"
         },
         {
             "name": "prestashop/ps_banner",

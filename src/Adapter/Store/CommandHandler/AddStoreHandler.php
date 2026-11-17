@@ -49,6 +49,7 @@ final class AddStoreHandler implements AddStoreHandlerInterface
             $command->getCountryId(),
             $command->getStateId()
         );
+        $this->storeValidator->assertCoordinates($command->getLatitude(), $command->getLongitude());
 
         if (null !== $command->getImagePath()) {
             $this->imageValidator->assertFileUploadLimits($command->getImagePath());
