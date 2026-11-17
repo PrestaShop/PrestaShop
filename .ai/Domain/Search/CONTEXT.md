@@ -8,9 +8,9 @@ Handles product search indexation (triggering full or partial reindexing, counti
 
 | Layer | Path |
 |-------|------|
-| Core CQRS | `src/Core/Domain/Search/` — `SearchIndexationCommand`, `GetIndexedProductsCount` query, handler interfaces, Exceptions |
-| Adapter | `src/Adapter/Search/` — handlers, `Repository/IndexedProductsRepository`, `Configuration/*` (settings of *Shop Parameters > Search*), `SearchProductSearchProvider` (front-office, unrelated to CQRS) |
-| Legacy ObjectModel | `classes/Search.php` (1273 lines) — do not add logic here |
+| Core CQRS | `src/Core/Domain/Search/` |
+| Adapter | `src/Adapter/Search/` |
+| Legacy ObjectModel | `classes/Search.php` |
 
 ## Non-obvious patterns
 
@@ -24,6 +24,8 @@ Handles product search indexation (triggering full or partial reindexing, counti
 ## Canonical examples
 
 - `src/Core/Domain/Search/Command/SearchIndexationCommand.php` + `src/Adapter/Search/CommandHandler/SearchIndexationHandler.php`
+- `GetIndexedProductsCount` query + `src/Adapter/Search/Repository/IndexedProductsRepository.php`: the shop-constrained count (`ShopConstraint`)
+- `src/Adapter/Search/Configuration/*`: settings of *Shop Parameters > Search* (`AbstractMultistoreConfiguration`)
 
 ## Related
 
