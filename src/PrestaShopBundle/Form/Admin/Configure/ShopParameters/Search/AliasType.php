@@ -20,7 +20,10 @@ use Symfony\Component\Validator\Constraints\NotNull;
  */
 class AliasType extends TranslatorAwareType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('alias', TextType::class, [
@@ -42,7 +45,10 @@ class AliasType extends TranslatorAwareType
         ;
     }
 
-    public function getBlockPrefix(): string
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
     {
         return 'alias_type';
     }
