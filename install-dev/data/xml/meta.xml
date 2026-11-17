@@ -104,6 +104,10 @@
 			<page>guest-tracking</page>
 			<configurable>1</configurable>
 		</meta>
+		<meta id="withdrawal">
+			<page>withdrawal</page>
+			<configurable>1</configurable>
+		</meta>
 		<meta id="order-confirmation">
 			<page>order-confirmation</page>
 			<configurable>1</configurable>

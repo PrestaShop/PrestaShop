@@ -4,6 +4,7 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderPresenter;
+use PrestaShop\PrestaShop\Adapter\WithdrawalRequest\WithdrawalButtonPresenter;
 use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 
 class GuestTrackingControllerCore extends FrontController
@@ -149,6 +150,7 @@ class GuestTrackingControllerCore extends FrontController
             'registered_customer_exists' => $registered_customer_exists,
             'is_customer' => $registered_customer_exists, // Kept for backwards compatibility
             'HOOK_DISPLAYORDERDETAIL' => Hook::exec('displayOrderDetail', ['order' => $this->order]),
+            'withdrawal_button' => $this->get(WithdrawalButtonPresenter::class)->present($this->order, (string) Tools::getValue('email')),
         ]);
 
         $this->setTemplate('customer/guest-tracking');

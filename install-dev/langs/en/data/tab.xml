@@ -137,6 +137,7 @@
     <tab id="Webservice" name="Webservice" />
     <tab id="ExtraPropertyDefinitions" name="Extra Properties" />
     <tab id="AdminAPI" name="Admin API" />
+    <tab id="Withdrawal_Requests" name="Withdrawal Requests" />
     <tab id="Zones" name="Zones" />
     <tab id="Marketing_tools" name="Module Selections" />
     <tab id="FeatureFlag" name="New &amp; Experimental Features" />

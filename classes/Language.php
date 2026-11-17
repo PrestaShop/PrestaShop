@@ -375,6 +375,8 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             'test.html', 'test.txt',
             'voucher.html', 'voucher.txt',
             'voucher_new.html', 'voucher_new.txt',
+            'withdrawal_acknowledgement.html', 'withdrawal_acknowledgement.txt',
+            'withdrawal_request.html', 'withdrawal_request.txt',
         ];
 
         $number = -1;

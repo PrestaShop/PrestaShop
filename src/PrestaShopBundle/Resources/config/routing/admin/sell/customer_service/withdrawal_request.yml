@@ -1,0 +1,39 @@
+# Routes backing the "Sell > Customer Service > Withdrawal Requests" admin page.
+admin_withdrawal_requests_index:
+  path: /
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\WithdrawalRequestController::indexAction
+
+admin_withdrawal_requests_search:
+  path: /
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\WithdrawalRequestController::searchAction
+
+admin_withdrawal_requests_save_options:
+  path: /options
+  methods: [ POST, PATCH ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\WithdrawalRequestController::saveOptionsAction
+    _parent: admin_withdrawal_requests_index
+
+admin_withdrawal_requests_mark_processed:
+  path: /{withdrawalRequestId}/mark-processed
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\WithdrawalRequestController::updateStatusAction
+    _parent: admin_withdrawal_requests_index
+    status: processed
+  requirements:
+    withdrawalRequestId: \d+
+
+admin_withdrawal_requests_mark_refused:
+  path: /{withdrawalRequestId}/mark-refused
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\WithdrawalRequestController::updateStatusAction
+    _parent: admin_withdrawal_requests_index
+    status: refused
+  requirements:
+    withdrawalRequestId: \d+

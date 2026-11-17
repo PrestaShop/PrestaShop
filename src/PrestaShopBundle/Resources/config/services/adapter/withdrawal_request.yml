@@ -1,0 +1,11 @@
+services:
+  _defaults:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\WithdrawalRequest\QueryHandler\GetOrderWithdrawalEligibilityHandler: ~
+
+  PrestaShop\PrestaShop\Adapter\WithdrawalRequest\CommandHandler\SubmitWithdrawalRequestHandler: ~
+
+  PrestaShop\PrestaShop\Adapter\WithdrawalRequest\CommandHandler\UpdateWithdrawalRequestStatusHandler: ~

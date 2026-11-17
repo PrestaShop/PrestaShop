@@ -594,6 +594,8 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\CustomerService\OrderReturn\OrderReturnOptionsType:
 
+  PrestaShopBundle\Form\Admin\Sell\CustomerService\WithdrawalRequest\WithdrawalRequestOptionsType:
+
   PrestaShopBundle\Form\Admin\Type\CarrierChoiceType:
     arguments:
       $carrierChoiceProvider: '@prestashop.core.form.choice_provider.carrier_by_reference_id'

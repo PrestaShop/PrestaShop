@@ -72,6 +72,7 @@ trans('Brands', 'Admin.Navigation.Menu');
 trans('Marketing', 'Admin.Navigation.Menu');
 trans('Menus', 'Admin.Navigation.Menu');
 trans('Merchandise Returns', 'Admin.Navigation.Menu');
+trans('Withdrawal Requests', 'Admin.Navigation.Menu');
 trans('Monitoring', 'Admin.Navigation.Menu');
 trans('Multistore', 'Admin.Navigation.Menu');
 trans('Order Messages', 'Admin.Navigation.Menu');

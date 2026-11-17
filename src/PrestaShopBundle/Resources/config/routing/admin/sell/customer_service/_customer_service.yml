@@ -9,3 +9,7 @@ _order_return:
 _customer_threads:
   resource: "customer_threads.yml"
   prefix: /customer-threads/
+
+_withdrawal_request:
+  resource: "withdrawal_request.yml"
+  prefix: /withdrawal-requests/

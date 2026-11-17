@@ -1574,6 +1574,7 @@ class FrontControllerCore extends Controller
             'order-confirmation', 'order-detail', 'order-follow', 'order', 'order-return',
             'order-slip', 'pagenotfound', 'password', 'pdf-invoice', 'pdf-order-return', 'pdf-order-slip',
             'prices-drop', 'product', 'registration', 'search', 'sitemap', 'stores', 'supplier', 'new-products',
+            'withdrawal',
         ];
         foreach ($p as $page_name) {
             $index = str_replace('-', '_', $page_name);
@@ -1656,6 +1657,7 @@ class FrontControllerCore extends Controller
             'voucher_enabled' => (int) CartRule::isFeatureActive(),
             'return_enabled' => (int) Configuration::get('PS_ORDER_RETURN'),
             'number_of_days_for_return' => (int) Configuration::get('PS_ORDER_RETURN_NB_DAYS'),
+            'withdrawal_enabled' => (int) Configuration::get('PS_WITHDRAWAL_FUNCTION'),
             'password_policy' => [
                 'minimum_length' => (int) Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH),
                 'maximum_length' => (int) Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH),
