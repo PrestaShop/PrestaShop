@@ -107,7 +107,7 @@ class Repository implements RepositoryInterface
      *
      * @var CurrencyInstalled|null
      */
-    protected $installedCurrencies;
+    protected ?CurrencyInstalled $installedCurrencies;
 
     public function __construct(
         CldrLocaleRepository $cldrLocaleRepository,
