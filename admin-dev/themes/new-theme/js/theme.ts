@@ -15,6 +15,8 @@ import 'dropzone';
 import 'typeahead.js/dist/typeahead.jquery';
 import 'typeahead.js/dist/bloodhound.min';
 import 'jquery-serializejson';
+// Not used by the core anymore, still loaded for the modules calling $.fn.tableDnD
+import 'tablednd/dist/jquery.tablednd.min';
 
 import '@scss/theme.scss';
 

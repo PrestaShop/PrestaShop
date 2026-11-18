@@ -5,8 +5,8 @@
 
 import {Grid} from '@PSTypes/grid';
 import GridMap from '@components/grid/grid-map';
+import Sortable from '@components/sortable';
 import {isUndefined} from '@components/typeguard';
-import 'tablednd/dist/jquery.tablednd.min';
 
 const {$} = window;
 
@@ -41,11 +41,14 @@ export default class PositionExtension {
     this.addIdsToGridTableRows();
     grid
       .getContainer()
-      .find(GridMap.gridTable)
-      .tableDnD({
-        onDragClass: GridMap.onDragClass,
-        dragHandle: GridMap.dragHandler,
-        onDrop: (table: HTMLElement, row: HTMLElement) => this.handlePositionChange(row),
+      .find(`${GridMap.gridTable} > tbody`)
+      .each((index, tableBody) => {
+        new Sortable(tableBody, {
+          items: 'tr',
+          handle: GridMap.dragHandler,
+          draggingClass: GridMap.onDragClass,
+          onDrop: (row: HTMLElement) => this.handlePositionChange(row),
+        });
       });
     grid
       .getContainer()
@@ -83,7 +86,7 @@ export default class PositionExtension {
     );
     const updateUrl = $rowPositionContainer.data('update-url');
     const method = $rowPositionContainer.data('update-method');
-    const positions = this.getRowsPositions();
+    const positions = this.getRowsPositions(<HTMLTableElement>row.closest('table'));
     const params = {positions};
 
     this.updatePosition(updateUrl, params, method);
@@ -94,9 +97,10 @@ export default class PositionExtension {
    * @returns {Array}
    * @private
    */
-  private getRowsPositions(): Array<DNDPositions> {
-    const tableData = JSON.parse($.tableDnD.jsonize());
-    const rowsData = tableData[`${this.grid.getId()}_grid_table`];
+  private getRowsPositions(table: HTMLTableElement): Array<DNDPositions> {
+    const rowsData = Array.from(table.rows)
+      .map((row) => row.id)
+      .filter((rowId) => rowId !== '');
     const completeRowsData = [];
 
     let trData;
@@ -116,7 +120,7 @@ export default class PositionExtension {
   }
 
   /**
-   * Add ID's to Grid table rows to make tableDnD.onDrop() function work.
+   * Add ID's to Grid table rows, they carry the row identifier and its original position.
    *
    * @private
    */

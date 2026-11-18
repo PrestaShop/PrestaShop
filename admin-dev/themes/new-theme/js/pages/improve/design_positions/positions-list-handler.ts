@@ -3,6 +3,8 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+import Sortable from '@components/sortable';
+
 const {$} = window;
 
 class PositionsListHandler {
@@ -29,6 +31,8 @@ class PositionsListHandler {
   $transplantModuleButton: JQuery;
 
   $hooksList: Array<Record<string, any>>;
+
+  private sortables: Sortable[] = [];
 
   constructor() {
     this.$panelSelection = $('#modules-position-selection-panel');
@@ -182,24 +186,26 @@ class PositionsListHandler {
   handleSortable(): void {
     const self = this;
 
-    $('.sortable').sortable({
-      forcePlaceholderSize: true,
-      start(e: JQueryEventObject, ui: Record<string, any>) {
-        $(this).data('previous-index', ui.item.index());
-      },
-      update($event: JQueryEventObject, ui: Record<string, any>) {
-        const [hookId, moduleId] = ui.item.attr('id').split('_');
+    this.sortables.forEach((sortable) => sortable.destroy());
+    this.sortables = Array.from(document.querySelectorAll<HTMLElement>('.sortable')).map(
+      (list) => new Sortable(list, {
+        items: '.module-item',
+        // Keeps the style the list had while jQuery UI was dragging an item
+        draggingClass: 'ui-sortable-helper',
+        onDrop(item: HTMLElement, oldIndex: number, newIndex: number) {
+          const [hookId, moduleId] = item.id.split('_');
 
-        const $data = {
-          hookId,
-          moduleId,
-          way: $(this).data('previous-index') < ui.item.index() ? 1 : 0,
-          positions: [],
-        };
+          const $data = {
+            hookId,
+            moduleId,
+            way: oldIndex < newIndex ? 1 : 0,
+            positions: [],
+          };
 
-        self.updatePositions($data, $($event.target));
-      },
-    });
+          self.updatePositions($data, $(list));
+        },
+      }),
+    );
   }
 
   updatePositions($data: Record<string, any>, $list: JQuery<Element>): void {

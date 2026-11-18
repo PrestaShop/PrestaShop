@@ -3,9 +3,9 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
-import 'tablednd/dist/jquery.tablednd.min';
 import {Grid} from '@PSTypes/grid';
 import GridMap from '@components/grid/grid-map';
+import Sortable from '@components/sortable';
 
 const {$} = window;
 
@@ -34,15 +34,30 @@ export default class CategoryPositionExtension {
 
     grid
       .getContainer()
-      .find(GridMap.gridTable)
-      .tableDnD({
-        dragHandle: GridMap.dragHandler,
-        onDragClass: 'dragging-row',
-        onDragStart: () => {
-          this.originalPositions = decodeURIComponent($.tableDnD.serialize());
-        },
-        onDrop: (table: HTMLElement, row: HTMLElement) => this.handleCategoryPositionChange(row),
+      .find(`${GridMap.gridTable} > tbody`)
+      .each((index, tableBody) => {
+        new Sortable(tableBody, {
+          items: 'tr',
+          handle: GridMap.dragHandler,
+          draggingClass: 'dragging-row',
+          onStart: (row: HTMLElement) => {
+            this.originalPositions = this.serializePositions(row);
+          },
+          onDrop: (row: HTMLElement) => this.handleCategoryPositionChange(row),
+        });
       });
+  }
+
+  /**
+   * Query string listing the identified rows of the table, in their current order.
+   */
+  private serializePositions(row: HTMLElement): string {
+    const table = <HTMLTableElement>row.closest('table');
+
+    return Array.from(table.rows)
+      .filter((tableRow) => tableRow.id !== '')
+      .map((tableRow) => `${table.id}[]=${tableRow.id}`)
+      .join('&');
   }
 
   /**
@@ -53,7 +68,7 @@ export default class CategoryPositionExtension {
    * @private
    */
   handleCategoryPositionChange(row: HTMLElement): void {
-    const positions = decodeURIComponent($.tableDnD.serialize());
+    const positions = this.serializePositions(row);
     const way = this.originalPositions.indexOf(row.id) < positions.indexOf(row.id)
       ? 1
       : 0;
@@ -90,7 +105,7 @@ export default class CategoryPositionExtension {
   }
 
   /**
-   * Add ID's to Grid table rows to make tableDnD.onDrop() function work.
+   * Add ID's to Grid table rows, they are the values sent as the new positions.
    *
    * @private
    */
