@@ -40,6 +40,16 @@ A handful of pages need a side effect at save time that does not belong in `Data
 - Overridden `save()` must call **`parent::save()`** so the hook dispatch still fires.
 - Cache-clearing or similar plumbing dependencies are wired via service `calls:` in the YAML.
 
+## Multistore
+
+A settings form whose keys can differ per shop needs every piece below, or a save from a shop context writes all its keys for that shop:
+
+- The FormType `getParent()` returns `MultistoreConfigurationType` and each field declares `multistore_configuration_key` (its `ps_configuration` key): `MultistoreConfigurationTypeExtension` then adds the `multistore_<field>` override checkboxes, disables the fields not overridden and switches the form to `PATCH`.
+- The DataConfiguration reads with `getShopConstraint()` and writes through `updateConfigurationValue()`, which removes the shop value of an unchecked field. A key derived from a field (a name stored next to its id) follows the checkbox of that field.
+- The save route accepts `PATCH` (`methods: [ PATCH, POST ]`).
+- The page script initialises `MultistoreConfigField`, which enables a field when its checkbox is checked.
+- A field a form listener rebuilds after `PRE_SET_DATA` loses the `disabled` attribute and the shops dropdown the extension set: carry them over (`ContactDetailsType::rebuildStateField()`).
+
 ## Anti-patterns (named symptoms)
 
 **"Outer wrapper builder"** — symptom: a visible wrapper label, a `label => false` workaround on the only `add()` call, submitted data shaped like `['xxx' => [...real fields...]]`, the FormType ends up nested as a child instead of being the root form.
