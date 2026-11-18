@@ -493,6 +493,8 @@ describe('API : Check endpoints', async () => {
     // @todo: add tests
     '/tax-rules-groups/{taxRulesGroupId}/set-status: PATCH',
     // @todo: add tests
+    '/tax-rules-groups/{taxRulesGroupId}/tax-rules: GET',
+    // @todo: add tests
     '/tax-rules-groups/{taxRulesGroupId}: DELETE',
     // @todo: add tests
     '/tax-rules-groups/{taxRulesGroupId}: GET',
