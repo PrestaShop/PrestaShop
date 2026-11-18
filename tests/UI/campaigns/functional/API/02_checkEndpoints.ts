@@ -465,6 +465,10 @@ describe('API : Check endpoints', async () => {
     // @todo: add tests
     '/stores/{storeId}: GET',
     // @todo: add tests
+    '/stores/{storeId}: PATCH',
+    // @todo: add tests
+    '/stores: POST',
+    // @todo: add tests
     '/suppliers/bulk-delete: DELETE',
     // @todo: add tests
     '/suppliers/bulk-disable: PUT',
@@ -492,6 +496,8 @@ describe('API : Check endpoints', async () => {
     '/tax-rules-groups/bulk-update-status: PUT',
     // @todo: add tests
     '/tax-rules-groups/{taxRulesGroupId}/set-status: PATCH',
+    // @todo: add tests
+    '/tax-rules-groups/{taxRulesGroupId}/tax-rules: GET',
     // @todo: add tests
     '/tax-rules-groups/{taxRulesGroupId}: DELETE',
     // @todo: add tests
