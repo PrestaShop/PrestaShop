@@ -9,8 +9,8 @@ services:
     volumes:
       - db-data:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWD:-prestashop}
-      MYSQL_DATABASE: ${DB_NAME:-prestashop}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWD:-blushandbloom}
+      MYSQL_DATABASE: ${DB_NAME:-blushandbloom}
     restart: on-failure
     networks:
       - prestashop-network
@@ -30,8 +30,8 @@ services:
     environment:
       DISABLE_MAKE: ${DISABLE_MAKE:-0}
       PS_INSTALL_AUTO: ${PS_INSTALL_AUTO:-1}
-      DB_PASSWD: ${DB_PASSWD:-prestashop}
-      DB_NAME: ${DB_NAME:-prestashop}
+      DB_PASSWD: ${DB_PASSWD:-blushandbloom}
+      DB_NAME: ${DB_NAME:-blushandbloom}
       DB_SERVER: ${DB_SERVER:-mysql}
       DB_PREFIX: ${DB_PREFIX:-ps_}
       PS_DOMAIN: ${PS_DOMAIN:-localhost:${HTTP_HOST_PORT:-8001}}
@@ -43,8 +43,8 @@ services:
       PS_ENABLE_SSL: ${PS_ENABLE_SSL:-0}
       PS_ERASE_DB: ${PS_ERASE_DB:-0}
       PS_USE_DOCKER_MAILDEV: ${PS_USE_DOCKER_MAILDEV:-1}
-      ADMIN_MAIL: ${ADMIN_MAIL:-demo@prestashop.com}
-      ADMIN_PASSWD: ${ADMIN_PASSWD:-Pr3st4Sh0P}
+      ADMIN_MAIL: ${ADMIN_MAIL:-demo@blushandbloombeauty.com}
+      ADMIN_PASSWD: ${ADMIN_PASSWD:-Bl#2mbUty}
       BLACKFIRE_ENABLE: ${BLACKFIRE_ENABLE:-0}
       BLACKFIRE_SERVER_ID: ${BLACKFIRE_SERVER_ID:-0}
       BLACKFIRE_SERVER_TOKEN: ${BLACKFIRE_SERVER_TOKEN:-0}
@@ -65,8 +65,8 @@ services:
       - "${MAILDEV_UI_HOST_PORT:-1080}:1080"
       - "${MAILDEV_SMTP_HOST_PORT:-1025}:1025"
     networks:
-      - prestashop-network
+      - blush-and-bloom-beauty-network
 
 networks:
-  prestashop-network:
-    name: ${NETWORK_NAME:-prestashop-network}
+  blush-and-bloom-beauty-network:
+    name: ${NETWORK_NAME:-blushandbloom-network}

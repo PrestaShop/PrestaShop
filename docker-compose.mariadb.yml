@@ -9,8 +9,8 @@ services:
     volumes:
       - db-data:/var/lib/mysql
     environment:
-      MARIADB_ROOT_PASSWORD: ${DB_PASSWD:-prestashop}
-      MARIADB_DATABASE: ${DB_NAME:-prestashop}
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWD:-blushandbloom}
+      MARIADB_DATABASE: ${DB_NAME:-blushandbloom}
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       start_period: 10s
@@ -19,7 +19,7 @@ services:
       retries: 3
     restart: on-failure
     networks:
-      - prestashop-network
+      - blush-and-bloom-beauty-network
 
   prestashop-git:
     hostname: ${PS_HOSTNAME:-localhost}
@@ -36,8 +36,8 @@ services:
     environment:
       DISABLE_MAKE: ${DISABLE_MAKE:-0}
       PS_INSTALL_AUTO: ${PS_INSTALL_AUTO:-1}
-      DB_PASSWD: ${DB_PASSWD:-prestashop}
-      DB_NAME: ${DB_NAME:-prestashop}
+      DB_PASSWD: ${DB_PASSWD:-blushandbloom}
+      DB_NAME: ${DB_NAME:-blushandbloom}
       DB_SERVER: ${DB_SERVER:-mariadb}
       DB_PREFIX: ${DB_PREFIX:-ps_}
       PS_DOMAIN: ${PS_DOMAIN:-localhost:${HTTP_HOST_PORT:-8001}}
@@ -49,8 +49,8 @@ services:
       PS_ENABLE_SSL: ${PS_ENABLE_SSL:-0}
       PS_ERASE_DB: ${PS_ERASE_DB:-0}
       PS_USE_DOCKER_MAILDEV: ${PS_USE_DOCKER_MAILDEV:-1}
-      ADMIN_MAIL: ${ADMIN_MAIL:-demo@prestashop.com}
-      ADMIN_PASSWD: ${ADMIN_PASSWD:-Pr3st4Sh0P}
+      ADMIN_MAIL: ${ADMIN_MAIL:-demo@blushandbloombeauty.com}
+      ADMIN_PASSWD: ${ADMIN_PASSWD:-Bl#2mbUty}
       BLACKFIRE_ENABLE: ${BLACKFIRE_ENABLE:-0}
       BLACKFIRE_SERVER_ID: ${BLACKFIRE_SERVER_ID:-0}
       BLACKFIRE_SERVER_TOKEN: ${BLACKFIRE_SERVER_TOKEN:-0}
@@ -64,7 +64,7 @@ services:
     volumes:
       - ./:/var/www/html:delegated
     networks:
-      - prestashop-network
+      - blush-and-bloom-beauty-network
 
   maildev:
     image: 'maildev/maildev'
@@ -72,8 +72,8 @@ services:
       - "${MAILDEV_UI_HOST_PORT:-1080}:1080"
       - "${MAILDEV_SMTP_HOST_PORT:-1025}:1025"
     networks:
-      - prestashop-network
+      - blush-and-bloom-beauty-network
 
 networks:
-  prestashop-network:
-    name: ${NETWORK_NAME:-prestashop-network}
+  blush-and-bloom-beauty-network:
+    name: ${NETWORK_NAME:-blushandbloom-network}

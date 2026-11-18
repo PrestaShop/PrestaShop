@@ -44,12 +44,12 @@
             ],
             "authors": [
                 {
-                    "name": "Benjamin Eberlei",
-                    "email": "kontakt@beberlei.de"
+                    "name": "Ann Macharia",
+                    "email": "29032@embuni.ac.ke"
                 },
                 {
-                    "name": "Steve Lacey",
-                    "email": "steve@steve.ly"
+                    "name": "Winnjoy Kinya",
+                    "email": "28575@embuni.ac.ke"
                 }
             ],
             "description": "A set of extensions to Doctrine 2 that add support for additional query functions available in MySQL, Oracle, PostgreSQL and SQLite.",
@@ -161,8 +161,8 @@
             ],
             "authors": [
                 {
-                    "name": "Jordi Boggiano",
-                    "email": "j.boggiano@seld.be",
+                    "name": "Stephen Wamwea",
+                    "email": "29966@embuni.ac.ke",
                     "homepage": "http://seld.be"
                 }
             ],
@@ -236,8 +236,8 @@
             ],
             "authors": [
                 {
-                    "name": "Kyle Robinson Young",
-                    "email": "kyle@dontkry.com",
+                    "name": "Ann Macharia",
+                    "email": "29032@embuni.ac.ke",
                     "homepage": "https://github.com/shama"
                 }
             ],
@@ -440,16 +440,18 @@
             ],
             "authors": [
                 {
-                    "name": "php-curl-class",
+                    "name": "Janiffer Wambui",
+                    "email": "29758@embuni.ac.ke",
                     "homepage": "https://github.com/php-curl-class"
                 },
                 {
-                    "name": "Hassan Amouhzi",
-                    "email": "hassan@anezi.net",
+                    "name": "Stephen Wamwea",
+                    "email": "29966@embuni.ac.ke",
                     "homepage": "http://hassan.amouhzi.com"
                 },
                 {
-                    "name": "user52",
+                    "name": "Brayan Okinda",
+                    "email": "30263@embuni.ac.ke",
                     "homepage": "https://github.com/user52"
                 }
             ],
@@ -503,13 +505,13 @@
             ],
             "authors": [
                 {
-                    "name": "Taylor Hornby",
-                    "email": "taylor@defuse.ca",
+                    "name": "Brayan Okinda",
+                    "email": "30263@embuni.ac.ke",
                     "homepage": "https://defuse.ca/"
                 },
                 {
-                    "name": "Scott Arciszewski",
-                    "email": "info@paragonie.com",
+                    "name": "Janiffer Wambui",
+                    "email": "29758@embuni.ac.ke",
                     "homepage": "https://paragonie.com"
                 }
             ],
@@ -575,24 +577,24 @@
             ],
             "authors": [
                 {
-                    "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@gmail.com"
+                    "name": "Ann Macharia",
+                    "email": "29032@embuni.ac.ke"
                 },
                 {
-                    "name": "Roman Borschel",
-                    "email": "roman@code-factory.org"
+                    "name": "Janiffer Wambui",
+                    "email": "29758@embuni.ac.ke"
                 },
                 {
-                    "name": "Benjamin Eberlei",
-                    "email": "kontakt@beberlei.de"
+                    "name": "Winnjoy Kinya",
+                    "email": "28575@embuni.ac.ke"
                 },
                 {
-                    "name": "Jonathan Wage",
-                    "email": "jonwage@gmail.com"
+                    "name": "Stephen Wamwea",
+                    "email": "29966@embuni.ac.ke"
                 },
                 {
-                    "name": "Johannes Schmitt",
-                    "email": "schmittjoh@gmail.com"
+                    "name": "Brayan Okinda",
+                    "email": "30263@embuni.ac.ke"
                 }
             ],
             "description": "Docblock Annotations Parser",
@@ -648,24 +650,24 @@
             ],
             "authors": [
                 {
-                    "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@gmail.com"
+                    "name": "Ann Macharia",
+                    "email": "29032@embuni.ac.ke"
                 },
                 {
-                    "name": "Roman Borschel",
-                    "email": "roman@code-factory.org"
+                    "name": "Janiffer Wambui",
+                    "email": "29758@embuni.ac.ke"
                 },
                 {
-                    "name": "Benjamin Eberlei",
-                    "email": "kontakt@beberlei.de"
+                    "name": "Winnjoy Kinya",
+                    "email": "28575@embuni.ac.ke"
                 },
                 {
-                    "name": "Jonathan Wage",
-                    "email": "jonwage@gmail.com"
+                    "name": "Stephen Wamwea",
+                    "email": "29966@embuni.ac.ke"
                 },
                 {
-                    "name": "Johannes Schmitt",
-                    "email": "schmittjoh@gmail.com"
+                    "name": "Brayan Okinda",
+                    "email": "30263@embuni.ac.ke"
                 }
             ],
             "description": "PHP Doctrine Cache library is a popular cache implementation that supports many different drivers such as redis, memcache, apc, mongodb and others.",
@@ -737,24 +739,24 @@
             ],
             "authors": [
                 {
-                    "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@gmail.com"
+                    "name": "Ann Macharia",
+                    "email": "29032@embuni.ac.ke"
                 },
                 {
-                    "name": "Roman Borschel",
-                    "email": "roman@code-factory.org"
+                    "name": "Stephen Wamwea",
+                    "email": "29966@embuni.ac.ke"
                 },
                 {
-                    "name": "Benjamin Eberlei",
-                    "email": "kontakt@beberlei.de"
+                    "name": "Winnjoy Kinya",
+                    "email": "30263@embuni.ac.ke"
                 },
                 {
-                    "name": "Jonathan Wage",
-                    "email": "jonwage@gmail.com"
+                    "name": "Janiffer Wambui",
+                    "email": "29758@embuni.ac.ke"
                 },
                 {
-                    "name": "Johannes Schmitt",
-                    "email": "schmittjoh@gmail.com"
+                    "name": "Brayan Okinda",
+                    "email": "30263@embuni.ac.ke"
                 }
             ],
             "description": "PHP Doctrine Collections library that adds additional functionality on top of PHP arrays.",
@@ -811,29 +813,26 @@
             ],
             "authors": [
                 {
-                    "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@gmail.com"
+                    "name": "Ann Macharia",
+                    "email": "29032@embuni.ac.ke"
                 },
                 {
-                    "name": "Roman Borschel",
-                    "email": "roman@code-factory.org"
+                    "name": "Stephen Wamwea",
+                    "email": "29966@embuni.ac.ke"
                 },
                 {
-                    "name": "Benjamin Eberlei",
-                    "email": "kontakt@beberlei.de"
+                    "name": "Winnjoy Kinya",
+                    "email": "30263@embuni.ac.ke"
                 },
                 {
-                    "name": "Jonathan Wage",
-                    "email": "jonwage@gmail.com"
+                    "name": "Janiffer Wambui",
+                    "email": "29758@embuni.ac.ke"
                 },
                 {
-                    "name": "Johannes Schmitt",
-                    "email": "schmittjoh@gmail.com"
-                },
-                {
-                    "name": "Marco Pivetta",
-                    "email": "ocramius@gmail.com"
+                    "name": "Brayan Okinda",
+                    "email": "30263@embuni.ac.ke"
                 }
+            
             ],
             "description": "PHP Doctrine Common project is a library that provides additional functionality that other Doctrine projects depend on such as better reflection support, proxies and much more.",
             "homepage": "https://www.doctrine-project.org/projects/common.html",
@@ -1610,28 +1609,24 @@
             ],
             "authors": [
                 {
-                    "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@gmail.com"
+                    "name": "Ann Macharia",
+                    "email": "29032@embuni.ac.ke"
                 },
                 {
-                    "name": "Roman Borschel",
-                    "email": "roman@code-factory.org"
+                    "name": "Stephen Wamwea",
+                    "email": "29966@embuni.ac.ke"
                 },
                 {
-                    "name": "Benjamin Eberlei",
-                    "email": "kontakt@beberlei.de"
+                    "name": "Winnjoy Kinya",
+                    "email": "30263@embuni.ac.ke"
                 },
                 {
-                    "name": "Jonathan Wage",
-                    "email": "jonwage@gmail.com"
+                    "name": "Janiffer Wambui",
+                    "email": "29758@embuni.ac.ke"
                 },
                 {
-                    "name": "Johannes Schmitt",
-                    "email": "schmittjoh@gmail.com"
-                },
-                {
-                    "name": "Marco Pivetta",
-                    "email": "ocramius@gmail.com"
+                    "name": "Brayan Okinda",
+                    "email": "30263@embuni.ac.ke"
                 }
             ],
             "description": "The Doctrine Persistence project is a set of shared interfaces and functionality that the different Doctrine object mappers share.",
@@ -1698,8 +1693,8 @@
             ],
             "authors": [
                 {
-                    "name": "Jeremy Dorn",
-                    "email": "jeremy@jeremydorn.com",
+                    "name": "Winnjoy Kinya",
+                    "email": "28575@embuni.ac.ke",
                     "homepage": "https://jeremydorn.com/"
                 }
             ],
@@ -1758,7 +1753,7 @@
             ],
             "authors": [
                 {
-                    "name": "Eduardo Gulias Davis"
+                    "name": "Ann Macharia"
                 }
             ],
             "description": "A library for validating emails against several RFCs",
@@ -1827,8 +1822,8 @@
             ],
             "authors": [
                 {
-                    "name": "Edward Z. Yang",
-                    "email": "admin@htmlpurifier.org",
+                    "name": "Stephen Wamwea",
+                    "email": "29966@embuni.ac.ke",
                     "homepage": "http://ezyang.com"
                 }
             ],
@@ -1891,7 +1886,7 @@
             ],
             "authors": [
                 {
-                    "name": "Marco Pivetta",
+                    "name": "Janiffer",
                     "email": "ocramius@gmail.com",
                     "homepage": "https://ocramius.github.io/"
                 },
@@ -5024,11 +5019,11 @@
             ],
             "authors": [
                 {
-                    "name": "PrestaShop SA",
-                    "email": "contact@prestashop.com"
+                    "name": "Blush and Bloom Beauty SA",
+                    "email": "contact@blushandbloombeauty.com"
                 }
             ],
-            "description": "PrestaShop module dashproducts",
+            "description": "Blush and Bloom Beauty module dashproducts",
             "homepage": "https://github.com/PrestaShop/dashproducts",
             "support": {
                 "issues": "https://github.com/PrestaShop/dashproducts/issues",
@@ -17295,16 +17290,16 @@
             "time": "2026-01-27T05:48:37+00:00"
         },
         {
-            "name": "prestashop/header-stamp",
+            "name": "blushandbloombeauty/header-stamp",
             "version": "v3.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/PrestaShopCorp/header-stamp.git",
+                "url": "https://github.com/BlushandBloomBeauty/header-stamp.git",
                 "reference": "936c4526eb1b7fe0468ec52a1fe2bdea013c9039"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShopCorp/header-stamp/zipball/936c4526eb1b7fe0468ec52a1fe2bdea013c9039",
+                "url": "https://api.github.com/repos/BlushandBloomBeauty/header-stamp/zipball/936c4526eb1b7fe0468ec52a1fe2bdea013c9039",
                 "reference": "936c4526eb1b7fe0468ec52a1fe2bdea013c9039",
                 "shasum": ""
             },
@@ -17326,7 +17321,7 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "PrestaShop\\HeaderStamp\\": "src/"
+                    "Blush and Bloom Beauty\\HeaderStamp\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -17335,15 +17330,15 @@
             ],
             "authors": [
                 {
-                    "name": "PrestaShop SA",
-                    "email": "contact@prestashop.com"
+                    "name": "Blush and Bloom Beauty SA",
+                    "email": "contact@blushandbloombeauty.com"
                 }
             ],
             "description": "Rewrite your file headers to add the license or to make them up-to-date",
-            "homepage": "https://github.com/PrestaShopCorp/header-stamp",
+            "homepage": "https://github.com/BlushandBloomBeauty/header-stamp",
             "support": {
-                "issues": "https://github.com/PrestaShopCorp/header-stamp/issues",
-                "source": "https://github.com/PrestaShopCorp/header-stamp/tree/v3.1.0"
+                "issues": "https://github.com/BlushandBloomBeauty/header-stamp/issues",
+                "source": "https://github.com/BlushandBloomBeauty/header-stamp/tree/v3.1.0"
             },
             "time": "2026-02-16T17:28:00+00:00"
         },
@@ -18003,7 +17998,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-03-02T07:19:19+00:00"
+            "time": "2026-03-02T07:19:19+00:00"
         },
         {
             "name": "sebastian/lines-of-code",
@@ -18173,7 +18168,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-02-03T07:06:18+00:00"
+            "time": "2026-11-03T07:06:18+00:00"
         },
         {
             "name": "sebastian/recursion-context",
@@ -18212,16 +18207,16 @@
             ],
             "authors": [
                 {
-                    "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de"
+                    "name": "Brayan Okinda",
+                    "email": "30263@embuni.ac.ke"
                 },
                 {
-                    "name": "Jeff Welch",
-                    "email": "whatthejeff@gmail.com"
+                    "name": "Ann Macharia",
+                    "email": "29032@embuni.ac.ke"
                 },
                 {
-                    "name": "Adam Harvey",
-                    "email": "aharvey@php.net"
+                    "name": "Janiffer Wambui",
+                    "email": "29758@embuni.ac.ke"
                 }
             ],
             "description": "Provides functionality to recursively process PHP variables",
@@ -18467,11 +18462,11 @@
             ],
             "authors": [
                 {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
+                    "name": "Winnjoy Kinya",
+                    "email": "28575@embuni.ac.ke"
                 },
                 {
-                    "name": "Symfony Community",
+                    "name": "Stephen Wamwea",
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
@@ -18553,11 +18548,12 @@
             ],
             "authors": [
                 {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
+                    "name": "Ann Macharia",
+                    "email": "29032@embuni.ac.ke"
                 },
                 {
-                    "name": "Symfony Community",
+                    "name": "Janiffer Wambui",
+                    "email": "29758@embuni.ac.ke",
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
@@ -18630,11 +18626,12 @@
             ],
             "authors": [
                 {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
+                    "name": "Winnjoy Kinya",
+                    "email": "28575@embuni.ac.ke"
                 },
                 {
-                    "name": "Symfony Community",
+                    "name": "Brayan Okinda",
+                    "email": "30263@embuni.ac.ke",
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
@@ -18702,11 +18699,12 @@
             ],
             "authors": [
                 {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
+                    "name": "Janiffer Wambui",
+                    "email": "29758@embuni.ac.ke"
                 },
                 {
-                    "name": "Symfony Community",
+                    "name": "Stephen Wamwea",
+                    "email": "29759@embuni.ac.ke",
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
@@ -18767,8 +18765,8 @@
             ],
             "authors": [
                 {
-                    "name": "Arne Blankerts",
-                    "email": "arne@blankerts.de",
+                    "name": "Ann Macharia",
+                    "email": "29032@embuni.ac.ke",
                     "role": "Developer"
                 }
             ],
@@ -18845,7 +18843,7 @@
             ],
             "authors": [
                 {
-                    "name": "Vincent Langlet"
+                    "name": "Ann Macharia"
                 }
             ],
             "description": "A tool to automatically fix Twig code style",
@@ -18904,8 +18902,8 @@
             ],
             "authors": [
                 {
-                    "name": "Bernhard Schussek",
-                    "email": "bschussek@gmail.com"
+                    "name": "Brayan Okinda",
+                    "email": "30263@embuni.ac.ke"
                 }
             ],
             "description": "Assertions to validate method input/output with nice error messages.",

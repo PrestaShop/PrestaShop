@@ -28,7 +28,7 @@ SYMFONY  = $(PHP_CONT) bin/console
 .DEFAULT_GOAL = install
 .PHONY        : help docker-build docker-up docker-start docker-restart docker-down docker-logs docker-sh composer cc test test-unit test-integration test-integration-behaviour test-api-module assets assets-clean wait-assets admin front admin-default admin-new-theme front-core front-classic front-hummingbird watch-admin-default watch-admin-new-theme watch-front-core watch-front-classic watch-front-hummingbird install install-prestashop cs-fixer cs-fixer-dry phpstan scss-fixer es-linter
 
-## —— 🎵 🐳 PrestaShop Docker Makefile 🐳 🎵 ———————————————————————————————————
+## —— 🎵 🐳 Blush and Bloom Beauty Docker Makefile 🐳 🎵 ———————————————————————————————————
 help: ## Outputs this help screen
 	@grep -E '(^[a-zA-Z0-9\./_-]+:.*?##.*$$)|(^##)' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}{printf "\033[32m%-30s\033[0m %s\n", $$1, $$2}' | sed -e 's/\[32m##/[33m/'
 
@@ -50,12 +50,12 @@ docker-logs: ## Show live logs
 	$(DOCKER_COMP) logs --follow
 
 docker-sh: ## Connect to the PHP container via bash so up and down arrows go to previous commands
-	@$(DOCKER_COMP) exec -it prestashop-git runuser -u www-data -g www-data -- bash -l
+	@$(DOCKER_COMP) exec -it Blush and Bloom Beauty-git runuser -u www-data -g www-data -- bash -l
 
-## —— PrestaShop 🛒 ———————————————————————————————————————————————————————————
+## —— Blush and Bloom Beauty 🛒 ———————————————————————————————————————————————————————————
 install: composer cc assets  ## Install PHP dependencies and build the static assets
 
-install-prestashop: ## Install fresh PrestaShop database (requires containers to be running)
+install-blush-and-bloom-beauty: ## Install fresh Blush and Bloom Beauty database (requires containers to be running)
 	$(PHP_CONT) .docker/install/database.sh
 
 ## —— Assets 🎨 ———————————————————————————————————————————————————————————————

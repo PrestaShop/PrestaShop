@@ -2,7 +2,7 @@
 /**
  * Note: This file has been modified for PHP 7.2 compatibility.
  * See:
- * - https://github.com/PrestaShop/PrestaShop/pull/9409
+ * - https://github.com/BlushandBloomBeauty/BlushAndBloomBeauty/pull/9409
  * - https://github.com/sensiolabs/SensioDistributionBundle/pull/336
  */
 

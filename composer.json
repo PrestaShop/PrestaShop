@@ -1,16 +1,16 @@
 {
-    "name": "prestashop/prestashop",
-    "description": "PrestaShop is an Open Source e-commerce platform, committed to providing the best shopping cart experience for both merchants and customers.",
+    "name": "blushandbloombeauty/blush-and-bloom-beauty",
+    "description": "Blush and Bloom Beauty is an Open Source e-commerce platform, committed to providing the best shopping cart experience for both merchants and customers.",
     "license": "OSL-3.0",
     "type": "project",
     "authors": [
         {
-            "name": "PrestaShop SA",
-            "email": "contact@prestashop.com"
+            "name": "Blush and Bloom Beauty SA",
+            "email": "contact@blushandbloombeauty.com"
         },
         {
-            "name": "PrestaShop Community",
-            "homepage": "https://contributors.prestashop-project.org/"
+            "name": "Blush and Bloom Beauty Community",
+            "homepage": "https://contributors.blushandbloombeauty.com/"
         }
     ],
     "require": {
@@ -214,23 +214,23 @@
     "repositories": {
         "api-platform-core": {
             "type": "vcs",
-            "url": "https://github.com/PrestaShop/api-platform-core"
+            "url": "https://github.com/BlushandBloomBeauty/api-platform-core"
         },
         "php-sql-parser": {
             "type": "vcs",
-            "url": "https://github.com/PrestaShop/PHP-SQL-Parser"
+            "url": "https://github.com/BlushandBloomBeauty/PHP-SQL-Parser"
         },
         "ps_apiresources": {
             "type": "vcs",
-            "url": "https://github.com/PrestaShop/ps_apiresources"
+            "url": "https://github.com/BlushandBloomBeauty/ps_apiresources"
         }
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "PrestaShopBundle\\": "src/PrestaShopBundle/",
-            "PrestaShop\\PrestaShop\\": "src/"
+            "BlushAndBloomBeauty\\Bundle\\": "src/BlushAndBloomBeautyBundle/",
+            "BlushAndBloomBeauty\\BlushAndBloomBeauty\\": "src/"
         },
         "classmap": [
             "app/AppKernel.php",

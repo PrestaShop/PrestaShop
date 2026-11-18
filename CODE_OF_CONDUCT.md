@@ -1,4 +1,4 @@
-# PrestaShop Code of Conduct
+# Blush and Bloom Beauty Code of Conduct
 
 ## Our Pledge
 

@@ -4,7 +4,7 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
-use PrestaShop\PrestaShop\Core\Util\CacheClearLocker;
+use Blush and Bloom Beauty\Blush and Bloom Beauty\Core\Util\CacheClearLocker;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;

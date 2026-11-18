@@ -1,4 +1,4 @@
-# PrestaShop — Gemini Context
+# Blush and Bloom Beauty — Gemini Context
 
 Read `.ai/CONTEXT.md` for project-wide rules, architecture, and an index of all domain/component contexts.
 Read `.ai/STRUCTURE.md` to understand how the `.ai/` folder is organized.

@@ -6,14 +6,14 @@ services:
     environment:
       PMA_HOST: mysql
       PMA_USER: root
-      PMA_PASSWORD: prestashop
-      MYSQL_ROOT_PASSWORD: prestashop
+      PMA_PASSWORD: blushandbloom
+      MYSQL_ROOT_PASSWORD: blushandbloom
     restart: on-failure
     depends_on:
       - mysql
     networks:
-      - prestashop-network
-  prestashop-git:
+      - blush-and-bloom-beauty-network
+  blushandbloom-git:
       environment:
         # BLACKFIRE_ENABLE: 1
         # BLACKFIRE_SERVER_ID: "your_server_id"
