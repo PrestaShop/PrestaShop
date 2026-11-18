@@ -146,6 +146,26 @@ class SearchTest extends TestCase
     {
         Configuration::set('PS_SEARCH_START', true);
         Configuration::set('PS_SEARCH_END', false);
+
+        $this->assertFindRelevance($expression, $likePatterns);
+    }
+
+    public function testFindRelevanceOfAFuzzyMatchUsesTheClosestWord(): void
+    {
+        Configuration::set('PS_SEARCH_START', true);
+        Configuration::set('PS_SEARCH_END', false);
+        Configuration::set('PS_SEARCH_FUZZY', true);
+        $context = Context::getContext();
+        $this->assertEmpty($this->getExpectedPositions(['%mgu%'], (int) $context->shop->id));
+
+        $closestWord = Search::findClosestWeightestWord($context, 'mgu');
+        $this->assertNotEmpty($closestWord);
+
+        $this->assertFindRelevance('mgu', [Search::getSearchParamFromWord($closestWord)]);
+    }
+
+    private function assertFindRelevance(string $expression, array $likePatterns): void
+    {
         $context = Context::getContext();
 
         $found = Search::find(1, $expression, 1, 1000, 'position', 'desc', false, false, $context);
