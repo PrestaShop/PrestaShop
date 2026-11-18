@@ -10,7 +10,7 @@ Handles product search indexation (triggering full or partial reindexing, counti
 |-------|------|
 | Core CQRS | `src/Core/Domain/Search/` |
 | Adapter | `src/Adapter/Search/` |
-| Legacy ObjectModel | `classes/Search.php` |
+| Legacy ObjectModel | `classes/Search.php`, do not add logic here |
 
 ## Non-obvious patterns
 
