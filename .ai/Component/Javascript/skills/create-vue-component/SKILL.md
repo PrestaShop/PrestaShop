@@ -72,9 +72,10 @@ export default function initComponentName(
 
 ```typescript
 // In form/index.ts or edit/index.ts
+import onReady from '@components/on-ready';
 import initComponentName from './components/initComponentName';
 
-$(() => {
+onReady(() => {
   // Standard components first
   window.prestashop.component.initComponents(['TranslatableInput']);
 
