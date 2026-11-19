@@ -9,9 +9,12 @@ declare(strict_types=1);
 namespace Tests\Integration\Adapter;
 
 use Configuration as LegacyConfiguration;
+use InvalidArgumentException;
+use Language;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Entity\Shop;
 use PrestaShopBundle\Entity\ShopGroup;
 use Shop as LegacyShop;
@@ -25,6 +28,10 @@ class ConfigurationTest extends KernelTestCase
      */
     private $configuration;
 
+    private static int $otherShopId;
+
+    private static int $otherShopGroupId;
+
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
@@ -37,6 +44,7 @@ class ConfigurationTest extends KernelTestCase
         DatabaseDump::restoreAllTables();
         LegacyShop::resetStaticCache();
         LegacyConfiguration::resetStaticCache();
+        Language::resetStaticCache();
     }
 
     protected function setUp(): void
@@ -85,6 +93,154 @@ class ConfigurationTest extends KernelTestCase
         $result = $this->configuration->has($getParams['key'], $getParams['shopConstraint']);
 
         $this->assertEquals($expectedResult, $result);
+    }
+
+    /**
+     * @dataProvider explicitShopConstraintProvider
+     */
+    public function testGetRespectsExplicitShopConstraint(
+        string $scope,
+        bool $strict,
+        bool $withGroupOverride,
+        bool $withShopOverride,
+        bool $localized,
+        ?string $expectedValue,
+    ): void {
+        $key = $localized ? 'localized_scope_isolation_test' : 'scope_isolation_test';
+        $context = LegacyShop::getContext();
+        $contextId = $context === LegacyShop::CONTEXT_SHOP
+            ? LegacyShop::getContextShopID()
+            : LegacyShop::getContextShopGroupID();
+
+        try {
+            $this->configuration->remove($key);
+            $this->setScopeIsolationValues($key, $localized, $withGroupOverride, $withShopOverride);
+            LegacyConfiguration::resetStaticCache();
+            LegacyShop::setContext(LegacyShop::CONTEXT_SHOP, 1);
+
+            $constraint = $this->getExplicitShopConstraint($scope, $strict);
+            $expected = $expectedValue;
+            if ($localized) {
+                $this->assertNotNull($expectedValue);
+                $expected = $this->getLocalizedTestValues($expectedValue);
+            }
+
+            $this->assertSame($expected, $this->configuration->get($key, null, $constraint));
+        } finally {
+            LegacyShop::setContext($context ?? LegacyShop::CONTEXT_ALL, $contextId);
+            $this->configuration->remove($key);
+        }
+    }
+
+    public static function explicitShopConstraintProvider(): iterable
+    {
+        $cases = [
+            'global' => ['global', false, true, true, 'GLOBAL'],
+            'global strict' => ['global', true, true, true, 'GLOBAL'],
+            'current group' => ['current_group', false, true, true, 'CURRENT_GROUP'],
+            'current group strict' => ['current_group', true, true, true, 'CURRENT_GROUP'],
+            'other group' => ['other_group', false, true, true, 'OTHER_GROUP'],
+            'other group strict' => ['other_group', true, true, true, 'OTHER_GROUP'],
+            'other group inherits global' => ['other_group', false, false, false, 'GLOBAL'],
+            'current shop' => ['current_shop', false, true, true, 'CURRENT_SHOP'],
+            'current shop strict' => ['current_shop', true, true, true, 'CURRENT_SHOP'],
+            'other shop override' => ['other_shop', false, true, true, 'OTHER_SHOP'],
+            'other shop override strict' => ['other_shop', true, true, true, 'OTHER_SHOP'],
+            'other shop inherits own group' => ['other_shop', false, true, false, 'OTHER_GROUP'],
+            'other shop inherits global' => ['other_shop', false, false, false, 'GLOBAL'],
+        ];
+
+        foreach ($cases as $name => [$scope, $strict, $withGroupOverride, $withShopOverride, $expected]) {
+            foreach ([false, true] as $localized) {
+                yield ($localized ? 'localized ' : 'scalar ') . $name => [
+                    $scope, $strict, $withGroupOverride, $withShopOverride, $localized, $expected,
+                ];
+            }
+        }
+
+        yield 'scalar strict group does not inherit global' => ['other_group', true, false, false, false, null];
+        yield 'scalar strict shop does not inherit group' => ['other_shop', true, true, false, false, null];
+        yield 'scalar strict shop does not inherit global' => ['other_shop', true, false, false, false, null];
+    }
+
+    /**
+     * @dataProvider strictLocalizedShopConstraintProvider
+     */
+    public function testStrictLocalizedReadDoesNotInherit(string $scope, bool $withGroupOverride): void
+    {
+        $key = 'strict_localized_scope_test';
+        $context = LegacyShop::getContext();
+        $contextId = $context === LegacyShop::CONTEXT_SHOP
+            ? LegacyShop::getContextShopID()
+            : LegacyShop::getContextShopGroupID();
+
+        try {
+            $this->configuration->remove($key);
+            $this->setScopeIsolationValues($key, true, $withGroupOverride, false);
+            LegacyConfiguration::resetStaticCache();
+            // Use all-shops context to test strict inheritance independently of the current shop.
+            LegacyShop::setContext(LegacyShop::CONTEXT_ALL);
+
+            $constraint = $this->getExplicitShopConstraint($scope, false);
+            $inheritedValues = $this->getLocalizedTestValues($withGroupOverride ? 'OTHER_GROUP' : 'GLOBAL');
+            $this->assertSame($inheritedValues, $this->configuration->get($key, null, $constraint));
+
+            $strictValues = $this->configuration->get($key, null, $constraint->clone(true));
+            $this->assertSame(array_fill_keys(array_keys($inheritedValues), false), $strictValues);
+        } finally {
+            LegacyShop::setContext($context ?? LegacyShop::CONTEXT_ALL, $contextId);
+            $this->configuration->remove($key);
+        }
+    }
+
+    public static function strictLocalizedShopConstraintProvider(): iterable
+    {
+        yield 'group must not inherit global' => ['other_group', false];
+        yield 'shop must not inherit own group' => ['other_shop', true];
+        yield 'shop must not inherit global' => ['other_shop', false];
+    }
+
+    private function getExplicitShopConstraint(string $scope, bool $strict): ShopConstraint
+    {
+        return match ($scope) {
+            'global' => ShopConstraint::allShops($strict),
+            'current_group' => ShopConstraint::shopGroup(1, $strict),
+            'other_group' => ShopConstraint::shopGroup(self::$otherShopGroupId, $strict),
+            'current_shop' => ShopConstraint::shop(1, $strict),
+            'other_shop' => ShopConstraint::shop(self::$otherShopId, $strict),
+            default => throw new InvalidArgumentException(sprintf('Unexpected shop constraint scope "%s".', $scope)),
+        };
+    }
+
+    private function setScopeIsolationValues(string $key, bool $localized, bool $withGroupOverride, bool $withShopOverride): void
+    {
+        $values = [
+            [ShopConstraint::allShops(), 'GLOBAL'],
+            [ShopConstraint::shopGroup(1), 'CURRENT_GROUP'],
+            [ShopConstraint::shop(1), 'CURRENT_SHOP'],
+        ];
+        if ($withGroupOverride) {
+            $values[] = [ShopConstraint::shopGroup(self::$otherShopGroupId), 'OTHER_GROUP'];
+        }
+        if ($withShopOverride) {
+            $values[] = [ShopConstraint::shop(self::$otherShopId), 'OTHER_SHOP'];
+        }
+
+        foreach ($values as [$constraint, $value]) {
+            $this->configuration->set($key, $localized ? $this->getLocalizedTestValues($value) : $value, $constraint);
+        }
+    }
+
+    private function getLocalizedTestValues(string $value): array
+    {
+        $values = [];
+        foreach (Language::getIDs(false) as $langId) {
+            $values[$langId] = $value . '_' . $langId;
+        }
+
+        $this->assertNotEmpty($values, 'The multistore fixture must contain an installed language.');
+
+        return $values;
     }
 
     /**
@@ -474,6 +630,34 @@ class ConfigurationTest extends KernelTestCase
         $entityManager->persist($shop);
         $entityManager->flush();
 
+        $otherGroup = new ShopGroup();
+        $otherGroup->setName('configuration_scope_group');
+        $otherGroup->setColor('blue');
+        $otherGroup->setShareCustomer(false);
+        $otherGroup->setShareOrder(false);
+        $otherGroup->setShareStock(false);
+        $otherGroup->setActive(true);
+        $otherGroup->setDeleted(false);
+        $entityManager->persist($otherGroup);
+
+        $otherShop = new Shop();
+        $otherShop->setActive(true);
+        $otherShop->setIdCategory(2);
+        $otherShop->setName('configuration_scope_shop');
+        $otherShop->setShopGroup($otherGroup);
+        $otherShop->setColor('blue');
+        $otherShop->setThemeName(Theme::getDefaultTheme());
+        $otherShop->setDeleted(false);
+        $entityManager->persist($otherShop);
+
+        foreach ($entityManager->getRepository(Lang::class)->findAll() as $language) {
+            $language->addShop($otherShop);
+        }
+        $entityManager->flush();
+        self::$otherShopId = $otherShop->getId();
+        self::$otherShopGroupId = $otherGroup->getId();
+
         LegacyShop::resetStaticCache();
+        Language::resetStaticCache();
     }
 }
