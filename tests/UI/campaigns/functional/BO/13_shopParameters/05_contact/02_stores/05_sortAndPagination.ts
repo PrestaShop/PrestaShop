@@ -82,72 +82,72 @@ describe('BO - Shop Parameters - Contact : Sort and pagination stores', async ()
     const sortTests = [
       {
         args: {
-          testIdentifier: 'sortByIdDesc', sortBy: 'id_store', sortDirection: 'down', isFloat: true,
+          testIdentifier: 'sortByIdDesc', sortBy: 'id_store', sortDirection: 'desc', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByNameAsc', sortBy: 'sl!name', sortDirection: 'up',
+          testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'asc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByNameDesc', sortBy: 'sl!name', sortDirection: 'down',
+          testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'desc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByAddressAsc', sortBy: 'sl!address1', sortDirection: 'up',
+          testIdentifier: 'sortByAddressAsc', sortBy: 'address', sortDirection: 'asc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByAddressDesc', sortBy: 'sl!address1', sortDirection: 'down',
+          testIdentifier: 'sortByAddressDesc', sortBy: 'address', sortDirection: 'desc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByCityAsc', sortBy: 'city', sortDirection: 'up',
+          testIdentifier: 'sortByCityAsc', sortBy: 'city', sortDirection: 'asc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByCityDesc', sortBy: 'city', sortDirection: 'down',
+          testIdentifier: 'sortByCityDesc', sortBy: 'city', sortDirection: 'desc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByPostCodeAsc', sortBy: 'postcode', sortDirection: 'up', isFloat: true,
+          testIdentifier: 'sortByPostCodeAsc', sortBy: 'postcode', sortDirection: 'asc', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByPostCodeDesc', sortBy: 'postcode', sortDirection: 'down', isFloat: true,
+          testIdentifier: 'sortByPostCodeDesc', sortBy: 'postcode', sortDirection: 'desc', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByStateAsc', sortBy: 'st!name', sortDirection: 'up',
+          testIdentifier: 'sortByStateAsc', sortBy: 'state', sortDirection: 'asc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByStateDesc', sortBy: 'st!name', sortDirection: 'down',
+          testIdentifier: 'sortByStateDesc', sortBy: 'state', sortDirection: 'desc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByCountryAsc', sortBy: 'cl!name', sortDirection: 'up',
+          testIdentifier: 'sortByCountryAsc', sortBy: 'country', sortDirection: 'asc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByCountryDesc', sortBy: 'city', sortDirection: 'down',
+          testIdentifier: 'sortByCountryDesc', sortBy: 'country', sortDirection: 'desc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByIdAsc', sortBy: 'id_store', sortDirection: 'up', isFloat: true,
+          testIdentifier: 'sortByIdAsc', sortBy: 'id_store', sortDirection: 'asc', isFloat: true,
         },
       },
     ];
@@ -168,7 +168,7 @@ describe('BO - Shop Parameters - Contact : Sort and pagination stores', async ()
 
           const expectedResult: number[] = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
-          if (test.args.sortDirection === 'up') {
+          if (test.args.sortDirection === 'asc') {
             expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
             expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
@@ -176,7 +176,7 @@ describe('BO - Shop Parameters - Contact : Sort and pagination stores', async ()
         } else {
           const expectedResult: string[] = await utilsCore.sortArray(nonSortedTable);
 
-          if (test.args.sortDirection === 'up') {
+          if (test.args.sortDirection === 'asc') {
             expect(sortedTable).to.deep.equal(expectedResult);
           } else {
             expect(sortedTable).to.deep.equal(expectedResult.reverse());
@@ -221,28 +221,28 @@ describe('BO - Shop Parameters - Contact : Sort and pagination stores', async ()
         await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
         const paginationNumber = await boStoresPage.selectPaginationLimit(page, 20);
-        expect(paginationNumber).to.equal('1');
+        expect(paginationNumber).to.contains('(page 1 / 2)');
       });
 
       it('should click on next', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
         const paginationNumber = await boStoresPage.paginationNext(page);
-        expect(paginationNumber).to.equal('2');
+        expect(paginationNumber).to.contains('(page 2 / 2)');
       });
 
       it('should click on previous', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
         const paginationNumber = await boStoresPage.paginationPrevious(page);
-        expect(paginationNumber).to.equal('1');
+        expect(paginationNumber).to.contains('(page 1 / 2)');
       });
 
       it('should change the items number to 50 per page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
         const paginationNumber = await boStoresPage.selectPaginationLimit(page, 50);
-        expect(paginationNumber).to.equal('1');
+        expect(paginationNumber).to.contains('(page 1 / 1)');
       });
     });
 
@@ -250,13 +250,13 @@ describe('BO - Shop Parameters - Contact : Sort and pagination stores', async ()
       it('should filter list by name', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
-        await boStoresPage.filterTable(page, 'input', 'sl!name', 'todelete');
+        await boStoresPage.filterTable(page, 'input', 'name', 'todelete');
 
         const numberOfStoresAfterFilter = await boStoresPage.getNumberOfElementInGrid(page);
         expect(numberOfStoresAfterFilter).to.be.at.least(16);
 
         for (let i = 1; i <= numberOfStoresAfterFilter; i++) {
-          const textColumn = await boStoresPage.getTextColumn(page, i, 'sl!name');
+          const textColumn = await boStoresPage.getTextColumn(page, i, 'name');
           expect(textColumn).to.contains('todelete');
         }
       });

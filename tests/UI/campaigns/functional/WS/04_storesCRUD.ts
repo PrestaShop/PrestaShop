@@ -559,7 +559,7 @@ describe('WS - Stores : CRUD', async () => {
 
           const xmlValueLatitude = storeXml.getEltTextContent(xmlCreate, 'latitude');
           const valueLatitude = await boStoresCreatePage.getInputValue(page, 'latitude');
-          expect(valueLatitude).to.be.eq(xmlValueLatitude);
+          expect(parseFloat(valueLatitude)).to.be.eq(parseFloat(xmlValueLatitude as string));
         });
 
         it('should check store\'s longitude', async function () {
@@ -567,7 +567,7 @@ describe('WS - Stores : CRUD', async () => {
 
           const xmlValueLongitude = storeXml.getEltTextContent(xmlCreate, 'longitude');
           const valueLongitude = await boStoresCreatePage.getInputValue(page, 'longitude');
-          expect(valueLongitude).to.be.eq(xmlValueLongitude);
+          expect(parseFloat(valueLongitude)).to.be.eq(parseFloat(xmlValueLongitude as string));
         });
 
         it('should check store\'s phone', async function () {
@@ -598,7 +598,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreActive', baseContext);
 
           const xmlValueActive = storeXml.getEltTextContent(xmlCreate, 'active');
-          const active = await boStoresCreatePage.isActive(page, 'on');
+          const active = await boStoresCreatePage.isActive(page, '1');
           expect(active).to.be.eq(xmlValueActive !== '0');
         });
 
@@ -897,7 +897,7 @@ describe('WS - Stores : CRUD', async () => {
 
           const xmlValueLatitude = storeXml.getEltTextContent(xmlUpdate, 'latitude');
           const valueLatitude = await boStoresCreatePage.getInputValue(page, 'latitude');
-          expect(valueLatitude).to.be.eq(xmlValueLatitude);
+          expect(parseFloat(valueLatitude)).to.be.eq(parseFloat(xmlValueLatitude as string));
         });
 
         it('should check store\'s longitude', async function () {
@@ -905,7 +905,7 @@ describe('WS - Stores : CRUD', async () => {
 
           const xmlValueLongitude = storeXml.getEltTextContent(xmlUpdate, 'longitude');
           const valueLongitude = await boStoresCreatePage.getInputValue(page, 'longitude');
-          expect(valueLongitude).to.be.eq(xmlValueLongitude);
+          expect(parseFloat(valueLongitude)).to.be.eq(parseFloat(xmlValueLongitude as string));
         });
 
         it('should check store\'s phone', async function () {
@@ -936,7 +936,7 @@ describe('WS - Stores : CRUD', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkStoreActive2', baseContext);
 
           const xmlValueActive = storeXml.getEltTextContent(xmlUpdate, 'active');
-          const active = await boStoresCreatePage.isActive(page, 'on');
+          const active = await boStoresCreatePage.isActive(page, '1');
           expect(active).to.be.eq((xmlValueActive !== '0'));
         });
 

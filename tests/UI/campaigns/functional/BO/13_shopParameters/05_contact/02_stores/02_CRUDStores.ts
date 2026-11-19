@@ -99,9 +99,9 @@ describe('BO - Shop Parameters - Contact : Create, update and delete Store in BO
       await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
 
       await boStoresPage.resetFilter(page);
-      await boStoresPage.filterTable(page, 'input', 'sl!name', createStoreData.name);
+      await boStoresPage.filterTable(page, 'input', 'name', createStoreData.name);
 
-      const textEmail = await boStoresPage.getTextColumn(page, 1, 'sl!name');
+      const textEmail = await boStoresPage.getTextColumn(page, 1, 'name');
       expect(textEmail).to.contains(createStoreData.name);
     });
 
@@ -130,9 +130,9 @@ describe('BO - Shop Parameters - Contact : Create, update and delete Store in BO
       await testContext.addContextItem(this, 'testIdentifier', 'filterForDelete', baseContext);
 
       await boStoresPage.resetFilter(page);
-      await boStoresPage.filterTable(page, 'input', 'sl!name', editStoreData.name);
+      await boStoresPage.filterTable(page, 'input', 'name', editStoreData.name);
 
-      const textEmail = await boStoresPage.getTextColumn(page, 1, 'sl!name');
+      const textEmail = await boStoresPage.getTextColumn(page, 1, 'name');
       expect(textEmail).to.contains(editStoreData.name);
     });
 

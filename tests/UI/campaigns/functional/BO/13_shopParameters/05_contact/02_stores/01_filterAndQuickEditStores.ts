@@ -85,7 +85,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
           {
             column: 'Name',
             filterType: 'input',
-            filterBy: 'sl!name',
+            filterBy: 'name',
             filterValue: dataStores.store_1.name,
           },
       },
@@ -94,7 +94,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
           {
             column: 'Address',
             filterType: 'input',
-            filterBy: 'sl!address1',
+            filterBy: 'address',
             filterValue: dataStores.store_1.address1,
           },
       },
@@ -121,7 +121,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
           {
             column: 'State',
             filterType: 'input',
-            filterBy: 'st!name',
+            filterBy: 'state',
             filterValue: dataStores.store_1.state,
           },
       },
@@ -130,7 +130,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
           {
             column: 'country',
             filterType: 'input',
-            filterBy: 'cl!name',
+            filterBy: 'country',
             filterValue: dataStores.store_1.country,
           },
       },
@@ -201,12 +201,12 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
     it(`should filter by name '${dataStores.store_2.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
-      await boStoresPage.filterTable(page, 'input', 'sl!name', dataStores.store_2.name);
+      await boStoresPage.filterTable(page, 'input', 'name', dataStores.store_2.name);
 
       const numberOfStoresAfterFilter = await boStoresPage.getNumberOfElementInGrid(page);
       expect(numberOfStoresAfterFilter).to.be.at.most(numberOfStores);
 
-      const textColumn = await boStoresPage.getTextColumn(page, 1, 'sl!name');
+      const textColumn = await boStoresPage.getTextColumn(page, 1, 'name');
       expect(textColumn).to.contains(dataStores.store_2.name);
     });
 
