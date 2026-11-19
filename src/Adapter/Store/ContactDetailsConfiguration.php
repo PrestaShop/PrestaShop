@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Store;
 
-use Configuration as LegacyConfiguration;
 use Country;
 use Exception;
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
@@ -140,10 +139,11 @@ final class ContactDetailsConfiguration extends AbstractMultistoreConfiguration
 
     private function getInheritedCountryId(): int
     {
-        $shopGroupId = $this->shopContext->isShopContext() ? (int) $this->shopContext->getContextShopGroup()->id : 0;
+        $shopConstraint = $this->shopContext->isShopContext()
+            ? ShopConstraint::shopGroup((int) $this->shopContext->getContextShopGroup()->id)
+            : ShopConstraint::allShops();
 
-        // Shop id 0, not null: with null, legacy falls back to the context shop, whose value is the one removed.
-        return (int) LegacyConfiguration::get('PS_SHOP_COUNTRY_ID', null, $shopGroupId, 0);
+        return (int) $this->configuration->get('PS_SHOP_COUNTRY_ID', null, $shopConstraint);
     }
 
     /**
