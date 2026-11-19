@@ -49,6 +49,7 @@ services:
     autoconfigure: true
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext()'
+      - '@PrestaShop\PrestaShop\Adapter\Employee\EmployeeRepository'
 
   prestashop.core.domain.customer_service.command_handler.update_customer_thread_status_handler:
     class: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler\UpdateCustomerThreadStatusHandler'
