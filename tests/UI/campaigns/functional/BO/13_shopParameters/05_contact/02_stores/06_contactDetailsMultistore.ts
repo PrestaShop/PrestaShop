@@ -293,6 +293,8 @@ describe('BO - Shop Parameters - Contact : Override contact details per shop', a
 
       await boStoresPage.clickOnMultiStoreHeader(page);
       await boStoresPage.chooseAllShops(page);
+      // Wait for the States of the restored Country first, or the save still sends Alabama
+      await boStoresPage.selectContactDetailsCountry(page, dataStores.contact.country);
 
       const textResult = await boStoresPage.setContactDetails(page, dataStores.contact);
       expect(textResult).to.contains(boStoresPage.contactFormSuccessfulUpdateMessage);
