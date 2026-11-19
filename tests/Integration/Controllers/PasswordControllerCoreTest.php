@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Controllers;
 
+use Context;
+use Controller;
 use Customer;
 use PasswordControllerCore;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
@@ -35,10 +37,18 @@ class PasswordControllerCoreTest extends KernelTestCase
      */
     private $customer;
 
+    /**
+     * @var Controller|null
+     */
+    private $previousContextController;
+
     protected function setUp(): void
     {
         parent::setUp();
 
+        // Building a controller registers it in the shared context, and the context controller
+        // decides which container ObjectModel uses: it is restored after each test.
+        $this->previousContextController = Context::getContext()->controller;
         $_GET = [];
         $_POST = [];
         Tools::resetRequest();
@@ -46,6 +56,7 @@ class PasswordControllerCoreTest extends KernelTestCase
 
     protected function tearDown(): void
     {
+        Context::getContext()->controller = $this->previousContextController;
         if (null !== $this->customer) {
             $this->customer->delete();
             $this->customer = null;
