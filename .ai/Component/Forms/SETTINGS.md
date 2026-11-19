@@ -8,7 +8,7 @@
 |---|---|---|
 | DataConfiguration | `src/Adapter/{Domain}/{Name}Configuration.php` | extends `AbstractMultistoreConfiguration`. Reads/writes config rows. Implements `getConfiguration(): array`, `updateConfiguration(array): array` (returns array of errors), and protected `buildResolver(): OptionsResolver` for option validation. |
 | FormDataProvider | `src/PrestaShopBundle/Form/Admin/{Section}/{Name}FormDataProvider.php` | implements `PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface`. Two-line bridge: `getData()` → `dataConfiguration->getConfiguration()`, `setData($data)` → `dataConfiguration->updateConfiguration($data)`. |
-| FormType | `src/PrestaShopBundle/Form/Admin/{Section}/{Name}Type.php` | standard `AbstractType` / `TranslatorAwareType`. **This is the root form** — no `getParent()`, no wrapper, no entity binding. |
+| FormType | `src/PrestaShopBundle/Form/Admin/{Section}/{Name}Type.php` | standard `AbstractType` / `TranslatorAwareType`. **This is the root form** — no wrapper, no entity binding, and no `getParent()` unless the keys can differ per shop (see *Multistore*). |
 
 ## Service definitions (4 YAML entries, no PHP handler class)
 

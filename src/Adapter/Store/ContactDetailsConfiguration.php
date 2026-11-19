@@ -11,6 +11,7 @@ namespace PrestaShop\PrestaShop\Adapter\Store;
 use Country;
 use Exception;
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
 use State;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Validate;
@@ -56,6 +57,16 @@ final class ContactDetailsConfiguration extends AbstractMultistoreConfiguration
         $country = $countryId ? new Country($countryId, $langId) : null;
         $state = ($stateId && $countryId) ? new State($stateId) : null;
 
+        // A Country overridden for the shop alone keeps the State inherited from all shops, which may belong to
+        // another country: the State is then overridden along with it, emptied.
+        if ($state !== null && (int) $state->id_country !== $countryId
+            && $this->isOverriddenForShop($configuration, 'id_country')
+            && !$this->isOverriddenForShop($configuration, 'id_state')
+        ) {
+            $configuration[MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . 'id_state'] = true;
+            $state = null;
+        }
+
         $errors = $this->collectValidationErrors($configuration, $state, $countryId);
         if (!empty($errors)) {
             return $errors;
@@ -94,6 +105,13 @@ final class ContactDetailsConfiguration extends AbstractMultistoreConfiguration
         $resolver->setAllowedTypes('fax', ['string', 'null']);
 
         return $resolver;
+    }
+
+    private function isOverriddenForShop(array $configuration, string $field): bool
+    {
+        return $this->multistoreFeature->isUsed()
+            && !$this->shopContext->isAllShopContext()
+            && isset($configuration[MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . $field]);
     }
 
     private function collectValidationErrors(array $configuration, ?State $state, int $countryId): array

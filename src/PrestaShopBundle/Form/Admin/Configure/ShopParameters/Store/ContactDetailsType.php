@@ -152,7 +152,13 @@ final class ContactDetailsType extends TranslatorAwareType
         });
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event): void {
-            $this->rebuildStateField($event->getForm(), (int) ($event->getData()['id_country'] ?? 0));
+            $data = $event->getData() ?? [];
+            $form = $event->getForm();
+            // A Country not overridden for the shop is disabled, so not submitted: the states are those of the inherited country
+            $countryId = array_key_exists('id_country', $data)
+                ? (int) $data['id_country']
+                : (int) $form->get('id_country')->getData();
+            $this->rebuildStateField($form, $countryId);
         });
     }
 
