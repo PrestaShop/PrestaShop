@@ -60,9 +60,9 @@ class AuthControllerCore extends FrontController
         parent::initContent();
 
         if ($should_redirect && !$this->ajax) {
-            $back = rawurldecode(Tools::getValue('back'));
+            $back = rawurldecode(Tools::getStringValue('back'));
 
-            if (Tools::urlBelongsToShop($back)) {
+            if ('' !== $back && Tools::urlBelongsToShop($back)) {
                 // Checks to see if "back" is a fully qualified
                 // URL that is on OUR domain, with the right protocol
                 $this->redirectWithNotifications($back);

@@ -571,6 +571,27 @@ class ToolsCore
     }
 
     /**
+     * Get a string value from the request.
+     *
+     * Uses getValue() to retrieve the value and returns the default when the
+     * parameter is missing or its value is not a string. Non-string values are
+     * not converted to strings.
+     * Exceptions thrown by getValue() are propagated, including those related
+     * to Symfony Request parameters.
+     *
+     * @param string $key Value key
+     * @param string $default Default value (optional)
+     *
+     * @return string Value or default
+     */
+    public static function getStringValue($key, string $default = ''): string
+    {
+        $value = static::getValue($key);
+
+        return is_string($value) ? $value : $default;
+    }
+
+    /**
      * Get all values from $_POST/$_GET.
      *
      * @return mixed
