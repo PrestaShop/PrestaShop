@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Store;
 
+use Configuration as LegacyConfiguration;
 use Country;
 use Exception;
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
@@ -68,14 +69,18 @@ final class ContactDetailsConfiguration extends AbstractMultistoreConfiguration
             $state = null;
         }
 
-        // Removing the Country override removes the empty State override created with it: with a country without
-        // states, its row is hidden and cannot be unchecked.
-        if ($state === null
-            && $this->isOverriddenForShop($configuration, 'id_state')
-            && !$this->isOverriddenForShop($configuration, 'id_country')
-            && $this->hasShopValue('PS_SHOP_COUNTRY_ID')
-        ) {
-            unset($configuration[MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . 'id_state']);
+        // A shop removing its Country override inherits the Country again, while the disabled field still submits
+        // its own one. Its State override is kept only if it belongs to the inherited Country: an empty one (whose
+        // row is hidden with a country without states) or one of another country is removed with it.
+        if ($this->isOverrideRemovedForShop($configuration, 'id_country', 'PS_SHOP_COUNTRY_ID')) {
+            $countryId = $this->getInheritedCountryId();
+            $country = $countryId ? new Country($countryId, $langId) : null;
+            if ($this->isOverriddenForShop($configuration, 'id_state')
+                && ($state === null || (int) $state->id_country !== $countryId)
+            ) {
+                unset($configuration[MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . 'id_state']);
+                $state = null;
+            }
         }
 
         $errors = $this->collectValidationErrors($configuration, $state, $countryId);
@@ -123,6 +128,22 @@ final class ContactDetailsConfiguration extends AbstractMultistoreConfiguration
         return $this->multistoreFeature->isUsed()
             && !$this->shopContext->isAllShopContext()
             && isset($configuration[MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . $field]);
+    }
+
+    private function isOverrideRemovedForShop(array $configuration, string $field, string $key): bool
+    {
+        return $this->multistoreFeature->isUsed()
+            && !$this->shopContext->isAllShopContext()
+            && !isset($configuration[MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . $field])
+            && $this->hasShopValue($key);
+    }
+
+    private function getInheritedCountryId(): int
+    {
+        $shopGroupId = $this->shopContext->isShopContext() ? (int) $this->shopContext->getContextShopGroup()->id : 0;
+
+        // Shop id 0, not null: with null, legacy falls back to the context shop, whose value is the one removed.
+        return (int) LegacyConfiguration::get('PS_SHOP_COUNTRY_ID', null, $shopGroupId, 0);
     }
 
     /**

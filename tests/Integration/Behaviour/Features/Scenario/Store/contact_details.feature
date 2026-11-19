@@ -172,3 +172,62 @@ Feature: contact details configuration
     Then the shop "shop2" should only override the contact details ""
     And the contact details country should be "United States"
     And the contact details state should be "Alabama"
+
+  Scenario: Removing the country override in a shop context removes a state override of another country
+    Given I enable multishop feature
+    And shop "shop1" with name "test_shop" exists
+    And shop group "default_shop_group" with name "Default" exists
+    And I add a shop "shop2" with name "test_second_shop" and color "red" for the group "default_shop_group"
+    And multiple shop context is loaded
+    And I save contact details with the following values:
+      | name    | My US Shop       |
+      | email   | shop@example.com |
+      | country | United States    |
+      | state   | Alabama          |
+    And single shop "shop2" context is loaded
+    And I save contact details with the following values:
+      | name                  | My US Shop       |
+      | email                 | shop@example.com |
+      | country               | Canada           |
+      | state                 | Quebec           |
+      | multistore_id_country | true             |
+      | multistore_id_state   | true             |
+    # The disabled Country still submits the shop's own Canada
+    When I save contact details with the following values:
+      | name                | My US Shop       |
+      | email               | shop@example.com |
+      | country             | Canada           |
+      | state               | Quebec           |
+      | multistore_id_state | true             |
+    Then the shop "shop2" should only override the contact details ""
+    And the contact details country should be "United States"
+    And the contact details state should be "Alabama"
+
+  Scenario: Removing the country override in a shop context keeps a state override of the inherited country
+    Given I enable multishop feature
+    And shop "shop1" with name "test_shop" exists
+    And shop group "default_shop_group" with name "Default" exists
+    And I add a shop "shop2" with name "test_second_shop" and color "red" for the group "default_shop_group"
+    And multiple shop context is loaded
+    And I save contact details with the following values:
+      | name    | My US Shop       |
+      | email   | shop@example.com |
+      | country | United States    |
+      | state   | Alabama          |
+    And single shop "shop2" context is loaded
+    And I save contact details with the following values:
+      | name                  | My US Shop       |
+      | email                 | shop@example.com |
+      | country               | United States    |
+      | state                 | Alaska           |
+      | multistore_id_country | true             |
+      | multistore_id_state   | true             |
+    When I save contact details with the following values:
+      | name                | My US Shop       |
+      | email               | shop@example.com |
+      | country             | United States    |
+      | state               | Alaska           |
+      | multistore_id_state | true             |
+    Then the shop "shop2" should only override the contact details "PS_SHOP_STATE,PS_SHOP_STATE_ID"
+    And the contact details country should be "United States"
+    And the contact details state should be "Alaska"
