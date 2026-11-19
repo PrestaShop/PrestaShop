@@ -4,6 +4,8 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\Discount;
 
 use CartRule;
@@ -15,7 +17,7 @@ use PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\DiscountType;
  * created with the legacy page or by modules) have no id_cart_rule_type. This class deduces the closest discount
  * type from their legacy properties, and lists the legacy settings that this type cannot represent.
  */
-class LegacyDiscountTypeResolver
+final class LegacyDiscountTypeResolver
 {
     /** The cart rule also offers free shipping, which is not part of the deduced type */
     public const UNSUPPORTED_FREE_SHIPPING = 'free_shipping';

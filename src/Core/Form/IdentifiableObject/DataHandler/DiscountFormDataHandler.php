@@ -73,6 +73,8 @@ class DiscountFormDataHandler implements FormDataHandlerInterface
     {
         $command = new UpdateDiscountCommand($id);
 
+        // The type cannot be changed, but it is saved for cart rules created before the discount types were introduced
+        $command->setDiscountType($data['information']['discount_type']);
         $command->setLocalizedNames($data['information']['names']);
         $command->setActive((bool) $data['information']['active']);
 

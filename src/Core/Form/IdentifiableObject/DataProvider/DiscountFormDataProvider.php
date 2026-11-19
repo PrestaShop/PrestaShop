@@ -129,10 +129,6 @@ class DiscountFormDataProvider implements FormDataProviderInterface
     {
         /** @var DiscountForEditing $discountForEditing */
         $discountForEditing = $this->queryBus->handle(new GetDiscountForEditing($id));
-        // Not on submit, or the warnings would still be displayed after the redirection, once the type has been saved
-        if ($discountForEditing->isTypeDeduced() && !$this->requestStack->getCurrentRequest()?->isMethod('POST')) {
-            $this->displayLegacyTypeWarnings($discountForEditing);
-        }
         $isAmountDiscount = $discountForEditing->getReductionAmount() !== null;
         $specificProducts = $this->getSpecificProducts($discountForEditing);
         $productSegment = $this->getProductSegmentDetails($discountForEditing);
@@ -172,6 +168,8 @@ class DiscountFormDataProvider implements FormDataProviderInterface
 
         return [
             'id' => $id,
+            // Not a form field: rendered as alerts by the template, as long as the type of the discount is not saved
+            'legacy_type_warnings' => $discountForEditing->isTypeDeduced() ? $this->getLegacyTypeWarnings($discountForEditing) : [],
             'information' => [
                 'active' => $discountForEditing->isActive(),
                 'highlight_in_cart' => $discountForEditing->isHighlightInCart(),
@@ -368,16 +366,18 @@ class DiscountFormDataProvider implements FormDataProviderInterface
     /**
      * Cart rules created before the discount types were introduced have no type, it was deduced from their settings
      * so we warn the user about it and about the legacy settings this form can't display.
+     *
+     * @return string[]
      */
-    private function displayLegacyTypeWarnings(DiscountForEditing $discountForEditing): void
+    private function getLegacyTypeWarnings(DiscountForEditing $discountForEditing): array
     {
         $discountType = $discountForEditing->getType()->getValue();
         $discountTypeData = $this->discountTypeRepository->getByDiscountType($discountType, $this->languageContext->getId());
-        $this->displayWarning($this->translator->trans(
+        $warnings = [$this->translator->trans(
             'This discount was created before discount types were introduced. Its type "%type%" has been deduced from its settings and will be saved when you submit this form.',
             ['%type%' => !empty($discountTypeData['name']) ? $discountTypeData['name'] : $discountType],
             'Admin.Catalog.Notification'
-        ));
+        )];
 
         foreach ($discountForEditing->getUnsupportedLegacySettings() as $unsupportedSetting) {
             $message = match ($unsupportedSetting) {
@@ -409,9 +409,11 @@ class DiscountFormDataProvider implements FormDataProviderInterface
                 default => null,
             };
             if (null !== $message) {
-                $this->displayWarning($message);
+                $warnings[] = $message;
             }
         }
+
+        return $warnings;
     }
 
     private function displayWarning(string $message): void
