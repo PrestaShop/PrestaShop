@@ -72,6 +72,10 @@ class CustomerAddressFormCore extends AbstractForm
 
     public function fillWith(array $params = [])
     {
+        if (array_key_exists('back', $params) && !is_string($params['back'])) {
+            $params['back'] = '';
+        }
+
         /*
          * This form is tricky - fields may change depending on which country is being selected.
          * Country preselection priority order:
