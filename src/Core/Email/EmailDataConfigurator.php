@@ -31,11 +31,11 @@ final class EmailDataConfigurator extends AbstractMultistoreConfiguration
             'log_emails' => (bool) $this->configuration->get('PS_LOG_EMAILS', false, $shopConstraint),
             'smtp_config' => [
                 'domain' => (string) $this->configuration->get('PS_MAIL_DOMAIN', false, $shopConstraint),
-                'server' => $this->configuration->get('PS_MAIL_SERVER', false, $shopConstraint),
+                'server' => (string) $this->configuration->get('PS_MAIL_SERVER', false, $shopConstraint),
                 'username' => (string) $this->configuration->get('PS_MAIL_USER', false, $shopConstraint),
                 'password' => (string) $this->configuration->get('PS_MAIL_PASSWD', false, $shopConstraint),
                 'encryption' => (string) $this->configuration->get('PS_MAIL_SMTP_ENCRYPTION', false, $shopConstraint),
-                'port' => $this->configuration->get('PS_MAIL_SMTP_PORT', false, $shopConstraint),
+                'port' => (string) $this->configuration->get('PS_MAIL_SMTP_PORT', false, $shopConstraint),
             ],
             'dkim_enable' => (bool) $this->configuration->get('PS_MAIL_DKIM_ENABLE', false, $shopConstraint),
             'dkim_config' => [

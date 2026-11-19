@@ -196,6 +196,26 @@ class EmailDataConfiguratorTest extends KernelTestCase
         self::assertSame('global-password', LegacyConfiguration::getGlobalValue('PS_MAIL_PASSWD'));
     }
 
+    public function testBlankPasswordPreservesExistingGlobalPassword(): void
+    {
+        LegacyShop::setContext(LegacyShop::CONTEXT_ALL);
+        $configurator = new EmailDataConfigurator(
+            $this->configuration,
+            new Context(),
+            self::$kernel->getContainer()->get('prestashop.adapter.multistore_feature')
+        );
+
+        $configuration = $configurator->getConfiguration();
+        self::assertSame('global-password', $configuration['smtp_config']['password']);
+
+        $configuration['smtp_config']['password'] = '';
+        self::assertSame([], $configurator->updateConfiguration($configuration));
+        LegacyConfiguration::resetStaticCache();
+
+        self::assertSame('global-password', LegacyConfiguration::getGlobalValue('PS_MAIL_PASSWD'));
+        self::assertSame('global-password', $configurator->getConfiguration()['smtp_config']['password']);
+    }
+
     /**
      * @dataProvider provideContexts
      */
