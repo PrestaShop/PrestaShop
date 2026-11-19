@@ -2839,13 +2839,12 @@ FileETag none
     </IfModule>
 </IfModule>
 
-# Prefer Brotli when available: mod_deflate runs before mod_brotli, so it is disabled for clients accepting br
+# Prefer Brotli for the same types when the client accepts it: without a type, FilterDeclare runs the filter before mod_deflate, which then leaves the encoded response untouched
 <IfModule mod_brotli.c>
     <IfModule mod_filter.c>
-        AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/css text/javascript application/javascript application/x-javascript application/json text/xml application/xml font/ttf application/x-font-ttf font/otf application/x-font-otf font/opentype application/vnd.ms-fontobject image/svg+xml image/x-icon image/vnd.microsoft.icon
-    </IfModule>
-    <IfModule mod_setenvif.c>
-        SetEnvIf Accept-Encoding br no-gzip
+        FilterDeclare PS_BROTLI
+        FilterProvider PS_BROTLI BROTLI_COMPRESS \"%{HTTP:Accept-Encoding} =~ /\\bbr\\b/ && %{CONTENT_TYPE} =~ m#^(text/(html|plain|css|javascript|xml)|application/(javascript|x-javascript|json|xml|x-font-ttf|x-font-otf|vnd\\.ms-fontobject)|font/(ttf|otf|opentype)|image/(svg\\+xml|x-icon|vnd\\.microsoft\\.icon))([;[:space:]]|\$)#\"
+        FilterChain PS_BROTLI
     </IfModule>
 </IfModule>\n\n";
             fwrite($write_fd, $cache_control);
