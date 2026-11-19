@@ -139,3 +139,10 @@ Feature: Manage profile permissions from BO
     Then profile super_admin should have the following permissions for modules:
       | ps_banner | view,configure,uninstall |
       | bankwire  | view,configure,uninstall |
+
+  Scenario: The permissions configuration is computed for the profile of the query
+    Then the permissions configuration for profile super_admin should allow editing permissions
+    And the permissions configuration for profile salesman should not allow editing permissions
+    And profile logistician should have the following permissions for modules:
+      | ps_banner |  |
+      | bankwire  |  |
