@@ -6,7 +6,7 @@
 /**
  * Responsible for the search preferences page (indexing, search options and weight settings).
  */
-document.addEventListener('DOMContentLoaded', () => {
+$(() => {
   window.prestashop.component.initComponents(
     [
       'MultistoreConfigField',
