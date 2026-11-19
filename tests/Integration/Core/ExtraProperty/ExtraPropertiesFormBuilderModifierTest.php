@@ -258,6 +258,36 @@ class ExtraPropertiesFormBuilderModifierTest extends AbstractFormTester
     }
 
     /**
+     * The TranslatableType renders the row once and its per-language children only their widget,
+     * so a row option left on the children is never rendered.
+     */
+    public function testLangRowOptionsGoToTheTranslatableTypeAndWidgetOptionsToItsChildren(): void
+    {
+        $definition = new ExtraPropertyDefinition(
+            entityName: 'product',
+            propertyName: 'is_dangerous',
+            scope: ExtraPropertyScope::LANG,
+            moduleName: 'demoextrafield',
+            associatedForms: ['product'],
+            formType: TextType::class,
+            formOptions: [
+                'attr' => ['class' => 'js-usage-tips'],
+                'label_subtitle' => 'Shown on the product page',
+                'label_tag_name' => 'h3',
+            ],
+            labelWording: 'Usage tips',
+        );
+
+        $builder = $this->createSimpleFormBuilder();
+        $this->makeModifier($definition)->apply($builder, 'product', null);
+
+        $field = $builder->get(self::FIELD_NAME);
+        $this->assertSame('h3', $field->getOption('label_tag_name'));
+        $this->assertSame('Shown on the product page', $field->getOption('label_subtitle'));
+        $this->assertSame(['attr' => ['class' => 'js-usage-tips']], $field->getOption('options'));
+    }
+
+    /**
      * The functional payoff of the implicit constraint: a value the registry would refuse
      * as a default is refused INLINE by the form too, with zero declared constraints —
      * here invalid JSON typed in the free-text textarea, previously stored verbatim.

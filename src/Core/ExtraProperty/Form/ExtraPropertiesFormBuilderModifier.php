@@ -220,19 +220,25 @@ class ExtraPropertiesFormBuilderModifier
         if (ExtraPropertyScope::LANG === $definition->getScope()) {
             // In BO, use TranslatableType (data keyed by id_lang). Constraints are attached to the OUTER field so
             // they validate the whole [id_lang => value] array — consistent with ExtraPropertyValidator: whole-array
-            // constraints (e.g. DefaultLanguage) see the array, per-language rules use Assert\All. The per-language
-            // children carry only $extraOptions (no constraints of their own).
+            // constraints (e.g. DefaultLanguage) see the array, per-language rules use Assert\All. The row options
+            // (label_tag_name…) go to the OUTER field too, as it renders the row; the per-language children carry
+            // the other $extraOptions (no constraints of their own).
+            $rowOptions = array_intersect_key($extraOptions, array_flip(ExtraPropertyFormOptionsPolicy::TRANSLATABLE_ROW_OPTIONS));
+
             return [
                 TranslatableType::class,
-                [
-                    'type' => $baseType,
-                    'label' => $label,
-                    'help' => $help,
-                    'mapped' => false,
-                    'required' => $definition->isRequired(),
-                    'constraints' => $constraints,
-                    'options' => array_merge($baseOptions, $extraOptions),
-                ],
+                array_merge(
+                    [
+                        'type' => $baseType,
+                        'label' => $label,
+                        'help' => $help,
+                        'mapped' => false,
+                        'required' => $definition->isRequired(),
+                        'constraints' => $constraints,
+                        'options' => array_merge($baseOptions, array_diff_key($extraOptions, $rowOptions)),
+                    ],
+                    $rowOptions
+                ),
             ];
         }
 
