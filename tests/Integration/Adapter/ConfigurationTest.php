@@ -88,6 +88,33 @@ class ConfigurationTest extends KernelTestCase
     }
 
     /**
+     * @dataProvider getParentValueFromShopContextProvider
+     */
+    public function testGetParentValueFromShopContext(ShopConstraint $shopConstraint, string $expectedResult): void
+    {
+        $this->configuration->set('parent_value_key', 'all_shops_value', ShopConstraint::allShops());
+        $this->configuration->set('parent_value_key', 'shop_value', ShopConstraint::shop(2));
+        LegacyConfiguration::resetStaticCache();
+
+        LegacyShop::setContext(LegacyShop::CONTEXT_SHOP, 2);
+        try {
+            $result = $this->configuration->get('parent_value_key', null, $shopConstraint);
+        } finally {
+            LegacyShop::setContext(LegacyShop::CONTEXT_ALL);
+        }
+
+        $this->assertSame($expectedResult, $result);
+    }
+
+    public function getParentValueFromShopContextProvider(): iterable
+    {
+        yield 'all shops' => [ShopConstraint::allShops(), 'all_shops_value'];
+        yield 'all shops strict' => [ShopConstraint::allShops(true), 'all_shops_value'];
+        yield 'shop group inherits all shops' => [ShopConstraint::shopGroup(1), 'all_shops_value'];
+        yield 'shop' => [ShopConstraint::shop(2), 'shop_value'];
+    }
+
+    /**
      * @return iterable
      */
     public function hasProvider(): iterable

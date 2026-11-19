@@ -117,12 +117,13 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
             return ConfigurationLegacy::get($key, null, null, $shopId);
         }
 
+        // A null id makes legacy fall back to the context shop and group, which the constraint excludes here
         if (null !== $shopGroupId && ConfigurationLegacy::hasKey($key, null, $shopGroupId)) {
-            return ConfigurationLegacy::get($key, null, $shopGroupId);
+            return ConfigurationLegacy::get($key, null, $shopGroupId, 0);
         }
 
         if (ConfigurationLegacy::hasKey($key)) {
-            return ConfigurationLegacy::get($key);
+            return ConfigurationLegacy::get($key, null, 0, 0);
         }
 
         return $default;
@@ -331,7 +332,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
         $configuration = [];
 
         foreach (Language::getIDs(false, $shopId ?: false) as $langId) {
-            $configuration[$langId] = ConfigurationLegacy::get($key, $langId, $shopGroupId, $shopId);
+            $configuration[$langId] = ConfigurationLegacy::get($key, $langId, $shopGroupId ?? 0, $shopId ?? 0);
         }
 
         return $configuration;
@@ -432,11 +433,11 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
         if (null !== $shopConstraint->getShopGroupId()) {
             $hasKey = ConfigurationLegacy::hasKey($key, null, $shopConstraint->getShopGroupId()->getValue());
 
-            return $hasKey ? ConfigurationLegacy::get($key, null, $shopConstraint->getShopGroupId()->getValue()) : null;
+            return $hasKey ? ConfigurationLegacy::get($key, null, $shopConstraint->getShopGroupId()->getValue(), 0) : null;
         }
 
         if (ConfigurationLegacy::hasKey($key)) {
-            return ConfigurationLegacy::get($key);
+            return ConfigurationLegacy::get($key, null, 0, 0);
         }
 
         return null;
