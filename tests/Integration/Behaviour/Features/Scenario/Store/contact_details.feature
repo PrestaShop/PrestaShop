@@ -162,3 +162,13 @@ Feature: contact details configuration
     When multiple shop context is loaded
     Then the contact details country should be "United States"
     And the contact details state should be "Alabama"
+    # Unchecking the Country also removes the empty State override created with it (its row is hidden)
+    When single shop "shop2" context is loaded
+    And I save contact details with the following values:
+      | name                | My US Shop       |
+      | email               | shop@example.com |
+      | country             | France           |
+      | multistore_id_state | true             |
+    Then the shop "shop2" should only override the contact details ""
+    And the contact details country should be "United States"
+    And the contact details state should be "Alabama"

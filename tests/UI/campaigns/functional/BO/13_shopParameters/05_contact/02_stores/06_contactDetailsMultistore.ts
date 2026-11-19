@@ -27,7 +27,7 @@ Scenario (TEST-8905):
 - Create a second shop
 - Set United States / Alabama for all stores
 - Override the State alone on the second shop, then the Country alone (the State follows, emptied)
-- Check that all stores keep their values, then remove the overrides of the second shop
+- Check that all stores keep their values, then uncheck the Country of the second shop (its empty State override goes with it)
 - Restore the contact details and delete the second shop
 Post-condition:
 - Disable multistore
@@ -267,8 +267,8 @@ describe('BO - Shop Parameters - Contact : Override contact details per shop', a
 
       await boStoresPage.clickOnMultiStoreHeader(page);
       await boStoresPage.chooseShop(page, 2);
+      // The State row is hidden (France has no states): unchecking the Country also removes the empty State override
       await boStoresPage.setContactDetailsOverride(page, 'id_country', false);
-      await boStoresPage.setContactDetailsOverride(page, 'id_state', false);
 
       const textResult = await boStoresPage.saveContactDetails(page);
       expect(textResult).to.contains(boStoresPage.contactFormSuccessfulUpdateMessage);

@@ -11,6 +11,7 @@ namespace PrestaShop\PrestaShop\Adapter\Store;
 use Country;
 use Exception;
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
 use State;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -67,6 +68,16 @@ final class ContactDetailsConfiguration extends AbstractMultistoreConfiguration
             $state = null;
         }
 
+        // Removing the Country override removes the empty State override created with it: with a country without
+        // states, its row is hidden and cannot be unchecked.
+        if ($state === null
+            && $this->isOverriddenForShop($configuration, 'id_state')
+            && !$this->isOverriddenForShop($configuration, 'id_country')
+            && $this->hasShopValue('PS_SHOP_COUNTRY_ID')
+        ) {
+            unset($configuration[MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . 'id_state']);
+        }
+
         $errors = $this->collectValidationErrors($configuration, $state, $countryId);
         if (!empty($errors)) {
             return $errors;
@@ -112,6 +123,23 @@ final class ContactDetailsConfiguration extends AbstractMultistoreConfiguration
         return $this->multistoreFeature->isUsed()
             && !$this->shopContext->isAllShopContext()
             && isset($configuration[MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . $field]);
+    }
+
+    /**
+     * Whether the key has a value of its own in the current shop or shop group context, not an inherited one.
+     */
+    private function hasShopValue(string $key): bool
+    {
+        $shopConstraint = $this->getShopConstraint();
+        if ($shopConstraint === null) {
+            return false;
+        }
+
+        $strictConstraint = $shopConstraint->getShopId() !== null
+            ? ShopConstraint::shop($shopConstraint->getShopId()->getValue(), true)
+            : ShopConstraint::shopGroup($shopConstraint->getShopGroupId()->getValue(), true);
+
+        return $this->configuration->has($key, $strictConstraint);
     }
 
     private function collectValidationErrors(array $configuration, ?State $state, int $countryId): array
