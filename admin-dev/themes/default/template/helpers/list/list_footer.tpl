@@ -26,7 +26,7 @@
 				{foreach $bulk_actions as $key => $params}
 					<li{if $params.text == 'divider'} class="divider"{/if}>
 						{if $params.text != 'divider'}
-						<a href="#" onclick="{if isset($params.confirm)}if (confirm('{$params.confirm}')){/if}sendBulkAction($(this).closest('form').get(0), 'submitBulk{$key}{$table}');">
+						<a href="#" onclick="{if isset($params.confirm)}if (confirm('{$params.confirm}')){/if}sendBulkAction($(this).closest('form').get(0), 'submitBulk{$key}{$table}');return false;">
 							{if isset($params.icon)}<i class="{$params.icon}"></i>{/if}&nbsp;{$params.text}
 						</a>
 						{/if}
