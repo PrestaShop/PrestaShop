@@ -140,15 +140,9 @@ class PasswordControllerCore extends FrontController
                 // If password is submitted validate pass and confirmation
                 $passwd = Tools::getValue('passwd');
                 $confirmation = Tools::getValue('confirmation');
-                $isValidPasswordType = is_string($passwd);
 
-                if (!$isValidPasswordType) {
-                    $passwd = '';
-                }
-
-                if (!is_string($confirmation)) {
-                    $confirmation = '';
-                }
+                $passwd = is_string($passwd) ? $passwd : '';
+                $confirmation = is_string($confirmation) ? $confirmation : '';
 
                 if (!$passwd) {
                     $this->errors[] = $this->trans('The password is missing: please enter your new password.', [], 'Shop.Notifications.Error');
@@ -168,7 +162,7 @@ class PasswordControllerCore extends FrontController
                     }
                 }
 
-                if ($isValidPasswordType && Validate::isAcceptablePasswordLength($passwd) === false) {
+                if (Validate::isAcceptablePasswordLength($passwd) === false) {
                     $this->errors[] = $this->translator->trans(
                         'Password must be between %d and %d characters long',
                         [
@@ -179,7 +173,7 @@ class PasswordControllerCore extends FrontController
                     );
                 }
 
-                if ($isValidPasswordType && Validate::isAcceptablePasswordScore($passwd) === false) {
+                if (Validate::isAcceptablePasswordScore($passwd) === false) {
                     $wordingsForScore = [
                         $this->translator->trans('Very weak', [], 'Shop.Theme.Global'),
                         $this->translator->trans('Weak', [], 'Shop.Theme.Global'),
@@ -217,11 +211,11 @@ class PasswordControllerCore extends FrontController
                         ['error_regen_pwd' => 1]
                     ));
                 } else {
-                    $customer->passwd = $this->get('hashing')->hash($password = $passwd, _COOKIE_KEY_);
+                    $customer->passwd = $this->get('hashing')->hash($passwd, _COOKIE_KEY_);
                     $customer->last_passwd_gen = date('Y-m-d H:i:s', time());
 
                     if ($customer->update()) {
-                        Hook::exec('actionPasswordRenew', ['customer' => $customer, 'password' => $password]);
+                        Hook::exec('actionPasswordRenew', ['customer' => $customer, 'password' => $passwd]);
                         $customer->removeResetPasswordToken();
                         $customer->update();
 
