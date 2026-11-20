@@ -11,8 +11,10 @@ namespace Tests\Unit\PrestaShopBundle\Command;
 use Generator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\ImageThumbnailsRegenerator;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\ImageSettings\Command\RegenerateThumbnailsCommand as DomainRegenerateThumbnailsCommand;
+use PrestaShop\PrestaShop\Core\Domain\ImageSettings\Exception\RegenerateThumbnailsTimeoutException;
 use PrestaShop\PrestaShop\Core\Domain\ImageSettings\ImageDomain;
 use PrestaShopBundle\Command\RegenerateThumbnailsCommand;
 use RuntimeException;
@@ -147,6 +149,61 @@ class RegenerateThumbnailsCommandTest extends TestCase
 
         $exitCode = $this->tester->execute(['image' => 'products']);
         $this->assertSame(Command::FAILURE, $exitCode);
+    }
+
+    /**
+     * @dataProvider workerOptionsProvider
+     */
+    public function testWorkerOptionsAreDispatched(array $options, int $expectedWorkerCount, ?int $expectedWorkerIndex): void
+    {
+        $this->commandBus->expects($this->once())
+            ->method('handle')
+            ->with($this->callback(function (DomainRegenerateThumbnailsCommand $command) use ($expectedWorkerCount, $expectedWorkerIndex) {
+                return $command->getWorkerCount() === $expectedWorkerCount && $command->getWorkerIndex() === $expectedWorkerIndex;
+            }));
+
+        $this->assertSame(Command::SUCCESS, $this->tester->execute(['image' => 'products', ...$options]));
+    }
+
+    public static function workerOptionsProvider(): iterable
+    {
+        yield 'sequential' => [[], 1, null];
+        yield 'parallel' => [['--workers' => '4'], 4, null];
+        yield 'one worker' => [['--worker' => '1/4'], 4, 1];
+    }
+
+    /**
+     * @dataProvider invalidWorkerProvider
+     */
+    public function testInvalidWorker(string $worker): void
+    {
+        $this->commandBus->expects($this->never())->method('handle');
+
+        $this->assertSame(Command::FAILURE, $this->tester->execute(['image' => 'products', '--worker' => $worker]));
+    }
+
+    public static function invalidWorkerProvider(): iterable
+    {
+        yield 'not a fraction' => ['abc'];
+        yield 'no worker' => ['0/0'];
+        yield 'single worker' => ['0/1'];
+        yield 'index out of range' => ['2/2'];
+    }
+
+    public function testTimeoutExitCode(): void
+    {
+        $this->commandBus->method('handle')->willThrowException(new RegenerateThumbnailsTimeoutException('timeout'));
+
+        $this->assertSame(Command::FAILURE, $this->tester->execute(['image' => 'products']));
+    }
+
+    public function testWorkerTimeoutExitCode(): void
+    {
+        $this->commandBus->method('handle')->willThrowException(new RegenerateThumbnailsTimeoutException('timeout'));
+
+        $exitCode = $this->tester->execute(['image' => 'products', '--worker' => '1/2']);
+
+        $this->assertSame(ImageThumbnailsRegenerator::WORKER_TIMEOUT_EXIT_CODE, $exitCode);
     }
 
     public static function numericStringImageTypesProvider(): array

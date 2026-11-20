@@ -130,9 +130,11 @@ final class CategoryThumbnailImageUploader extends AbstractImageUploader impleme
                 );
 
                 if (!$generated) {
+                    ImageManager::clearDecodedSource();
                     throw new ImageUploadException('Error occurred when uploading category thumbnail image');
                 }
             }
         }
+        ImageManager::clearDecodedSource();
     }
 }

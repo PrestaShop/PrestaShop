@@ -43,6 +43,16 @@ class ImageManagerCore
      */
     protected const SVG_MIMETYPES = ['image/svg+xml', 'image/svg'];
 
+    private static ?array $decodedSource = null;
+
+    /**
+     * Frees the source image kept in memory to generate its next thumbnails.
+     */
+    public static function clearDecodedSource(): void
+    {
+        self::$decodedSource = null;
+    }
+
     /**
      * Generate a cached thumbnail for object lists (eg. carrier, order statuses...etc).
      *
@@ -122,6 +132,7 @@ class ImageManagerCore
      */
     public static function checkImageMemoryLimit($image)
     {
+        self::$decodedSource = null;
         $infos = @getimagesize($image);
 
         if (!is_array($infos) || !isset($infos['bits'])) {
@@ -217,6 +228,7 @@ class ImageManagerCore
 
             return false;
         }
+        $fullSizeCopy = !$destinationWidth && !$destinationHeight;
         if (!$destinationWidth) {
             $destinationWidth = $sourceWidth;
         }
@@ -233,7 +245,8 @@ class ImageManagerCore
             $imageFitment
         );
 
-        if (!ImageManager::checkImageMemoryLimit($sourceFile)) {
+        $sourceHash = hash_file('xxh128', $sourceFile);
+        if ($sourceHash !== (self::$decodedSource[0] ?? null) && !ImageManager::checkImageMemoryLimit($sourceFile)) {
             $error = self::ERROR_MEMORY_LIMIT;
 
             return false;
@@ -260,19 +273,93 @@ class ImageManagerCore
             imagefilledrectangle($destImage, 0, 0, $destinationWidth, $destinationHeight, $white);
         }
 
-        $srcImage = ImageManager::create($sourceFileType, $sourceFile);
-        if ($rotationToApply) {
-            /** @phpstan-ignore-next-line */
-            $srcImage = imagerotate($srcImage, $rotationToApply, 0);
+        if ($sourceHash !== (self::$decodedSource[0] ?? null)) {
+            self::$decodedSource = null;
+            $srcImage = ImageManager::create($sourceFileType, $sourceFile);
+            if ($srcImage && $rotationToApply) {
+                /** @phpstan-ignore-next-line */
+                $srcImage = imagerotate($srcImage, $rotationToApply, 0);
+            }
+            if (!$srcImage) {
+                return false;
+            }
+            self::$decodedSource = [$sourceHash, [$srcImage]];
         }
+        $srcImage = self::$decodedSource[1][0];
 
         if ($destinationWidth >= $sourceWidth && $destinationHeight >= $sourceHeight) {
             imagecopyresized($destImage, $srcImage, (int) (($destinationWidth - $nextWidth) / 2), (int) (($destinationHeight - $nextHeight) / 2), 0, 0, $nextWidth, $nextHeight, $sourceWidth, $sourceHeight);
         } else {
-            ImageManager::imagecopyresampled($destImage, $srcImage, (int) (($destinationWidth - $nextWidth) / 2), (int) (($destinationHeight - $nextHeight) / 2), 0, 0, $nextWidth, $nextHeight, $sourceWidth, $sourceHeight, $quality);
+            // Palette outputs and the fast quality modes keep resampling from the full source
+            $cascade = $quality >= 5 && $nextWidth > 0 && $nextHeight > 0 && $nextWidth <= $sourceWidth && $nextHeight <= $sourceHeight && imageistruecolor($destImage);
+            $memoryLimit = Tools::getMemoryLimit();
+
+            // Resample from the smallest halved copy of the source still at least twice the target size
+            $level = 0;
+            while ($cascade && $sourceWidth >> ($level + 1) >= 2 * $nextWidth && $sourceHeight >> ($level + 1) >= 2 * $nextHeight) {
+                if (!isset(self::$decodedSource[1][$level + 1])) {
+                    if ($memoryLimit != -1 && memory_get_usage() + ($sourceWidth >> ($level + 1)) * ($sourceHeight >> ($level + 1)) * 5 > $memoryLimit - 1048576) {
+                        break;
+                    }
+                    $halvedImage = imagecreatetruecolor($sourceWidth >> ($level + 1), $sourceHeight >> ($level + 1));
+                    imagealphablending($halvedImage, false);
+                    imagecopyresampled($halvedImage, self::$decodedSource[1][$level], 0, 0, 0, 0, $sourceWidth >> ($level + 1), $sourceHeight >> ($level + 1), imagesx(self::$decodedSource[1][$level]), imagesy(self::$decodedSource[1][$level]));
+                    self::$decodedSource[1][$level + 1] = $halvedImage;
+                }
+                ++$level;
+            }
+            $srcImage = self::$decodedSource[1][$level];
+            $nextX = (int) (($destinationWidth - $nextWidth) / 2);
+            $nextY = (int) (($destinationHeight - $nextHeight) / 2);
+
+            // Only resample the part of the image visible on the canvas, cropped fitments overflow it
+            $destinationX = max(0, $nextX);
+            $destinationY = max(0, $nextY);
+            $visibleWidth = min($nextWidth, $destinationWidth);
+            $visibleHeight = min($nextHeight, $destinationHeight);
+            $scaleX = $nextWidth > 0 ? imagesx($srcImage) / $nextWidth : 0;
+            $scaleY = $nextHeight > 0 ? imagesy($srcImage) / $nextHeight : 0;
+
+            $sharedKey = [$nextWidth, $nextHeight, $destinationX - $nextX, $destinationY - $nextY, $visibleWidth, $visibleHeight];
+            $transparentCanvas = in_array($destinationFileType, ['png', 'webp', 'avif']);
+            $previous = self::$decodedSource[2] ?? null;
+
+            // Formats of the same thumbnail size reuse the previous resampled pixels. Those were blended
+            // on the previous canvas background, so only an opaque source can switch background.
+            if ($cascade && $previous !== null && $previous[0] === $sharedKey
+                && ($previous[2] === $transparentCanvas || $sourceFileType === IMAGETYPE_JPEG)) {
+                imagecopy($destImage, $previous[1], $destinationX, $destinationY, $previous[3], $previous[4], $visibleWidth, $visibleHeight);
+            } else {
+                ImageManager::imagecopyresampled(
+                    $destImage,
+                    $srcImage,
+                    $destinationX,
+                    $destinationY,
+                    (int) round(($destinationX - $nextX) * $scaleX),
+                    (int) round(($destinationY - $nextY) * $scaleY),
+                    $visibleWidth,
+                    $visibleHeight,
+                    (int) round($visibleWidth * $scaleX),
+                    (int) round($visibleHeight * $scaleY),
+                    $quality
+                );
+                if ($cascade) {
+                    self::$decodedSource[2] = [$sharedKey, $destImage, $transparentCanvas, $destinationX, $destinationY];
+                }
+            }
         }
         $writeFile = ImageManager::write($destinationFileType, $destImage, $destinationFile);
+
+        // Uploads write the original at full size then generate its thumbnails from that file: keep its pixels.
+        // They are keyed by the written content, so a file changed by the hook below is decoded again.
+        $writtenHash = null;
+        if ($writeFile && $fullSizeCopy && $nextWidth === $sourceWidth && $nextHeight === $sourceHeight) {
+            $writtenHash = hash_file('xxh128', $destinationFile);
+        }
         Hook::exec('actionOnImageResizeAfter', ['dst_file' => $destinationFile, 'file_type' => $destinationFileType]);
+        if ($writtenHash !== null) {
+            self::$decodedSource = [$writtenHash, [$destImage]];
+        }
 
         return $writeFile;
     }
@@ -672,6 +759,7 @@ class ImageManagerCore
         static $psJpegQuality = null;
         static $psWebpQuality = null;
         static $psAvifQuality = null;
+        static $psAvifSpeed = null;
 
         if ($psPngQuality === null) {
             $psPngQuality = Configuration::get('PS_PNG_QUALITY');
@@ -687,6 +775,10 @@ class ImageManagerCore
 
         if ($psAvifQuality === null) {
             $psAvifQuality = Configuration::get('PS_AVIF_QUALITY');
+        }
+
+        if ($psAvifSpeed === null) {
+            $psAvifSpeed = Configuration::get('PS_AVIF_SPEED');
         }
 
         $success = false;
@@ -714,7 +806,7 @@ class ImageManagerCore
             case 'avif':
                 $quality = ($psAvifQuality === false ? 80 : $psAvifQuality);
                 // @phpstan-ignore-next-line
-                $success = imageavif($resource, $filename, $quality);
+                $success = imageavif($resource, $filename, $quality, $psAvifSpeed === false ? -1 : (int) $psAvifSpeed);
 
                 break;
 
@@ -907,6 +999,7 @@ class ImageManagerCore
             return false;
         }
         unlink($orig_tmpfile);
+        ImageManager::clearDecodedSource();
 
         return true;
     }

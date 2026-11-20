@@ -77,6 +77,17 @@ class ImageSettingsType extends TranslatorAwareType
                 'constraints' => $avifEnabled ? [new NotBlank(), new Range(['min' => 0, 'max' => 100])] : [],
                 'help' => $this->trans('Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file).', 'Admin.Design.Help') . ' ' . $this->trans('Recommended: %d.', 'Admin.Design.Help', [90]),
             ])
+            ->add('avif-speed', IntegerType::class, [
+                'label' => $this->trans('AVIF encoding speed', 'Admin.Design.Feature'),
+                'required' => $avifEnabled,
+                'disabled' => !$avifEnabled,
+                'attr' => [
+                    'min' => 0,
+                    'max' => 10,
+                ],
+                'constraints' => $avifEnabled ? [new NotBlank(), new Range(['min' => 0, 'max' => 10])] : [],
+                'help' => $this->trans('Ranges from 0 (slowest, smallest file) to 10 (fastest, slightly bigger file).', 'Admin.Design.Help') . ' ' . $this->trans('Recommended: %d.', 'Admin.Design.Help', [8]),
+            ])
             ->add('jpeg-quality', IntegerType::class, [
                 'label' => $this->trans('JPEG compression', 'Admin.Design.Feature'),
                 'required' => true,

@@ -122,6 +122,7 @@ Feature: Image Settings
       | formats            | jpg,avif,webp |
       | base-format        | jpg           |
       | avif-quality       | 50            |
+      | avif-speed         | 9             |
       | jpeg-quality       | 60            |
       | png-quality        | 5             |
       | webp-quality       | 70            |
@@ -133,6 +134,7 @@ Feature: Image Settings
       | formats            | jpg,avif,webp |
       | base-format        | jpg           |
       | avif-quality       | 50            |
+      | avif-speed         | 9             |
       | jpeg-quality       | 60            |
       | png-quality        | 5             |
       | webp-quality       | 70            |
