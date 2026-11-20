@@ -24,7 +24,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Pack\QueryResult\PackedProductDeta
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
-use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilder;
+use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -59,7 +59,7 @@ class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
     protected $attributeRepository;
 
     /**
-     * @var CombinationNameBuilder
+     * @var CombinationNameBuilderInterface
      */
     protected $combinationNameBuilder;
 
@@ -84,7 +84,7 @@ class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
         ProductRepository $productRepository,
         CombinationRepository $combinationRepository,
         AttributeRepository $attributeRepository,
-        CombinationNameBuilder $combinationNameBuilder,
+        CombinationNameBuilderInterface $combinationNameBuilder,
         ProductImageRepository $productImageRepository,
         TranslatorInterface $translator,
         ProductImageProviderInterface $productImageProvider
