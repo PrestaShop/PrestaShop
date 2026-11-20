@@ -32,6 +32,11 @@ final class MostCommonCustomersGenderKpi implements KpiInterface
     private $sourceUrl;
 
     /**
+     * @var int
+     */
+    private $employeeIdLang;
+
+    /**
      * @param TranslatorInterface $translator
      * @param ConfigurationInterface $kpiConfiguration
      * @param string $sourceUrl
@@ -39,11 +44,13 @@ final class MostCommonCustomersGenderKpi implements KpiInterface
     public function __construct(
         TranslatorInterface $translator,
         ConfigurationInterface $kpiConfiguration,
-        $sourceUrl
+        $sourceUrl,
+        int $employeeIdLang
     ) {
         $this->translator = $translator;
         $this->kpiConfiguration = $kpiConfiguration;
         $this->sourceUrl = $sourceUrl;
+        $this->employeeIdLang = $employeeIdLang;
     }
 
     /**
@@ -58,12 +65,14 @@ final class MostCommonCustomersGenderKpi implements KpiInterface
         $helper->title = $this->translator->trans('Customers', [], 'Admin.Global');
         $helper->subtitle = $this->translator->trans('All time', [], 'Admin.Global');
 
-        if (false !== $this->kpiConfiguration->get('CUSTOMER_MAIN_GENDER')) {
-            $helper->value = $this->kpiConfiguration->get('CUSTOMER_MAIN_GENDER');
+        $customerMainGender = $this->kpiConfiguration->get('CUSTOMER_MAIN_GENDER');
+        if (isset($customerMainGender[$this->employeeIdLang])) {
+            $helper->value = $customerMainGender[$this->employeeIdLang];
         }
 
         $helper->source = $this->sourceUrl;
-        $helper->refresh = $this->kpiConfiguration->get('CUSTOMER_MAIN_GENDER_EXPIRE') < time();
+        $customerMainGenderExpire = $this->kpiConfiguration->get('CUSTOMER_MAIN_GENDER_EXPIRE');
+        $helper->refresh = ($customerMainGenderExpire[$this->employeeIdLang] ?? false) < time();
 
         return $helper->generate();
     }
