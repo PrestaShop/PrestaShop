@@ -57,6 +57,11 @@ class PageConfiguration extends AbstractMultistoreConfiguration
     {
         $errors = [];
 
+        // When stock management is disabled, the "Display available quantities" switch is forced off
+        // and disabled in the UI, so the browser does not submit it. Treat the missing/null value as
+        // its forced state (false) instead of letting the bool resolver reject it. See issue #43312.
+        $config['display_quantities'] = (bool) ($config['display_quantities'] ?? false);
+
         if ($this->validateConfiguration($config)) {
             $shopConstraint = $this->getShopConstraint();
             $this->updateConfigurationValue('PS_DISPLAY_QTIES', 'display_quantities', $config, $shopConstraint);
