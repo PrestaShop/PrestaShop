@@ -51,4 +51,40 @@ class PassVsprintfContraintTest extends ConstraintValidatorTestCase
 
         $this->buildViolation($constraint->message)->assertRaised();
     }
+
+    public function testClassicPlaceholderFollowedByLetterIsNotFalsePositive()
+    {
+        // "%product_count% order" — the closing % of the classic placeholder followed by
+        // " o" was misidentified as a space-padded printf octal specifier (% o).
+        $translation = (new Translation())
+            ->setKey('%product_count% order items')
+            ->setTranslation('%product_count% tilaustuotteita');
+        $this->validator->validate($translation, new PassVsprintf());
+
+        $this->assertNoViolation();
+    }
+
+    public function testClassicPlaceholderFollowedByPrintfSpecifierIsValid()
+    {
+        // A string mixing real classic placeholders and a real printf specifier must still validate.
+        $translation = (new Translation())
+            ->setKey('%name% has %d items')
+            ->setTranslation('%name% hat %d Artikel');
+        $this->validator->validate($translation, new PassVsprintf());
+
+        $this->assertNoViolation();
+    }
+
+    public function testMismatchedPrintfSpecifierAfterClassicPlaceholderIsInvalid()
+    {
+        // Translation drops the real %s — this must still raise a violation.
+        $translation = (new Translation())
+            ->setKey('%label%: %s')
+            ->setTranslation('%label%: missing specifier');
+        $constraint = new PassVsprintf();
+
+        $this->validator->validate($translation, $constraint);
+
+        $this->buildViolation($constraint->message)->assertRaised();
+    }
 }
