@@ -145,7 +145,9 @@ export default class ShippingRenderer {
    */
   private renderDeliveryOptions(deliveryOptions: Record<string, any>, selectedVal: any): void {
     const $deliveryOptionSelect = $(createOrderMap.deliveryOptionSelect);
+    const $extraContent = $(createOrderMap.deliveryOptionExtraContent);
     $deliveryOptionSelect.empty();
+    $extraContent.empty();
 
     Object.values(deliveryOptions).forEach((option: Record<string, any>) => {
       const deliveryOption: DeliveryOption = {
@@ -155,6 +157,11 @@ export default class ShippingRenderer {
 
       if (selectedVal === deliveryOption.value) {
         deliveryOption.selected = 'selected';
+        // Only the chosen carrier's content is shown, the way the front office shows it.
+        // Changing the selection reloads the cart, which renders this block again.
+        if (option.extraContent) {
+          $extraContent.html(option.extraContent);
+        }
       }
 
       $deliveryOptionSelect.append($('<option>', deliveryOption));
