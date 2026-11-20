@@ -69,6 +69,8 @@ class AdminControllerTest extends TestCase
     protected function tearDown(): void
     {
         ServiceLocator::setServiceContainerInstance($this->savedContainer);
+        // This class replaces the trait's setUpBeforeClass()/tearDownAfterClass(), so without this the mocked context outlives the test
+        self::resetContext();
     }
 
     /**
