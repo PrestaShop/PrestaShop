@@ -7,6 +7,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
 
 use Customer;
+use PrestaShop\PrestaShop\Adapter\Customer\Group\Repository\GroupRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
@@ -40,8 +41,11 @@ final class AddCustomerHandler extends AbstractCustomerHandler implements AddCus
      * @param Hashing $hashing
      * @param string $legacyCookieKey
      */
-    public function __construct(Hashing $hashing, $legacyCookieKey)
-    {
+    public function __construct(
+        Hashing $hashing,
+        $legacyCookieKey,
+        private readonly GroupRepository $groupRepository,
+    ) {
         $this->hashing = $hashing;
         $this->legacyCookieKey = $legacyCookieKey;
     }
@@ -75,6 +79,10 @@ final class AddCustomerHandler extends AbstractCustomerHandler implements AddCus
 
         // Check if provided groups contain the correct data (the default group must be in group list)
         $this->assertCustomerCanAccessDefaultGroup($command);
+
+        if (null !== $command->getGroupIds()) {
+            $this->assertGroupsAreAssociatedToCustomerShop($this->groupRepository, $command->getGroupIds(), (int) $command->getShopId());
+        }
 
         $customer->add();
         if (null !== $command->getGroupIds()) {

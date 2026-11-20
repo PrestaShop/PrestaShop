@@ -15,6 +15,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\TransformGuestToCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerGroupShopAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\EditableCustomer;
@@ -319,6 +320,15 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Then I should get an error that the customer group is not available in the customer shop
+     */
+    public function assertGotGroupShopAssociationError(): void
+    {
+        Assert::assertInstanceOf(CustomerGroupShopAssociationException::class, $this->latestResult);
+        $this->latestResult = null;
+    }
+
+    /**
      * @Then /^I should be returned an error message '(.+)'$/
      */
     public function assertGotErrorMessage($message)
@@ -377,6 +387,9 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
         } else {
             $data['riskId'] = 0;
         }
+        if (isset($data['shopId']) && SharedStorage::getStorage()->exists($data['shopId'])) {
+            $data['shopId'] = (int) SharedStorage::getStorage()->get($data['shopId']);
+        }
         if (array_key_exists('isGuest', $data)) {
             $data['isGuest'] = PrimitiveUtils::castStringBooleanIntoBoolean($data['isGuest']);
         }
@@ -404,6 +417,10 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
                 $isValid = true;
                 $groupId = $group->getId();
             }
+        }
+
+        if (!$isValid && SharedStorage::getStorage()->exists($groupName)) {
+            return (int) SharedStorage::getStorage()->get($groupName);
         }
 
         if (!$isValid) {
