@@ -90,6 +90,10 @@ export default class CombinationsListRenderer {
       this.updateByPriceImpactTaxIncluded($(event.currentTarget));
     });
 
+    this.$combinationsListContainer.on('change', CombinationsMap.list.finalPrice, (event: ChangeEvent) => {
+      this.updateByFinalPrice($(event.currentTarget));
+    });
+
     this.$combinationsListContainer.on('click', CombinationsMap.list.isDefault, (event) => {
       const clickedDefaultId = event.currentTarget.id;
       $(`${CombinationsMap.list.isDefault}:not(#${clickedDefaultId})`).prop('checked', false).val(0);
@@ -272,14 +276,55 @@ export default class CombinationsListRenderer {
       combinationPrice = combinationPrice.plus(new BigNumber(ecoTax.toString()));
     }
 
-    const finalPrice = this.productFormModel.displayPrice(combinationPrice);
+    const precision = this.productFormModel.getPrecision() ?? 2;
+    const finalPriceNumeric = combinationPrice.toFixed(precision);
 
     if (typeof $finalPrice !== 'undefined') {
-      $finalPrice.val(finalPrice);
+      $finalPrice.val(finalPriceNumeric);
     }
 
     if (typeof $finalPricePreview !== 'undefined') {
-      $finalPricePreview.html(finalPrice);
+      $finalPricePreview.html(this.productFormModel.displayPrice(combinationPrice));
     }
+  }
+
+  private updateByFinalPrice($finalPrice: JQuery): void {
+    const $row = $finalPrice.parents(CombinationsMap.list.combinationRow);
+    const $priceImpactTaxExcluded = $(CombinationsMap.list.priceImpactTaxExcluded, $row);
+    const $priceImpactTaxIncluded = $(CombinationsMap.list.priceImpactTaxIncluded, $row);
+
+    if (isUndefined($row) || isUndefined($priceImpactTaxExcluded) || isUndefined($priceImpactTaxIncluded)) {
+      return;
+    }
+
+    const finalPriceVal = new BigNumber(Number($finalPrice.val()));
+    if (finalPriceVal.isNaN()) {
+      return;
+    }
+
+    const productPrice = this.productFormModel.getPriceTaxExcluded();
+    const combinationEcoTax = $(CombinationsMap.list.ecoTax, $row).val();
+    let ecoTax: BigNumber;
+
+    if (combinationEcoTax !== undefined && Number(combinationEcoTax) > 0) {
+      ecoTax = new BigNumber(combinationEcoTax.toString());
+    } else {
+      ecoTax = this.productFormModel.getBigNumber('price.ecotaxTaxExcluded') ?? new BigNumber(0);
+    }
+
+    if (ecoTax.isNaN()) {
+      ecoTax = new BigNumber(0);
+    }
+
+    const precision = this.productFormModel.getPrecision() ?? 2;
+    const priceImpactTaxExcluded = finalPriceVal.minus(productPrice).minus(ecoTax);
+    $priceImpactTaxExcluded.val(priceImpactTaxExcluded.toFixed(precision));
+    $priceImpactTaxExcluded.addClass(CombinationsMap.list.modifiedFieldClass);
+
+    const priceImpactTaxIncluded = this.productFormModel.addTax(priceImpactTaxExcluded);
+    $priceImpactTaxIncluded.val(priceImpactTaxIncluded);
+    $priceImpactTaxIncluded.addClass(CombinationsMap.list.modifiedFieldClass);
+
+    $priceImpactTaxExcluded.trigger('change');
   }
 }
