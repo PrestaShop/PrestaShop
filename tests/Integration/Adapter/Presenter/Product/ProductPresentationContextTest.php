@@ -9,21 +9,27 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Adapter\Presenter\Product;
 
+use Cart;
 use Configuration;
+use Context;
 use Db;
 use Language;
 use Link;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
+use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartProductPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductPresentationContext;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
+use ReflectionProperty;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Tests\Integration\Utility\ContextMocker;
 
 /**
- * The presentation context lets the listing presenter resolve per-product lookups (new flag,
+ * The presentation context lets the listing and cart presenters resolve per-product lookups (new flag,
  * colored variants, images) for a whole set with a single batched query each. These tests prove
  * that the batched resolution returns exactly what the per-product resolution returned, and that
  * the lazy array actually routes through the batch when a context is provided.
@@ -83,6 +89,64 @@ class ProductPresentationContextTest extends KernelTestCase
 
         $outsideContext = $this->presentListing($product, $imageRetriever, new ProductPresentationContext([2]));
         $this->assertSame(999, $outsideContext['cover']['id_image'], 'A product outside the context must fall back to the per-product loader.');
+    }
+
+    public function testCartProductPresenterRoutesImagesThroughTheBatchedLoader(): void
+    {
+        $product = $this->productData(1);
+
+        $imageRetriever = $this->createMock(ImageRetriever::class);
+        $imageRetriever->method('getProductsImages')->willReturn([1 => [['id_image' => 111, 'cover' => 1, 'associatedVariants' => []]]]);
+        $imageRetriever->method('getAllProductImages')->willReturn([['id_image' => 999, 'cover' => 1, 'associatedVariants' => []]]);
+
+        $presenter = new CartProductPresenter(
+            $imageRetriever,
+            $this->createMock(Link::class),
+            $this->createMock(PriceFormatter::class),
+            $this->createMock(ProductColorsRetriever::class),
+            $this->createMock(TranslatorInterface::class)
+        );
+        $presenter->setPresentationContext(new ProductPresentationContext([1]));
+
+        $presented = $presenter->present($this->settings, $product, $this->createMock(Language::class));
+
+        $this->assertSame(111, $presented['cover']['id_image'], 'A cart line must take its images from the batched loader.');
+    }
+
+    public function testCartPresentsItsLinesWithAContextHoldingEveryCartProduct(): void
+    {
+        $productIds = array_slice($this->productIdsWithImages(), 0, 3);
+        $this->assertCount(3, $productIds, 'The test catalog must contain three products with images.');
+
+        $contextMocker = new ContextMocker();
+        $contextMocker->mockContext();
+        Context::getContext()->container = self::getContainer();
+        Context::getContext()->currentLocale = self::getContainer()->get('prestashop.core.localization.locale.repository')->getLocale(Context::getContext()->language->getLocale());
+
+        $cart = new Cart();
+        $cart->id_lang = (int) Configuration::get('PS_LANG_DEFAULT');
+        $cart->id_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
+        $cart->id_shop = 1;
+        $cart->add();
+        Context::getContext()->cart = $cart;
+
+        try {
+            foreach ($productIds as $productId) {
+                $cart->updateQty(1, $productId);
+            }
+
+            $presentedCart = (new CartPresenter())->present($cart);
+            $presentedCart['products'];
+
+            $cartProductPresenter = (new ReflectionProperty($presentedCart, 'cartProductPresenter'))->getValue($presentedCart);
+            $context = (new ReflectionProperty($cartProductPresenter, 'presentationContext'))->getValue($cartProductPresenter);
+
+            $this->assertInstanceOf(ProductPresentationContext::class, $context);
+            $this->assertEqualsCanonicalizing($productIds, $context->getProductIds());
+        } finally {
+            $cart->delete();
+            $contextMocker->resetContext();
+        }
     }
 
     public function testBatchedImagesMatchPerProductResolution(): void
