@@ -19,7 +19,7 @@ use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
 use Shop;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
+use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Tests\Resources\DatabaseDump;
 use Tests\TestCase\AbstractConfigurationTestCase;
 
@@ -109,23 +109,38 @@ class AbstractMultistoreConfigurationTest extends AbstractConfigurationTestCase
     }
 
     /**
+     * A field the configuration does not declare - typically one a module added to the form through
+     * its hook, which the module saves itself - is left out of the check rather than rejected.
+     *
      * @dataProvider provideShopConstraints
      *
      * @param ShopConstraint $shopConstraint
      */
-    public function testUndefinedOptionsException(ShopConstraint $shopConstraint): void
+    public function testUndeclaredFieldsAreIgnored(ShopConstraint $shopConstraint): void
     {
         $isAllShopContext = ($shopConstraint->getShopGroupId() === null && $shopConstraint->getShopId() === null);
         $testedObject = $this->getDummyMultistoreConfiguration($shopConstraint);
-        $this->expectException(UndefinedOptionsException::class);
 
+        $values = ['a_field_added_by_a_module' => true];
         if ($isAllShopContext) {
-            // in all shop context, multistore field are not expected
-            $testedObject->updateConfiguration(['test_conf_1' => true, MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . 'test_conf_1' => true]);
-        } else {
-            // test in other shop contexts with an undefined field
-            $testedObject->updateConfiguration(['undefined_element' => true]);
+            // every declared field is required in all shop context, so they have to be present for
+            // this to be about the undeclared one
+            $values += ['test_conf_1' => true, 'test_conf_2' => 'value'];
         }
+
+        // updateConfiguration() returns the list of errors, so an empty array means it went through
+        $this->assertSame([], $testedObject->updateConfiguration($values));
+    }
+
+    /**
+     * Dropping the undeclared fields must not weaken the requirement on the declared ones.
+     */
+    public function testDeclaredFieldsAreStillRequiredInAllShopContext(): void
+    {
+        $testedObject = $this->getDummyMultistoreConfiguration(ShopConstraint::allShops());
+        $this->expectException(MissingOptionsException::class);
+
+        $testedObject->updateConfiguration(['test_conf_1' => true, 'a_field_added_by_a_module' => true]);
     }
 
     /**

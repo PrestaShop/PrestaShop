@@ -11,7 +11,6 @@ namespace Tests\Unit\Adapter\Preferences;
 use PrestaShop\PrestaShop\Adapter\Meta\SEOOptionsDataConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 use Tests\TestCase\AbstractConfigurationTestCase;
 
 class SEOOptionsDataConfigurationTest extends AbstractConfigurationTestCase
@@ -68,7 +67,6 @@ class SEOOptionsDataConfigurationTest extends AbstractConfigurationTestCase
     public function provideInvalidConfiguration(): array
     {
         return [
-            [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
             [InvalidOptionsException::class, ['product_attributes_in_title' => 'wrong_type']],
         ];
     }
