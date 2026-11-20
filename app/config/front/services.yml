@@ -4,3 +4,11 @@ services:
     public: false
     autowire: true
     autoconfigure: true
+
+  # The tokenized router is defined for the back office only
+  prestashop.router:
+    alias: router
+    public: true
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.2
