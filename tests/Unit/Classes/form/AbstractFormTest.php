@@ -126,6 +126,26 @@ class AbstractFormTest extends TestCase
                     'field' => ['The %1$s field is too long (%2$d chars max).'],
                 ],
             ],
+            // Required field filled with spaces only
+            [
+                ['field' => (new FormField())->setName('field')->setRequired(true)],
+                ['field' => '   '],
+                false,
+                [
+                    '' => [],
+                    'field' => ['Required field'],
+                ],
+            ],
+            // Required field answered with a zero, which stays refused (0 means "none" for an id like id_state)
+            [
+                ['field' => (new FormField())->setName('field')->setRequired(true)],
+                ['field' => '0'],
+                false,
+                [
+                    '' => [],
+                    'field' => ['Required field'],
+                ],
+            ],
             // Not Required field but empty
             [
                 ['field' => (new FormField())->setName('field')->setRequired(false)],
