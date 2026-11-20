@@ -8,7 +8,9 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Controller\Sell\Customer\Address;
 
+use Address;
 use Country;
+use Customer;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Tests\Integration\Core\Form\IdentifiableObject\Handler\FormHandlerChecker;
@@ -63,9 +65,12 @@ class AddressControllerTest extends FormGridControllerTestCase
     {
         $this->client->disableReboot();
 
+        // Select the existing registered customer by ID instead of resolving the email in the form.
+        $customerId = (int) Customer::customerExists('pub@prestashop.com', true);
+        $this->assertGreaterThan(0, $customerId);
+
         // First create address
         $formData = [
-            'customer_address[customer_email]' => 'pub@prestashop.com',
             'customer_address[alias]' => 'create_alias',
             'customer_address[first_name]' => 'createfirstname',
             'customer_address[last_name]' => 'createlastname',
@@ -74,15 +79,30 @@ class AddressControllerTest extends FormGridControllerTestCase
             'customer_address[city]' => 'createcity',
             'customer_address[id_country]' => $this->countryId,
         ];
-        $addressId = $this->createEntityFromPage($formData);
+        // The selected customer fields are added to the DOM by JavaScript, which DomCrawler does not execute.
+        // Fill the rendered form and provide the selected customer collection directly in the POST data.
+        $form = $this->getFormFromPage($this->generateCreateUrl(), $this->getCreateSubmitButtonSelector());
+        $this->formFiller->fillForm($form, $formData);
+        $submittedData = $form->getPhpValues();
+        $submittedData['customer_address']['selected_customer'] = [
+            ['id_customer' => $customerId],
+        ];
+
+        $this->client->request($form->getMethod(), $form->getUri(), $submittedData);
+
+        $addressId = $this->getFormHandlerChecker()->getLastCreatedId();
+        $this->assertNotNull($addressId);
+
+        // Check that the address is linked to the selected customer.
+        $address = new Address($addressId);
+        $this->assertSame($customerId, (int) $address->id_customer);
 
         // Check that there is one more address in the list
         $newAddresses = $this->getEntitiesFromGrid();
         $this->assertCount($initialEntityCount + 1, $newAddresses);
         $this->assertCollectionContainsEntity($newAddresses, $addressId);
 
-        // Email is only used for initial association, but not editable after
-        unset($formData['customer_address[customer_email]']);
+        // The selected customer is only part of the creation form, not the edit form.
         $this->assertFormValuesFromPage(
             ['addressId' => $addressId],
             $formData

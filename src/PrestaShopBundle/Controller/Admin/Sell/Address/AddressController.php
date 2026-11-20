@@ -225,13 +225,9 @@ class AddressController extends PrestaShopAdminController
                 $formCountryId = (int) $request->request->all('customer_address')['id_country'];
                 $formData['id_country'] = $formCountryId;
             }
-            if (isset($request->request->all('customer_address')['id_customer'])) {
-                $idCustomer = (int) $request->request->all('customer_address')['id_customer'];
-                $formData['id_customer'] = $idCustomer;
-            }
         }
 
-        if (empty($formData['id_customer']) && $request->query->has('id_customer')) {
+        if ($request->query->has('id_customer')) {
             $formData['id_customer'] = (int) $request->query->get('id_customer');
         }
 

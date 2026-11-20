@@ -7,7 +7,7 @@
  * Defines all selectors that are used in customers address add/edit form.
  */
 export default {
-  addressEmailInput: '#customer_address_customer_email',
+  customerSearchContainer: '#customer_address_selected_customer',
   addressFirstnameInput: '#customer_address_first_name',
   addressLastnameInput: '#customer_address_last_name',
   addressCompanyInput: '#customer_address_company',

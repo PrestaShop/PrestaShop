@@ -6,7 +6,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
-use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\AddCustomerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCustomerAddressCommand;
@@ -26,18 +25,11 @@ final class AddressFormDataHandler implements FormDataHandlerInterface
     private $commandBus;
 
     /**
-     * @var CustomerDataProvider
-     */
-    private $customerDataProvider;
-
-    /**
      * @param CommandBusInterface $commandBus
-     * @param CustomerDataProvider $customerDataProvider
      */
-    public function __construct(CommandBusInterface $commandBus, CustomerDataProvider $customerDataProvider)
+    public function __construct(CommandBusInterface $commandBus)
     {
         $this->commandBus = $commandBus;
-        $this->customerDataProvider = $customerDataProvider;
     }
 
     /**
@@ -48,11 +40,11 @@ final class AddressFormDataHandler implements FormDataHandlerInterface
      */
     public function create(array $data)
     {
-        if (!empty($data['id_customer'])) {
-            $customerId = $data['id_customer'];
-        } else {
-            $customerId = $this->customerDataProvider->getIdByEmail($data['customer_email']);
-        }
+        // A preselected customer is provided when creating an address from their profile.
+        // Otherwise, the customer must be explicitly selected through the search widget.
+        $customerId = !empty($data['id_customer'])
+            ? (int) $data['id_customer']
+            : (int) ($data['selected_customer'][0]['id_customer'] ?? 0);
 
         $addAddressCommand = new AddCustomerAddressCommand(
             $customerId,
