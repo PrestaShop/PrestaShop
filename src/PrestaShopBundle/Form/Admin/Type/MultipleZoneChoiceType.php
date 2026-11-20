@@ -30,6 +30,7 @@ class MultipleZoneChoiceType extends AbstractType
                 return $this->zonesChoiceProvider->getChoices([
                     'active' => $options['active'],
                     'active_first' => $options['active_first'],
+                    'mark_inactive' => $options['mark_inactive'],
                 ]);
             }
         );
@@ -37,6 +38,7 @@ class MultipleZoneChoiceType extends AbstractType
         $resolver->setDefaults([
             'active' => false,
             'active_first' => false,
+            'mark_inactive' => false,
             'placeholder' => '--',
         ]);
     }

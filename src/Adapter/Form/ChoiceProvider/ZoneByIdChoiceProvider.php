@@ -11,6 +11,7 @@ namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceFormatter;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Zone;
 
 /**
@@ -18,18 +19,30 @@ use Zone;
  */
 class ZoneByIdChoiceProvider implements ConfigurableFormChoiceProviderInterface
 {
+    public function __construct(
+        private readonly ?TranslatorInterface $translator = null,
+    ) {
+    }
+
     /**
      * {@inheritdoc}
      */
     public function getChoices(array $options): array
     {
         $options = $this->resolveOptions($options);
+        $zones = Zone::getZones($options['active'], $options['active_first']);
 
-        return FormChoiceFormatter::formatFormChoices(
-            Zone::getZones($options['active'], $options['active_first']),
-            'id_zone',
-            'name'
-        );
+        if ($options['mark_inactive']) {
+            $inactiveLabel = $this->translator?->trans('Inactive', [], 'Admin.Global') ?? 'Inactive';
+            foreach ($zones as &$zone) {
+                if (!$zone['active']) {
+                    $zone['name'] .= ' (' . $inactiveLabel . ')';
+                }
+            }
+            unset($zone);
+        }
+
+        return FormChoiceFormatter::formatFormChoices($zones, 'id_zone', 'name');
     }
 
     private function resolveOptions(array $options): array
@@ -38,9 +51,11 @@ class ZoneByIdChoiceProvider implements ConfigurableFormChoiceProviderInterface
         $resolver->setDefaults([
             'active' => false,
             'active_first' => false,
+            'mark_inactive' => false,
         ]);
         $resolver->setAllowedTypes('active', 'bool');
         $resolver->setAllowedTypes('active_first', 'bool');
+        $resolver->setAllowedTypes('mark_inactive', 'bool');
 
         return $resolver->resolve($options);
     }
