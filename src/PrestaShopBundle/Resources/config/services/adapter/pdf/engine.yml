@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.pdf.engine_factory:
+    class: PrestaShop\PrestaShop\Adapter\PDF\Engine\TCPDFRendererEngineFactory
+
+  PrestaShop\PrestaShop\Core\PDF\PDFRendererEngineFactoryInterface:
+    alias: prestashop.adapter.pdf.engine_factory

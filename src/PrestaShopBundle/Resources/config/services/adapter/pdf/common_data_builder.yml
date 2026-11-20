@@ -1,0 +1,6 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.pdf.common_data_builder:
+    class: PrestaShop\PrestaShop\Adapter\PDF\PdfDocumentCommonDataBuilder

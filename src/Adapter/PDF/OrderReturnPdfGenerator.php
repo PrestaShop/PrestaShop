@@ -8,9 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\PDF;
 
-use Context;
 use OrderReturn;
-use PDF;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnNotFoundException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
@@ -24,12 +22,17 @@ use Validate;
  */
 final class OrderReturnPdfGenerator implements PDFGeneratorInterface
 {
+    public function __construct(
+        private readonly PDFGenerator $pdfGenerator
+    ) {
+    }
+
     /**
      * {@inheritdoc}
      *
      * @param array<int, int> $orderReturnIds exactly one id is supported
      *
-     * @return string raw PDF bytes (TCPDF 'S' mode), suitable for a Symfony Response body
+     * @return string raw PDF bytes, suitable for a Symfony Response body
      */
     public function generatePDF(array $orderReturnIds): string
     {
@@ -42,10 +45,8 @@ final class OrderReturnPdfGenerator implements PDFGeneratorInterface
             throw new OrderReturnNotFoundException();
         }
 
-        // Render in TCPDF 'S' (string) mode so the caller controls the HTTP response lifecycle —
-        // 'D' would send headers and exit, bypassing the Symfony kernel.
-        $pdf = new PDF($orderReturn, PDF::TEMPLATE_ORDER_RETURN, Context::getContext()->smarty);
-
-        return (string) $pdf->render(false);
+        // Rendered in string mode (never 'D'/download) so the caller controls the HTTP response
+        // lifecycle - letting the legacy engine send headers and exit would bypass the Symfony kernel.
+        return $this->pdfGenerator->generatePDFForResponse([$orderReturn])->getContent();
     }
 }
