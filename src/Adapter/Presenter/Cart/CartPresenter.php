@@ -62,10 +62,17 @@ class CartPresenter implements PresenterInterface
      */
     public function addCustomizedData(array $products, Cart $cart)
     {
-        return array_map(function ($product) use ($cart) {
+        // Every product without customization asks for the same data (id_customization 0).
+        $customizedDataByCustomization = [];
+
+        return array_map(function ($product) use ($cart, &$customizedDataByCustomization) {
             $customizations = [];
 
-            $data = Product::getAllCustomizedDatas($cart->id, null, true, null, (int) $product['id_customization']);
+            $idCustomization = (int) $product['id_customization'];
+            if (!array_key_exists($idCustomization, $customizedDataByCustomization)) {
+                $customizedDataByCustomization[$idCustomization] = Product::getAllCustomizedDatas($cart->id, null, true, null, $idCustomization);
+            }
+            $data = $customizedDataByCustomization[$idCustomization];
 
             if (!$data) {
                 $data = [];

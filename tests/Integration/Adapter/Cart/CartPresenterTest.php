@@ -8,7 +8,11 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Adapter\Cart;
 
+use Cart;
 use Configuration;
+use Context;
+use Customer;
+use Db;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use ReflectionClass;
@@ -25,6 +29,10 @@ class CartPresenterTest extends TestCase
      */
     private $previousSeparator;
 
+    private ?Cart $cart = null;
+
+    private ?Customer $previousCustomer = null;
+
     protected function setUp(): void
     {
         parent::setup();
@@ -37,6 +45,10 @@ class CartPresenterTest extends TestCase
     protected function tearDown(): void
     {
         Configuration::set('PS_ATTRIBUTE_ANCHOR_SEPARATOR', $this->previousSeparator);
+        if ($this->cart) {
+            $this->cart->delete();
+            Context::getContext()->customer = $this->previousCustomer;
+        }
 
         parent::tearDown();
     }
@@ -135,6 +147,77 @@ class CartPresenterTest extends TestCase
                 'Couleur' => 'Taupe',
             ],
         ];
+    }
+
+    public function testCustomizationDataIsReadOnceForProductsWithoutCustomization(): void
+    {
+        $shopId = (int) Configuration::get('PS_SHOP_DEFAULT');
+        // The cart links of a customized product carry a token built from the context customer.
+        $this->previousCustomer = Context::getContext()->customer;
+        Context::getContext()->customer = new Customer();
+        $this->cart = new Cart();
+        $this->cart->id_lang = (int) Configuration::get('PS_LANG_DEFAULT');
+        $this->cart->id_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
+        $this->cart->id_shop = $shopId;
+        $this->assertTrue($this->cart->add());
+
+        $db = Db::getInstance();
+        $this->assertTrue($db->insert('customization', [
+            'id_cart' => (int) $this->cart->id,
+            'id_product' => 19,
+            'id_product_attribute' => 0,
+            'id_address_delivery' => 0,
+            'quantity' => 1,
+            'in_cart' => 1,
+        ]));
+        $customizationId = (int) $db->Insert_ID();
+        $this->assertTrue($db->insert('customized_data', [
+            'id_customization' => $customizationId,
+            'type' => 1,
+            'index' => 1,
+            'value' => 'Engraved text',
+        ]));
+        $this->assertTrue($db->insert('cart_product', [
+            'id_cart' => (int) $this->cart->id,
+            'id_product' => 19,
+            'id_product_attribute' => 0,
+            'id_customization' => $customizationId,
+            'id_shop' => $shopId,
+            'quantity' => 1,
+            'date_add' => date('Y-m-d H:i:s'),
+        ]));
+
+        $plainProduct = function (int $productId): array {
+            return ['id_product' => $productId, 'id_product_attribute' => 0, 'id_customization' => 0];
+        };
+        $presented = $this->cartPresenter->addCustomizedData(
+            [$plainProduct(6), ['id_product' => 19, 'id_product_attribute' => 0, 'id_customization' => $customizationId], $plainProduct(7)],
+            $this->cart
+        );
+
+        $this->assertSame([], $presented[0]['customizations']);
+        $this->assertSame('Engraved text', $presented[1]['customizations'][0]['fields'][0]['text']);
+        $this->assertSame([], $presented[2]['customizations']);
+
+        $queriesForOneProduct = $this->countQueries(function () use ($plainProduct) {
+            $this->cartPresenter->addCustomizedData([$plainProduct(6)], $this->cart);
+        });
+        $queriesForThreeProducts = $this->countQueries(function () use ($plainProduct) {
+            $this->cartPresenter->addCustomizedData([$plainProduct(6), $plainProduct(7), $plainProduct(8)], $this->cart);
+        });
+        $this->assertGreaterThan(0, $queriesForOneProduct);
+        $this->assertSame($queriesForOneProduct, $queriesForThreeProducts);
+    }
+
+    private function countQueries(callable $callable): int
+    {
+        $questions = function (): int {
+            return (int) Db::getInstance()->executeS('SHOW SESSION STATUS LIKE \'Questions\'', true, false)[0]['Value'];
+        };
+        $before = $questions();
+        $callable();
+
+        return $questions() - $before - 1;
     }
 
     /**
