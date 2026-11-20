@@ -215,3 +215,37 @@ Feature: Search products to associate them in the BO
       | product  | name            | reference | image url                                             |
       | product6 | can of coke     |           | http://myshop.com/img/p/{image2}-home_default.jpg     |
       | product5 | can of lemonade |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+
+  Scenario: A product associated with several suppliers is returned once
+    Given shop "shop1" with name "test_shop" exists
+    And I add new supplier supplier1 with the following properties:
+      | name                    | first supplier   |
+      | address                 | Donelaicio st. 1 |
+      | city                    | Kaunas           |
+      | country                 | Lithuania        |
+      | enabled                 | true             |
+      | description[en-US]      | just a supplier  |
+      | meta title[en-US]       | first supplier   |
+      | meta description[en-US] |                  |
+      | shops                   | [shop1]          |
+    And I add new supplier supplier2 with the following properties:
+      | name                    | second supplier  |
+      | address                 | Donelaicio st. 2 |
+      | city                    | Kaunas           |
+      | country                 | Lithuania        |
+      | enabled                 | true             |
+      | description[en-US]      | another supplier |
+      | meta title[en-US]       | second supplier  |
+      | meta description[en-US] |                  |
+      | shops                   | [shop1]          |
+    When I add product "product7" with following information:
+      | name[en-US] | jar of honey |
+      | name[fr-FR] | pot de miel  |
+      | type        | standard     |
+    And I associate suppliers to product "product7"
+      | supplier  | product_supplier   |
+      | supplier1 | product7_supplier1 |
+      | supplier2 | product7_supplier2 |
+    Then I search for products with locale "english" matching "honey" I should get following results:
+      | product  | name         | reference | image url                                             |
+      | product7 | jar of honey |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
