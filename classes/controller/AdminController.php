@@ -476,10 +476,26 @@ class AdminControllerCore extends Controller
                 $this->bo_css = 'theme.css';
             }
 
-            $this->context->smarty->setTemplateDir([
-                _PS_BO_ALL_THEMES_DIR_ . $this->bo_theme . DIRECTORY_SEPARATOR . 'template',
-                _PS_OVERRIDE_DIR_ . 'controllers' . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . 'templates',
-            ]);
+            $themeTemplateDir = _PS_BO_ALL_THEMES_DIR_ . $this->bo_theme . DIRECTORY_SEPARATOR . 'template';
+            $overrideTemplateDir = _PS_OVERRIDE_DIR_ . 'controllers' . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . 'templates';
+
+            /*
+             * Smarty resolves a template in registration order, so a partial pulled in with {include}
+             * only picks up an override when the override directory is registered first. The numeric
+             * keys stay as they were, 0 for the theme and 1 for the override, because the admin reads
+             * them positionally in several places; assigning each directory with its own key keeps
+             * those readings intact while changing the order Smarty searches.
+             */
+            $templateDirs = Configuration::get('PS_DISABLE_OVERRIDES')
+                ? [0 => $themeTemplateDir, 1 => $overrideTemplateDir]
+                : [1 => $overrideTemplateDir, 0 => $themeTemplateDir];
+
+            $this->context->smarty->setTemplateDir([]);
+            foreach ($templateDirs as $templateDirKey => $templateDir) {
+                // Cast for the declared string|null parameter; PHP turns a numeric string key back
+                // into the integer one, so getTemplateDir(0) and (1) keep answering as before.
+                $this->context->smarty->addTemplateDir($templateDir, (string) $templateDirKey);
+            }
         }
 
         $this->id = Tab::getIdFromClassName($this->controller_name);
