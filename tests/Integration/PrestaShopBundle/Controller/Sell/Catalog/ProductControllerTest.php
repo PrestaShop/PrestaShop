@@ -8,12 +8,15 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Controller\Sell\Catalog;
 
+use Configuration;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProductGridDefinitionFactory;
+use Product;
 use Symfony\Component\DomCrawler\Crawler;
 use Tests\Integration\Core\Form\IdentifiableObject\Handler\FormHandlerChecker;
 use Tests\Integration\PrestaShopBundle\Controller\FormGridControllerTestCase;
@@ -263,6 +266,78 @@ class ProductControllerTest extends FormGridControllerTestCase
 
         $newProducts = $this->getEntitiesFromGrid();
         $this->assertCount($initialEntityCount - 1, $newProducts);
+    }
+
+    public function testExportUsesTheDisplayedPrice(): void
+    {
+        $this->assertFalse((bool) Configuration::get('PS_USE_ECOTAX'), 'With ecotax enabled the listing adds it to the price');
+        $product = new Product(1);
+        $originalEcotax = $product->ecotax;
+        $product->ecotax = 3.5;
+        $product->save();
+
+        // The export follows whatever filter the grid currently holds, and that filter is stored per
+        // employee, so a test that ran before this one leaves its own filter behind - re-submitting
+        // the form does not clear it, since the form renders with those values already in it.
+        $this->client->request('POST', $this->router->generate(
+            'admin_common_reset_search_by_filter_id',
+            ['filterId' => ProductGridDefinitionFactory::GRID_ID]
+        ));
+
+        try {
+            $this->client->request('GET', $this->router->generate('admin_products_export'));
+            // The streamed body is already consumed by the test client, so it is read from there
+            // rather than by calling sendContent() again.
+            $csv = (string) $this->client->getInternalResponse()->getContent();
+        } finally {
+            $product->ecotax = $originalEcotax;
+            $product->save();
+        }
+
+        $rows = array_map(
+            static fn (string $line): array => str_getcsv($line, ';'),
+            array_filter(explode("\n", trim($csv)))
+        );
+        $headers = array_shift($rows);
+        $priceColumn = array_search('Price (tax excl.)', $headers, true);
+        $this->assertNotFalse($priceColumn, 'The tax excluded price column is missing from the export');
+
+        $exportedRow = null;
+        foreach ($rows as $row) {
+            if ((int) $row[0] === 1) {
+                $exportedRow = $row;
+
+                break;
+            }
+        }
+
+        $this->assertNotNull($exportedRow, 'Product 1 is missing from the export');
+        $this->assertEqualsWithDelta(
+            (float) $product->price,
+            (float) $exportedRow[$priceColumn],
+            0.001,
+            'The exported price must be the one the listing shows, without the ecotax added on top'
+        );
+    }
+
+    public function testExportIncludesTheStatusColumn(): void
+    {
+        $this->client->request('GET', $this->router->generate('admin_products_export'));
+        $csv = (string) $this->client->getInternalResponse()->getContent();
+
+        $rows = array_map(
+            static fn (string $line): array => str_getcsv($line, ';'),
+            array_filter(explode("\n", trim($csv)))
+        );
+        $headers = array_shift($rows);
+        $statusColumn = array_search('Status', $headers, true);
+        $this->assertNotFalse($statusColumn, 'The status column is missing from the export');
+
+        $exportedStatuses = [];
+        foreach ($rows as $row) {
+            $exportedStatuses[(int) $row[0]] = $row[$statusColumn];
+        }
+        $this->assertSame((string) (int) (new Product(1))->active, $exportedStatuses[1] ?? null);
     }
 
     /**

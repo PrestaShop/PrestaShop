@@ -822,6 +822,7 @@ class ProductController extends PrestaShopAdminController
             'price' => $this->trans('Price (tax excl.)', [], 'Admin.Catalog.Feature'),
             'price_final' => $this->trans('Price (tax incl.)', [], 'Admin.Catalog.Feature'),
             'sav_quantity' => $this->trans('Quantity', [], 'Admin.Global'),
+            'active' => $this->trans('Status', [], 'Admin.Global'),
         ];
 
         $data = [];
@@ -836,6 +837,7 @@ class ProductController extends PrestaShopAdminController
                 'price' => $record['final_price_tax_excluded'],
                 'price_final' => $record['price_tax_included'],
                 'sav_quantity' => $record['quantity'],
+                'active' => $record['active'],
             ];
         }
 
