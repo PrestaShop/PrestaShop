@@ -10,6 +10,7 @@ namespace Tests\Integration\Classes;
 
 use Configuration;
 use Db;
+use Group;
 use Language;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Install\SqlLoader;
@@ -93,6 +94,29 @@ class ObjectModelTest extends TestCase
 
         $trans = $transMethod->invoke($newObject, '<a href="test">%d Succesful deletion "%s"</a>', [10, htmlspecialchars('<b>stringTest</b>')], 'Admin.Notifications.Success');
         $this->assertEquals('<a href="test">10 Succesful deletion "&lt;b&gt;stringTest&lt;/b&gt;"</a>', $trans);
+    }
+
+    public function testValidateFieldUsesTheDefaultLanguageOfTheShopContext(): void
+    {
+        $group = new Group();
+        $multishopActive = Configuration::getGlobalValue('PS_MULTISHOP_FEATURE_ACTIVE');
+
+        try {
+            Configuration::updateGlobalValue('PS_MULTISHOP_FEATURE_ACTIVE', 1);
+            Shop::resetContext();
+            Configuration::updateValue('PS_LANG_DEFAULT', $this->secondLanguageId, false, Shop::getGroupIdFromShopId($this->secondShopId), $this->secondShopId);
+
+            Shop::setContext(Shop::CONTEXT_SHOP, $this->defaultShopId);
+            $this->assertTrue($group->validateField('name', '', $this->secondLanguageId));
+
+            Shop::setContext(Shop::CONTEXT_SHOP, $this->secondShopId);
+            $this->assertSame('Property Group->name is empty.', $group->validateField('name', '', $this->secondLanguageId));
+        } finally {
+            Configuration::deleteFromGivenContext('PS_LANG_DEFAULT', null, $this->secondShopId);
+            Configuration::updateGlobalValue('PS_MULTISHOP_FEATURE_ACTIVE', $multishopActive);
+            Configuration::resetStaticCache();
+            Shop::resetContext();
+        }
     }
 
     public function testAdd(): void
