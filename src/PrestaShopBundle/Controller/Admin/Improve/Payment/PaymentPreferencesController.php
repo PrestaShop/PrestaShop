@@ -11,6 +11,7 @@ use PrestaShop\PrestaShop\Core\Module\DataProvider\PaymentModuleListProviderInte
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -74,6 +75,16 @@ class PaymentPreferencesController extends PrestaShopAdminController
         $paymentPreferencesForm->handleRequest($request);
 
         if ($paymentPreferencesForm->isSubmitted()) {
+            if ($this->isSubmissionTruncated($request, $paymentPreferencesForm)) {
+                $this->addFlash('error', $this->trans(
+                    'Nothing has been saved: the form has more fields than your server accepts in one request (max_input_vars = %limit%), so part of it was lost. Increase max_input_vars in your PHP configuration and try again.',
+                    ['%limit%' => ini_get('max_input_vars')],
+                    'Admin.Notifications.Error'
+                ));
+
+                return $this->redirectToRoute('admin_payment_preferences');
+            }
+
             $paymentPreferences = $paymentPreferencesForm->getData();
 
             $errors = $paymentPreferencesFormHandler->save($paymentPreferences);
@@ -87,5 +98,23 @@ class PaymentPreferencesController extends PrestaShopAdminController
         }
 
         return $this->redirectToRoute('admin_payment_preferences');
+    }
+
+    /**
+     * Every checked box is a separate input variable, so with many payment modules and countries
+     * the request can exceed PHP's max_input_vars, and PHP then silently drops the end of it.
+     * The CSRF token is rendered after all the restrictions, so it is missing exactly in that case,
+     * and saving would replace the restrictions with an incomplete set.
+     */
+    private function isSubmissionTruncated(Request $request, FormInterface $form): bool
+    {
+        $config = $form->getConfig();
+        if (!$config->getOption('csrf_protection', false)) {
+            return false;
+        }
+
+        $submittedData = $request->request->all($form->getName());
+
+        return !array_key_exists($config->getOption('csrf_field_name', '_token'), $submittedData);
     }
 }
