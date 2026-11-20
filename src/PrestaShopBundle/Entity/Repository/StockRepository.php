@@ -248,6 +248,7 @@ class StockRepository extends StockManagementRepository
           IF(COALESCE(pa.isbn, "") = "", "N/A", pa.isbn)                                    AS combination_isbn,
           IF(COALESCE(pa.upc, "") = "", "N/A", pa.upc)                                      AS combination_upc,
           IF(COALESCE(pa.mpn, "") = "", "N/A", pa.mpn)                                      AS combination_mpn,
+          COALESCE(sa.location, "")                                                         AS product_location,
           pl.name                                                                           AS product_name,
           p.id_supplier                                                                     AS supplier_id,
           COALESCE(s.name, "N/A")                                                           AS supplier_name,
