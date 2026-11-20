@@ -31,12 +31,12 @@
       "db": "mysql"
     },
     {
-      "php": "8.5",
+      "php": "8.6",
       "browser": "firefox",
       "db": "mysql"
     },
     {
-      "php": "8.5",
+      "php": "8.6",
       "browser": "chromium",
       "db": "mariadb"
     }
