@@ -11,7 +11,9 @@
 <link rel="apple-touch-icon" href="{{ this.imgDir }}app_icon.png" />
 <title>{{ this.shopName }}</title>
 
-{{ include('@AdminNewTheme/public/preload.html.twig') }}
+{# ignore_missing: this file is a webpack build artifact excluded from git, so a checkout whose
+   admin assets have not been built must still render the back office instead of failing here #}
+{{ include('@AdminNewTheme/public/preload.html.twig', ignore_missing: true) }}
 
 {% for css_uri, css_media in this.cssFiles %}
   <link href="{{ css_uri }}" rel="stylesheet" type="text/css" media="{{ css_media }}"/>
