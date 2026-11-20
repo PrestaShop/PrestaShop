@@ -10,6 +10,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 use DateTime;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DateRange;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
@@ -27,6 +28,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -55,6 +57,16 @@ class SpecificPriceType extends TranslatorAwareType
     private $combinationNameBuilder;
 
     /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
      * @var int
      */
     private $languageId;
@@ -66,7 +78,9 @@ class SpecificPriceType extends TranslatorAwareType
         AttributeRepository $attributeRepository,
         EventSubscriberInterface $specificPriceCombinationListener,
         CombinationNameBuilderInterface $combinationNameBuilder,
-        int $contextLanguageId
+        int $contextLanguageId,
+        ConfigurationInterface $configuration,
+        RouterInterface $router
     ) {
         parent::__construct($translator, $locales);
         $this->productRepository = $productRepository;
@@ -74,6 +88,8 @@ class SpecificPriceType extends TranslatorAwareType
         $this->specificPriceCombinationListener = $specificPriceCombinationListener;
         $this->combinationNameBuilder = $combinationNameBuilder;
         $this->languageId = $contextLanguageId;
+        $this->configuration = $configuration;
+        $this->router = $router;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -100,6 +116,7 @@ class SpecificPriceType extends TranslatorAwareType
             $builder->add('combination_id', ChoiceType::class, [
                 'label' => $this->trans('Combination', 'Admin.Global'),
                 'required' => false,
+                'help' => $this->getCombinationHelp(),
                 'choices' => $this->getSelectedChoices($builder),
                 'attr' => [
                     // select2 jQuery component is added in javascript manually for this ChoiceType
@@ -169,6 +186,34 @@ class SpecificPriceType extends TranslatorAwareType
      *
      * @return array<string, int>
      */
+    /**
+     * Warns that picking a combination here has no effect while quantity discounts are
+     * computed per product.
+     *
+     * With "Quantity discounts based on" set to Products, SpecificPrice sums the quantities of
+     * every combination of the product, so a specific price entered for one combination starts
+     * applying as soon as the total reaches the threshold - which is not what choosing a single
+     * combination in this dropdown looks like it does. The setting is the thing to change, so
+     * the message links to it.
+     *
+     * @return string|null null when discounts already work per combination and there is nothing to warn about
+     */
+    private function getCombinationHelp(): ?string
+    {
+        if ((bool) $this->configuration->get('PS_QTY_DISCOUNT_ON_COMBINATION')) {
+            return null;
+        }
+
+        return $this->trans(
+            'Note that if you want to base a quantity discount on a product, it will apply to all of its combinations. Go to [1]Shop Parameters > Product Settings[/1] to modify it.',
+            'Admin.Catalog.Help',
+            [
+                '[1]' => '<a href="' . $this->router->generate('admin_product_preferences') . '#configuration_fieldset_products">',
+                '[/1]' => '</a>',
+            ]
+        );
+    }
+
     private function getSelectedChoices(FormBuilderInterface $builder): array
     {
         $combinationIdValue = $builder->getData()['combination_id'] ?? NoCombinationId::NO_COMBINATION_ID;

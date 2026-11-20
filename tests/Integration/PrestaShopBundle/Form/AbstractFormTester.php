@@ -38,7 +38,7 @@ abstract class AbstractFormTester extends KernelTestCase
     /**
      * @param string $type
      * @param array $options
-     * @param null $data
+     * @param mixed $data
      *
      * @return FormBuilderInterface
      */
