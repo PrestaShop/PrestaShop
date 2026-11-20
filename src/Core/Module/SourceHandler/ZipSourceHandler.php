@@ -11,15 +11,12 @@ namespace PrestaShop\PrestaShop\Core\Module\SourceHandler;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorException;
 use PrestaShop\PrestaShop\Core\Security\Exception\ZipExtractionException;
 use PrestaShop\PrestaShop\Core\Security\SafeZipExtractor;
+use PrestaShop\PrestaShop\Core\Security\ZipArchiveDetector;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use ZipArchive;
 
 class ZipSourceHandler implements SourceHandlerInterface
 {
-    private const AUTHORIZED_MIME = [
-        'application/zip',
-    ];
-
     private const MODULE_REGEX = '/^([a-zA-Z0-9_-]+)\/\1\.php$/i'; // module_name/module_name.php
 
     /** @var string */
@@ -31,16 +28,24 @@ class ZipSourceHandler implements SourceHandlerInterface
     /** @var SafeZipExtractor */
     protected $zipExtractor;
 
-    public function __construct(string $modulePath, TranslatorInterface $translator, ?SafeZipExtractor $zipExtractor = null)
-    {
+    /** @var ZipArchiveDetector */
+    protected $zipArchiveDetector;
+
+    public function __construct(
+        string $modulePath,
+        TranslatorInterface $translator,
+        ?SafeZipExtractor $zipExtractor = null,
+        ?ZipArchiveDetector $zipArchiveDetector = null
+    ) {
         $this->modulePath = rtrim($modulePath, '/') . '/';
         $this->translator = $translator;
         $this->zipExtractor = $zipExtractor ?? new SafeZipExtractor();
+        $this->zipArchiveDetector = $zipArchiveDetector ?? new ZipArchiveDetector();
     }
 
     public function canHandle($source): bool
     {
-        return is_file($source) && in_array(mime_content_type($source), self::AUTHORIZED_MIME);
+        return is_string($source) && $this->zipArchiveDetector->isZipArchive($source);
     }
 
     public function getModuleName($source): string

@@ -82,7 +82,11 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
                 sprintf('%s only accept %s elements.', self::class, ModuleInterface::class)
             );
         }
-        $this->modules[$offset] = $value;
+        if (null === $offset) {
+            $this->modules[] = $value;
+        } else {
+            $this->modules[$offset] = $value;
+        }
     }
 
     public function offsetUnset($offset): void

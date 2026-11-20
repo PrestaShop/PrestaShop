@@ -8,6 +8,7 @@ namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\Exception\ThemeUploadException;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Security\ZipArchiveDetector;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -21,11 +22,18 @@ final class ThemeZipUploader implements ThemeUploaderInterface
     private $configuration;
 
     /**
-     * @param ConfigurationInterface $configuration
+     * @var ZipArchiveDetector
      */
-    public function __construct(ConfigurationInterface $configuration)
+    private $zipArchiveDetector;
+
+    /**
+     * @param ConfigurationInterface $configuration
+     * @param ZipArchiveDetector|null $zipArchiveDetector
+     */
+    public function __construct(ConfigurationInterface $configuration, ?ZipArchiveDetector $zipArchiveDetector = null)
     {
         $this->configuration = $configuration;
+        $this->zipArchiveDetector = $zipArchiveDetector ?? new ZipArchiveDetector();
     }
 
     /**
@@ -76,9 +84,7 @@ final class ThemeZipUploader implements ThemeUploaderInterface
      */
     private function assertUploadedFileIsZip(UploadedFile $uploadedTheme)
     {
-        preg_match('#application/zip#', $uploadedTheme->getMimeType(), $matches);
-
-        if (empty($matches)) {
+        if (!$this->zipArchiveDetector->isZipArchive($uploadedTheme->getPathname())) {
             throw new ThemeUploadException('Invalid mime type of theme zip. Allowed mime type is application/zip.', ThemeUploadException::INVALID_MIME_TYPE);
         }
     }

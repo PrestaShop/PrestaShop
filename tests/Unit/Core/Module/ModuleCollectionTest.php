@@ -82,7 +82,9 @@ class ModuleCollectionTest extends TestCase
         $this->assertFalse(isset($this->moduleCollection[1]));
 
         $this->moduleCollection[] = $this->createMock(Module::class);
-        $this->assertSame(2, count($this->moduleCollection));
+        $this->moduleCollection[] = $this->createMock(Module::class);
+        $this->assertSame(3, count($this->moduleCollection));
+        $this->assertTrue(isset($this->moduleCollection[3]));
 
         $this->expectException(PrestaShopException::class);
         $this->moduleCollection[] = new stdClass();
