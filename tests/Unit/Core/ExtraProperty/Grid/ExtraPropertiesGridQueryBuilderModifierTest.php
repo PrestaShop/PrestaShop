@@ -35,6 +35,8 @@ class ExtraPropertiesGridQueryBuilderModifierTest extends TestCase
     private const CONTEXT_LANG_ID = 2;
     private const CONTEXT_SHOP_ID = 3;
 
+    private string $dbPrefix = 'ps_';
+
     public function testCommonScopeJoinsOnPrimaryKeyOnly(): void
     {
         $modifier = $this->buildModifier($this->definition('note', ExtraPropertyScope::COMMON));
@@ -236,6 +238,25 @@ class ExtraPropertiesGridQueryBuilderModifierTest extends TestCase
         $this->assertStringNotContainsString('extra_entity', $countQb->getSQL());
     }
 
+    public function testMainTableIsFoundWithMixedCaseDatabasePrefix(): void
+    {
+        $this->dbPrefix = 'pS_';
+        $modifier = $this->buildModifier($this->definition('note', ExtraPropertyScope::COMMON));
+        $searchQb = $this->createQueryBuilder();
+        $searchQb->select('p.id_product')->from('pS_product', 'p');
+        $countQb = $this->createQueryBuilder();
+        $countQb->select('COUNT(*)')->from('pS_product', 'p');
+
+        $modifier->apply($searchQb, $countQb, $this->criteria(), 'product');
+
+        foreach ([$searchQb, $countQb] as $qb) {
+            $this->assertStringContainsString(
+                'LEFT JOIN pS_product_extra extra_entity ON extra_entity.`id_product` = p.`id_product`',
+                $qb->getSQL()
+            );
+        }
+    }
+
     // -------------------------------------------------------------------------
     // Fixtures
     // -------------------------------------------------------------------------
@@ -254,7 +275,7 @@ class ExtraPropertiesGridQueryBuilderModifierTest extends TestCase
         $definitionShopFilter = $this->createMock(ExtraPropertyDefinitionShopFilterInterface::class);
         $definitionShopFilter->method('filterByShopConstraint')->willReturnArgument(0);
 
-        return new ExtraPropertiesGridQueryBuilderModifier($repository, 'ps_', $languageContext, $shopContext, $definitionShopFilter, new NullLogger());
+        return new ExtraPropertiesGridQueryBuilderModifier($repository, $this->dbPrefix, $languageContext, $shopContext, $definitionShopFilter, new NullLogger());
     }
 
     /**
