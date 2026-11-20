@@ -120,7 +120,7 @@ abstract class ModuleCore implements ModuleInterface
     /** @var array to store the limited country */
     public $limited_countries = [];
 
-    /** @var array names of the controllers */
+    /** @var array names of the controllers, or definitions carrying their meta */
     public $controllers = [];
 
     /** @var bool */
@@ -927,8 +927,8 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         // Remove all configured meta data (titles, URLs etc.) for this module's front controllers
-        foreach ($this->controllers as $controller) {
-            $page_name = 'module-' . $this->name . '-' . $controller;
+        foreach ($this->getDeclaredControllers() as $controller) {
+            $page_name = 'module-' . $this->name . '-' . $controller['name'];
             $meta = Db::getInstance()->getValue('SELECT `id_meta` FROM `' . _DB_PREFIX_ . 'meta` WHERE `page`="' . pSQL($page_name) . '"');
             if ((int) $meta > 0) {
                 Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'meta_lang` WHERE `id_meta`=' . (int) $meta);
@@ -2967,8 +2967,11 @@ abstract class ModuleCore implements ModuleInterface
      */
     protected function installControllers()
     {
-        foreach ($this->controllers as $controller) {
-            $page = 'module-' . $this->name . '-' . $controller;
+        $languages = Language::getLanguages(false);
+        $metas = [];
+
+        foreach ($this->getDeclaredControllers() as $controller) {
+            $page = 'module-' . $this->name . '-' . $controller['name'];
             $result = Db::getInstance()->getValue('SELECT * FROM `' . _DB_PREFIX_ . 'meta` WHERE `page`="' . pSQL($page) . '"');
             if ((int) $result > 0) {
                 continue;
@@ -2977,10 +2980,54 @@ abstract class ModuleCore implements ModuleInterface
             $meta = new Meta();
             $meta->page = $page;
             $meta->configurable = 1;
+
+            foreach ($languages as $language) {
+                foreach (['title', 'url_rewrite'] as $field) {
+                    $value = is_array($controller[$field]) ? ($controller[$field][$language['iso_code']] ?? null) : $controller[$field];
+                    if (null !== $value) {
+                        $meta->{$field}[(int) $language['id_lang']] = $value;
+                    }
+                }
+            }
+
+            // Validated before any page is saved, so an invalid declaration installs none of them
+            if (true !== $meta->validateFieldsLang(false)) {
+                return false;
+            }
+            $metas[] = $meta;
+        }
+
+        foreach ($metas as $meta) {
             $meta->save();
         }
 
         return true;
+    }
+
+    /**
+     * A controller is declared by name, or as ['name' => ..., 'title' => ..., 'url_rewrite' => ...] where
+     * title and url_rewrite are one value for every language or a map keyed by language ISO code.
+     *
+     * @return array<int, array{name: string, title: string|array<string, string>|null, url_rewrite: string|array<string, string>|null}>
+     */
+    private function getDeclaredControllers(): array
+    {
+        $controllers = [];
+
+        foreach ($this->controllers as $controller) {
+            if (!is_array($controller)) {
+                $controllers[] = ['name' => (string) $controller, 'title' => null, 'url_rewrite' => null];
+
+                continue;
+            }
+
+            $name = (string) ($controller['name'] ?? '');
+            if ('' !== $name) {
+                $controllers[] = ['name' => $name, 'title' => $controller['title'] ?? null, 'url_rewrite' => $controller['url_rewrite'] ?? null];
+            }
+        }
+
+        return $controllers;
     }
 
     /**
