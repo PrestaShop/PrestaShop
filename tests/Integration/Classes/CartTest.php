@@ -467,6 +467,30 @@ class CartTest extends KernelTestCase
         $this->assertEquals(6, $cart->getOrderTotal(true, Cart::BOTH, null, $id_carrier));
     }
 
+    public function testRemovedCartRuleNoLongerCapsTheFollowingOnes(): void
+    {
+        $product = self::makeProduct('Capped Product', 10, self::getIdTaxRulesGroup(20));
+        $cart = self::makeCart();
+        $cart->updateQty(1, $product->id);
+
+        $removedCartRule = self::makeCartRule(8, 'before tax');
+        $keptCartRule = self::makeCartRule(5, 'before tax');
+        $cart->addCartRule($removedCartRule->id);
+        $cart->addCartRule($keptCartRule->id);
+
+        // Warm the caches: the kept cart rule is capped by the 8 already granted on a cart of 10
+        $this->assertCount(2, $cart->getOrderedCartRulesIds());
+        $this->assertEquals(2, $keptCartRule->getContextualValue(false));
+
+        $cart->removeCartRule($removedCartRule->id);
+
+        $this->assertSame(
+            [(int) $keptCartRule->id],
+            array_map('intval', array_column($cart->getOrderedCartRulesIds(), 'id_cart_rule'))
+        );
+        $this->assertEquals(5, $keptCartRule->getContextualValue(false));
+    }
+
     /**
      * This test checks that if PS_ATCP_SHIPWRAP is set to true then:
      * - the shipping cost of the carrier is understood as tax included instead of tax excluded
