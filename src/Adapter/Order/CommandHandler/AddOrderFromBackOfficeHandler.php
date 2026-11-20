@@ -73,6 +73,8 @@ final class AddOrderFromBackOfficeHandler extends AbstractOrderCommandHandler im
         $this->setCartContext($this->contextStateManager, $cart);
 
         try {
+            $this->persistDeliveryOption($cart);
+
             $orderMessage = $command->getOrderMessage();
             if (!empty($orderMessage)) {
                 $this->addOrderMessage($cart, $orderMessage);
@@ -108,6 +110,30 @@ final class AddOrderFromBackOfficeHandler extends AbstractOrderCommandHandler im
         }
 
         return new OrderId($orderId);
+    }
+
+    /**
+     * A back office cart only gets a usable delivery option once the employee changes the carrier
+     * selector: selecting the addresses re-applies the carrier the cart currently has, which is still
+     * none, so the cart keeps id_carrier = 0 and a delivery option pointing at carrier 0.
+     * PaymentModule::validateOrder() resolves a valid option on its own, so the order ends up with a
+     * carrier the cart does not have and both the cart list and the customer page show none for it.
+     *
+     * @param Cart $cart
+     */
+    private function persistDeliveryOption(Cart $cart): void
+    {
+        if ((int) $cart->id_carrier || $cart->isVirtualCart()) {
+            return;
+        }
+
+        $deliveryOption = $cart->getDeliveryOption(null, false, false);
+        if (empty($deliveryOption)) {
+            return;
+        }
+
+        $cart->setDeliveryOption($deliveryOption);
+        $cart->update();
     }
 
     /**
