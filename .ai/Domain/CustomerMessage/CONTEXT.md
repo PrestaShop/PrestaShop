@@ -8,8 +8,8 @@ Handles sending messages from the back office to customers in the context of an 
 
 | Layer | Path |
 |-------|------|
-| Core CQRS | `src/Core/Domain/CustomerMessage/` — Commands, CommandHandlers, Exceptions |
-| Adapter | no `src/Adapter/CustomerMessage/`; the concrete handler lives in `src/Core/Domain/CustomerService/CommandHandler/` |
+| Core CQRS | `src/Core/Domain/CustomerMessage/` — Commands, handler interfaces, Exceptions |
+| Adapter | `src/Adapter/CustomerMessage/CommandHandler/` — its service is declared with the CustomerService ones in `services/adapter/customer_service.yml` |
 | Legacy ObjectModel | `classes/CustomerMessage.php` (177 lines) — do not add logic here |
 
 ## Non-obvious patterns
@@ -20,7 +20,7 @@ Handles sending messages from the back office to customers in the context of an 
 
 ## Canonical examples
 
-- `src/Core/Domain/CustomerMessage/Command/AddOrderCustomerMessageCommand.php` + `src/Core/Domain/CustomerService/CommandHandler/AddOrderCustomerMessageHandler.php`
+- `src/Core/Domain/CustomerMessage/Command/AddOrderCustomerMessageCommand.php` + `src/Adapter/CustomerMessage/CommandHandler/AddOrderCustomerMessageHandler.php`
 
 ## Related
 

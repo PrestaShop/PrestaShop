@@ -29,6 +29,7 @@ All domain contexts:
 - Implement step definitions as PHP methods with `@Given`, `@When`, `@Then` annotations and regex patterns
 - One context class per domain is the typical case (e.g. `TaxFeatureContext`, `ManufacturerFeatureContext`). Complex domains with many commands (e.g. Product, Order) can be split into sub-contexts under `Context/Domain/{Domain}/` — register each in `behat.yml`
 - Contexts are NOT Symfony services — they are registered in `behat.yml`, not via DI
+- Behat sets `_PS_ADMIN_DIR_` to `tests/Integration/Behaviour`; the empty `themes/new-theme/` there only exists so the Twig loader (`AdminNewTheme` path) can boot when a handler renders Twig
 
 ### Context registration
 

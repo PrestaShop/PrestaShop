@@ -4,11 +4,12 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler;
+namespace PrestaShop\PrestaShop\Adapter\CustomerService\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSignature;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler\GetCustomerServiceSignatureHandlerInterface;
 
 /**
  * @internal
