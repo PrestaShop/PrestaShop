@@ -27,6 +27,14 @@ final class CarrierForOrderChoiceProvider implements ConfigurableFormChoiceProvi
         $options = $this->resolveOptions($options);
 
         $cart = Cart::getCartByOrderId($options['order_id']);
+
+        // getCartByOrderId() answers false for an order with no cart. Reading properties off that is
+        // only a warning on PHP 8, so the carriers were computed from customer group 0 and address 0
+        // and the caller got a plausible looking list for an order that has none.
+        if (!$cart instanceof Cart) {
+            return [];
+        }
+
         $groups = Customer::getGroupsStatic((int) $cart->id_customer);
         $address = new Address((int) $cart->id_address_delivery);
 
