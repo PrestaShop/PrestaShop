@@ -24,4 +24,16 @@ class ProductColorsRetriever
 
         return (is_array($attributesColorList)) ? current($attributesColorList) : null;
     }
+
+    /**
+     * @param int[] $productIds
+     *
+     * @return array<int, array> colored variants by product id, for the products having some
+     */
+    public function getColoredVariantsForProducts(array $productIds): array
+    {
+        $attributesColorList = Product::getAttributesColorList($productIds);
+
+        return is_array($attributesColorList) ? $attributesColorList : [];
+    }
 }

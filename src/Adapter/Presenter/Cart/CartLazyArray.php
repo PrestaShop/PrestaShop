@@ -19,6 +19,7 @@ use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\LazyArrayAttribute;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingLazyArray;
+use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductPresentationContext;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Cart\Calculator;
@@ -121,7 +122,10 @@ class CartLazyArray extends AbstractLazyArray
             $rawProducts[$k] = array_merge($assembledProducts[$k], $v);
         }
 
-        // Present them
+        // Present them, resolving the per-product lookups (images, colored variants) for all the cart lines at once
+        $this->cartProductPresenter->setPresentationContext(
+            new ProductPresentationContext(array_column($rawProducts, 'id_product'))
+        );
         $presentedProducts = array_map([$this, 'presentProduct'], $rawProducts);
 
         // And add customizations made
