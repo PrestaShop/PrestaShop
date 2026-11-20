@@ -11,7 +11,9 @@ use AdminKernel;
 use AppKernel;
 use FrontKernel;
 use Hook;
+use PrestaShop\PrestaShop\Adapter\Cache\Clearer\Symfony\FilesystemKernelCacheClearer;
 use PrestaShop\PrestaShop\Adapter\Cache\Clearer\Symfony\KernelCacheClearerInterface;
+use PrestaShop\PrestaShop\Adapter\Cache\Clearer\Symfony\KernelUsageChecker;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\Util\CacheClearLocker;
 use PrestaShopBundle\Cache\LegacyCacheClearer;
@@ -67,6 +69,7 @@ final class SymfonyCacheClearer implements CacheClearerInterface
         protected readonly iterable $kernelCacheClearers,
         protected readonly LoggerInterface $logger,
         protected readonly LegacyCacheClearer $legacyCacheClearer,
+        protected readonly KernelUsageChecker $kernelUsageChecker,
     ) {
     }
 
@@ -104,6 +107,8 @@ final class SymfonyCacheClearer implements CacheClearerInterface
                 @set_time_limit(0);
                 @ini_set('memory_limit', '-1');
 
+                $appIds = array_map(fn (string $kernelClass): string => $kernelClass::APP_ID, self::APPLICATION_KERNEL_CLASSES);
+                $usedAppIds = array_filter($appIds, $this->kernelUsageChecker->isUsed(...));
                 foreach (self::ENVIRONMENTS as $environment) {
                     /** @var AppKernel[] $applicationKernels */
                     $applicationKernels = [];
@@ -127,8 +132,12 @@ final class SymfonyCacheClearer implements CacheClearerInterface
                         }
 
                         $kernelCacheCleared = false;
+                        $isKernelUsed = in_array($applicationKernel->getAppId(), $usedAppIds, true);
                         /** @var KernelCacheClearerInterface $cacheClearer */
                         foreach ($this->kernelCacheClearers as $cacheClearer) {
+                            if (!$isKernelUsed && !$cacheClearer instanceof FilesystemKernelCacheClearer) {
+                                continue;
+                            }
                             try {
                                 // If one clearer succeeds it is enough we can stop the loop
                                 if ($kernelCacheCleared = $cacheClearer->clearKernelCache($applicationKernel, $environment)) {
