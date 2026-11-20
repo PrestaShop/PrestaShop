@@ -10,6 +10,7 @@ namespace Tests\Integration\Classes\db;
 
 use Db;
 use PHPUnit\Framework\TestCase;
+use PrestaShopDatabaseException;
 
 class DbTest extends TestCase
 {
@@ -75,5 +76,62 @@ class DbTest extends TestCase
         for ($i = 0; $i <= $nbServers; ++$i) {
             Db::$_servers[] = ['server' => _DB_SERVER_, 'user' => _DB_USER_, 'password' => _DB_PASSWD_, 'database' => _DB_NAME_];
         }
+    }
+
+    /**
+     * A legitimate read query whose values merely contain "outfile"/"dumpfile" (for example a shop
+     * search for such a term) must not be rejected by the write-to-file guard.
+     *
+     * @dataProvider provideReadQueriesContainingFileKeywords
+     */
+    public function testExecuteSAcceptsReadQueriesContainingFileKeywordsInValues(string $sql): void
+    {
+        $result = Db::getInstance()->executeS($sql);
+
+        $this->assertIsArray($result);
+    }
+
+    public function provideReadQueriesContainingFileKeywords(): iterable
+    {
+        yield 'outfile inside a LIKE value' => [
+            'SELECT `id_product` FROM `' . _DB_PREFIX_ . 'product` WHERE `reference` LIKE \'%outfile%\'',
+        ];
+        yield 'dumpfile inside a LIKE value' => [
+            'SELECT `id_product` FROM `' . _DB_PREFIX_ . 'product` WHERE `reference` LIKE \'%dumpfile%\'',
+        ];
+        yield 'keyword split across an escaped quote' => [
+            'SELECT `id_product` FROM `' . _DB_PREFIX_ . 'product` WHERE `reference` LIKE \'%out\\\'file%\'',
+        ];
+    }
+
+    /**
+     * A real "INTO OUTFILE"/"INTO DUMPFILE" write clause must still be rejected by executeS(),
+     * including when whitespace is obfuscated with a comment.
+     *
+     * @dataProvider provideWriteToFileQueries
+     */
+    public function testExecuteSRejectsWriteToFileClause(string $sql): void
+    {
+        $this->expectException(PrestaShopDatabaseException::class);
+        $this->expectExceptionMessage('must be used only');
+
+        Db::getInstance()->executeS($sql);
+    }
+
+    public function provideWriteToFileQueries(): iterable
+    {
+        yield 'into outfile' => [
+            'SELECT `id_product` FROM `' . _DB_PREFIX_ . 'product` INTO OUTFILE \'/tmp/ps-guard-test\'',
+        ];
+        yield 'into dumpfile' => [
+            'SELECT `id_product` FROM `' . _DB_PREFIX_ . 'product` INTO DUMPFILE \'/tmp/ps-guard-test\'',
+        ];
+        yield 'into outfile obfuscated with a comment' => [
+            'SELECT `id_product` FROM `' . _DB_PREFIX_ . 'product` INTO/**/OUTFILE \'/tmp/ps-guard-test\'',
+        ];
+        // Hostile input crafted to make the literal-stripping regex bail must fail closed, not open.
+        yield 'into outfile with a backslash-flood unterminated literal' => [
+            'SELECT `id_product` FROM `' . _DB_PREFIX_ . 'product` INTO OUTFILE \'' . str_repeat('\\', 60),
+        ];
     }
 }
