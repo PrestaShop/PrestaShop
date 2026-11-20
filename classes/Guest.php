@@ -231,8 +231,11 @@ class GuestCore extends ObjectModel
      */
     public static function setNewGuest($cookie)
     {
-        $guest = new Guest(isset($cookie->id_customer) ? (int) Guest::getFromCustomer((int) $cookie->id_customer) : null);
+        $idCustomer = isset($cookie->id_customer) ? (int) $cookie->id_customer : 0;
+        // Guest::getFromCustomer(0) matches any anonymous guest, so only look one up for a real customer
+        $guest = new Guest($idCustomer ? (int) Guest::getFromCustomer($idCustomer) : null);
         $guest->userAgent();
+        $guest->id_customer = $idCustomer;
         $guest->save();
         $cookie->id_guest = (int) $guest->id;
     }
