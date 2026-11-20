@@ -17,7 +17,7 @@ inputs:
   NODE_VERSION:
     required: false
     description: Node Version for tests
-    default: '20'
+    default: '26'
   BROWSER:
     required: false
     description: Bowser for tests
