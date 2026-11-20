@@ -330,6 +330,9 @@ class OrderControllerCore extends FrontController
     {
         $addressForm = $this->makeAddressForm();
 
+        // Keep the type of the form being refreshed, the template branches on it.
+        $addressType = Tools::getValue('type') === 'invoice' ? 'invoice' : 'delivery';
+
         if (Tools::getIsset('id_address') && ($id_address = (int) Tools::getValue('id_address'))) {
             $addressForm->loadAddressById($id_address);
         }
@@ -348,7 +351,7 @@ class OrderControllerCore extends FrontController
         $templateParams = array_merge(
             $addressForm->getTemplateVariables(),
             $stepTemplateParameters,
-            ['type' => 'delivery']
+            ['type' => $addressType]
         );
 
         ob_end_clean();
