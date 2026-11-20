@@ -7955,41 +7955,41 @@ class ProductCore extends ObjectModel
      */
     public static function getExistingIdsFromIdsOrRefs($ids_or_refs)
     {
-        // separate IDs and Refs
-        $ids = [];
-        $refs = [];
-        $whereStatements = [];
-        foreach ((is_array($ids_or_refs) ? $ids_or_refs : [$ids_or_refs]) as $id_or_ref) {
-            if (is_numeric($id_or_ref)) {
-                $ids[] = (int) $id_or_ref;
-            } elseif (is_string($id_or_ref)) {
-                $refs[] = '\'' . pSQL($id_or_ref) . '\'';
-            }
-        }
-
-        // construct WHERE statement with OR combination
-        if (count($ids) > 0) {
-            $whereStatements[] = ' p.id_product IN (' . implode(',', $ids) . ') ';
-        }
-        if (count($refs) > 0) {
-            $whereStatements[] = ' p.reference IN (' . implode(',', $refs) . ') ';
-        }
-        if (!count($whereStatements)) {
+        $values = is_array($ids_or_refs) ? $ids_or_refs : [$ids_or_refs];
+        $numericIds = array_map('intval', array_filter($values, 'is_numeric'));
+        if (empty($numericIds) && empty(array_filter($values, 'is_string'))) {
             return false;
         }
 
-        $results = Db::getInstance()->executeS('
-        SELECT DISTINCT `id_product`
-        FROM `' . _DB_PREFIX_ . 'product` p
-        WHERE ' . implode(' OR ', $whereStatements));
-
-        // simplify array since there is 1 useless dimension.
-        // FIXME : find a better way to avoid this, directly in SQL?
-        foreach ($results as $k => $v) {
-            $results[$k] = (int) $v['id_product'];
+        // A numeric value is an id when that product exists, a reference otherwise
+        $results = [];
+        if (!empty($numericIds)) {
+            $results = array_map('intval', array_column(Db::getInstance()->executeS('
+            SELECT `id_product`
+            FROM `' . _DB_PREFIX_ . 'product`
+            WHERE `id_product` IN (' . implode(',', $numericIds) . ')') ?: [], 'id_product'));
         }
 
-        return $results;
+        $refs = [];
+        foreach ($values as $id_or_ref) {
+            if (is_numeric($id_or_ref) && in_array((int) $id_or_ref, $results, true)) {
+                continue;
+            }
+            if (is_string($id_or_ref) || is_numeric($id_or_ref)) {
+                $refs[] = '\'' . pSQL((string) $id_or_ref) . '\'';
+            }
+        }
+
+        if (!empty($refs)) {
+            // Matched in SQL, so the column collation decides (case, trailing spaces) as before
+            $rows = Db::getInstance()->executeS('
+            SELECT DISTINCT `id_product`
+            FROM `' . _DB_PREFIX_ . 'product`
+            WHERE `reference` IN (' . implode(',', $refs) . ')') ?: [];
+            $results = array_merge($results, array_map('intval', array_column($rows, 'id_product')));
+        }
+
+        return array_values(array_unique($results));
     }
 
     /**
