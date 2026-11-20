@@ -51,12 +51,11 @@ class MetaCore extends ObjectModel
             throw new PrestaShopException(Context::getContext()->getTranslator()->trans('Cannot scan root directory', [], 'Admin.Notifications.Error'));
         }
 
+        // An existing but empty override directory (e.g. an override was removed, leaving the
+        // folder bare) is a legitimate "no overrides" state, not a scan failure: scandir() then
+        // returns an empty array, which must not abort the whole SEO & URLs page.
         $overrideDir = _PS_CORE_DIR_ . DIRECTORY_SEPARATOR . 'override' . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . 'front' . DIRECTORY_SEPARATOR;
-        if (!is_dir($overrideDir)) {
-            $overrideFiles = [];
-        } elseif (!$overrideFiles = Tools::scandir($overrideDir, 'php', '', true)) {
-            throw new PrestaShopException(Context::getContext()->getTranslator()->trans('Cannot scan "override" directory', [], 'Admin.Notifications.Error'));
-        }
+        $overrideFiles = is_dir($overrideDir) ? Tools::scandir($overrideDir, 'php', '', true) : [];
 
         $files = array_values(array_unique(array_merge($files, $overrideFiles)));
 
