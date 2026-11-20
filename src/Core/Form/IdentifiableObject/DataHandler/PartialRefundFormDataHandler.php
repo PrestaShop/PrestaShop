@@ -53,7 +53,7 @@ final class PartialRefundFormDataHandler implements FormDataHandlerInterface
         $command = new IssuePartialRefundCommand(
             $id,
             $refunds,
-            $data['shipping_amount'],
+            $data['shipping_amount'] ?? '0',
             $data['restock'],
             $data['credit_slip'],
             $data['voucher'],
