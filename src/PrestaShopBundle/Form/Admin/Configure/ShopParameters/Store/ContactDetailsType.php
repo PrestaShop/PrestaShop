@@ -14,6 +14,7 @@ use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
 use PrestaShopBundle\Form\Admin\Type\EmailType;
 use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -158,6 +159,17 @@ final class ContactDetailsType extends TranslatorAwareType
             $countryId = array_key_exists('id_country', $data)
                 ? (int) $data['id_country']
                 : (int) $form->get('id_country')->getData();
+
+            // A country without states empties the State select, which then submits nothing: the multistore forms
+            // are sent with PATCH, which would keep the saved State. A State left disabled (inherited) stays as is.
+            $stateCheckbox = MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . 'id_state';
+            if (array_key_exists('id_country', $data) && !array_key_exists('id_state', $data)
+                && (!$form->has($stateCheckbox) || !empty($data[$stateCheckbox]))
+            ) {
+                $data['id_state'] = '';
+                $event->setData($data);
+            }
+
             $this->rebuildStateField($form, $countryId);
         });
     }

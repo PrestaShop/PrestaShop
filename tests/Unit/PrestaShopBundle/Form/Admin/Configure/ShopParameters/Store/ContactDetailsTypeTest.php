@@ -100,6 +100,17 @@ class ContactDetailsTypeTest extends TypeTestCase
         $this->assertFalse($form->get('id_state')->isSynchronized());
     }
 
+    public function testACountryWithoutStatesEmptiesTheStateTheSelectNoLongerSubmits(): void
+    {
+        $form = $this->factory->create(ContactDetailsType::class, $this->initialData());
+
+        // A PATCH from the All stores context: France has no states, so its emptied State select submits nothing.
+        $form->submit(['id_country' => (string) self::FRANCE_ID], false);
+
+        $this->assertTrue($form->get('id_state')->isSynchronized());
+        $this->assertNull($form->get('id_state')->getData());
+    }
+
     private function initialData(): array
     {
         return [
