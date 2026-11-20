@@ -213,6 +213,16 @@ export default class ProductRenderer {
   }
 
   /**
+   * Combinations are keyed by their id, and JS enumerates integer-like keys numerically, so the
+   * order they were serialized in is lost. Sort them back on the position sent by the server.
+   *
+   * @param {Object} combinations
+   */
+  static sortCombinations(combinations: Record<string, any>): Record<string, any>[] {
+    return Object.values(combinations).sort((a, b) => a.position - b.position);
+  }
+
+  /**
    * Renders combinations row with select options
    *
    * @param {Array} combinations
@@ -228,7 +238,7 @@ export default class ProductRenderer {
       return;
     }
 
-    Object.values(combinations).forEach((combination) => {
+    ProductRenderer.sortCombinations(combinations).forEach((combination) => {
       $(createOrderMap.combinationsSelect).append(
         `<option
           value="${combination.attributeCombinationId}">
