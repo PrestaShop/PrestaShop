@@ -73,8 +73,10 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
     {
         $employee = new Employee($command->getEmployeeId()->getValue());
         $this->assertEmployeeWasFoundById($command->getEmployeeId(), $employee);
+        $this->assertContextEmployeeCanManage($employee);
 
         if (null !== $command->getProfileId()) {
+            $this->assertProfileExists((int) $command->getProfileId());
             $canAccessProfile = $this->profileAccessChecker->canEmployeeAccessProfile(
                 $this->contextEmployeeProvider->getId(),
                 (int) $command->getProfileId()
@@ -87,6 +89,12 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
 
         if (null !== $command->getEmail()) {
             $this->assertEmailIsNotAlreadyUsed($employee, $command->getEmail()->getValue());
+        }
+        if (null !== $command->getLanguageId()) {
+            $this->assertLanguageExists((int) $command->getLanguageId());
+        }
+        if (!empty($command->getShopAssociation())) {
+            $this->assertShopsExist($command->getShopAssociation());
         }
         $this->assertHomepageIsAccessible($command->getDefaultPageId() ?: ((int) $employee->default_tab), $command->getProfileId() ?: ((int) $employee->id_profile));
 
