@@ -168,6 +168,12 @@ class OrderRefundCalculator
             $productUnitPrice = $isTaxIncluded ? (float) $orderDetail->unit_price_tax_incl : (float) $orderDetail->unit_price_tax_excl;
             $productMaxRefund = (int) $quantity * $productUnitPrice;
 
+            // WHY: a zero amount is a real partial refund only for a product that cost nothing. For any other
+            // product it is a missing amount, and it stays refused.
+            if (null !== $orderDetailRefund->getRefundedAmount() && $orderDetailRefund->getRefundedAmount()->equalsZero() && $productMaxRefund > 0) {
+                throw new InvalidCancelProductException(InvalidCancelProductException::INVALID_AMOUNT);
+            }
+
             // If refunded amount is null it means the whole product is refunded (used for standard refund, and return product)
             if (null === $orderDetailRefund->getRefundedAmount()) {
                 $productRefundAmount = (float) (string) $productMaxRefund;
