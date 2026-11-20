@@ -535,12 +535,14 @@ class AdminCustomerThreadsControllerCore extends AdminController
             }
         }
 
-        if (!$extension) {
-            throw new PrestaShopException('Invalid file extension.');
-        }
+        if (!$extension || !Validate::isFileName($filename)) {
+            $this->errors[] = $this->trans(
+                'The file type of this attachment is not supported and cannot be displayed.',
+                [],
+                'Admin.Orderscustomers.Notification'
+            );
 
-        if (!Validate::isFileName($filename)) {
-            throw new PrestaShopException('Invalid filename.');
+            return;
         }
 
         if (ob_get_level() && ob_get_length() > 0) {
