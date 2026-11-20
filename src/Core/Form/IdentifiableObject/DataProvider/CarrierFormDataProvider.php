@@ -140,7 +140,16 @@ class CarrierFormDataProvider implements FormDataProviderInterface
             $zoneRanges = [];
             foreach ($zone->getRanges() as $range) {
                 $zoneRanges[] = [
-                    'range' => $range->getFrom()->__toString() . $rangeSymbol . ' - ' . $range->getTo()->__toString() . $rangeSymbol,
+                    // The bounds are inclusive on the left and exclusive on the right, which a
+                    // plain dash does not say: with "0 - 4" and "4 - 10" nothing tells which row a
+                    // cart of exactly 4 falls into. Keep in sync with carrier-form-manager.ts.
+                    'range' => sprintf(
+                        '>= %s%s - < %s%s',
+                        $range->getFrom()->__toString(),
+                        $rangeSymbol,
+                        $range->getTo()->__toString(),
+                        $rangeSymbol
+                    ),
                     'from' => $range->getFrom(),
                     'to' => $range->getTo(),
                     'price' => $range->getPrice()->__toString(),
