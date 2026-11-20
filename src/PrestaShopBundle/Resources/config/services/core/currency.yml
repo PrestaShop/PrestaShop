@@ -28,7 +28,7 @@ services:
   prestashop.core.exchange_rate.provider:
     class: PrestaShop\PrestaShop\Core\Currency\ExchangeRateProvider
     arguments:
-      - !php/const \PrestaShop\PrestaShop\Core\Currency\ExchangeRateProvider::CURRENCY_FEED_URL
+      - '@=constant("_PS_CURRENCY_FEED_URL_")'
       - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrencyIsoCode()'
       - '@prestashop.core.currency.exchange_rate.circuit_breaker'
       - '@cache.app'
