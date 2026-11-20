@@ -233,6 +233,11 @@ function updateProduct(event, eventType, updateUrl) {
         $(prestashop.selectors.product.details).replaceWith(
           data.product_details,
         );
+        // Only sent when combinations can override the product descriptions
+        if (data.product_description !== undefined) {
+          $(prestashop.selectors.product.description).html(data.product_description);
+          $(prestashop.selectors.product.descriptionShort).html(data.product_description_short);
+        }
         $(prestashop.selectors.product.flags)
           .first()
           .replaceWith(data.product_flags);

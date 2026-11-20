@@ -99,6 +99,10 @@ class CombinationFormType extends TranslatorAwareType
             $builder->add('features', CombinationFeaturesType::class);
         }
 
+        if ($this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_COMBINATION_SEO)) {
+            $builder->add('content', CombinationContentType::class);
+        }
+
         /*
          * This listener adapts the content of the form based on the data, it can remove add or transforms some
          * of the internal fields @see CombinationListener

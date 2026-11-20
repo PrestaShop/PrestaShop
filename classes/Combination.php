@@ -279,6 +279,10 @@ class CombinationCore extends ObjectModel
             'feature_product_attribute',
             '`id_product_attribute` = ' . (int) $this->id
         );
+        $result = $result && Db::getInstance()->delete(
+            'product_attribute_content',
+            '`id_product_attribute` = ' . (int) $this->id
+        );
 
         if ($result) {
             Hook::exec('actionAttributeCombinationDelete', ['id_product_attribute' => (int) $this->id]);

@@ -11,6 +11,8 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combinatio
 use Behat\Gherkin\Node\TableNode;
 use DateTime;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Content\Command\UpdateCombinationContentCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -196,6 +198,54 @@ class UpdateCombinationFeatureContext extends AbstractCombinationFeatureContext
         if (isset($dataRows['available later labels'])) {
             $command->setLocalizedAvailableLaterLabels($dataRows['available later labels']);
             unset($dataRows['available later labels']);
+        }
+    }
+
+    /**
+     * @When I update combination ":combinationReference" content with following values:
+     */
+    public function updateContentForDefaultShop(string $combinationReference, TableNode $tableNode): void
+    {
+        $this->updateContent($combinationReference, $tableNode, ShopConstraint::shop($this->getDefaultShopId()));
+    }
+
+    /**
+     * @When I update combination ":combinationReference" content with following values for shop ":shopReference":
+     */
+    public function updateContentForShop(string $combinationReference, TableNode $tableNode, string $shopReference): void
+    {
+        $this->updateContent($combinationReference, $tableNode, ShopConstraint::shop($this->getSharedStorage()->get($shopReference)));
+    }
+
+    /**
+     * @When I update combination ":combinationReference" content with following values for all shops:
+     */
+    public function updateContentForAllShops(string $combinationReference, TableNode $tableNode): void
+    {
+        $this->updateContent($combinationReference, $tableNode, ShopConstraint::allShops());
+    }
+
+    private function updateContent(string $combinationReference, TableNode $tableNode, ShopConstraint $shopConstraint): void
+    {
+        $data = $this->localizeByRows($tableNode);
+        $command = new UpdateCombinationContentCommand((int) $this->getSharedStorage()->get($combinationReference), $shopConstraint);
+        if (isset($data['description'])) {
+            $command->setLocalizedDescriptions($data['description']);
+        }
+        if (isset($data['description_short'])) {
+            $command->setLocalizedShortDescriptions($data['description_short']);
+        }
+        if (isset($data['meta_description'])) {
+            $command->setLocalizedMetaDescriptions($data['meta_description']);
+        }
+        if (isset($data['meta_title'])) {
+            $command->setLocalizedMetaTitles($data['meta_title']);
+        }
+
+        try {
+            $this->getCommandBus()->handle($command);
+        } catch (ProductConstraintException $e) {
+            $this->setLastException($e);
         }
     }
 

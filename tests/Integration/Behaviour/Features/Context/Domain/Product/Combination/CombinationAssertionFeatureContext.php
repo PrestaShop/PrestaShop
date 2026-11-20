@@ -13,12 +13,15 @@ use DateTime;
 use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Content\Query\GetCombinationContent;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Content\QueryResult\CombinationContent;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotGenerateCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationDetails;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationPrices;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationStock;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use RuntimeException;
 use StockAvailable;
@@ -150,6 +153,48 @@ class CombinationAssertionFeatureContext extends AbstractCombinationFeatureConte
             $actualStock->getQuantity(),
             sprintf('Unexpected combination "%s" quantity', $combinationReference)
         );
+    }
+
+    /**
+     * @Then combination ":combinationReference" should have following content:
+     */
+    public function assertContentForDefaultShop(string $combinationReference, TableNode $tableNode): void
+    {
+        $this->assertContent($combinationReference, $tableNode, $this->getDefaultShopId());
+    }
+
+    /**
+     * @Then combination ":combinationReference" should have following content for shop ":shopReference":
+     */
+    public function assertContentForShop(string $combinationReference, TableNode $tableNode, string $shopReference): void
+    {
+        $this->assertContent($combinationReference, $tableNode, (int) $this->getSharedStorage()->get($shopReference));
+    }
+
+    private function assertContent(string $combinationReference, TableNode $tableNode, int $shopId): void
+    {
+        /** @var CombinationContent $content */
+        $content = $this->getQueryBus()->handle(new GetCombinationContent(
+            (int) $this->getSharedStorage()->get($combinationReference),
+            ShopConstraint::shop($shopId)
+        ));
+        $actualValues = [
+            'description' => $content->getLocalizedDescriptions(),
+            'description_short' => $content->getLocalizedShortDescriptions(),
+            'meta_description' => $content->getLocalizedMetaDescriptions(),
+            'meta_title' => $content->getLocalizedMetaTitles(),
+        ];
+
+        foreach ($this->localizeByRows($tableNode) as $field => $localizedValues) {
+            Assert::assertArrayHasKey($field, $actualValues);
+            foreach ($localizedValues as $langId => $expectedValue) {
+                Assert::assertSame(
+                    $expectedValue,
+                    $actualValues[$field][$langId] ?? '',
+                    sprintf('Unexpected combination "%s" %s for language %d', $combinationReference, $field, $langId)
+                );
+            }
+        }
     }
 
     /**

@@ -12,6 +12,8 @@ use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Content\Query\GetCombinationContent;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Content\QueryResult\CombinationContent;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\FeatureValue\Query\GetCombinationFeatureValues;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\FeatureValue\QueryResult\CombinationFeatureValue;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
@@ -116,6 +118,17 @@ class CombinationFormDataProvider implements FormDataProviderInterface
         // form type), hence the data is only populated in that case to avoid feeding an absent field.
         if ($this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_COMBINATION_FEATURE_VALUES)) {
             $data['features'] = $this->extractFeatureValues($combinationId, $shopConstraint);
+        }
+
+        if ($this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_COMBINATION_SEO)) {
+            /** @var CombinationContent $content */
+            $content = $this->queryBus->handle(new GetCombinationContent($combinationId, $shopConstraint));
+            $data['content'] = [
+                'description' => $content->getLocalizedDescriptions(),
+                'description_short' => $content->getLocalizedShortDescriptions(),
+                'meta_description' => $content->getLocalizedMetaDescriptions(),
+                'meta_title' => $content->getLocalizedMetaTitles(),
+            ];
         }
 
         return $data;
