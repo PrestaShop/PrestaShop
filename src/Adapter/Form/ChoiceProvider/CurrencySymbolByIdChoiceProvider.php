@@ -7,6 +7,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
 use Currency;
+use Order;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceFormatter;
 
@@ -20,8 +21,11 @@ final class CurrencySymbolByIdChoiceProvider implements ConfigurableFormChoicePr
      */
     public function getChoices(array $options): array
     {
+        // The currency of the order stays available after it was deleted
+        $keptCurrencyId = isset($options['id_order']) ? (int) (new Order((int) $options['id_order']))->id_currency : 0;
+
         return FormChoiceFormatter::formatFormChoices(
-            Currency::getCurrenciesByIdShop($options['id_shop']),
+            Currency::getCurrenciesByIdShop($options['id_shop'], $keptCurrencyId),
             'id_currency',
             'symbol'
         );
