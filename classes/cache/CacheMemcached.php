@@ -59,7 +59,12 @@ class CacheMemcachedCore extends Cache
             $this->memcached->addServer($server['ip'], $server['port'], (int) $server['weight']);
         }
 
-        $this->is_connected = in_array('255.255.255', $this->memcached->getVersion(), true) === false;
+        // getVersion() answers false when no server could be reached - a memcached being restarted, for
+        // instance - and in_array() then raises a TypeError that takes the whole page down. A cache that
+        // cannot be reached is simply not connected.
+        $version = $this->memcached->getVersion();
+
+        $this->is_connected = is_array($version) && in_array('255.255.255', $version, true) === false;
     }
 
     /**
