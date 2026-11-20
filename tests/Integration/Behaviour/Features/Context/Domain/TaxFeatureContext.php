@@ -7,6 +7,7 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use Cache;
 use Country;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\AddTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkDeleteTaxCommand;
@@ -21,6 +22,7 @@ use RuntimeException;
 use State;
 use Tax;
 use TaxCalculator;
+use TaxManagerFactory;
 use TaxRule;
 use TaxRulesGroup;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -76,6 +78,9 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
             $command->setEnabled(PrimitiveUtils::castStringBooleanIntoBoolean($data['is_enabled']));
         }
         $this->getCommandBus()->handle($command);
+        // A tax is edited in its own request, so the rates resolved before it are not kept
+        Cache::clean('*');
+        TaxManagerFactory::resetStaticCache();
 
         SharedStorage::getStorage()->set($taxReference, new Tax($taxId));
     }
