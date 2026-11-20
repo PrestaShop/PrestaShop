@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use PrestaShopBundle\Entity\Enum\CustomerB2bStatus;
+use PrestaShopBundle\Entity\Repository\CustomerB2bRepository;
 
 /**
  * CustomerB2b.
@@ -28,7 +29,7 @@ use PrestaShopBundle\Entity\Enum\CustomerB2bStatus;
  *
  * @ORM\HasLifecycleCallbacks
  *
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass=CustomerB2bRepository::class)
  */
 class CustomerB2b
 {

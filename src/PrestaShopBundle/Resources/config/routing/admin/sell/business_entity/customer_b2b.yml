@@ -3,3 +3,10 @@ admin_customer_b2b_list:
   methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerB2b\CustomerB2bController::listAction
+
+admin_customer_b2b_create:
+  path: /new
+  methods: [ GET, POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerB2b\CustomerB2bController::createAction
+    _parent: admin_customer_b2b_list

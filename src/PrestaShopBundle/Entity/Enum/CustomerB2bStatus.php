@@ -6,12 +6,21 @@
 
 namespace PrestaShopBundle\Entity\Enum;
 
-/**
- * Enum status BusinessEntity.
- */
-enum CustomerB2bStatus: string
+use Symfony\Contracts\Translation\TranslatableInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
+
+enum CustomerB2bStatus: string implements TranslatableInterface
 {
     case PENDING = 'pending';
     case ACTIVE = 'active';
     case REJECTED = 'rejected';
+
+    public function trans(TranslatorInterface $translator, ?string $locale = null): string
+    {
+        return match ($this) {
+            self::PENDING => $translator->trans('Pending', [], 'Admin.Global', $locale),
+            self::ACTIVE => $translator->trans('Active', [], 'Admin.Global', $locale),
+            self::REJECTED => $translator->trans('Rejected', [], 'Admin.Global', $locale),
+        };
+    }
 }

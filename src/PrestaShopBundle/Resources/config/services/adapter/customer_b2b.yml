@@ -1,0 +1,10 @@
+services:
+  _defaults:
+    autoconfigure: true
+    autowire: true
+
+  PrestaShop\PrestaShop\Adapter\CustomerB2b\CommandHandler\AddCustomerB2bHandler: ~
+
+  PrestaShop\PrestaShop\Adapter\CustomerB2b\Validate\CustomerB2bValidator:
+    arguments:
+      $shopRepository: '@prestashop.core.admin.shop.repository'
