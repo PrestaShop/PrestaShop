@@ -92,7 +92,9 @@ class PricingType extends TranslatorAwareType
                     'data-show-label' => $this->trans('Show catalog price rules', 'Admin.Catalog.Feature'),
                 ],
             ])
-            ->add('catalog_price_rules', CatalogPriceRulesType::class)
+            ->add('catalog_price_rules', CatalogPriceRulesType::class, [
+                'product_id' => $options['product_id'],
+            ])
             ->add('priority_management', ProductSpecificPricePriorityType::class, [
                 'label' => $this->trans('Priority management', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
@@ -113,6 +115,7 @@ class PricingType extends TranslatorAwareType
             ])
             ->setRequired([
                 'tax_rules_group_id',
+                'product_id',
             ]);
     }
 }
