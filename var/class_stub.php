@@ -163,6 +163,7 @@ class MetaLang extends MetaLangCore {};
 abstract    class Module extends ModuleCore {};
 abstract class ModuleAdminController extends ModuleAdminControllerCore {};
 class ModuleFrontController extends ModuleFrontControllerCore {};
+abstract class ModuleProductListingFrontController extends ModuleProductListingFrontControllerCore {};
 abstract class ModuleGraph extends ModuleGraphCore {};
 abstract class ModuleGraphEngine extends ModuleGraphEngineCore {};
 abstract class ModuleGrid extends ModuleGridCore {};
