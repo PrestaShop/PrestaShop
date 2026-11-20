@@ -22,7 +22,7 @@ export default class TagsRenderer {
     tagRemovedEventName: string,
   ) {
     this.eventEmitter = eventEmitter;
-    this.container = document.querySelector(containerSelector) as HTMLElement;
+    this.container = document.querySelector<HTMLElement>(containerSelector)!;
     this.tagRemovedEventName = tagRemovedEventName;
     this.listenTagRemoval();
   }
@@ -45,10 +45,10 @@ export default class TagsRenderer {
 
       if (tplFragment && tplFragment.firstChild && tplFragment.firstChild.parentNode) {
         const frag = tplFragment.firstChild.parentNode;
-        const idInput = frag.querySelector(ProductCategoryMap.tagCategoryIdInput) as HTMLInputElement;
+        const idInput = frag.querySelector<HTMLInputElement>(ProductCategoryMap.tagCategoryIdInput)!;
         idInput.value = String(category.id);
 
-        const tagRemoveBtn = frag.querySelector(ProductCategoryMap.tagRemoveBtn) as HTMLElement;
+        const tagRemoveBtn = frag.querySelector<HTMLElement>(ProductCategoryMap.tagRemoveBtn)!;
 
         // don't show the tag removal element when it is the last category
         if (categories.length === 1) {
@@ -93,7 +93,7 @@ export default class TagsRenderer {
         const tagItem = clickedBtn.closest(ProductCategoryMap.tagItem) as HTMLElement;
 
         if (tagItem) {
-          const idInput = tagItem.querySelector(ProductCategoryMap.tagCategoryIdInput) as HTMLInputElement;
+          const idInput = tagItem.querySelector<HTMLInputElement>(ProductCategoryMap.tagCategoryIdInput)!;
           tagItem.remove();
           this.eventEmitter.emit(this.tagRemovedEventName, Number(idInput.value));
         }
