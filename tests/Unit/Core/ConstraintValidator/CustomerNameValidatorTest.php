@@ -31,6 +31,59 @@ class CustomerNameValidatorTest extends ConstraintValidatorTestCase
     }
 
     /**
+     * A name has to carry a letter. Everything here is punctuation the pattern allows inside a name but
+     * which says nothing on its own, which is how an account named "-" could be created.
+     *
+     * @return array
+     */
+    public function getNamesWithoutALetter()
+    {
+        return [
+            ['-'], ['--'], ['- -'], ["'"], ["''"], ["-'-"], ['  -  '],
+        ];
+    }
+
+    /**
+     * The counter-examples raised when this was discussed: one and two letter names exist, and a name
+     * may legitimately carry a hyphen, an apostrophe or a non-latin script. None of these may regress.
+     *
+     * @return array
+     */
+    public function getShortAndInternationalNames()
+    {
+        return [
+            ['E'], ['Li'], ['Xu Li'], ["O'Brien"], ['Jean-Luc'], ['Ann-Marie'],
+            ['李'], ['Þór'], ['van der Berg'],
+        ];
+    }
+
+    /**
+     * @dataProvider getNamesWithoutALetter
+     *
+     * @param string $name
+     */
+    public function testItFailsWhenTheNameCarriesNoLetter($name)
+    {
+        $this->validator->validate($name, new CustomerName());
+
+        $this->buildViolation((new CustomerName())->message)
+            ->assertRaised()
+        ;
+    }
+
+    /**
+     * @dataProvider getShortAndInternationalNames
+     *
+     * @param string $name
+     */
+    public function testItAcceptsShortAndNonLatinNames($name)
+    {
+        $this->validator->validate($name, new CustomerName());
+
+        $this->assertNoViolation();
+    }
+
+    /**
      * @return array
      */
     public function getValidCharactersWithSpaces()
