@@ -132,4 +132,10 @@ class CarrierConstraintException extends CarrierException
      * Thrown when a product quantity of an availability search is missing or not strictly positive
      */
     public const INVALID_PRODUCT_QUANTITY = 230;
+
+    /**
+     * A carrier priced from its own ranges was saved without any, which leaves it invisible in the front
+     * office rather than free of charge - the shipping cost lookup simply finds nothing to apply.
+     */
+    public const MISSING_RANGES = 240;
 }
