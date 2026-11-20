@@ -3443,8 +3443,9 @@ class ProductCore extends ObjectModel
 
         $cart_quantity = 0;
         if ((int) $id_cart) {
+            // The quantity of this product in this cart, whatever quantity is being priced
             $cache_id = 'Product::getPriceStatic_' . (int) $id_product . '-' . (int) $id_cart;
-            if (!Cache::isStored($cache_id) || ($cart_quantity = Cache::retrieve($cache_id) != (int) $quantity)) {
+            if (!Cache::isStored($cache_id)) {
                 $sql = 'SELECT SUM(`quantity`)
                 FROM `' . _DB_PREFIX_ . 'cart_product`
                 WHERE `id_product` = ' . (int) $id_product . '
@@ -3452,7 +3453,7 @@ class ProductCore extends ObjectModel
                 $cart_quantity = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
                 Cache::store($cache_id, $cart_quantity);
             } else {
-                $cart_quantity = Cache::retrieve($cache_id);
+                $cart_quantity = (int) Cache::retrieve($cache_id);
             }
         }
 
