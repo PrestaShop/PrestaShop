@@ -53,4 +53,11 @@ export default {
   [types.RESET_MODIFIED_TRANSLATIONS](state: Record<string, any>): void {
     state.modifiedTranslations = [];
   },
+  [types.REMOVE_SAVED_MODIFIED_TRANSLATIONS](state: Record<string, any>, savedKeys: Array<string>): void {
+    Object.keys(state.modifiedTranslations).forEach((id) => {
+      if (savedKeys.includes(state.modifiedTranslations[id].default)) {
+        delete state.modifiedTranslations[id];
+      }
+    });
+  },
 };
