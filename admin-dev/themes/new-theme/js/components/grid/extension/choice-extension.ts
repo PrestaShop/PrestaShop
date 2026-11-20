@@ -29,6 +29,7 @@ export default class ChoiceExtension {
       .find(GridMap.bulks.choiceOptions);
 
     this.letOpenMenusEscapeTheScrollingTable(grid);
+    this.enableChoiceSearch(grid);
 
     $choiceOptionsContainer.find(GridMap.dropdownItem).on('click', (e) => {
       e.preventDefault();
@@ -38,6 +39,81 @@ export default class ChoiceExtension {
 
       this.submitForm(url, $button);
     });
+  }
+
+  /**
+   * Filters the choices of a searchable column as the user types.
+   * Enter is intercepted because the grid sits inside the filters form.
+   *
+   * @param {Grid} grid
+   * @private
+   */
+  private enableChoiceSearch(grid: Grid): void {
+    const $container = grid.getContainer();
+
+    $container.on('shown.bs.dropdown', (e: JQuery.TriggeredEvent) => {
+      const $search = $(e.target).find(GridMap.choiceSearch);
+
+      if ($search.length === 0) {
+        return;
+      }
+
+      $search.val('');
+      this.filterChoices($search);
+      $search.trigger('focus');
+    });
+
+    $container.on('input', GridMap.choiceSearch, (e: JQuery.TriggeredEvent) => {
+      this.filterChoices($(e.currentTarget));
+    });
+
+    $container.on('keydown', GridMap.choiceSearch, (e: JQuery.KeyDownEvent) => {
+      if (e.key !== 'Enter') {
+        return;
+      }
+
+      e.preventDefault();
+      $(e.currentTarget)
+        .closest(GridMap.bulks.choiceOptions)
+        .find(`${GridMap.dropdownItem}:not(.d-none)`)
+        .first()
+        .trigger('click');
+    });
+  }
+
+  /**
+   * @param {JQuery} $search
+   * @private
+   */
+  private filterChoices($search: JQuery): void {
+    const term = ChoiceExtension.normalize(String($search.val()));
+    const $menu = $search.closest(GridMap.bulks.choiceOptions);
+    let matchCount = 0;
+
+    $menu.find(GridMap.dropdownItem).each((index: number, item: HTMLElement) => {
+      const matches = ChoiceExtension.normalize($(item).text()).includes(term);
+      $(item).toggleClass('d-none', !matches);
+
+      if (matches) {
+        matchCount += 1;
+      }
+    });
+
+    $menu.find(GridMap.choiceNoResults).toggleClass('d-none', matchCount > 0);
+  }
+
+  /**
+   * Makes the search case and accent insensitive ("accepte" finds "Paiement accepté").
+   *
+   * @param {string} value
+   * @private
+   */
+  private static normalize(value: string): string {
+    return value
+      .normalize('NFD')
+      .replace(/[̀-ͯ]/g, '')
+      .toLowerCase()
+      .trim();
   }
 
   /**

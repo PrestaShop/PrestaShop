@@ -215,6 +215,7 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
                     'record_route_params' => [
                         'id_order' => 'orderId',
                     ],
+                    'searchable' => true,
                 ])
             )
             ->add((new DateTimeColumn('date_add'))

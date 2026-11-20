@@ -38,12 +38,14 @@ final class ChoiceColumn extends AbstractColumn
             ->setDefaults([
                 'color_field' => '',
                 'record_route_params' => [],
+                'searchable' => false,
             ])
             ->setAllowedTypes('choice_provider', ConfigurableFormChoiceProviderInterface::class)
             ->setAllowedTypes('field', ['string', 'int', 'bool'])
             ->setAllowedTypes('color_field', 'string')
             ->setAllowedTypes('route', 'string')
             ->setAllowedTypes('record_route_params', 'array')
+            ->setAllowedTypes('searchable', 'bool')
         ;
     }
 }
