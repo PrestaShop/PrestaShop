@@ -8,7 +8,7 @@
       font-weight: 400;
       vertical-align: top;
       border: none;
-      border-bottom: 2px solid var(--#{$cdk}primary-800);
+      border-bottom: 2px solid var(--#{$cdk}blue-700);
 
       .title_box {
         display: block;
@@ -41,7 +41,7 @@
     > tr.filter > th {
       vertical-align: middle;
       background-color: var(--#{$cdk}primary-100);
-      border-color: var(--#{$cdk}primary-400);
+      border-color: var(--#{$cdk}blue-700);
       border-width: var(--#{$cdk}size-1);
 
       input[type="text"].filter,
