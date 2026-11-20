@@ -152,6 +152,9 @@ class CombinationPriceImpactType extends TranslatorAwareType
                         'class' => 'ecotax-tax-excluded',
                     ],
                 ])
+                // No modify_all_shops here on purpose: only ecotax_tax_excluded is sent to the
+                // command (UpdateCombinationCommandsBuilder maps it to setEcoTax), so a checkbox on
+                // this field would control nothing.
                 ->add('ecotax_tax_included', MoneyType::class, [
                     'label' => $this->trans('Ecotax (tax incl.)', 'Admin.Catalog.Feature'),
                     'help' => $helpMessage,
@@ -161,7 +164,6 @@ class CombinationPriceImpactType extends TranslatorAwareType
                         new PositiveOrZero(),
                     ],
                     'currency' => $this->defaultCurrency->iso_code,
-                    'modify_all_shops' => true,
                     'attr' => [
                         'data-tax-rate' => (string) $ecotaxRate,
                     ],
