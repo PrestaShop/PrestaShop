@@ -181,9 +181,9 @@ class PrestaShopExceptionCore extends Exception
     protected function logError()
     {
         $logger = new FileLogger();
-        $logger->setFilename(_PS_ROOT_DIR_ . '/var/logs/' . date('Ymd') . '_exception.log');
 
         try {
+            $logger->setFilename(_PS_ROOT_DIR_ . '/var/logs/' . date('Ymd') . '_exception.log');
             $logger->logError($this->getExtendedMessage(false));
         } catch (PrestaShopException) {
             // Catch exception because there is a hook executed in the AbstractLogger that is bound to fail when the DB
