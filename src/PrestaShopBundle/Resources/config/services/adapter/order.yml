@@ -194,6 +194,13 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\ResendOrderEmailHandler
     autoconfigure: true
 
+  prestashop.adapter.order.command_handler.send_order_invoice_email_handler:
+    class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\SendOrderInvoiceEmailHandler
+    autoconfigure: true
+    arguments:
+      - '@prestashop.adapter.pdf.order_invoice_pdf_generator'
+      - '@translator'
+
   prestashop.adapter.order.query_handler.get_order_preview_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Order\QueryHandler\GetOrderPreviewHandler'
     autoconfigure: true
