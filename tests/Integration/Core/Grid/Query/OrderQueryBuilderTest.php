@@ -202,6 +202,71 @@ class OrderQueryBuilderTest extends KernelTestCase
         }
     }
 
+    public function testItCountsWithoutTheJoinsThatOnlySupplyColumns(): void
+    {
+        $sql = $this->countSql([]);
+
+        $this->assertStringContainsString($this->dbPrefix . 'address', $sql);
+        $this->assertStringContainsString($this->dbPrefix . 'country', $sql);
+
+        $this->assertStringNotContainsString($this->dbPrefix . 'currency', $sql);
+        $this->assertStringNotContainsString($this->dbPrefix . 'shop s', $sql);
+        $this->assertStringNotContainsString($this->dbPrefix . 'order_state', $sql);
+        $this->assertStringNotContainsString($this->dbPrefix . 'customer', $sql);
+    }
+
+    /**
+     * @dataProvider provideFiltersNeedingAJoin
+     */
+    public function testItKeepsTheJoinAFilterReadsFrom(array $filters, string $expectedTable): void
+    {
+        $this->assertStringContainsString($this->dbPrefix . $expectedTable, $this->countSql($filters));
+    }
+
+    public function provideFiltersNeedingAJoin(): iterable
+    {
+        yield 'order state' => [['osname' => 2], 'order_state'];
+        yield 'customer name' => [['customer' => 'doe'], 'customer'];
+        yield 'company' => [['company' => 'acme'], 'customer'];
+        yield 'company, no value' => [['company' => null], 'customer'];
+    }
+
+    /**
+     * @dataProvider provideFilters
+     */
+    public function testTheCountMatchesTheList(array $filters): void
+    {
+        $criteria = $this->createSearchCriteria($filters, 'id_order', 'ASC', 100000, 0);
+
+        $count = (int) $this->queryBuilder->getCountQueryBuilder($criteria)->executeQuery()->fetchOne();
+
+        $this->assertSame(count($this->fetchOrderIds($criteria)), $count);
+    }
+
+    public function provideFilters(): iterable
+    {
+        yield 'none' => [[]];
+        yield 'id' => [['id_order' => 1]];
+        yield 'order state' => [['osname' => 2]];
+        yield 'customer' => [['customer' => 'doe']];
+        yield 'customer, no value' => [['customer' => null]];
+        yield 'company' => [['company' => 'acme']];
+        yield 'company, no value' => [['company' => null]];
+        yield 'reference' => [['reference' => 'ABC']];
+        yield 'payment' => [['payment' => 'bank']];
+        yield 'total' => [['total_paid_tax_incl' => 0]];
+        yield 'new customer' => [['new' => 1]];
+        yield 'country' => [['country_name' => 1]];
+        yield 'date' => [['date_add' => ['from' => '2000-01-01']]];
+    }
+
+    private function countSql(array $filters): string
+    {
+        return $this->queryBuilder
+            ->getCountQueryBuilder($this->createSearchCriteria($filters, 'id_order', 'ASC', 10, 0))
+            ->getSQL();
+    }
+
     private function insertCustomer(string $firstname, string $lastname): int
     {
         $this->connection->executeStatement(
