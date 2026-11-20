@@ -286,6 +286,15 @@ class ModuleController extends ModuleAbstractController
                     'level' => $this->getAuthorizationLevel(self::CONTROLLER_NAME),
                 ]
             );
+
+            // The card shows the version outside the action menu, so replacing the menu alone leaves
+            // the old number on screen after an upgrade. Send the line back rendered rather than
+            // reloading the page: bulk upgrades run one after another and a reload would drop the
+            // ones still queued.
+            $response[$moduleName]['version'] = $collectionPresented[0]->attributes->get('version');
+            $response[$moduleName]['version_html'] = $this->twig->load(
+                '@PrestaShop/Admin/Module/Includes/card_manage_installed.html.twig'
+            )->renderBlock('addon_version', ['module' => $collectionPresented[0]]);
         } else {
             $response[$moduleName]['msg'] = $this->trans(
                 'Cannot %action% module %module%. %error_details%',
