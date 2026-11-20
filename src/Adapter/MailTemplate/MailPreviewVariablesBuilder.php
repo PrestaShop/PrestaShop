@@ -11,6 +11,7 @@ use AddressFormat;
 use Carrier;
 use Cart;
 use Context;
+use Mail;
 use Order;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Shipment\OrderShipmentService;
@@ -133,6 +134,17 @@ final class MailPreviewVariablesBuilder
         $templateVars['{history_url}'] = $this->context->link->getPageLink('history');
         $templateVars['{color}'] = $this->configuration->get('PS_MAIL_COLOR');
         $templateVars = array_merge($templateVars, $this->buildOrderVariables($mailLayout));
+
+        // Same hook Mail::send() uses, so a module's placeholders are substituted in the preview too
+        // instead of being shown raw.
+        $templateVars = array_merge(
+            $templateVars,
+            Mail::getExtraTemplateVars(
+                $mailLayout->getName(),
+                $templateVars,
+                (int) $this->context->language->id
+            )
+        );
 
         return $templateVars;
     }
