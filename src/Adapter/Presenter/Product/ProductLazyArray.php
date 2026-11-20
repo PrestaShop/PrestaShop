@@ -34,6 +34,7 @@ use Product;
 use ReflectionException;
 use Symfony\Component\Translation\Exception\InvalidArgumentException;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Tag;
 use Tools;
 use Validate;
 
@@ -143,6 +144,28 @@ class ProductLazyArray extends AbstractLazyArray
     public function getId()
     {
         return $this->product['id_product'];
+    }
+
+    /**
+     * Tags of the product, for the current language.
+     *
+     * Tags are not part of the product's ObjectModel definition, so ObjectPresenter, which copies the
+     * definition fields only, drops them before the array reaches this class. Reading them here keeps
+     * {$product.tags} working without loading them for products that never ask for them.
+     *
+     * @return string[]
+     */
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getTags(): array
+    {
+        $tags = Tag::getProductTags((int) ($this->product['id_product'] ?? 0));
+
+        // getProductTags() returns false when the product carries no tag at all.
+        if (!is_array($tags)) {
+            return [];
+        }
+
+        return $tags[(int) $this->language->id] ?? [];
     }
 
     /**
