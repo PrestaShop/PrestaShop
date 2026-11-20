@@ -107,7 +107,7 @@ EventEmitter.on('PSComponentsInitiated', () => {
 
 ## Rules
 
-Conventions (jQuery ready pattern, direct instantiation, EventEmitter module registration) are in [Javascript/CONTEXT.md](../../CONTEXT.md). Skill-specific reminders:
+Conventions (`onReady` pattern, direct instantiation, EventEmitter module registration) are in [Javascript/CONTEXT.md](../../CONTEXT.md). Skill-specific reminders:
 
 - Only initialize components the page needs — don't load everything
 - Components rely on DOM `data-*` attributes rendered by Symfony form types — they are not standalone
