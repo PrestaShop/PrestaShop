@@ -117,4 +117,76 @@ class ModuleRepositoryTest extends TestCase
         $this->assertEquals('overridden full description', $dummy_module->get('fullDescription'));
         $this->assertEquals('added value', $dummy_module->get('testAttribute'));
     }
+
+    public function testGetModuleIsRefreshedWhenTheMainClassIsEditedInPlace(): void
+    {
+        $moduleName = 'qamodulecachetest';
+        $modulesDir = sys_get_temp_dir() . '/ps-module-cache-' . uniqid() . '/';
+        $moduleDir = $modulesDir . $moduleName;
+        $mainClass = $moduleDir . '/' . $moduleName . '.php';
+
+        mkdir($moduleDir, 0777, true);
+        file_put_contents($mainClass, "<?php\n// version 1.0.0\n");
+
+        try {
+            $repository = $this->createRepositoryFor($modulesDir);
+
+            $initialFilemtime = $repository->getModule($moduleName)->getDiskAttributes()->get('filemtime');
+            $directoryMtime = filemtime($moduleDir);
+
+            // Editing a file that already exists does not touch the folder holding it, which is exactly
+            // what happens when a developer bumps $this->version in the main class.
+            file_put_contents($mainClass, "<?php\n// version 1.0.1\n");
+            touch($mainClass, $initialFilemtime + 10);
+            touch($moduleDir, $directoryMtime);
+            clearstatcache();
+
+            $this->assertSame(
+                $directoryMtime,
+                filemtime($moduleDir),
+                'The folder mtime must stay put, otherwise this test is not reproducing the reported case.'
+            );
+
+            $this->assertSame(
+                $initialFilemtime + 10,
+                $repository->getModule($moduleName)->getDiskAttributes()->get('filemtime'),
+                'The cached module must be rebuilt once its main class changes.'
+            );
+        } finally {
+            @unlink($mainClass);
+            @rmdir($moduleDir);
+            @rmdir($modulesDir);
+        }
+    }
+
+    private function createRepositoryFor(string $modulesDir): ModuleRepository
+    {
+        $moduleDataProvider = $this->createMock(ModuleDataProvider::class);
+        $moduleDataProvider->method('can')->willReturn(true);
+
+        $hookManager = $this->createMock(HookManager::class);
+        $hookManager->method('exec')->willReturn([]);
+
+        /** @var CacheProvider $cacheProvider */
+        $cacheProvider = DoctrineProvider::wrap(new ArrayAdapter());
+
+        return new ModuleRepository(
+            $moduleDataProvider,
+            $this->createMock(AdminModuleDataProvider::class),
+            $cacheProvider,
+            $hookManager,
+            $modulesDir,
+            new LanguageContext(
+                1,
+                'English',
+                'en',
+                'en-US',
+                'en-us',
+                false,
+                'm/d/Y',
+                'm/d/Y H:i:s',
+                $this->createMock(LocaleInterface::class),
+            ),
+        );
+    }
 }
