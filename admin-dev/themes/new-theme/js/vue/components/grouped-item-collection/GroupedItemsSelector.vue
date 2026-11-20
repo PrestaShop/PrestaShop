@@ -28,7 +28,10 @@
 
     <div class="item-groups-list-container">
       <div class="item-groups-list-overflow">
-        <div class="item-groups-list">
+        <div
+          class="item-groups-list"
+          ref="itemGroupsList"
+        >
           <div
             class="item-group"
             v-for="itemGroup of itemGroups"
@@ -130,6 +133,7 @@
         dataSetConfig: {},
         searchSource: {},
         scrollbar: null,
+        resizeObserver: null,
         searchableItems: [],
       };
     },
@@ -138,8 +142,22 @@
       // Init scrollbar for the selection container (when everything is selected and open it all
       // needs to fit in the modal).
       this.scrollbar = new PerfectScrollbar(GroupedItemCollectionMap.scrollBarContainer);
+      // PerfectScrollbar only measures the container when asked to, but the list changes height after mount
+      // (item groups are expanded/collapsed, items are selected), so its geometry must be refreshed
+      const listContent = this.$refs.itemGroupsList as HTMLElement | undefined;
+
+      if (listContent) {
+        this.resizeObserver = new ResizeObserver(() => this.scrollbar?.update());
+        this.resizeObserver.observe(listContent);
+      }
       const $searchInput = $(GroupedItemCollectionMap.searchInput);
       new AutoCompleteSearch($searchInput, <Partial<AutoCompleteSearchConfig>> this.dataSetConfig);
+    },
+    beforeUnmount() {
+      this.resizeObserver?.disconnect();
+      this.resizeObserver = null;
+      this.scrollbar?.destroy();
+      this.scrollbar = null;
     },
     computed: {
       selectedItems(): Item[] {
@@ -278,6 +296,8 @@
   }
 
   .item-groups-list-overflow {
+    // PerfectScrollbar positions its rails relatively to the scrolled container
+    position: relative;
     max-height: 50vh;
 
     .item-group {

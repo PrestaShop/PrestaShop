@@ -17,6 +17,7 @@ export interface GroupedItemsSelectorStates {
   dataSetConfig: AutoCompleteSearchConfig | Record<string, any>;
   searchSource: Bloodhound | null;
   scrollbar: PerfectScrollbar | null;
+  resizeObserver: ResizeObserver | null;
   searchableItems: Item[];
 }
 

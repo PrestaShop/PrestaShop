@@ -156,6 +156,7 @@
 <style lang="scss" scoped>
   .modal.show {
     display: block;
+    overflow-y: auto;
   }
   .modal-fade-enter-active, .modal-fade-leave-active {
     transition: opacity .5s;
