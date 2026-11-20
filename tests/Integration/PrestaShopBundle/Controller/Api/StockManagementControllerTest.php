@@ -100,6 +100,12 @@ class StockManagementControllerTest extends ApiTestCase
                 24,
             ],
             [
+                // A sortable column has to be both allowed and mapped to a real one, otherwise the
+                // token reaches the query unreplaced and the request fails.
+                ['order' => 'reserved_quantity desc', 'page_index' => 1, 'page_size' => 2],
+                24,
+            ],
+            [
                 ['supplier_id' => 1, 'page_index' => 2, 'page_size' => 2],
                 0,
             ],
