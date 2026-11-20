@@ -402,7 +402,9 @@ class StockAvailableCore extends ObjectModel
             $stock_available->update();
 
             if (true === $add_movement && 0 != $deltaQuantity) {
-                $stockManager->saveMovement($id_product, $id_product_attribute, $deltaQuantity);
+                $stockManager->saveMovement($id_product, $id_product_attribute, $deltaQuantity, [
+                    'id_shop' => $id_shop,
+                ]);
             }
         } else {
             $out_of_stock = StockAvailable::outOfStock($id_product, $id_shop);
@@ -421,13 +423,19 @@ class StockAvailableCore extends ObjectModel
                 $stock_available->id_shop = 0;
                 $stock_available->id_shop_group = (int) $shop_group->id;
             } else {
+                // Avoid (int) null => 0 which creates orphan stock_available rows
+                if ($id_shop === null) {
+                    $id_shop = (int) Shop::getContextShopID();
+                }
                 $stock_available->id_shop = (int) $id_shop;
                 $stock_available->id_shop_group = 0;
             }
             $stock_available->add();
 
             if (true === $add_movement && 0 != $quantity) {
-                $stockManager->saveMovement($id_product, $id_product_attribute, (int) $quantity);
+                $stockManager->saveMovement($id_product, $id_product_attribute, (int) $quantity, [
+                    'id_shop' => $id_shop,
+                ]);
             }
         }
 
