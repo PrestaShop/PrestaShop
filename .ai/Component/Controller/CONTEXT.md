@@ -16,7 +16,7 @@ Symfony admin controllers for the back-office. Controllers are the thinnest laye
 
 - **Base class:** all admin controllers extend `PrestaShopAdminController` (not `FrameworkBundleAdminController` which no longer exists in v9)
 - **DI preference:** in order — **action argument injection** > `getSubscribedServices()` > constructor. Inject directly on the action method (with `#[Autowire(service: '…')]` for explicit IDs) when the service is used by that action only — finest granularity, services built just-in-time. Use `getSubscribedServices()` when the same service is reused across several actions of the same controller. Reserve constructor injection for the rare service every action needs
-- **Security attributes:** every action must have `#[AdminSecurity]` and `#[DemoRestricted]` PHP attributes
+- **Security attributes:** every action must have `#[AdminSecurity]` PHP attribute, and `#[DemoRestricted]` on potentially vulnerable endpoints.
 - **Error mapping:** controllers implement a `getErrorMessages()` method that maps domain exception classes to translatable flash messages
 - **Grid search/filter:** `CommonController::searchGridAction` is the generic controller that saves and applies grid filters, then redirects back to the domain's index. It is used as a base but still defined as a domain-specific route pointing to it
 - **Grid filter reset:** uses the generic route `admin_common_reset_search_by_filter_id` — no domain-specific route or code needed. This is referenced from the `GridDefinition`
