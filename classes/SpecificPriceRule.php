@@ -211,7 +211,7 @@ class SpecificPriceRuleCore extends ObjectModel
 
                 $attributes_join_added = false;
 
-                // Add the conditions
+                // Add the conditions, as EXISTS rather than joins: MySQL refuses more than 61 joined tables
                 foreach ($condition_group as $id_condition => $condition) {
                     if ($condition['type'] == 'attribute') {
                         if (!$attributes_join_added) {
@@ -222,13 +222,27 @@ class SpecificPriceRuleCore extends ObjectModel
                             $attributes_join_added = true;
                         }
 
-                        $query->leftJoin('product_attribute_combination', 'pac' . (int) $id_condition, 'pa.`id_product_attribute` = pac' . (int) $id_condition . '.`id_product_attribute`')
-                            ->where('pac' . (int) $id_condition . '.`id_attribute` = ' . (int) $condition['value']);
+                        $query->where('EXISTS(
+							SELECT
+								`pac' . (int) $id_condition . '`.`id_product_attribute`
+							FROM
+								`' . _DB_PREFIX_ . 'product_attribute_combination` `pac' . (int) $id_condition . '`
+							WHERE
+								`pa`.`id_product_attribute` = `pac' . (int) $id_condition . '`.`id_product_attribute`
+								AND `pac' . (int) $id_condition . '`.`id_attribute` = ' . (int) $condition['value'] . '
+						)');
                     } elseif ($condition['type'] == 'manufacturer') {
                         $query->where('p.id_manufacturer = ' . (int) $condition['value']);
                     } elseif ($condition['type'] == 'category') {
-                        $query->leftJoin('category_product', 'cp' . (int) $id_condition, 'p.`id_product` = cp' . (int) $id_condition . '.`id_product`')
-                            ->where('cp' . (int) $id_condition . '.id_category = ' . (int) $condition['value']);
+                        $query->where('EXISTS(
+							SELECT
+								`cp' . (int) $id_condition . '`.`id_product`
+							FROM
+								`' . _DB_PREFIX_ . 'category_product` `cp' . (int) $id_condition . '`
+							WHERE
+								`p`.`id_product` = `cp' . (int) $id_condition . '`.`id_product`
+								AND `cp' . (int) $id_condition . '`.`id_category` = ' . (int) $condition['value'] . '
+						)');
                     } elseif ($condition['type'] == 'supplier') {
                         $query->where('EXISTS(
 							SELECT
@@ -240,8 +254,15 @@ class SpecificPriceRuleCore extends ObjectModel
 								AND `ps' . (int) $id_condition . '`.`id_supplier` = ' . (int) $condition['value'] . '
 						)');
                     } elseif ($condition['type'] == 'feature') {
-                        $query->leftJoin('feature_product', 'fp' . (int) $id_condition, 'p.`id_product` = fp' . (int) $id_condition . '.`id_product`')
-                            ->where('fp' . (int) $id_condition . '.`id_feature_value` = ' . (int) $condition['value']);
+                        $query->where('EXISTS(
+							SELECT
+								`fp' . (int) $id_condition . '`.`id_product`
+							FROM
+								`' . _DB_PREFIX_ . 'feature_product` `fp' . (int) $id_condition . '`
+							WHERE
+								`p`.`id_product` = `fp' . (int) $id_condition . '`.`id_product`
+								AND `fp' . (int) $id_condition . '`.`id_feature_value` = ' . (int) $condition['value'] . '
+						)');
                     }
                 }
 
