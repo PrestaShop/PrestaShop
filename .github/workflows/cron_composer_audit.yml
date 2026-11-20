@@ -1,0 +1,187 @@
+name: Cron Composer Audit
+
+# Weekly security audit of the locked PHP dependencies of the maintained branches,
+# so advisories surface before the release healthcheck (deps/composer-audit) does.
+# When advisories are found, the vulnerable packages are updated within their
+# constraints and a pull request is opened for review.
+# Scheduled workflows only run from the default branch, hence the branch matrix.
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+# The pull request is pushed with JARVIS_TOKEN (a GITHUB_TOKEN push would not trigger the CI),
+# so the job token itself never needs write access.
+permissions:
+  contents: read
+
+jobs:
+  composer-audit:
+    name: Composer audit (${{ matrix.BRANCH }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        BRANCH:
+          - develop
+          - 9.2.x
+    env:
+      BRANCH: ${{ matrix.BRANCH }}
+      ADVISORY_ROW: '"| `\(.packageName)` | \(.severity // "-") | \(.cve // "-") | [\(.title | gsub("\\|"; "\\|"))](\(.link)) | `\(.affectedVersions | gsub("\\|"; "\\|"))` |"'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ matrix.BRANCH }}
+          persist-credentials: false
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          # Pinned: a Composer minor can change how update and audit treat advisories
+          tools: composer:2.11.2
+          coverage: none
+
+      - name: Audit composer.lock
+        id: audit
+        run: |
+          report="$RUNNER_TEMP/audit-before.json"
+          set +e
+          composer audit --locked --no-interaction --abandoned=report --format=json > "$report"
+          rc=$?
+          set -e
+          echo "rc=$rc" >> "$GITHUB_OUTPUT"
+
+          packages=""
+          if jq -e . "$report" > /dev/null 2>&1; then
+            packages=$(jq -r '.advisories | keys[]' "$report" | grep -E '^[a-z0-9_.-]+/[a-z0-9_.-]+$' | paste -sd' ' - || true)
+          fi
+          echo "packages=$packages" >> "$GITHUB_OUTPUT"
+
+          {
+            echo "## Composer audit — \`$BRANCH\`"
+            echo ""
+            if ! jq -e . "$report" > /dev/null 2>&1; then
+              echo "❌ \`composer audit\` did not produce a report, see the job log."
+            elif [ "$(jq '[.advisories[]?[]] | length' "$report")" -eq 0 ]; then
+              echo "✅ No security vulnerability advisories found."
+            else
+              echo "| Package | Severity | CVE | Title | Affected versions |"
+              echo "| ------- | -------- | --- | ----- | ----------------- |"
+              jq -r ".advisories[]?[] | $ADVISORY_ROW" "$report"
+            fi
+            abandoned=$(jq -r '.abandoned // {} | to_entries[] | "- `\(.key)` → \(.value // "no replacement")"' "$report" 2>/dev/null || true)
+            if [ -n "$abandoned" ]; then
+              echo ""
+              echo "### Abandoned packages"
+              echo "$abandoned"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # Lock file only: --no-install downloads no package code and --no-scripts/--no-plugins
+      # run none, so a compromised release cannot execute anything in this job.
+      - name: Update vulnerable packages
+        id: update
+        if: steps.audit.outputs.packages != ''
+        env:
+          PACKAGES: ${{ steps.audit.outputs.packages }}
+        run: |
+          before="$RUNNER_TEMP/audit-before.json"
+          after="$RUNNER_TEMP/audit-after.json"
+          body="$RUNNER_TEMP/pr-body.md"
+
+          # Composer refuses to resolve a version affected by an advisory, so one advisory that cannot be fixed
+          # within the constraints would make the whole update fail. Only advisory blocking is lifted.
+          composer config --global policy.advisories.block false
+
+          # shellcheck disable=SC2086
+          composer update $PACKAGES --with-dependencies --no-install --no-scripts --no-plugins --no-interaction --no-progress
+
+          set +e
+          composer audit --locked --no-interaction --abandoned=report --format=json > "$after"
+          set -e
+          jq -e . "$after" > /dev/null 2>&1 || echo '{"advisories":{}}' > "$after"
+
+          remaining_ids=$(jq -c '[.advisories[]?[].advisoryId]' "$after")
+          fixed=$(jq -r --argjson remaining "$remaining_ids" ".advisories[]?[] | select(.advisoryId as \$id | \$remaining | index(\$id) | not) | $ADVISORY_ROW" "$before")
+          remaining=$(jq -r ".advisories[]?[] | $ADVISORY_ROW" "$after")
+          lock_versions='[(.packages + (."packages-dev" // []))[] | {key: .name, value: .version}] | from_entries'
+          git show HEAD:composer.lock | jq "$lock_versions" > "$RUNNER_TEMP/lock-before.json"
+          jq "$lock_versions" composer.lock > "$RUNNER_TEMP/lock-after.json"
+          lock_changes=$(jq -rn --slurpfile b "$RUNNER_TEMP/lock-before.json" --slurpfile a "$RUNNER_TEMP/lock-after.json" \
+            '($b[0] + $a[0]) | keys[] as $name | select($b[0][$name] != $a[0][$name])
+             | "| `\($name)` | \($b[0][$name] // "-" | if . == "-" then . else "`\(.)`" end) | \($a[0][$name] // "-" | if . == "-" then . else "`\(.)`" end) |"')
+
+          if git diff --quiet -- composer.lock || [ -z "$fixed" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+          {
+            echo "| Questions                      | Answers |"
+            echo "| ------------------------------ | ------------------------------------------------------- |"
+            echo "| Branch?                        | $BRANCH |"
+            echo "| Description?                   | Updates the dependencies affected by published security advisories reported by \`composer audit\`, within the constraints of \`composer.json\`. |"
+            echo "| Type?                          | bug fix |"
+            echo "| Category?                      | CO |"
+            echo "| BC breaks?                     | no |"
+            echo "| Deprecations?                  | no |"
+            echo "| Fixed ticket?                  | N/A |"
+            echo "| How to test?                   | CI green |"
+            echo "| UI Tests?                      | Paste the URL here |"
+            echo "| Fixed issue or discussion?     | N/A |"
+            echo "| Related PRs                    | N/A |"
+            echo ""
+            echo "## Advisories fixed by this update"
+            echo ""
+            echo "| Package | Severity | CVE | Title | Affected versions |"
+            echo "| ------- | -------- | --- | ----- | ----------------- |"
+            echo "$fixed"
+            echo ""
+            echo "## Lock changes"
+            echo ""
+            echo "| Package | From | To |"
+            echo "| ------- | ---- | -- |"
+            echo "$lock_changes"
+            if [ -n "$remaining" ]; then
+              echo ""
+              echo "## Advisories not fixed within the current constraints"
+              echo ""
+              echo "| Package | Severity | CVE | Title | Affected versions |"
+              echo "| ------- | -------- | --- | ----- | ----------------- |"
+              echo "$remaining"
+            fi
+          } > "$body"
+
+          {
+            echo ""
+            echo "### Lock update"
+            echo ""
+            if [ -z "$fixed" ]; then
+              echo "⚠️ No advisory can be fixed within the constraints of \`composer.json\`, no pull request opened."
+            else
+              echo "Fixed: $(printf '%s\n' "$fixed" | grep -c .) advisory/ies. Remaining: $(printf '%s' "$remaining" | grep -c . || true)."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Create or update the pull request
+        if: steps.update.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.JARVIS_TOKEN }}
+          add-paths: composer.lock
+          commit-message: Update dependencies affected by security advisories
+          title: Update dependencies affected by security advisories (${{ matrix.BRANCH }})
+          body-path: ${{ runner.temp }}/pr-body.md
+          branch: chore/composer-audit-fix-${{ matrix.BRANCH }}
+          base: ${{ matrix.BRANCH }}
+          delete-branch: true
+
+      - name: Fail on advisories
+        if: steps.audit.outputs.rc != '0'
+        run: |
+          echo "::error::composer audit found security advisories on $BRANCH, see the job summary."
+          exit 1
