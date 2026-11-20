@@ -34,8 +34,10 @@ class OrderSlipCreator
 {
     /**
      * @var ConfigurationInterface
+     *
+     * @deprecated since 9.2.x, no longer used
      */
-    private $configuration;
+    private $configuration; /* @phpstan-ignore property.onlyWritten */
 
     /**
      * @var TranslatorInterface
@@ -48,7 +50,7 @@ class OrderSlipCreator
     private $orderSlipCreated;
 
     /**
-     * @param ConfigurationInterface $configuration
+     * @param ConfigurationInterface $configuration @deprecated since 9.2.x, no longer used
      * @param TranslatorInterface $translator
      */
     public function __construct(
@@ -168,6 +170,7 @@ class OrderSlipCreator
         int $precision = 6
     ) {
         $currency = new Currency((int) $order->id_currency);
+        $roundMode = (int) $order->round_mode;
         $orderSlip = new OrderSlip();
         $orderSlip->id_customer = (int) $order->id_customer;
         $orderSlip->id_order = (int) $order->id;
@@ -187,14 +190,14 @@ class OrderSlipCreator
             if ($add_tax) {
                 $orderSlip->total_shipping_tax_excl = $shipping_cost;
                 if ($tax_calculator instanceof TaxCalculator) {
-                    $orderSlip->total_shipping_tax_incl = Tools::ps_round($tax_calculator->addTaxes($orderSlip->total_shipping_tax_excl), $precision);
+                    $orderSlip->total_shipping_tax_incl = Tools::ps_round($tax_calculator->addTaxes($orderSlip->total_shipping_tax_excl), $precision, $roundMode);
                 } else {
                     $orderSlip->total_shipping_tax_incl = $orderSlip->total_shipping_tax_excl;
                 }
             } else {
                 $orderSlip->total_shipping_tax_incl = $shipping_cost;
                 if ($tax_calculator instanceof TaxCalculator) {
-                    $orderSlip->total_shipping_tax_excl = Tools::ps_round($tax_calculator->removeTaxes($orderSlip->total_shipping_tax_incl), $precision);
+                    $orderSlip->total_shipping_tax_excl = Tools::ps_round($tax_calculator->removeTaxes($orderSlip->total_shipping_tax_incl), $precision, $roundMode);
                 } else {
                     $orderSlip->total_shipping_tax_excl = $orderSlip->total_shipping_tax_incl;
                 }
@@ -207,6 +210,7 @@ class OrderSlipCreator
         $orderSlip->total_products_tax_excl = 0;
         $orderSlip->total_products_tax_incl = 0;
         $total_products = [];
+        $roundType = (int) $order->round_type;
         foreach ($product_list as &$product) {
             $order_detail = new OrderDetail((int) $product['id_order_detail']);
             $price = (float) $product['unit_price'];
@@ -224,7 +228,7 @@ class OrderSlipCreator
                 $orderSlip->total_products_tax_incl += $price * $quantity;
             }
 
-            if (in_array($this->configuration->get('PS_ROUND_TYPE'), [Order::ROUND_ITEM, Order::ROUND_LINE])) {
+            if (in_array($roundType, [Order::ROUND_ITEM, Order::ROUND_LINE])) {
                 if (!isset($total_products[$id_tax_rules_group])) {
                     $total_products[$id_tax_rules_group] = 0;
                 }
@@ -234,26 +238,19 @@ class OrderSlipCreator
                 }
             }
 
-            if ($add_tax) {
-                $product_tax_incl_line = Tools::ps_round($tax_calculator->addTaxes($price) * $quantity, $precision);
-            } else {
-                $product_tax_incl_line = Tools::ps_round($tax_calculator->removeTaxes($price) * $quantity, $precision);
-            }
-            switch ($this->configuration->get('PS_ROUND_TYPE')) {
+            switch ($roundType) {
                 case Order::ROUND_ITEM:
-                    if ($add_tax) {
-                        $product_tax_incl = Tools::ps_round($tax_calculator->addTaxes($price), $precision) * $quantity;
-                    } else {
-                        $product_tax_incl = Tools::ps_round($tax_calculator->removeTaxes($price), $precision) * $quantity;
-                    }
-                    $total_products[$id_tax_rules_group] += $product_tax_incl;
-                    break;
                 case Order::ROUND_LINE:
-                    $product_tax_incl = $product_tax_incl_line;
+                    // Same amount as recorded on the order detail, which never exceeds what is left to refund
+                    $product_tax_incl = (float) $product[$add_tax ? 'total_refunded_tax_incl' : 'total_refunded_tax_excl'];
                     $total_products[$id_tax_rules_group] += $product_tax_incl;
                     break;
                 case Order::ROUND_TOTAL:
-                    $product_tax_incl = $product_tax_incl_line;
+                    if ($add_tax) {
+                        $product_tax_incl = Tools::ps_round($tax_calculator->addTaxes($price) * $quantity, $precision, $roundMode);
+                    } else {
+                        $product_tax_incl = Tools::ps_round($tax_calculator->removeTaxes($price) * $quantity, $precision, $roundMode);
+                    }
                     $total_products[$id_tax_rules_group . '_' . $id_address] += $price * $quantity;
                     break;
                 default:
@@ -262,29 +259,29 @@ class OrderSlipCreator
 
             if ($add_tax) {
                 $product['unit_price_tax_excl'] = $price;
-                $product['unit_price_tax_incl'] = Tools::ps_round($tax_calculator->addTaxes($price), $precision);
-                $product['total_price_tax_excl'] = Tools::ps_round($price * $quantity, $precision);
-                $product['total_price_tax_incl'] = Tools::ps_round($product_tax_incl, $precision);
+                $product['unit_price_tax_incl'] = Tools::ps_round($tax_calculator->addTaxes($price), $precision, $roundMode);
+                $product['total_price_tax_excl'] = Tools::ps_round($price * $quantity, $precision, $roundMode);
+                $product['total_price_tax_incl'] = Tools::ps_round($product_tax_incl, $precision, $roundMode);
             } else {
                 $product['unit_price_tax_incl'] = $price;
-                $product['unit_price_tax_excl'] = Tools::ps_round($tax_calculator->removeTaxes($price), $precision);
-                $product['total_price_tax_incl'] = Tools::ps_round($price * $quantity, $precision);
-                $product['total_price_tax_excl'] = Tools::ps_round($product_tax_incl, $precision);
+                $product['unit_price_tax_excl'] = Tools::ps_round($tax_calculator->removeTaxes($price), $precision, $roundMode);
+                $product['total_price_tax_incl'] = Tools::ps_round($price * $quantity, $precision, $roundMode);
+                $product['total_price_tax_excl'] = Tools::ps_round($product_tax_incl, $precision, $roundMode);
             }
         }
 
         unset($product);
 
         foreach ($total_products as $key => $price) {
-            if ($this->configuration->get('PS_ROUND_TYPE') == Order::ROUND_TOTAL) {
+            if ($roundType === Order::ROUND_TOTAL) {
                 $tmp = explode('_', $key);
                 $address = Address::initialize((int) $tmp[1], true);
                 $tax_calculator = TaxManagerFactory::getManager($address, (int) $tmp[0])->getTaxCalculator();
 
                 if ($add_tax) {
-                    $orderSlip->total_products_tax_incl += Tools::ps_round($tax_calculator->addTaxes($price), $precision);
+                    $orderSlip->total_products_tax_incl += Tools::ps_round($tax_calculator->addTaxes($price), $precision, $roundMode);
                 } else {
-                    $orderSlip->total_products_tax_excl += Tools::ps_round($tax_calculator->removeTaxes($price), $precision);
+                    $orderSlip->total_products_tax_excl += Tools::ps_round($tax_calculator->removeTaxes($price), $precision, $roundMode);
                 }
             } else {
                 if ($add_tax) {

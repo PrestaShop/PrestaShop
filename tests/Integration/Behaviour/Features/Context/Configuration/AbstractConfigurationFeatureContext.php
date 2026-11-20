@@ -9,6 +9,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Configuration;
 use Behat\Behat\Context\Context as BehatContext;
 use Configuration;
 use Tests\Resources\DatabaseDump;
+use Tools;
 
 abstract class AbstractConfigurationFeatureContext implements BehatContext
 {
@@ -19,6 +20,9 @@ abstract class AbstractConfigurationFeatureContext implements BehatContext
         $this->configurationModified = true;
         Configuration::updateGlobalValue($index, $value);
         Configuration::resetStaticCache();
+        if ($index === 'PS_PRICE_ROUND_MODE') {
+            Tools::$round_mode = null;
+        }
     }
 
     /**
@@ -31,6 +35,8 @@ abstract class AbstractConfigurationFeatureContext implements BehatContext
         if ($this->configurationModified) {
             DatabaseDump::restoreTables(['configuration', 'configuration_lang']);
             Configuration::resetStaticCache();
+            // Cached by Tools::ps_round()
+            Tools::$round_mode = null;
         }
         $this->configurationModified = false;
     }
