@@ -6,34 +6,25 @@
 
 namespace PrestaShop\PrestaShop\Core\CreditSlip;
 
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Responsible for saving configuration options for credit slip
  */
-final class CreditSlipOptionsConfiguration implements DataConfigurationInterface
+final class CreditSlipOptionsConfiguration extends AbstractMultistoreConfiguration
 {
-    /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
-    /**
-     * @param ConfigurationInterface $configuration
-     */
-    public function __construct(ConfigurationInterface $configuration)
-    {
-        $this->configuration = $configuration;
-    }
+    private const CONFIGURATION_FIELDS = ['slip_prefix'];
 
     /**
      * {@inheritdoc}
      */
     public function getConfiguration()
     {
+        $shopConstraint = $this->getShopConstraint();
+
         return [
-            'slip_prefix' => $this->configuration->get('PS_CREDIT_SLIP_PREFIX'),
+            'slip_prefix' => $this->configuration->get('PS_CREDIT_SLIP_PREFIX', null, $shopConstraint),
         ];
     }
 
@@ -43,7 +34,9 @@ final class CreditSlipOptionsConfiguration implements DataConfigurationInterface
     public function updateConfiguration(array $configuration)
     {
         if ($this->validateConfiguration($configuration)) {
-            $this->configuration->set('PS_CREDIT_SLIP_PREFIX', $configuration['slip_prefix']);
+            $shopConstraint = $this->getShopConstraint();
+
+            $this->updateConfigurationValue('PS_CREDIT_SLIP_PREFIX', 'slip_prefix', $configuration, $shopConstraint);
         }
 
         return [];
@@ -52,8 +45,9 @@ final class CreditSlipOptionsConfiguration implements DataConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function validateConfiguration(array $configuration)
+    protected function buildResolver(): OptionsResolver
     {
-        return isset($configuration['slip_prefix']);
+        return (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS);
     }
 }
