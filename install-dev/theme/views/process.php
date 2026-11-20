@@ -72,7 +72,7 @@
         </h3>
 
         <div class="fo-bo-container">
-          <div id="boBlock" class="blockInfoEnd clearfix" onclick="window.open('<?php echo '../' . $this->session->adminFolderName; ?>')">
+          <div id="boBlock" class="blockInfoEnd clearfix" onclick="window.open('<?php echo '../' . rtrim($this->session->adminFolderName, '/') . '/'; ?>')">
               <img src="theme/img/visu_boBlock.png" alt="" />
               <div class="bo-infos">
                 <h3><?php echo $this->translator->trans('Back Office', [], 'Install'); ?></h3>
