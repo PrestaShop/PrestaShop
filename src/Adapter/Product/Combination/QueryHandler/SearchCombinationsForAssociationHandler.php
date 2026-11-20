@@ -125,6 +125,6 @@ class SearchCombinationsForAssociationHandler implements SearchCombinationsForAs
             $languageId
         );
 
-        return $this->combinationNameBuilder->buildFullName($productName, $attributesInformation[$combinationId]);
+        return $this->combinationNameBuilder->buildFullName($productName, $attributesInformation[$combinationId] ?? []);
     }
 }
