@@ -510,9 +510,6 @@ class OrderController extends PrestaShopAdminController
             return $this->redirectToRoute('admin_orders_index');
         }
 
-        $filters = new ShipmentFilters(['filters' => ['order_id' => $orderId]] + $filters->all());
-        $shipmentsGrid = $shipmentGridFactory->getGrid($filters);
-
         $updateOrderStatusForm = $this->formFactory->createNamed(
             'update_order_status',
             UpdateOrderStatusType::class,
@@ -622,25 +619,42 @@ class OrderController extends PrestaShopAdminController
             )
         );
 
-        $shipmentsLabel = $this->trans(
-            'Shipments ([1]%shipment_count%[/1])',
-            [
-                '%shipment_count%' => $shipmentsGrid->getData()->getRecordsTotal(),
-                '[1]' => '<span class="count">',
-                '[/1]' => '</span>',
-            ],
-            'Admin.Shipping.Feature'
-        );
+        $isImprovedShipmentFeatureFlagEnabled = $featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT);
+        $orderHasShipment = $this->orderHasShipment($orderForViewing->getId());
 
-        $carriersLabel = $this->trans(
-            'Carriers ([1]%carriers_count%[/1])',
-            [
-                '%carriers_count%' => count($orderForViewing->getShipping()->getCarriers()),
-                '[1]' => '<span class="count">',
-                '[/1]' => '</span>',
-            ],
-            'Admin.Shipping.Feature'
-        );
+        $presentedShipmentsGrid = null;
+        $presentedShipmentsLabel = null;
+        $presentedCarriersLabel = null;
+
+        if ($isImprovedShipmentFeatureFlagEnabled && $orderHasShipment) {
+            $filters = new ShipmentFilters(['filters' => ['order_id' => $orderId]] + $filters->all());
+            $shipmentsGrid = $shipmentGridFactory->getGrid($filters);
+
+            $presentedShipmentsGrid = $this->presentGrid($shipmentsGrid);
+
+            $shipmentsLabel = $this->trans(
+                'Shipments ([1]%shipment_count%[/1])',
+                [
+                    '%shipment_count%' => $shipmentsGrid->getData()->getRecordsTotal(),
+                    '[1]' => '<span class="count">',
+                    '[/1]' => '</span>',
+                ],
+                'Admin.Shipping.Feature'
+            );
+
+            $presentedShipmentsLabel = $tools->purifyHTML($shipmentsLabel);
+        } else {
+            $presentedCarriersLabel = $this->trans(
+                'Carriers ([1]%carriers_count%[/1])',
+                [
+                    '%carriers_count%' => count($orderForViewing->getShipping()->getCarriers()),
+                    '[1]' => '<span class="count">',
+                    '[/1]' => '</span>',
+                ],
+                'Admin.Shipping.Feature'
+            );
+            $presentedCarriersLabel = $tools->purifyHTML($presentedCarriersLabel);
+        }
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => true,
@@ -671,11 +685,11 @@ class OrderController extends PrestaShopAdminController
             'paginationNumOptions' => $paginationNumOptions,
             'isAvailableQuantityDisplayed' => (bool) $this->getConfiguration()->get('PS_STOCK_MANAGEMENT'),
             'internalNoteForm' => $internalNoteForm->createView(),
-            'isImprovedShipmentFeatureFlagEnabled' => $featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT),
-            'orderHasShipment' => $this->orderHasShipment($orderForViewing->getId()),
-            'shipmentsGrid' => $this->presentGrid($shipmentsGrid),
-            'shipmentsLabel' => $tools->purifyHTML($shipmentsLabel),
-            'carriersLabel' => $tools->purifyHTML($carriersLabel),
+            'isImprovedShipmentFeatureFlagEnabled' => $isImprovedShipmentFeatureFlagEnabled,
+            'orderHasShipment' => $orderHasShipment,
+            'shipmentsGrid' => $presentedShipmentsGrid,
+            'shipmentsLabel' => $presentedShipmentsLabel,
+            'carriersLabel' => $presentedCarriersLabel,
         ]);
     }
 
