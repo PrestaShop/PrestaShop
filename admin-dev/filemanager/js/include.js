@@ -1,5 +1,9 @@
 var version="9.3.3";
 var active_contextmenu=true;
+
+// Detect touch input for tooltips, swipe gestures and help visibility.
+var supportsTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
 if(loading_bar){   
 if(!(/MSIE (\d+\.\d+);/.test(navigator.userAgent))){ 
     window.addEventListener('DOMContentLoaded', function() {
@@ -360,7 +364,8 @@ $(document).ready(function(){
 	    }
 	});
 	
-	if (!Modernizr.touch) {
+	// Enable tooltips for mouse input and swipe gestures for touch input.
+	if (!supportsTouch) {
 	    $('.tip').tooltip({placement: "bottom"});
 	    $('.tip-left').tooltip({placement: "left"});
 	    $('.tip-right').tooltip({placement: "right"});
@@ -379,7 +384,8 @@ $(document).ready(function(){
 	    });
 	}
 	
-	if(!Modernizr.csstransforms) { // Test if CSS transform are supported
+	// Animate thumbnails with jQuery when CSS transforms are not supported.
+	if (!('transform' in document.documentElement.style)) {
             
 		$('figure').bind('mouseover',function(){
 			if ($('#view').val()==0) {
@@ -424,7 +430,7 @@ function fix_colums(adding) {
 	    $('ul.grid li, ul.grid figure').css( "width", width);
 	}
 	$('#help').hide();
-    }else{if(Modernizr.touch) {
+    }else{if(supportsTouch) {
 	    $('#help').show();
     }}
 }

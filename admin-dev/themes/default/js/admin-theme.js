@@ -503,8 +503,10 @@ $(() => {
     unmatch() {},
   });
 
-  // bootstrap components init
-  $('.dropdown-toggle').dropdown();
+  // Initialize Bootstrap dropdowns; js/admin/notifications.js handles the notifications dropdown.
+  $('.dropdown-toggle').not('.notification').dropdown();
+
+  // Initialize Bootstrap tooltips and the error modal.
   $('.label-tooltip, .help-tooltip').tooltip();
   $('#error-modal').modal('show');
 
