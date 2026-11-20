@@ -37,10 +37,13 @@ class RegistrationControllerCore extends FrontController
      */
     public function initContent(): void
     {
+        $formData = Tools::getAllValues();
+        $formData['back'] = Tools::getStringValue('back');
+
         $register_form = $this
             ->makeCustomerForm()
             ->setGuestAllowed(false)
-            ->fillWith(Tools::getAllValues());
+            ->fillWith($formData);
 
         // If registration form was submitted
         if (Tools::isSubmit('submitCreate')) {
@@ -56,8 +59,8 @@ class RegistrationControllerCore extends FrontController
             if ($hookResult && $register_form->submit() && !$this->ajax) {
                 // First option - redirect the customer to desired URL specified in 'back' parameter
                 // Before that, we need to check if 'back' is legit URL that is on OUR domain, with the right protocol
-                $back = rawurldecode(Tools::getValue('back'));
-                if (Tools::urlBelongsToShop($back)) {
+                $back = rawurldecode(Tools::getStringValue('back'));
+                if ($back !== '' && Tools::urlBelongsToShop($back)) {
                     $this->redirectWithNotifications($back);
                 }
 
