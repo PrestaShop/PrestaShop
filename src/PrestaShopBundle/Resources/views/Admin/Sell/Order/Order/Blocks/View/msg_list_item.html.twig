@@ -3,9 +3,11 @@
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  #}
 
- <li class="mb-2 {% if message.employeeId %}messages-block-employee{% else %}messages-block-customer{% endif %}">
+{# A private message without an employee is a payment module note, shown on the shop side #}
+{% set shopSide = message.employeeId or message.isPrivate %}
+ <li class="mb-2 {% if shopSide %}messages-block-employee{% else %}messages-block-customer{% endif %}">
   <div class="row no-gutters">
-    {% if not message.employeeId %}
+    {% if not shopSide %}
       <div class="messages-block-icon">
         <i class="material-icons">account_circle</i>
       </div>
@@ -21,7 +23,7 @@
       </div>
     {% endif %}
 
-    {% if message.employeeId %}
+    {% if shopSide %}
       <div class="messages-block-content">
         <p class="mb-0 message employee-message{{ message.isPrivate ? '--private' : '' }}">
           {{ message.message|nl2br }}
@@ -29,7 +31,7 @@
         <p class="text-muted mb-0 text-right">
           {% if message.isCurrentEmployeesMessage %}
             {{ 'Me'|trans({}, 'Admin.Global') }}
-          {% else %}
+          {% elseif message.employeeId %}
             {{ message.employeeFirstName ~ ' ' ~ message.employeeLastName }}
           {% endif %}
 

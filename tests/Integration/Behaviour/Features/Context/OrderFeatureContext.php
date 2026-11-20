@@ -9,7 +9,10 @@ namespace Tests\Integration\Behaviour\Features\Context;
 use AdminKernel;
 use Behat\Gherkin\Node\TableNode;
 use Configuration;
+use CustomerThread;
+use Db;
 use Exception;
+use Message;
 use Order;
 use OrderCarrier;
 use OrderCartRule;
@@ -30,8 +33,9 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
 
     /**
      * @When /^I validate my cart using payment module (fake)$/
+     * @When /^I validate my cart using payment module (fake) with message "(.+)"$/
      */
-    public function validateCartWithPaymentModule($paymentModuleName)
+    public function validateCartWithPaymentModule($paymentModuleName, $message = null)
     {
         switch ($paymentModuleName) {
             case 'fake':
@@ -56,7 +60,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
             (int) Configuration::get('PS_OS_CHEQUE'), // PS_OS_PAYMENT for payment-validated order
             0,
             'Unknown',
-            null,
+            $message,
             [],
             null,
             false,
@@ -67,6 +71,47 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $this->orders[] = $order;
 
         $kernel = $previousKernel;
+    }
+
+    /**
+     * @Given /^I leave the message "(.+)" on my cart$/
+     */
+    public function leaveMessageOnCart(string $message): void
+    {
+        $cart = $this->getCurrentCart();
+        $cartMessage = new Message();
+        $cartMessage->id_cart = (int) $cart->id;
+        $cartMessage->id_customer = (int) $cart->id_customer;
+        $cartMessage->message = $message;
+        $cartMessage->private = false;
+        $cartMessage->add();
+    }
+
+    /**
+     * Messages are compared with "\n" read as a line break.
+     *
+     * @Then /^the order should have one (open|closed) customer thread holding:$/
+     */
+    public function checkOrderCustomerThread(string $status, TableNode $table): void
+    {
+        $order = $this->getCurrentCartOrder();
+        $threads = Db::getInstance()->executeS(
+            'SELECT id_customer_thread, status FROM ' . _DB_PREFIX_ . 'customer_thread WHERE id_order = ' . (int) $order->id
+        );
+        Assert::assertCount(1, $threads, sprintf('Order %d should have one customer thread', $order->id));
+        Assert::assertSame($status, $threads[0]['status']);
+
+        $messages = array_map(
+            static fn (array $message): array => ['message' => $message['message'], 'private' => (string) (int) $message['private']],
+            CustomerThread::getMessageCustomerThreads((int) $threads[0]['id_customer_thread'])
+        );
+        $expected = array_map(
+            static fn (array $row): array => ['message' => str_replace('\n', "\n", $row['message']), 'private' => $row['private']],
+            $table->getColumnsHash()
+        );
+        sort($messages);
+        sort($expected);
+        Assert::assertSame($expected, $messages);
     }
 
     /**
