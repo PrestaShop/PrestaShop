@@ -50,6 +50,11 @@ parameters:
     - message: "#^Dead catch \\- Symfony\\\\Component\\\\HttpFoundation\\\\File\\\\Exception\\\\FileNotFoundException is never thrown in the try block\\.$#"
       count: 1
       path: src/PrestaShopBundle/Controller/Admin/SecuredFileReaderController.php
+    ## A fixture module driven by a test. tests/Resources is excluded above, so the module class the
+    ## test controls is not in PHPStan's symbol table even though it exists and is loaded at runtime.
+    -
+      message: '#^Access to static property \$hookReturnValue on an unknown class SubmitAccountHookTest\.$#'
+      path: tests/Integration/Classes/Checkout/CheckoutPersonalInformationStepHookTest.php
     ## Smarty functions
     - '#^Function smartyRegisterFunction not found\.$#'
     ## CQRS API Platform operations
