@@ -329,7 +329,8 @@ export default class EntitySearchInput {
         url: this.options.remoteUrl,
         replace: (query: string, searchPhrase: string) => {
           // need to replace wildcard manually, because here we are overriding the default replace function
-          const url = query.replace(this.options.queryWildcard, searchPhrase);
+          // the phrase is encoded like the default one does, a raw "+" would reach the server as a space
+          const url = query.replace(this.options.queryWildcard, encodeURIComponent(searchPhrase));
 
           if (!isUndefined(this.options.extraQueryParams)) {
             // this allows appending extra parameters to the query, such as shopId
