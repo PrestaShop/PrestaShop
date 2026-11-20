@@ -2048,9 +2048,12 @@ $product-page-padding-bottom: 80px !default;
     flex-wrap: wrap;
 
     .combination-image-choice {
-      flex: 0 0 0;
       margin: var(--#{$cdk}size-6);
       border: var(--#{$cdk}size-3) solid transparent;
+
+      img {
+        max-width: 98px;
+      }
 
       .form-check-radio {
         display: none;
