@@ -5003,6 +5003,11 @@
       <title/>
       <description/>
     </hook>
+    <hook id="actionCreditSlipNumberFormatted">
+      <name>actionCreditSlipNumberFormatted</name>
+      <title/>
+      <description/>
+    </hook>
     <hook id="actionOnImageResizeAfter">
       <name>actionOnImageResizeAfter</name>
       <title/>
