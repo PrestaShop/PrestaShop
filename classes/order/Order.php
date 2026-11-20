@@ -312,6 +312,8 @@ class OrderCore extends ObjectModel
     public function add($autodate = true, $null_values = true)
     {
         if (parent::add($autodate, $null_values)) {
+            Cache::clean('Product::cartHasOrder_' . (int) $this->id_cart . '_*');
+
             return SpecificPrice::deleteByIdCart($this->id_cart);
         }
 
