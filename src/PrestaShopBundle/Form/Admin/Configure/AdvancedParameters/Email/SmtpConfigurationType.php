@@ -6,6 +6,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email;
 
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -27,6 +28,7 @@ class SmtpConfigurationType extends TranslatorAwareType
                 'required' => false,
                 'empty_data' => '',
                 'label' => $this->trans('Email domain name', 'Admin.Advparameters.Feature'),
+                'multistore_configuration_key' => 'PS_MAIL_DOMAIN',
                 'help' => $this->trans('Fully qualified domain name (keep this field empty if you don\'t know).', 'Admin.Advparameters.Help'),
                 'attr' => [
                     'autocapitalize' => 'off',
@@ -35,6 +37,7 @@ class SmtpConfigurationType extends TranslatorAwareType
             ->add('server', TextType::class, [
                 'required' => false,
                 'label' => $this->trans('SMTP server', 'Admin.Advparameters.Feature'),
+                'multistore_configuration_key' => 'PS_MAIL_SERVER',
                 'help' => $this->trans('IP address or server name (e.g. smtp.mydomain.com).', 'Admin.Advparameters.Help'),
                 'attr' => [
                     'autocapitalize' => 'off',
@@ -44,6 +47,7 @@ class SmtpConfigurationType extends TranslatorAwareType
                 'required' => false,
                 'empty_data' => '',
                 'label' => $this->trans('SMTP username', 'Admin.Advparameters.Feature'),
+                'multistore_configuration_key' => 'PS_MAIL_USER',
                 'help' => $this->trans('Leave blank if not applicable.', 'Admin.Advparameters.Help'),
                 'attr' => [
                     'autocapitalize' => 'off',
@@ -53,6 +57,7 @@ class SmtpConfigurationType extends TranslatorAwareType
                 'required' => false,
                 'empty_data' => '',
                 'label' => $this->trans('SMTP password', 'Admin.Advparameters.Feature'),
+                'multistore_configuration_key' => 'PS_MAIL_PASSWD',
                 'help' => $this->trans('Leave blank if not applicable.', 'Admin.Advparameters.Help'),
                 /* Some browsers (for example Google Chrome) are totally ignoring "off" value, so we use "new-password" - which is working well for this purpose */
                 'attr' => [
@@ -67,11 +72,21 @@ class SmtpConfigurationType extends TranslatorAwareType
                 ],
                 'choice_translation_domain' => 'Admin.Advparameters.Feature',
                 'label' => $this->trans('Encryption', 'Admin.Advparameters.Feature'),
+                'multistore_configuration_key' => 'PS_MAIL_SMTP_ENCRYPTION',
             ])
             ->add('port', TextType::class, [
                 'required' => false,
                 'label' => $this->trans('Port', 'Admin.Advparameters.Feature'),
+                'multistore_configuration_key' => 'PS_MAIL_SMTP_PORT',
                 'help' => $this->trans('Port number to use.', 'Admin.Advparameters.Help'),
             ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }

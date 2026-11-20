@@ -1711,6 +1711,12 @@ parameters:
 			path: src/PrestaShopBundle/EventListener/Admin/LegacyParametersListener.php
 
 		-
+			message: '#^Namespace Configuration is forbidden, No legacy calls inside the prestashop bundle\. Please create an interface and an adapter if you need to\.$#'
+			identifier: disallowed.namespace
+			count: 3
+			path: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Email/EmailConfigurationFormDataProvider.php
+
+		-
 			message: '#^Namespace PrestaShopException is forbidden, No legacy calls inside the prestashop bundle\. Please create an interface and an adapter if you need to\.$#'
 			identifier: disallowed.namespace
 			count: 1

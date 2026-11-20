@@ -242,6 +242,8 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Email\EmailDataConfigurator'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
 
   PrestaShop\PrestaShop\Adapter\Webservice\WebserviceConfiguration:
     public: false
