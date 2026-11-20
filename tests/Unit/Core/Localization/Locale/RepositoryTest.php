@@ -13,7 +13,9 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleInterface as CldrLocaleIn
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository as CldrLocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\NumberSymbolsData;
 use PrestaShop\PrestaShop\Core\Localization\Currency;
+use PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyInstalled;
 use PrestaShop\PrestaShop\Core\Localization\Currency\Repository as CurrencyRepository;
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 
@@ -110,8 +112,58 @@ class RepositoryTest extends TestCase
      */
     public function testGetLocaleWithInvalidLocaleCode()
     {
-        $this->expectException(\PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException::class);
+        $this->expectException(LocalizationException::class);
 
         $this->localeRepository->getLocale('en-US');
+    }
+
+    /**
+     * Given installed currency codes are provided
+     * When formatting a price
+     * Then only the requested currency is built, and a currency that is not installed is rejected
+     */
+    public function testPriceSpecificationsAreBuiltOnFirstUse()
+    {
+        $cldrLocale = $this->createMock(CldrLocaleInterface::class);
+        $symbols = new NumberSymbolsData();
+        $symbols->setDecimal(',');
+        $symbols->setGroup(' ');
+        $symbols->setList(';');
+        $symbols->setPercentSign('%');
+        $symbols->setMinusSign('-');
+        $symbols->setPlusSign('+');
+        $symbols->setExponential('E');
+        $symbols->setSuperscriptingExponent('^');
+        $symbols->setPerMille('‰');
+        $symbols->setInfinity('∞');
+        $symbols->setNan('NaN');
+        $cldrLocale->method('getAllNumberSymbols')->willReturn(['latn' => $symbols]);
+        $cldrLocale->method('getDecimalPattern')->willReturn('#,##0.###');
+        $cldrLocale->method('getCurrencyPattern')->willReturn('#,##0.00 ¤');
+        $cldrLocaleRepository = $this->createMock(CldrLocaleRepository::class);
+        $cldrLocaleRepository->method('getLocale')->willReturn($cldrLocale);
+
+        $currency = $this->createMock(Currency::class);
+        $currency->method('getSymbol')->willReturn('€');
+        $currency->method('getIsoCode')->willReturn('EUR');
+        $currency->method('getDecimalPrecision')->willReturn(2);
+
+        $currencyRepository = $this->createMock(CurrencyRepository::class);
+        $currencyRepository->expects($this->never())->method('getAllInstalledCurrencies');
+        $currencyRepository->expects($this->once())
+            ->method('getCurrency')
+            ->with('EUR', 'fr-FR')
+            ->willReturn($currency);
+
+        $installedCurrencies = $this->createMock(CurrencyInstalled::class);
+        $installedCurrencies->method('getAllInstalledCurrencyIsoCodes')->willReturn(['EUR']);
+
+        $locale = (new LocaleRepository($cldrLocaleRepository, $currencyRepository, installedCurrencies: $installedCurrencies))
+            ->getLocale('fr-FR');
+
+        $this->assertSame($locale->getPriceSpecification('EUR'), $locale->getPriceSpecification('EUR'));
+
+        $this->expectException(LocalizationException::class);
+        $locale->formatPrice(1, 'USD');
     }
 }

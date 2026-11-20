@@ -17,8 +17,9 @@ services:
 
   PrestaShop\PrestaShop\Core\Localization\Locale\Repository:
     arguments:
-      - '@prestashop.core.localization.cldr.locale_repository'
-      - '@prestashop.core.localization.currency.repository'
+      0: '@prestashop.core.localization.cldr.locale_repository'
+      1: '@prestashop.core.localization.currency.repository'
+      $installedCurrencies: '@prestashop.core.localization.currency.middleware.installed'
 
   prestashop.core.localization.locale.repository:
     alias: PrestaShop\PrestaShop\Core\Localization\Locale\Repository

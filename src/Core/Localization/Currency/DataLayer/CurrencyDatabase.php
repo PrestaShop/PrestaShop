@@ -91,7 +91,7 @@ class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInt
         $currencyData->setNames([$localeCode => $currencyEntity->name]);
         $currencyData->setSymbols([$localeCode => $currencyEntity->symbol]);
 
-        $idLang = Language::getIdByLocale($localeCode, true);
+        $idLang = Language::getIdByLocale($localeCode);
         $currencyPattern = $currencyEntity->getPattern($idLang);
         if (!empty($currencyPattern)) {
             $currencyData->setPatterns([$localeCode => $currencyEntity->getPattern($idLang)]);
