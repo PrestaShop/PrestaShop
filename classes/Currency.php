@@ -451,19 +451,42 @@ class CurrencyCore extends ObjectModel
      */
     public function delete()
     {
-        if ($this->id == Currency::getDefaultCurrencyId()) {
-            $result = Db::getInstance()->getRow('SELECT `id_currency` FROM ' . _DB_PREFIX_ . 'currency WHERE `id_currency` != ' . (int) $this->id . ' AND `deleted` = 0');
-            if (empty($result['id_currency'])) {
+        // Shops can override the default currency
+        $defaultScopes = Db::getInstance()->executeS('SELECT `id_shop_group`, `id_shop` FROM ' . _DB_PREFIX_ . 'configuration WHERE `name` = "PS_CURRENCY_DEFAULT" AND `value` = ' . (int) $this->id);
+        $fallbacks = [];
+        foreach ($defaultScopes as $index => $scope) {
+            $fallbacks[$index] = $this->getFallbackDefaultCurrencyId((int) $scope['id_shop']);
+            if (!$fallbacks[$index]) {
                 return false;
             }
-
-            Configuration::updateValue('PS_CURRENCY_DEFAULT', $result['id_currency']);
+        }
+        foreach ($defaultScopes as $index => $scope) {
+            Configuration::updateValue(
+                'PS_CURRENCY_DEFAULT',
+                $fallbacks[$index],
+                false,
+                (int) $scope['id_shop_group'],
+                (int) $scope['id_shop']
+            );
         }
 
         // Remove currency restrictions
         $res = Db::getInstance()->delete('module_currency', 'id_currency = ' . (int) $this->id);
 
         return $res && $this->softDelete();
+    }
+
+    /**
+     * A non deleted currency other than this one, preferably active, installed in the shop when one is given.
+     */
+    private function getFallbackDefaultCurrencyId(int $shopId): int
+    {
+        return (int) Db::getInstance()->getValue('
+            SELECT c.`id_currency`
+            FROM `' . _DB_PREFIX_ . 'currency` c
+            ' . ($shopId ? 'INNER JOIN `' . _DB_PREFIX_ . 'currency_shop` cs ON (cs.`id_currency` = c.`id_currency` AND cs.`id_shop` = ' . $shopId . ')' : '') . '
+            WHERE c.`id_currency` != ' . (int) $this->id . ' AND c.`deleted` = 0
+            ORDER BY c.`active` DESC, c.`id_currency` ASC');
     }
 
     /**
