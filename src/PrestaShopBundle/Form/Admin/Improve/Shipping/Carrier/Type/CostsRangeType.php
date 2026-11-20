@@ -54,6 +54,11 @@ class CostsRangeType extends TranslatorAwareType
                 'label' => $this->trans('Price (VAT excl.)', 'Admin.Shipping.Feature'),
                 'empty_data' => '0.0', // string instead number needed for DecimalNumber.php validation
                 'currency' => $this->defaultCurrencyIsoCode,
+                'constraints' => [
+                    new PositiveOrZero([
+                        'message' => 'The value must be a positive number.',
+                    ]),
+                ],
             ]);
     }
 

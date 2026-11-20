@@ -95,6 +95,12 @@ class CarrierRangeZone
                     CarrierConstraintException::INVALID_RANGE_NEGATIVE
                 );
             }
+            if ((float) $range['range_price'] < 0) {
+                throw new CarrierConstraintException(
+                    'Carrier range price cannot be less than zero.',
+                    CarrierConstraintException::INVALID_RANGE_PRICE_NEGATIVE
+                );
+            }
             if ($min > $range['range_from']) {
                 throw new CarrierConstraintException(
                     'Carrier ranges are overlapping',
