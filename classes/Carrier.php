@@ -1028,6 +1028,28 @@ class CarrierCore extends ObjectModel
     }
 
     /**
+     * Moves every scope whose default carrier is $oldCarrierId to $newCarrierId (a re-versioned carrier).
+     */
+    public static function reassignDefaultCarrier(int $oldCarrierId, int $newCarrierId): void
+    {
+        $scopes = Db::getInstance()->executeS('
+            SELECT `id_shop_group`, `id_shop`
+            FROM `' . _DB_PREFIX_ . 'configuration`
+            WHERE `name` = "PS_CARRIER_DEFAULT" AND `value` = ' . (int) $oldCarrierId);
+
+        foreach ($scopes as $scope) {
+            Configuration::updateValue(
+                'PS_CARRIER_DEFAULT',
+                $newCarrierId,
+                false,
+                // 0 targets the exact scope, null would fall back to the context shop
+                (int) $scope['id_shop_group'],
+                (int) $scope['id_shop']
+            );
+        }
+    }
+
+    /**
      * Copy old carrier informations when update carrier.
      *
      * @param int $old_id Old id carrier (copy from that id)
@@ -1096,9 +1118,7 @@ class CarrierCore extends ObjectModel
         }
 
         // Copy default carrier
-        if (Configuration::get('PS_CARRIER_DEFAULT') == $old_id) {
-            Configuration::updateValue('PS_CARRIER_DEFAULT', (int) $this->id);
-        }
+        Carrier::reassignDefaultCarrier((int) $old_id, (int) $this->id);
 
         // Copy reference
         $id_reference = Db::getInstance()->getValue('
