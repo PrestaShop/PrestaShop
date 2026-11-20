@@ -9,6 +9,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Order;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShopBundle\Form\Admin\Type\TaxInclusionChoiceType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -87,6 +88,9 @@ class AddOrderCartRuleType extends AbstractType
                     'type' => 'numeric',
                     'message' => $this->trans('Discount value must be a number', [], 'Admin.Notifications.Error'),
                 ]),
+            ])
+            ->add('value_tax_included', TaxInclusionChoiceType::class, [
+                'data' => 1,
             ])
             ->add('invoice_id', ChoiceType::class, [
                 'choices' => $invoices,
