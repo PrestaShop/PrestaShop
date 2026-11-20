@@ -30,7 +30,7 @@ class EmployeeFilters extends Filters
             'limit' => 10,
             'offset' => 0,
             'orderBy' => 'id_employee_session',
-            'sortOrder' => 'asc',
+            'sortOrder' => 'desc',
             'filters' => [],
         ];
     }
