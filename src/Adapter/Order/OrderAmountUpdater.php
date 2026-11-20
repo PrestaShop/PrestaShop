@@ -13,6 +13,7 @@ use Cache;
 use Carrier;
 use Cart;
 use CartRule;
+use Combination;
 use Currency;
 use Customer;
 use Order;
@@ -351,6 +352,15 @@ class OrderAmountUpdater
         $cartProducts = $cart->getProducts(true, false, null, true, $this->keepOrderPrices);
         foreach ($order->getCartProducts() as $orderProduct) {
             $orderDetail = new OrderDetail($orderProduct['id_order_detail'], null, $this->contextStateManager->getContext());
+
+            // Deleted products and combinations are no longer in the cart: keep the invoiced amounts
+            if (!Product::existsInDatabase((int) $orderDetail->product_id)
+                || (0 !== (int) $orderDetail->product_attribute_id
+                    && !Combination::existsInDatabase((int) $orderDetail->product_attribute_id))
+            ) {
+                continue;
+            }
+
             $cartProduct = $this->getProductFromCart($cartProducts, (int) $orderDetail->product_id, (int) $orderDetail->product_attribute_id, (int) $orderDetail->id_customization);
 
             $this->orderDetailUpdater->updateOrderDetail(
