@@ -933,7 +933,7 @@ class CartRuleCore extends ObjectModel
                 return (!$display_error) ? false : $this->trans('The gift product does not exist.', [], 'Shop.Notifications.Error');
             }
 
-            if (!(int) $giftProduct->available_for_order) {
+            if (!(int) $giftProduct->available_for_order || Combination::isDisabledInShop((int) $this->gift_product_attribute, (int) $cart->id_shop)) {
                 return (!$display_error) ? false : $this->trans('The gift product is not available for order.', [], 'Shop.Notifications.Error');
             }
 

@@ -69,6 +69,38 @@ class CombinationAssertionFeatureContext extends AbstractCombinationFeatureConte
     }
 
     /**
+     * @Then combination :combinationReference should be enabled
+     */
+    public function assertEnabledForDefaultShop(string $combinationReference): void
+    {
+        $this->assertStatus($combinationReference, true, [$this->getDefaultShopId()]);
+    }
+
+    /**
+     * @Then combination :combinationReference should be disabled
+     */
+    public function assertDisabledForDefaultShop(string $combinationReference): void
+    {
+        $this->assertStatus($combinationReference, false, [$this->getDefaultShopId()]);
+    }
+
+    /**
+     * @Then combination :combinationReference should be enabled for shops :shopReferences
+     */
+    public function assertEnabledForShops(string $combinationReference, string $shopReferences): void
+    {
+        $this->assertStatus($combinationReference, true, $this->referencesToIds($shopReferences));
+    }
+
+    /**
+     * @Then combination :combinationReference should be disabled for shops :shopReferences
+     */
+    public function assertDisabledForShops(string $combinationReference, string $shopReferences): void
+    {
+        $this->assertStatus($combinationReference, false, $this->referencesToIds($shopReferences));
+    }
+
+    /**
      * @Transform table:combination detail,value
      *
      * @param TableNode $tableNode
@@ -485,6 +517,20 @@ class CombinationAssertionFeatureContext extends AbstractCombinationFeatureConte
                 $expectedStock->getLocalizedAvailableLaterLabels(),
                 $actualStock->getLocalizedAvailableLaterLabels(),
                 sprintf('available later label for shop %d', $shopId)
+            );
+        }
+    }
+
+    /**
+     * @param int[] $shopIds
+     */
+    private function assertStatus(string $combinationReference, bool $expectedActive, array $shopIds): void
+    {
+        foreach ($shopIds as $shopId) {
+            Assert::assertSame(
+                $expectedActive,
+                $this->getCombinationForEditing($combinationReference, $shopId)->isActive(),
+                sprintf('Unexpected status for combination "%s" in shop %d', $combinationReference, $shopId)
             );
         }
     }
