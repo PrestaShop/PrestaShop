@@ -25,6 +25,8 @@ export default class OrderProductCancel {
 
   discountsAmount: number;
 
+  currencyPrecision: number;
+
   currencyFormatter: NumberFormatter;
 
   useAmountInputs: boolean;
@@ -36,6 +38,7 @@ export default class OrderProductCancel {
     this.orderDelivered = parseInt(this.cancelProductForm.data('isDelivered'), 10) === 1;
     this.isTaxIncluded = parseInt(this.cancelProductForm.data('isTaxIncluded'), 10) === 1;
     this.discountsAmount = parseFloat(this.cancelProductForm.data('discountsAmount'));
+    this.currencyPrecision = Number($(OrderViewPageMap.productsTable).data('currencyPrecision'));
     this.currencyFormatter = NumberFormatter.build(
       this.cancelProductForm.data('priceSpecification'),
     );
@@ -127,9 +130,8 @@ export default class OrderProductCancel {
       const priceFieldName = this.isTaxIncluded ? 'productPriceTaxIncl' : 'productPriceTaxExcl';
       const productUnitPrice = parseFloat($productQuantityInput.data(priceFieldName));
       const amountRefundable = parseFloat($productQuantityInput.data('amountRefundable'));
-      const guessedAmount = productUnitPrice * productQuantity < amountRefundable
-        ? productUnitPrice * productQuantity
-        : amountRefundable;
+      const lineAmount = window.ps_round(productUnitPrice * productQuantity, this.currencyPrecision);
+      const guessedAmount = lineAmount < amountRefundable ? lineAmount : amountRefundable;
       const amountValue = parseFloat(<string>$productAmount.val());
 
       if (this.useAmountInputs) {
@@ -176,9 +178,8 @@ export default class OrderProductCancel {
     const priceFieldName = this.isTaxIncluded ? 'productPriceTaxIncl' : 'productPriceTaxExcl';
     const productUnitPrice = parseFloat($productQuantityInput.data(priceFieldName));
     const amountRefundable = parseFloat($productQuantityInput.data('amountRefundable'));
-    const guessedAmount = productUnitPrice * productQuantity < amountRefundable
-      ? productUnitPrice * productQuantity
-      : amountRefundable;
+    const lineAmount = window.ps_round(productUnitPrice * productQuantity, this.currencyPrecision);
+    const guessedAmount = lineAmount < amountRefundable ? lineAmount : amountRefundable;
     const amountValue = parseFloat(<string>$productAmount.val());
 
     if ($productAmount.val() === '' || amountValue === 0 || amountValue > guessedAmount) {
@@ -201,7 +202,7 @@ export default class OrderProductCancel {
         const priceFieldName = this.isTaxIncluded ? 'productPriceTaxIncl' : 'productPriceTaxExcl';
         const productUnitPrice = parseFloat($quantityInput.data(priceFieldName));
         const productQuantity = parseInt(<string>$quantityInput.val(), 10);
-        totalAmount += productQuantity * productUnitPrice;
+        totalAmount += window.ps_round(productQuantity * productUnitPrice, this.currencyPrecision);
       });
     }
 

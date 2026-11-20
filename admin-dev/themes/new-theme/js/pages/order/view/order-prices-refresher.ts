@@ -107,7 +107,9 @@ export default class OrderPricesRefresher {
     // We convert the expected values into int/float to avoid a type mismatch that would be wrongly interpreted
     const expectedProductId = Number(productId);
     const expectedCombinationId = Number(combinationId);
-    const expectedGivenPrice = Number(givenPrice);
+    // The edit button carries the unit price unrounded when the order does not round per item
+    const precision = Number($(OrderViewPageMap.productsTable).data('currencyPrecision'));
+    const expectedGivenPrice = window.ps_round(Number(givenPrice), precision);
     let unmatchingInvoicePriceExists = false;
     let unmatchingProductPriceExists = false;
 
@@ -140,7 +142,7 @@ export default class OrderPricesRefresher {
 
       if (
         expectedGivenPrice
-        !== Number(productEditBtn.data('product-price-tax-incl'))
+        !== window.ps_round(Number(productEditBtn.data('product-price-tax-incl')), precision)
       ) {
         if (
           !invoiceId
