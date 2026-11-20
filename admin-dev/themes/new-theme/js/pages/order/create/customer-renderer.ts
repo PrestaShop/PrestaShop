@@ -10,7 +10,6 @@ import {EventEmitter} from '@components/event-emitter';
 
 const {$} = window;
 
-/* eslint-disable camelcase */
 export interface CustomerGroup {
   id_group: string;
   name: string;
@@ -26,7 +25,6 @@ export interface CustomerResult {
   birthday: string;
   company: string;
 }
-/* eslint-disable camelcase */
 
 /**
  * Responsible for customer information rendering
@@ -84,7 +82,7 @@ export default class CustomerRenderer {
         });
         customer.groups = `${window.translate_javascripts['Customer search - group label multiple']}: ${output.join(', ')}`;
       } else if (Object.keys(customerResult.groups).length > 0) {
-        // eslint-disable-next-line
+        // eslint-disable-next-line max-len
         customer.groups = `${window.translate_javascripts['Customer search - group label single']}: ${Object.values(customerResult.groups)[0].name}`;
       }
 

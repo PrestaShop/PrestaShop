@@ -82,7 +82,7 @@
 
         this.selectedLanguage.priceSpecification.currencySymbol = customData.symbol;
         this.selectedLanguage.priceSpecification.positivePattern = patterns[0];
-        // eslint-disable-next-line
+        // eslint-disable-next-line operator-linebreak
         this.selectedLanguage.priceSpecification.negativePattern =
           patterns.length > 1 ? patterns[1] : `-${patterns[0]}`;
 

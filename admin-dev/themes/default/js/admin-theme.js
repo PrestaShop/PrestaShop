@@ -4,7 +4,7 @@
  */
 
 // build confirmation modal
-// eslint-disable-next-line
+// eslint-disable-next-line no-unused-vars
 function confirm_modal(
   heading,
   question,
@@ -45,7 +45,7 @@ function confirm_modal(
 
 // build error modal
 /* global errorContinueMsg */
-// eslint-disable-next-line
+// eslint-disable-next-line no-unused-vars
 function error_modal(heading, msg) {
   const errorModal = $(
     `${'<div class="bootstrap modal hide fade">'
@@ -72,9 +72,9 @@ function error_modal(heading, msg) {
 }
 
 // move to hash after clicking on anchored links
-// eslint-disable-next-line
+// eslint-disable-next-line consistent-return
 function scroll_if_anchor(href) {
-  // eslint-disable-next-line
+  // eslint-disable-next-line no-param-reassign
   href = typeof href === 'string' ? href : $(this).attr('href');
   const fromTop = 120;
 
@@ -567,7 +567,7 @@ $(() => {
     $('#header_search .form-group').removeClass('focus-search');
   });
 
-  // eslint-disable-next-line
+  // eslint-disable-next-line consistent-return
   $('#header_search #bo_query').on('click', (e) => {
     e.stopPropagation();
     e.preventDefault();

@@ -156,7 +156,6 @@ export default class BulkChoicesSelector {
       const span = this.tabContainer.querySelector<HTMLSpanElement>(`label[for=${input.id}] span`);
 
       if (!label || !span) {
-        // eslint-disable-next-line max-len
         console.error(`Each ${CombinationMap.commonBulkAllSelector} is expected to have a dedicated <label> containing a <span>`);
         return;
       }

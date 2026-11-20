@@ -17,10 +17,10 @@ $(() => {
   /*
    * Input field changes management
   */
-  // eslint-disable-next-line
+  // eslint-disable-next-line consistent-return
   function checkInputPage(eventOrigin) {
     const e = eventOrigin || event;
-    // eslint-disable-next-line
+    // eslint-disable-next-line max-len
     const char = e.type === 'keypress' ? String.fromCharCode(e.keyCode || e.which) : (e.clipboardData || window.clipboardData).getData('Text');
 
     if (/[^\d]/gi.test(char)) {
@@ -31,7 +31,7 @@ $(() => {
     this.onkeypress = checkInputPage;
     this.onpaste = checkInputPage;
 
-    // eslint-disable-next-line
+    // eslint-disable-next-line consistent-return
     $(this).on('keyup', function (e) {
       const val = parseInt($(e.target).val(), 10);
 
@@ -52,7 +52,7 @@ $(() => {
       }
     });
 
-    // eslint-disable-next-line
+    // eslint-disable-next-line consistent-return
     $(this).on('blur', function (e) {
       const val = parseInt($(e.target).val(), 10);
 

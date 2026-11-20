@@ -10,7 +10,7 @@ import NumberSymbol from '@app/cldr/number-symbol';
 import PriceSpecification from '@app/cldr/specifications/price';
 import NumberSpecification from '@app/cldr/specifications/number';
 
-// eslint-disable-next-line
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const escapeRE = require('lodash.escaperegexp');
 
 const CURRENCY_SYMBOL_PLACEHOLDER = '¤';

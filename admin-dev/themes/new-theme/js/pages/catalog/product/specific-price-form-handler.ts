@@ -151,14 +151,13 @@ class SpecificPriceFormHandler {
 
     $(SpecificMap.save).on('click', () => this.submitCreatePriceForm());
 
-    // eslint-disable-next-line
     $(SpecificMap.openCreate).on('click', () => this.loadAndFillOptionsForSelectCombinationInput(usePrefixForCreate),
     );
 
     $(SpecificMap.leavBPrice(selectorPrefix)).on('click', () => this.enableSpecificPriceFieldIfEligible(usePrefixForCreate),
     );
 
-    // eslint-disable-next-line
+    // eslint-disable-next-line max-len
     $(SpecificMap.reductionType(selectorPrefix)).on('change', () => this.enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate),
     );
   }
@@ -297,7 +296,6 @@ class SpecificPriceFormHandler {
     );
     const url = baseUrl.replace(/update\/\d+/, `update/${specificPriceId}`);
 
-    /* eslint-disable-next-line max-len */
     const data = $(
       '#edit-specific-price-modal-form input, #edit-specific-price-modal-form select, #form_id_product',
     ).serialize();
