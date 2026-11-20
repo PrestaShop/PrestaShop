@@ -1645,6 +1645,7 @@ class FrontControllerCore extends Controller
             'low_quantity_threshold' => (int) Configuration::get('PS_LAST_QTIES'),
             'is_b2b' => (bool) Configuration::get('PS_B2B_ENABLE'),
             'is_catalog' => (bool) Configuration::isCatalogMode(),
+            'max_products_per_page' => $this->getMaxProductsPerPage(),
             'show_prices' => (bool) Configuration::showPrices(),
             'opt_in' => [
                 'partner' => (bool) Configuration::get('PS_CUSTOMER_OPTIN'),
@@ -1664,6 +1665,19 @@ class FrontControllerCore extends Controller
                 'minimum_score' => (int) Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_SCORE),
             ],
         ];
+    }
+
+    /**
+     * @return int 0 when the number of products a listing page displays is not limited
+     */
+    protected function getMaxProductsPerPage(): int
+    {
+        $maxProductsPerPage = (int) Configuration::get('PS_PRODUCTS_PER_PAGE_MAX', null, null, null, 96);
+        if ($maxProductsPerPage <= 0) {
+            return 0;
+        }
+
+        return max($maxProductsPerPage, (int) Configuration::get('PS_PRODUCTS_PER_PAGE'));
     }
 
     protected function getDisplayTaxesLabel()

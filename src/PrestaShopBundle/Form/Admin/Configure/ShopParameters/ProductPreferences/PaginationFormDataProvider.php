@@ -73,6 +73,13 @@ class PaginationFormDataProvider implements FormDataProviderInterface
                 'parameters' => [$this->translator->trans('Products per page', [], 'Admin.Shopparameters.Feature')],
             ];
         }
+        if (!is_numeric($data['max_products_per_page'])) {
+            $errors[] = [
+                'key' => 'The %s field is invalid.',
+                'domain' => 'Admin.Notifications.Error',
+                'parameters' => [$this->translator->trans('Maximum products per page', [], 'Admin.Shopparameters.Feature')],
+            ];
+        }
 
         return $errors;
     }
