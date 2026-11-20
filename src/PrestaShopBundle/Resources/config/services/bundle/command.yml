@@ -32,8 +32,7 @@ services:
       - 'console.command'
 
   PrestaShopBundle\Command\ThemeEnablerCommand:
-    arguments:
-      - '@prestashop.core.addon.theme.theme_manager'
+    autowire: true
     tags:
       - 'console.command'
 
