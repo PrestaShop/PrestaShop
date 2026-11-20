@@ -32,6 +32,8 @@
             'data-is-delivered': orderForViewing.isDelivered,
             'data-is-tax-included': orderForViewing.isTaxIncluded,
             'data-discounts-amount': orderForViewing.prices.discountsAmountRaw,
+            'data-products-amount': orderForViewing.prices.productsPriceRaw,
+            'data-discounts-shared': orderForViewing.discounts.discounts|filter(discount => discount.productRestricted)|length == 0 ? 1 : 0,
             'data-price-specification': priceSpecification|json_encode,
           },
         } %}
