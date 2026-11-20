@@ -60,4 +60,9 @@ class TestableObjectModel extends ObjectModel
         Shop::addTableAssociation('testable_object_lang', ['type' => 'fk_shop']);
         parent::__construct($id, $id_lang, $id_shop);
     }
+
+    public function getIdLang(): ?int
+    {
+        return $this->id_lang;
+    }
 }
