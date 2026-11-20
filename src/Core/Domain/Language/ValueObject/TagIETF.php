@@ -45,6 +45,20 @@ class TagIETF
     }
 
     /**
+     * The `language-REGION` locale of a tag that names its region, null otherwise.
+     */
+    public function toLocale(): ?string
+    {
+        [$language, $region] = array_pad(explode('-', $this->tagIETF, 2), 2, null);
+
+        if (null === $region) {
+            return null;
+        }
+
+        return strtolower($language) . '-' . strtoupper($region);
+    }
+
+    /**
      * @param string $tagIETF
      *
      * @throws LanguageConstraintException
