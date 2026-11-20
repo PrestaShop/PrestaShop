@@ -195,6 +195,8 @@ class MailCore extends ObjectModel
             return false;
         }
 
+        $idShopGroup = (int) $shop->id_shop_group;
+
         // Get all required configuration for sending the email
         $configuration = Configuration::getMultiple(
             [
@@ -213,7 +215,7 @@ class MailCore extends ObjectModel
                 'PS_MAIL_DKIM_KEY',
             ],
             null,
-            null,
+            $idShopGroup,
             $idShop
         );
 
@@ -395,7 +397,7 @@ class MailCore extends ObjectModel
             if ($iso) {
                 $isoArray[] = $iso;
             }
-            $isoDefault = Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT'));
+            $isoDefault = Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT', null, $idShopGroup, $idShop));
             if ($isoDefault && $iso !== $isoDefault) {
                 $isoArray[] = $isoDefault;
             }
@@ -510,7 +512,7 @@ class MailCore extends ObjectModel
             );
 
             // Prepend shop name to subject if configured and add it to the message
-            if (Configuration::get('PS_MAIL_SUBJECT_PREFIX')) {
+            if (Configuration::get('PS_MAIL_SUBJECT_PREFIX', null, $idShopGroup, $idShop)) {
                 $subject = '[' . strip_tags($configuration['PS_SHOP_NAME']) . '] ' . $subject;
             }
             $email->subject($subject);
@@ -533,13 +535,13 @@ class MailCore extends ObjectModel
              * Now we add common template variables. First, the logo. If we have a specific logo for emails,
              * we will use it, otherwise we will use the default logo.
              */
-            if (false !== Configuration::get('PS_LOGO_MAIL', null, null, $idShop)
-                && file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO_MAIL', null, null, $idShop))
+            if (false !== Configuration::get('PS_LOGO_MAIL', null, $idShopGroup, $idShop)
+                && file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO_MAIL', null, $idShopGroup, $idShop))
             ) {
-                $logo = _PS_IMG_DIR_ . Configuration::get('PS_LOGO_MAIL', null, null, $idShop);
+                $logo = _PS_IMG_DIR_ . Configuration::get('PS_LOGO_MAIL', null, $idShopGroup, $idShop);
             } else {
-                if (file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO', null, null, $idShop))) {
-                    $logo = _PS_IMG_DIR_ . Configuration::get('PS_LOGO', null, null, $idShop);
+                if (file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO', null, $idShopGroup, $idShop))) {
+                    $logo = _PS_IMG_DIR_ . Configuration::get('PS_LOGO', null, $idShopGroup, $idShop);
                 } else {
                     $templateVars['{shop_logo}'] = '';
                 }
@@ -567,7 +569,7 @@ class MailCore extends ObjectModel
             $templateVars['{guest_tracking_url}'] = Context::getContext()->link->getPageLink('guest-tracking', null, $idLang, null, false, $idShop);
             $templateVars['{history_url}'] = Context::getContext()->link->getPageLink('history', null, $idLang, null, false, $idShop);
             $templateVars['{order_slip_url}'] = Context::getContext()->link->getPageLink('order-slip', null, $idLang, null, false, $idShop);
-            $templateVars['{color}'] = Tools::safeOutput(Configuration::get('PS_MAIL_COLOR', null, null, $idShop));
+            $templateVars['{color}'] = Tools::safeOutput(Configuration::get('PS_MAIL_COLOR', null, $idShopGroup, $idShop));
 
             // Hook to allow modules to add extra template variables
             // Get extra template_vars
@@ -659,7 +661,7 @@ class MailCore extends ObjectModel
             ShopUrl::resetMainDomainCache();
 
             // Log the entry to the mail table
-            if (Configuration::get('PS_LOG_EMAILS')) {
+            if (Configuration::get('PS_LOG_EMAILS', null, $idShopGroup, $idShop)) {
                 $mail = new Mail();
                 $mail->template = Tools::substr($template, 0, 62);
                 $mail->subject = Tools::substr($email->getSubject(), 0, 255);
