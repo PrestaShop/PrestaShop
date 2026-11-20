@@ -43,7 +43,7 @@ export default class ChoiceExtension {
 
   /**
    * Filters the choices of a searchable column as the user types.
-   * Enter is intercepted because the grid sits inside the filters form.
+   * Enter applies the first match; it is intercepted because the grid sits inside the filters form.
    *
    * @param {Grid} grid
    * @private
@@ -68,16 +68,18 @@ export default class ChoiceExtension {
     });
 
     $container.on('keydown', GridMap.choiceSearch, (e: JQuery.KeyDownEvent) => {
-      if (e.key !== 'Enter') {
+      if (e.key !== 'Enter' && e.key !== 'ArrowDown') {
         return;
       }
 
       e.preventDefault();
-      $(e.currentTarget)
+      const $firstMatch = $(e.currentTarget)
         .closest(GridMap.bulks.choiceOptions)
         .find(`${GridMap.dropdownItem}:not(.d-none)`)
-        .first()
-        .trigger('click');
+        .first();
+
+      // Bootstrap ignores arrow keys typed in an input of the menu, so the first move is done here
+      $firstMatch.trigger(e.key === 'Enter' ? 'click' : 'focus');
     });
   }
 
