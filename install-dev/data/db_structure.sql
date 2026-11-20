@@ -117,7 +117,8 @@ CREATE TABLE `PREFIX_carrier_lang` (
   `delay` varchar(512) DEFAULT NULL,
   PRIMARY KEY (
     `id_lang`, `id_shop`, `id_carrier`
-  )
+  ),
+  KEY `id_carrier` (`id_carrier`, `id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
 /* Association between a zone and a carrier */
