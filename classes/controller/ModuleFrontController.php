@@ -24,6 +24,39 @@ class ModuleFrontControllerCore extends FrontController
         $this->controller_type = 'modulefront';
     }
 
+    public function init()
+    {
+        parent::init();
+
+        // Requests with parameters of their own (payment returns, callbacks) are not redirected: it would drop them
+        if (!$this->ajax && !Tools::isPHPCLI() && $this->carriesOnlyRoutingParameters($_GET)) {
+            $this->redirectToCanonicalModuleUrl(Dispatcher::getInstance()->getController());
+        }
+    }
+
+    private function redirectToCanonicalModuleUrl(string $controllerName): void
+    {
+        try {
+            $canonicalUrl = $this->context->link->getModuleLink(
+                $this->module->name,
+                $controllerName,
+                [],
+                $this->ssl,
+                $this->context->language->id
+            );
+        } catch (PrestaShopException $e) {
+            // A module route that needs a parameter has no URL without it
+            return;
+        }
+
+        $this->canonicalRedirection($canonicalUrl);
+    }
+
+    private function carriesOnlyRoutingParameters(array $query): bool
+    {
+        return empty(array_diff_key($query, array_flip(['controller', 'fc', 'module', 'id_lang', 'isolang'])));
+    }
+
     /**
      * Assigns module template for page content.
      *
