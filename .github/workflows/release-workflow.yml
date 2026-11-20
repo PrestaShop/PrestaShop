@@ -16,6 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Normalize Dependabot PR
-        uses: PrestaShop/.github/.github/actions/normalize-dependabot-pr@master
+        uses: PrestaShop/.github/.github/actions/normalize-dependabot-pr@d44abaa07d60927acbe6ece78e649f342c5b7169 # master
         with:
           default-branch: ${{ github.event.pull_request.base.ref }}
