@@ -8,7 +8,7 @@
 |---|---|---|
 | DataConfiguration | `src/Adapter/{Domain}/{Name}Configuration.php` | extends `AbstractMultistoreConfiguration`. Reads/writes config rows. Implements `getConfiguration(): array`, `updateConfiguration(array): array` (returns array of errors), and protected `buildResolver(): OptionsResolver` for option validation. |
 | FormDataProvider | `src/PrestaShopBundle/Form/Admin/{Section}/{Name}FormDataProvider.php` | implements `PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface`. Two-line bridge: `getData()` → `dataConfiguration->getConfiguration()`, `setData($data)` → `dataConfiguration->updateConfiguration($data)`. |
-| FormType | `src/PrestaShopBundle/Form/Admin/{Section}/{Name}Type.php` | standard `AbstractType` / `TranslatorAwareType`. **This is the root form** — no `getParent()`, no wrapper, no entity binding. |
+| FormType | `src/PrestaShopBundle/Form/Admin/{Section}/{Name}Type.php` | standard `AbstractType` / `TranslatorAwareType`. **This is the root form** — no wrapper, no entity binding, and no `getParent()` unless the keys can differ per shop (see *Multistore*). |
 
 ## Service definitions (4 YAML entries, no PHP handler class)
 
@@ -39,6 +39,16 @@ A handful of pages need a side effect at save time that does not belong in `Data
 - The class must **`extends Handler`** — never reimplement `FormHandlerInterface` from scratch.
 - Overridden `save()` must call **`parent::save()`** so the hook dispatch still fires.
 - Cache-clearing or similar plumbing dependencies are wired via service `calls:` in the YAML.
+
+## Multistore
+
+A settings form whose keys can differ per shop needs every piece below, or a save from a shop context writes all its keys for that shop:
+
+- The FormType `getParent()` returns `MultistoreConfigurationType` and each field declares `multistore_configuration_key` (its `ps_configuration` key): `MultistoreConfigurationTypeExtension` then adds the `multistore_<field>` override checkboxes, disables the fields not overridden and switches the form to `PATCH`.
+- The DataConfiguration reads with `getShopConstraint()` and writes through `updateConfigurationValue()`, which removes the shop value of an unchecked field. A key derived from a field (a name stored next to its id) follows the checkbox of that field.
+- The save route accepts `PATCH` (`methods: [ PATCH, POST ]`).
+- The page script initialises `MultistoreConfigField`, which enables a field when its checkbox is checked.
+- A field a form listener rebuilds after `PRE_SET_DATA` loses the `disabled` attribute and the shops dropdown the extension set: carry them over (`ContactDetailsType::rebuildStateField()`).
 
 ## Anti-patterns (named symptoms)
 

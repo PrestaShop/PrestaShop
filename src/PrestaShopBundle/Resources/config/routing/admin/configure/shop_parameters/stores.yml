@@ -42,7 +42,7 @@ admin_stores_edit:
 
 admin_stores_save_contact_details:
   path: /contact-details/save
-  methods: [ POST ]
+  methods: [ PATCH, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoreController::saveContactDetailsAction'
     _legacy_controller: AdminStores

@@ -4,6 +4,8 @@
  */
 
 $(() => {
+  window.prestashop.component.initComponents(['MultistoreConfigField']);
+
   new window.prestashop.component.CountryStateSelectionToggler(
     '#stores-contact-details_id_country',
     '#stores-contact-details_id_state',
