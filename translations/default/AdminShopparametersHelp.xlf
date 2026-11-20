@@ -268,6 +268,11 @@
         <target>Enable this option only if your server allows URL rewriting (recommended).</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/SetUpUrlType.php [Line: 73]</note>
       </trans-unit>
+      <trans-unit id="c1588611513859995eb0b9c9881d1061">
+        <source>Enable this option to let customers use multiple promo codes. Existing shops keep their current behavior after upgrading.</source>
+        <target>Enable this option to let customers use multiple promo codes. Existing shops keep their current behavior after upgrading.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/GeneralType.php [Line: 79]</note>
+      </trans-unit>
       <trans-unit id="feb02e79a9b6bca4bb9559914d218455">
         <source>Enables or disables SSL encryption (https://) for your shop. This is a security standard and you should always keep this option enabled, unless there is a specific technical issue.</source>
         <target>Enables or disables SSL encryption (https://) for your shop. This is a security standard and you should always keep this option enabled, unless there is a specific technical issue.</target>
