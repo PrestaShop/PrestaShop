@@ -15,7 +15,7 @@
 	<tbody>
 		<!-- PRODUCTS -->
 		{foreach $products as $product}
-			{if $product.product_quantity-$product.product_quantity_refunded > 0}
+			{if $product.product_quantity > 0}
 				{cycle values=["color_line_even", "color_line_odd"] assign=bgcolor_class}
 				<tr class="product {$bgcolor_class}">
 
@@ -46,7 +46,7 @@
 						{/if}
 					</td>
 					<td class="product center">
-						{$product.product_quantity-$product.product_quantity_refunded}
+						{$product.product_quantity}
 					</td>
 
 				</tr>
@@ -82,7 +82,7 @@
                 </td>
 
                 <td class="center">
-                  ({if $customization.quantity == 0}1{else}{$customization.quantity-$product.product_quantity_refunded}{/if})
+                  ({if $customization.quantity == 0}1{else}{$customization.quantity}{/if})
                 </td>
 
               </tr>
