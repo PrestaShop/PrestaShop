@@ -182,6 +182,12 @@ class ProductFeatureValueUpdater
         }
 
         $qb = $this->connection->createQueryBuilder();
+        $qb->delete($this->dbPrefix . 'feature_value_lang')
+            ->where($qb->expr()->in('id_feature_value', $orphanIds))
+        ;
+        $qb->executeStatement();
+
+        $qb = $this->connection->createQueryBuilder();
         $qb->delete($this->dbPrefix . 'feature_value')
             ->where($qb->expr()->in('id_feature_value', $orphanIds))
         ;
