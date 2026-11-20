@@ -30,7 +30,11 @@ class PrestaShopLayoutGlobalVariables
      */
     public function setupSmarty(string $title, string $metaTitle, bool $liteDisplay): void
     {
-        $this->context->getContext()->smarty->setTemplateDir(_PS_BO_ALL_THEMES_DIR_ . 'new-theme/template/');
+        // The default theme provides the helper templates (and their includes) the new theme does not ship
+        $this->context->getContext()->smarty->setTemplateDir([
+            _PS_BO_ALL_THEMES_DIR_ . 'new-theme/template/',
+            _PS_BO_ALL_THEMES_DIR_ . 'default/template/',
+        ]);
         $this->assignSmartyVariables->fill($title, $metaTitle, $liteDisplay);
     }
 
