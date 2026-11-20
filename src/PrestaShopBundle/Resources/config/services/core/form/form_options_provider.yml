@@ -17,3 +17,8 @@ services:
     autowire: true
 
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\ExtraPropertyDefinitionFormOptionsProvider: ~
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\ShopGroupFormOptionsProvider:
+    public: false
+    arguments:
+      - '@prestashop.core.query_bus'
