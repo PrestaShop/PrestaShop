@@ -56,6 +56,11 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
     protected $customizationFields = [];
 
     /**
+     * @var Customization[]
+     */
+    protected $previousCustomizationsInCart = [];
+
+    /**
      * @var CategoryFeatureContext
      */
     protected $categoryFeatureContext;
@@ -840,6 +845,44 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @When /^I add (\d+) items of a new customization of product "(.+)"$/
+     */
+    public function iAddItemsOfANewCustomizationOfProduct(int $quantity, string $productName): void
+    {
+        $this->checkProductWithNameExists($productName);
+        if (isset($this->customizationsInCart[$productName])) {
+            $this->previousCustomizationsInCart[] = $this->customizationsInCart[$productName];
+            unset($this->customizationsInCart[$productName]);
+        }
+        $this->addCustomizationInCurrentCartForProductNamedIfNotExist($productName);
+        $result = $this->getCurrentCart()->updateQty($quantity, $this->getProductWithName($productName)->id, null, $this->customizationsInCart[$productName]->id);
+        if (!$result) {
+            throw new RuntimeException(sprintf('Expects true, got %s instead', $result));
+        }
+    }
+
+    /**
+     * @Then /^the line of product "(.+)" with quantity (\d+) in my cart should have a reduction of (\d+(?:\.\d+)?)$/
+     */
+    public function theLineOfProductWithQuantityShouldHaveAReductionOf(string $productName, int $quantity, string $expectedReduction): void
+    {
+        $this->checkProductWithNameExists($productName);
+        $productId = (int) $this->getProductWithName($productName)->id;
+        foreach ($this->getCurrentCart()->getProducts(true) as $line) {
+            if ((int) $line['id_product'] === $productId && (int) $line['cart_quantity'] === $quantity) {
+                $reduction = round((float) $line['reduction'], 2);
+                if ($reduction !== round((float) $expectedReduction, 2)) {
+                    throw new RuntimeException(sprintf('Expects a reduction of %s, got %s instead', $expectedReduction, $reduction));
+                }
+
+                return;
+            }
+        }
+
+        throw new RuntimeException(sprintf('No line of product "%s" with quantity %d in the cart', $productName, $quantity));
+    }
+
+    /**
      * @Then /^I am not able to add (\d+) items of customization "(.+)" of product "(.+)" to my cart$/
      */
     public function iAmNotAbleToAddPCustomizationNamedOfroductNamedInMyCartWithQuantity(int $customizationFieldQuantity, string $customizationFieldName, string $productName)
@@ -904,6 +947,11 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
             $customization->delete();
         }
         $this->customizationsInCart = [];
+
+        foreach ($this->previousCustomizationsInCart as $customization) {
+            $customization->delete();
+        }
+        $this->previousCustomizationsInCart = [];
     }
 
     /**
