@@ -1049,7 +1049,7 @@ function getControllerActionMap(force_action) {
 function ajaxStates(id_state_selected)
 {
   $.ajax({
-    url: `${$('#contains_states').data('statesUrl')}&id_country=${$('#id_country').val()}`,
+    url: `${$('#contains_states').data('statesUrl')}&id_country=${$('#id_country').val()}&id_state=${id_state_selected || 0}`,
     cache: false,
     success: function(response)
     {

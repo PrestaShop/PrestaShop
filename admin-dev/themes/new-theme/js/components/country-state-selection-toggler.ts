@@ -63,6 +63,8 @@ export default class CountryStateSelectionToggler {
       dataType: 'json',
       data: {
         id_country: countryId,
+        // Keeps the saved state in the list when it has been disabled since
+        id_state: selectedStateId,
       },
     })
       .then((response) => {

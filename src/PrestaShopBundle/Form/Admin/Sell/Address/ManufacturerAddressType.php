@@ -77,7 +77,10 @@ class ManufacturerAddressType extends TranslatorAwareType
         $nameHint = $this->trans('Invalid characters:', 'Admin.Global') . ' 0-9!<>,;?=+()@#"�{}_$%:';
         $data = $builder->getData();
         $countryId = 0 !== $data['id_country'] ? $data['id_country'] : $this->contextCountryId;
-        $stateChoices = $this->statesChoiceProvider->getChoices(['id_country' => $countryId]);
+        $stateChoices = $this->statesChoiceProvider->getChoices([
+            'id_country' => $countryId,
+            'kept_state_id' => (int) ($data['id_state'] ?? 0),
+        ]);
         $otherHint = $this->trans('Invalid characters:', 'Admin.Global') . ' <>{}';
 
         $builder
