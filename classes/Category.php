@@ -1822,9 +1822,18 @@ class CategoryCore extends ObjectModel
             return false;
         }
 
-        return Db::getInstance()->execute('
+        $idCategory = (int) Context::getContext()->shop->getCategory();
+
+        $result = Db::getInstance()->execute('
 		INSERT INTO `' . _DB_PREFIX_ . 'category_group` (`id_category`, `id_group`)
-		VALUES (' . (int) Context::getContext()->shop->getCategory() . ', ' . (int) $idGroup . ')');
+		VALUES (' . $idCategory . ', ' . (int) $idGroup . ')');
+
+        // The home category groups may already be cached, drop the stale list like addGroups() does
+        $category = new Category();
+        $category->id = $idCategory;
+        Cache::clean($category->getGroupsCacheId());
+
+        return $result;
     }
 
     /**
