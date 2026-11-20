@@ -5,7 +5,7 @@
  */
 use Doctrine\DBAL\Exception as DBALException;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
-use Symfony\Component\Dotenv\Dotenv;
+use PrestaShop\PrestaShop\Core\Util\DotEnvLoader;
 
 ob_start();
 
@@ -71,13 +71,8 @@ if ((!is_dir(_PS_CORE_DIR_ . DIRECTORY_SEPARATOR . 'vendor') ||
 require_once _PS_CORE_DIR_ . '/config/defines.inc.php';
 require_once _PS_CORE_DIR_ . '/config/autoload.php';
 
-// Loads .env file from the root of project
-$dotEnvFile = dirname(__FILE__, 2) . '/.env';
-(new Dotenv())
-    // DO NOT use putEnv
-    ->usePutenv(false)
-    ->loadEnv($dotEnvFile)
-;
+// Loads the .env files from the root of project if present
+DotEnvLoader::load(dirname(__FILE__, 2) . '/.env');
 
 if (file_exists(_PS_CORE_DIR_ . '/app/config/parameters.php')) {
     require_once _PS_CORE_DIR_ . '/config/bootstrap.php';
