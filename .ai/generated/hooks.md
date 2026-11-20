@@ -1,5 +1,5 @@
 # Hook Names Index (generated 2026-04-25)
-# 128 unique hook names discovered via static source analysis
+# 129 unique hook names discovered via static source analysis
 #
 # Source: dispatchWithParameters / Hook::exec calls in src/ and classes/
 # Dynamic hooks (computed names, hook names in DB) are not listed here.
@@ -40,6 +40,7 @@
 - actionClearCompileCache
 - actionClearSf2Cache
 - actionConfigurationUpdateValueBefore
+- actionCspPolicyModifier
 - actionCustomerAccountAdd
 - actionCustomerAccountUpdate
 - actionCustomerAddGroups

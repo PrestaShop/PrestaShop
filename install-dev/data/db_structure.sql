@@ -3113,6 +3113,37 @@ CREATE TABLE `PREFIX_api_client` (
   PRIMARY KEY (`id_api_client`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
+CREATE TABLE `PREFIX_csp_log` (
+  `id_csp_log`   INT UNSIGNED AUTO_INCREMENT NOT NULL,
+  `id_shop`      INT UNSIGNED               NOT NULL,
+  `context`      VARCHAR(10)   DEFAULT 'front' NOT NULL,
+  `directive`    VARCHAR(64)                NOT NULL,
+  `source`       VARCHAR(255)               NOT NULL,
+  `document_uri` VARCHAR(255)  DEFAULT ''   NOT NULL,
+  `sample`       VARCHAR(64)   DEFAULT NULL,
+  `source_file`  VARCHAR(255)  DEFAULT NULL,
+  `line_number`  INT UNSIGNED  DEFAULT NULL,
+  `hits`         INT UNSIGNED  DEFAULT 1    NOT NULL,
+  `date_add`     DATETIME                   NOT NULL,
+  `date_upd`     DATETIME                   NOT NULL,
+  UNIQUE INDEX `csp_log_shop_directive_source_doc_idx` (`id_shop`, `context`, `directive`, `source`, `document_uri`),
+  INDEX `csp_log_shop_prune_idx` (`id_shop`, `context`, `hits`, `date_upd`),
+  INDEX `csp_log_shop_id_idx` (`id_shop`, `context`, `id_csp_log`),
+  INDEX `csp_log_shop_date_add_idx` (`id_shop`, `context`, `date_add`),
+  PRIMARY KEY (`id_csp_log`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
+CREATE TABLE `PREFIX_csp_rule` (
+  `id_csp_rule`  INT UNSIGNED AUTO_INCREMENT NOT NULL,
+  `id_shop`      INT UNSIGNED               NOT NULL,
+  `context`      VARCHAR(10)   DEFAULT 'front' NOT NULL,
+  `directive`    VARCHAR(64)                NOT NULL,
+  `source`       VARCHAR(255)               NOT NULL,
+  `date_add`     DATETIME                   NOT NULL,
+  UNIQUE INDEX `csp_rule_shop_directive_source_idx` (`id_shop`, `context`, `directive`, `source`),
+  PRIMARY KEY (`id_csp_rule`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
 CREATE TABLE `PREFIX_stock_mvt` (
   `id_stock_mvt`        BIGINT AUTO_INCREMENT NOT NULL,
   `id_stock`            INT                      NOT NULL,
