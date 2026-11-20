@@ -28,7 +28,7 @@ class ImageTypeRepository
 
     public function setTypes(array $types)
     {
-        $this->removeAllTypes();
+        // image_type is shared by every shop: the types this theme does not declare belong to the merchant or to another shop's theme
         foreach ($types as $name => $data) {
             $this->createType(
                 $name,
@@ -62,6 +62,13 @@ class ImageTypeRepository
             } else {
                 $data[$scope_item] = 0;
             }
+        }
+
+        $existingId = $this->getIdByName($name);
+        if ($existingId) {
+            $this->db->update('image_type', $data, 'id_image_type = ' . $existingId);
+
+            return $existingId;
         }
 
         $this->db->insert('image_type', $data);
