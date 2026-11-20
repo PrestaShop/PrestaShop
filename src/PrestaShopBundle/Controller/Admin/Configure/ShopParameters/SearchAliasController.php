@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Controller responsible for "Configure > Shop Parameters > Search" page.
+ * Controller responsible for "Configure > Shop Parameters > Search > Aliases" page.
  */
 class SearchAliasController extends PrestaShopAdminController
 {
@@ -44,7 +44,7 @@ class SearchAliasController extends PrestaShopAdminController
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Search/index.html.twig', [
             'aliasGrid' => $this->presentGrid($aliasGrid),
-            'help_link' => $this->generateSidebarLink('AdminSearchConf'),
+            'help_link' => $this->generateSidebarLink('AdminAliases'),
             'layoutHeaderToolbarBtn' => [
                 'add' => [
                     'desc' => $this->trans('Add new alias', [], 'Admin.Shopparameters.Feature'),
@@ -80,7 +80,7 @@ class SearchAliasController extends PrestaShopAdminController
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Search/form.html.twig', [
             'form' => $form->createView(),
-            'help_link' => $this->generateSidebarLink('AdminSearchConf'),
+            'help_link' => $this->generateSidebarLink('AdminAliases'),
             'enableSidebar' => true,
             'layoutTitle' => $this->trans('New aliases', [], 'Admin.Shopparameters.Feature'),
         ]);
@@ -116,7 +116,7 @@ class SearchAliasController extends PrestaShopAdminController
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Search/form.html.twig', [
             'form' => $form->createView(),
-            'help_link' => $this->generateSidebarLink('AdminSearchConf'),
+            'help_link' => $this->generateSidebarLink('AdminAliases'),
             'enableSidebar' => true,
             'layoutTitle' => $this->trans(
                 'Edit aliases for %s',

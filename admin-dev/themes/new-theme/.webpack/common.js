@@ -181,6 +181,7 @@ module.exports = {
     rtl: './scss/rtl.scss',
     search: './js/pages/search',
     search_engine: './js/pages/search-engine',
+    search_preferences: './js/pages/search/preferences',
     security: './js/pages/security',
     shipping_preferences: './js/pages/shipping-preferences',
     specific_price_form: './js/pages/product/specific-price/form',

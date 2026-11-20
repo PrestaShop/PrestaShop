@@ -95,6 +95,10 @@ services:
     test_currency_context_builder:
       alias: PrestaShop\PrestaShop\Core\Context\CurrencyContextBuilder
 
+    # Made public so its shop context, which is only built once, can be refreshed when a test switches the shop context
+    test_multistore_checkbox_enabler:
+      alias: PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler
+
     # The contexts services are not shared, meaning a new instance is created everytime they are accessed
     # This allow changing them dynamically during the test process
     PrestaShop\PrestaShop\Core\Context\ShopContext:
