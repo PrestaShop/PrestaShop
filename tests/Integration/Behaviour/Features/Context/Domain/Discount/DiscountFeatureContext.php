@@ -83,6 +83,48 @@ class DiscountFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then I should get an error that the discount type cannot be changed
+     */
+    public function assertDiscountTypeCannotBeChanged(): void
+    {
+        $this->assertLastErrorIs(DiscountConstraintException::class, DiscountConstraintException::INVALID_DISCOUNT_TYPE);
+    }
+
+    /**
+     * @Then discount :discountReference should have the type :discountType deduced from its legacy settings
+     */
+    public function assertDiscountTypeIsDeduced(string $discountReference, string $discountType): void
+    {
+        $discountForEditing = $this->getDiscountForEditing($discountReference);
+        Assert::assertTrue($discountForEditing->isTypeDeduced(), 'Discount type was expected to be deduced, not saved');
+        Assert::assertSame($discountType, $discountForEditing->getType()->getValue(), 'Unexpected deduced type');
+    }
+
+    /**
+     * @Then discount :discountReference should have the type :discountType saved
+     */
+    public function assertDiscountTypeIsSaved(string $discountReference, string $discountType): void
+    {
+        $discountForEditing = $this->getDiscountForEditing($discountReference);
+        Assert::assertFalse($discountForEditing->isTypeDeduced(), 'Discount type was expected to be saved, not deduced');
+        Assert::assertSame($discountType, $discountForEditing->getType()->getValue(), 'Unexpected saved type');
+        Assert::assertEmpty($discountForEditing->getUnsupportedLegacySettings(), 'Unexpected unsupported legacy settings');
+    }
+
+    /**
+     * @Then discount :discountReference should have the following unsupported legacy settings: :unsupportedSettings
+     */
+    public function assertDiscountUnsupportedLegacySettings(string $discountReference, string $unsupportedSettings): void
+    {
+        $discountForEditing = $this->getDiscountForEditing($discountReference);
+        Assert::assertSame(
+            PrimitiveUtils::castStringArrayIntoArray($unsupportedSettings),
+            $discountForEditing->getUnsupportedLegacySettings(),
+            'Unexpected unsupported legacy settings'
+        );
+    }
+
+    /**
      * @Then I should get an error that start date cannot be after expiry date
      */
     public function assertStartDateCannotBeAfterExpiryDate(): void
@@ -367,6 +409,9 @@ class DiscountFeatureContext extends AbstractDomainFeatureContext
         $discountId = $this->getSharedStorage()->get($discountReference);
         $command = new UpdateDiscountCommand($discountId);
 
+        if (isset($data['type'])) {
+            $command->setDiscountType($data['type']);
+        }
         if (isset($data['name'])) {
             $command->setLocalizedNames($data['name']);
         }

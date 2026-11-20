@@ -53,7 +53,11 @@ final class BulkUpdateDiscountsStatusHandler extends AbstractBulkCommandHandler 
         }
 
         $entity->active = $command->getNewStatus();
-        $this->discountValidator->validateDiscountPropertiesForType($entity, null);
+        // A cart rule created before the discount types were introduced has no type to validate, its status can still be
+        // changed (as with the single status toggle), its type is only saved from the discount form
+        if (null !== $entity->getType()) {
+            $this->discountValidator->validateDiscountPropertiesForType($entity, null);
+        }
 
         if (!$entity->update()) {
             throw new CannotUpdateDiscountException(sprintf('Cannot update status for discount with id "%s"', $id->getValue()));

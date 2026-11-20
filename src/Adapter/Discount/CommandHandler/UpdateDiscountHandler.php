@@ -36,13 +36,34 @@ class UpdateDiscountHandler implements UpdateDiscountCommandHandlerInterface
     public function handle(UpdateDiscountCommand $command): void
     {
         $cartRule = $this->discountRepository->get($command->getDiscountId());
-        $updatableProperties = $this->discountFiller->fillUpdatableProperties($cartRule, $command);
+        $updatableProperties = [];
+        $newType = $command->getDiscountType()?->getValue();
+        if (null !== $newType && $newType !== $cartRule->getType()) {
+            if (null !== $cartRule->getType()) {
+                throw new DiscountConstraintException(
+                    sprintf('The type of discount %d cannot be changed from "%s" to "%s".', $command->getDiscountId()->getValue(), $cartRule->getType(), $newType),
+                    DiscountConstraintException::INVALID_DISCOUNT_TYPE
+                );
+            }
+            $newTypeId = $this->discountTypeRepository->getTypeIdByString($newType);
+            if (null === $newTypeId) {
+                throw new DiscountConstraintException(sprintf("Invalid discount type '%s'.", $newType), DiscountConstraintException::INVALID_DISCOUNT_TYPE);
+            }
+            // Cart rule created before the discount types were introduced: its type is only saved when it is explicitly
+            // given (by the discount form, where the merchant saw the deduced type), never implicitly (e.g. status toggle)
+            $cartRule->id_cart_rule_type = $newTypeId;
+            $updatableProperties[] = 'id_cart_rule_type';
+        }
+        $updatableProperties = array_merge($updatableProperties, $this->discountFiller->fillUpdatableProperties($cartRule, $command));
         // This should be tested by the validator but since both getters impact the same entity field and the validator is based on it
         // this is the only place where we can check this constraint
         if ($cartRule->getType() === DiscountType::PRODUCT_LEVEL && $command->getCheapestProduct() && null !== $command->getReductionProductId()) {
             throw new DiscountConstraintException('You need to choose only one target, cheapest, single product or product segment.', DiscountConstraintException::INVALID_PRODUCT_DISCOUNT_INCOMPATIBLE_TARGETS);
         }
-        $this->discountValidator->validateDiscountPropertiesForType($cartRule, $command->getProductConditions());
+        // A cart rule without type keeps its legacy behaviour, like in the bulk status update, there is no type to validate
+        if (null !== $cartRule->getType()) {
+            $this->discountValidator->validateDiscountPropertiesForType($cartRule, $command->getProductConditions());
+        }
         $this->discountValidator->validateAssociations(
             $command->getProductConditions(),
             $command->getCarrierIds() ? array_map(fn (CarrierId $carrierId) => $carrierId->getValue(), $command->getCarrierIds()) : null,

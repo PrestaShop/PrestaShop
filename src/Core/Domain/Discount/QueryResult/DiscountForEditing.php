@@ -52,6 +52,8 @@ class DiscountForEditing
         private readonly array $countryIds,
         private readonly array $customerGroupIds,
         private readonly array $compatibleDiscountTypeIds,
+        private readonly bool $typeDeduced = false,
+        private readonly array $unsupportedLegacySettings = [],
     ) {
         if ($reductionAmount !== null && $reductionAmountCurrencyId !== null && $reductionAmountTaxIncluded !== null) {
             $this->reductionAmount = new Money($reductionAmount, $reductionAmountCurrencyId, $reductionAmountTaxIncluded);
@@ -219,5 +221,23 @@ class DiscountForEditing
     public function getCompatibleDiscountTypeIds(): array
     {
         return $this->compatibleDiscountTypeIds;
+    }
+
+    /**
+     * True when the discount has no type saved (legacy cart rule) and its type was deduced from its settings
+     */
+    public function isTypeDeduced(): bool
+    {
+        return $this->typeDeduced;
+    }
+
+    /**
+     * Legacy settings of the cart rule that its deduced type cannot represent
+     *
+     * @return string[]
+     */
+    public function getUnsupportedLegacySettings(): array
+    {
+        return $this->unsupportedLegacySettings;
     }
 }
