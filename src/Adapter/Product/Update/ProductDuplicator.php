@@ -497,20 +497,22 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         $this->bulkInsert('product_attribute_shop', $newShopAssociations, CannotDuplicateProductException::FAILED_DUPLICATE_COMBINATIONS);
 
         // Finally copy all combination multi lang fields
-        $oldCombinationsLang = $this->getRows(
-            'product_attribute_lang',
-            [
-                'id_product_attribute' => array_keys($combinationMatching),
-            ],
-            CannotDuplicateProductException::FAILED_DUPLICATE_COMBINATIONS
-        );
-        $newCombinationsLang = [];
-        foreach ($oldCombinationsLang as $oldLang) {
-            $newCombinationsLang[] = array_merge($oldLang, [
-                'id_product_attribute' => $combinationMatching[(int) $oldLang['id_product_attribute']],
-            ]);
+        foreach (['product_attribute_lang', 'product_attribute_content'] as $langTable) {
+            $oldCombinationsLang = $this->getRows(
+                $langTable,
+                [
+                    'id_product_attribute' => array_keys($combinationMatching),
+                ],
+                CannotDuplicateProductException::FAILED_DUPLICATE_COMBINATIONS
+            );
+            $newCombinationsLang = [];
+            foreach ($oldCombinationsLang as $oldLang) {
+                $newCombinationsLang[] = array_merge($oldLang, [
+                    'id_product_attribute' => $combinationMatching[(int) $oldLang['id_product_attribute']],
+                ]);
+            }
+            $this->bulkInsert($langTable, $newCombinationsLang, CannotDuplicateProductException::FAILED_DUPLICATE_COMBINATIONS);
         }
-        $this->bulkInsert('product_attribute_lang', $newCombinationsLang, CannotDuplicateProductException::FAILED_DUPLICATE_COMBINATIONS);
 
         return $combinationMatching;
     }
