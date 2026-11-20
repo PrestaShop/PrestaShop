@@ -140,7 +140,7 @@ class StockManager
      * @param int $delta_quantity The quantity change (positive or negative)
      * @param int|null $id_shop Optional
      * @param bool $add_movement Optional
-     * @param array $params Optional
+     * @param array $params Optional, keys read: id_order, id_stock_mvt_reason, id_employee, employee_firstname, employee_lastname
      */
     public function updateQuantity($product, $id_product_attribute, $delta_quantity, $id_shop = null, $add_movement = false, $params = [])
     {
@@ -342,7 +342,7 @@ class StockManager
      * @param int $productId
      * @param int $productAttributeId
      * @param int $deltaQuantity
-     * @param array $params
+     * @param array $params Keys read: id_order, id_stock_mvt_reason, id_employee, employee_firstname, employee_lastname
      *
      * @return bool
      */
@@ -423,6 +423,17 @@ class StockManager
                     $stockMvt->setIdEmployee((int) $employee->id);
                     $stockMvt->setEmployeeFirstname($employee->firstname);
                     $stockMvt->setEmployeeLastname($employee->lastname);
+                }
+
+                // An author given by the caller wins over the context employee
+                if (isset($params['id_employee'])) {
+                    $stockMvt->setIdEmployee((int) $params['id_employee']);
+                }
+                if (isset($params['employee_firstname'])) {
+                    $stockMvt->setEmployeeFirstname((string) $params['employee_firstname']);
+                }
+                if (isset($params['employee_lastname'])) {
+                    $stockMvt->setEmployeeLastname((string) $params['employee_lastname']);
                 }
 
                 return $stockMvt;
