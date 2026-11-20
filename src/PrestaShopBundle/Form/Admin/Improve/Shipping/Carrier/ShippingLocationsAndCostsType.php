@@ -104,6 +104,8 @@ class ShippingLocationsAndCostsType extends TranslatorAwareType
                     $shippingWeightTraduction => ShippingMethod::BY_WEIGHT,
                 ],
                 'default_empty_data' => ShippingMethod::BY_PRICE,
+                'required' => false,
+                'placeholder' => false,
                 'expanded' => true,
                 'multiple' => false,
                 'attr' => [
@@ -120,6 +122,8 @@ class ShippingLocationsAndCostsType extends TranslatorAwareType
                     $this->trans('Disable carrier', 'Admin.Shipping.Feature') => OutOfRangeBehavior::DISABLED,
                 ],
                 'default_empty_data' => OutOfRangeBehavior::USE_HIGHEST_RANGE,
+                'required' => false,
+                'placeholder' => false,
             ])
             ->add('ranges', CarrierRangesType::class, [
                 'required' => false,
