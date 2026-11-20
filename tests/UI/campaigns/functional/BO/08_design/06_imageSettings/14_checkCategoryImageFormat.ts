@@ -229,17 +229,14 @@ describe('BO - Design - Image Settings : Check category image format', async () 
           const imageTypeCoverJPG = await utilsFile.getFileType(pathImageCoverJPG);
           expect(imageTypeCoverJPG).to.be.eq(arg.extImageType);
 
-          // @todo : https://github.com/PrestaShop/PrestaShop/issues/32404
-          /*
-          // Check the WebP file
-          const pathImageWEBP: string = `${utilsFile.getRootPath()}/img/c/${idCategory}-large_default.webp`;
+          // Check the cover image file category_default WebP thumbnail is generated
+          const pathImageCoverWEBP: string = `${utilsFile.getRootPath()}/img/c/${idCategory}-category_default.webp`;
 
-          const fileExistsWEBP = await utilsFile.doesFileExist(pathImageWEBP);
-          expect(fileExistsWEBP, `The file ${pathImageWEBP} doesn't exist!`).to.eq(true);
+          const fileExistsCoverWEBP = await utilsFile.doesFileExist(pathImageCoverWEBP);
+          expect(fileExistsCoverWEBP, `The file ${pathImageCoverWEBP} doesn't exist!`).to.eq(true);
 
-          const imageTypeWEBP = await utilsFile.getFileType(pathImageWEBP);
-          expect(imageTypeWEBP).to.be.eq('webp');
-          */
+          const imageTypeCoverWEBP = await utilsFile.getFileType(pathImageCoverWEBP);
+          expect(imageTypeCoverWEBP).to.be.eq('webp');
 
           // Check the cover image file small_default jpg thumbnail is generated in proper format
           const pathImageMetaJPG: string = `${utilsFile.getRootPath()}/img/c/${idCategory}-small_default.jpg`;
@@ -250,17 +247,14 @@ describe('BO - Design - Image Settings : Check category image format', async () 
           const imageTypeMetaJPG = await utilsFile.getFileType(pathImageMetaJPG);
           expect(imageTypeMetaJPG).to.be.eq(arg.extImageType);
 
-          // @todo : https://github.com/PrestaShop/PrestaShop/issues/32404
-          /*
-          // Check the WebP file
-          const pathImageWEBP: string = `${utilsFile.getRootPath()}/img/c/${idCategory}-large_default.webp`;
+          // Check the cover image file small_default WebP thumbnail is generated
+          const pathImageMetaWEBP: string = `${utilsFile.getRootPath()}/img/c/${idCategory}-small_default.webp`;
 
-          const fileExistsWEBP = await utilsFile.doesFileExist(pathImageWEBP);
-          expect(fileExistsWEBP, `The file ${pathImageWEBP} doesn't exist!`).to.eq(true);
+          const fileExistsMetaWEBP = await utilsFile.doesFileExist(pathImageMetaWEBP);
+          expect(fileExistsMetaWEBP, `The file ${pathImageMetaWEBP} doesn't exist!`).to.eq(true);
 
-          const imageTypeWEBP = await utilsFile.getFileType(pathImageWEBP);
-          expect(imageTypeWEBP).to.be.eq('webp');
-          */
+          const imageTypeMetaWEBP = await utilsFile.getFileType(pathImageMetaWEBP);
+          expect(imageTypeMetaWEBP).to.be.eq('webp');
         });
 
         it('should go to FO page', async function () {
