@@ -531,3 +531,8 @@ services:
     deprecated:
       package: PrestaShop\PrestaShop
       version: 9.0
+
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\WithdrawalRequestGridDefinitionFactory:
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
+    autowire: true
+    public: true

@@ -1,0 +1,33 @@
+# Services of the withdrawal function used BOTH by the Symfony kernels and by the legacy front office container
+# (imported by config/services/common.yml), where the withdrawal page checks eligibility and records statements.
+# They must only depend on services that exist in the legacy front office container: no command bus, no Symfony
+# hook dispatcher, no translator.
+services:
+  _defaults:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Domain\WithdrawalRequest\Service\WithdrawalDeadlineCalculator: ~
+
+  PrestaShopBundle\Entity\Repository\WithdrawalRequestRepository:
+    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    arguments:
+      - PrestaShopBundle\Entity\WithdrawalRequest
+
+  PrestaShop\PrestaShop\Adapter\WithdrawalRequest\Repository\OrderWithdrawalDataRepository:
+    arguments:
+      $connection: '@doctrine.dbal.default_connection'
+      $dbPrefix: '%database_prefix%'
+
+  PrestaShop\PrestaShop\Adapter\WithdrawalRequest\WithdrawalEligibilityChecker:
+    public: true
+    arguments:
+      $configuration: '@PrestaShop\PrestaShop\Adapter\Configuration'
+
+  PrestaShop\PrestaShop\Adapter\WithdrawalRequest\WithdrawalButtonPresenter:
+    public: true
+
+  PrestaShop\PrestaShop\Adapter\WithdrawalRequest\WithdrawalRequestNotifier: ~
+
+  PrestaShop\PrestaShop\Adapter\WithdrawalRequest\WithdrawalRequestSubmitter:
+    public: true

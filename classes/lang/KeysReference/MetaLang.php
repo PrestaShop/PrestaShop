@@ -61,5 +61,7 @@ trans('Stores', 'Shop.Navigation');
 trans('stores', 'Shop.Navigation');
 trans('Guest tracking', 'Shop.Navigation');
 trans('guest-tracking', 'Shop.Navigation');
+trans('Withdraw from a contract', 'Shop.Navigation');
+trans('withdrawal', 'Shop.Navigation');
 trans('Order confirmation', 'Shop.Navigation');
 trans('order-confirmation', 'Shop.Navigation');

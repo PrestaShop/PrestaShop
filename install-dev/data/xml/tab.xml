@@ -191,6 +191,11 @@
             <wording>Merchandise Returns</wording>
             <wording_domain>Admin.Navigation.Menu</wording_domain>
         </tab>
+        <tab id="Withdrawal_Requests" id_parent="Customer_Service" active="1" enabled="1" route_name="admin_withdrawal_requests_index">
+            <class_name>AdminWithdrawalRequests</class_name>
+            <wording>Withdrawal Requests</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
 
         <!--STATISTICS-->
         <tab id="Stats" id_parent="SELL" active="1" enabled="1" icon="assessment">

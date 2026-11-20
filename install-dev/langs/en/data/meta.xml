@@ -125,6 +125,11 @@
     <description/>
     <url_rewrite>guest-tracking</url_rewrite>
   </meta>
+  <meta id="withdrawal" id_shop="1">
+    <title>Withdraw from a contract</title>
+    <description/>
+    <url_rewrite>withdrawal</url_rewrite>
+  </meta>
   <meta id="order-confirmation" id_shop="1">
     <title>Order confirmation</title>
     <description/>

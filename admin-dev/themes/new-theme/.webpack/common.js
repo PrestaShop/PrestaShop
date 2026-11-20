@@ -206,6 +206,7 @@ module.exports = {
     translation_settings: './js/pages/translation-settings',
     translations: './js/app/pages/translations',
     webservice: './js/pages/webservice',
+    withdrawal_request: './js/pages/withdrawal-request',
     zone: './js/pages/zone',
   },
   output: {

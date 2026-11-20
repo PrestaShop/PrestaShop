@@ -2342,6 +2342,27 @@ CREATE TABLE `PREFIX_import_job` (
   KEY `date_upd` (`date_upd`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
+CREATE TABLE `PREFIX_withdrawal_request` (
+  `id_withdrawal_request` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id_shop` int(10) UNSIGNED NOT NULL,
+  `id_order` int(10) UNSIGNED NOT NULL,
+  `id_customer` int(10) UNSIGNED NOT NULL,
+  `order_reference` varchar(64) NOT NULL,
+  `firstname` varchar(255) NOT NULL,
+  `lastname` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `message` text DEFAULT NULL,
+  `status` varchar(32) NOT NULL,
+  `submitted_at` datetime NOT NULL,
+  `acknowledged_at` datetime DEFAULT NULL,
+  `date_add` datetime NOT NULL,
+  `date_upd` datetime NOT NULL,
+  PRIMARY KEY (`id_withdrawal_request`),
+  UNIQUE KEY `id_order` (`id_order`),
+  KEY `id_shop_status` (`id_shop`, `status`),
+  KEY `id_customer` (`id_customer`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
 CREATE TABLE `PREFIX_country_shop` (
   `id_country` INT(11) UNSIGNED NOT NULL,
   `id_shop` INT(11) UNSIGNED NOT NULL,
