@@ -35,7 +35,6 @@ class TaxCore extends ObjectModel
         ],
     ];
 
-    protected static $_product_country_tax = [];
     protected static $_product_tax_via_rules = [];
 
     protected $webserviceParameters = [
