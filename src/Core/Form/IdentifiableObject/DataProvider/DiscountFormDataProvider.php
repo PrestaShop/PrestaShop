@@ -69,6 +69,7 @@ class DiscountFormDataProvider implements FormDataProviderInterface
 
         return [
             'information' => [
+                'active' => true,
                 'highlight_in_cart' => false,
             ],
             'period' => [
@@ -169,6 +170,7 @@ class DiscountFormDataProvider implements FormDataProviderInterface
                 'discount_type' => $discountForEditing->getType()->getValue(),
                 'names' => $discountForEditing->getLocalizedNames(),
                 'description' => $discountForEditing->getDescription(),
+                'active' => $discountForEditing->isActive(),
             ],
             'value' => [
                 'reduction' => [
