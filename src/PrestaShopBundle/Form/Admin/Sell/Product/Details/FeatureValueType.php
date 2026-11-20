@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Details;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
+use PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValueSettings;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
@@ -19,6 +20,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 
 class FeatureValueType extends TranslatorAwareType
 {
@@ -70,6 +72,14 @@ class FeatureValueType extends TranslatorAwareType
                         ),
                         'groups' => 'custom_value',
                     ]),
+                ],
+                'options' => [
+                    'constraints' => [
+                        new Length([
+                            'max' => FeatureValueSettings::VALUE_MAX_LENGTH,
+                            'groups' => 'custom_value',
+                        ]),
+                    ],
                 ],
             ])
             ->add('delete', IconButtonType::class, [
