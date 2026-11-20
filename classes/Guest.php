@@ -197,6 +197,12 @@ class GuestCore extends ObjectModel
      */
     public function mergeWithCustomer($idGuest, $idCustomer)
     {
+        // WHY: without an id, the updates below match `id_guest = 0`, i.e. every guest-less cart and
+        // connection of the shop (back office orders, webservice, imports), and would hand them all over.
+        if (!Validate::isLoadedObject($this)) {
+            return false;
+        }
+
         // Since the guests are merged, the guest id in the connections table must be changed too
         Db::getInstance()->update('connections', [
             'id_guest' => (int) $idGuest,
