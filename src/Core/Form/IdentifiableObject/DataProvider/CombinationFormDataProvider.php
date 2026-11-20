@@ -116,6 +116,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
         // form type), hence the data is only populated in that case to avoid feeding an absent field.
         if ($this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_COMBINATION_FEATURE_VALUES)) {
             $data['features'] = $this->extractFeatureValues($combinationId, $shopConstraint);
+            $data['carriers'] = $combinationForEditing->getCarrierReferenceIds();
         }
 
         return $data;
