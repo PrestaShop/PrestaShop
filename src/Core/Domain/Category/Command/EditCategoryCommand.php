@@ -52,6 +52,11 @@ class EditCategoryCommand
     private $isActive;
 
     /**
+     * @var bool|null
+     */
+    private $indexation;
+
+    /**
      * @var string[]
      */
     private $localizedMetaTitles;
@@ -227,6 +232,26 @@ class EditCategoryCommand
     public function isActive()
     {
         return $this->isActive;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getIndexation()
+    {
+        return $this->indexation;
+    }
+
+    /**
+     * @param bool $indexation
+     *
+     * @return self
+     */
+    public function setIndexation($indexation)
+    {
+        $this->indexation = (bool) $indexation;
+
+        return $this;
     }
 
     /**
