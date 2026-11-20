@@ -573,7 +573,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         if (ConfigurationKPI::get('PENDING_MESSAGES') !== false) {
             $helper->value = ConfigurationKPI::get('PENDING_MESSAGES');
         }
-        $helper->source = $this->context->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=pending_messages';
+        $helper->source = $this->context->link->getAdminLink('AdminStats', true, [], ['ajax' => 1, 'action' => 'getKpi', 'kpi' => 'pending_messages']);
         $helper->refresh = (bool) (ConfigurationKPI::get('PENDING_MESSAGES_EXPIRE') < $time);
         $kpis[] = $helper->generate();
 
@@ -586,7 +586,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         if (ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME') !== false) {
             $helper->value = ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME');
         }
-        $helper->source = $this->context->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=avg_msg_response_time';
+        $helper->source = $this->context->link->getAdminLink('AdminStats', true, [], ['ajax' => 1, 'action' => 'getKpi', 'kpi' => 'avg_msg_response_time']);
         $helper->refresh = (bool) (ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME_EXPIRE') < $time);
         $kpis[] = $helper->generate();
 
@@ -599,7 +599,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         if (ConfigurationKPI::get('MESSAGES_PER_THREAD') !== false) {
             $helper->value = ConfigurationKPI::get('MESSAGES_PER_THREAD');
         }
-        $helper->source = $this->context->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=messages_per_thread';
+        $helper->source = $this->context->link->getAdminLink('AdminStats', true, [], ['ajax' => 1, 'action' => 'getKpi', 'kpi' => 'messages_per_thread']);
         $helper->refresh = (bool) (ConfigurationKPI::get('MESSAGES_PER_THREAD_EXPIRE') < $time);
         $kpis[] = $helper->generate();
 

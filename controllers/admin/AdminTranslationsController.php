@@ -1267,7 +1267,7 @@ class AdminTranslationsControllerCore extends AdminController
         if (ConfigurationKPI::get('ENABLED_LANGUAGES') !== false) {
             $helper->value = ConfigurationKPI::get('ENABLED_LANGUAGES');
         }
-        $helper->source = $this->context->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=enabled_languages';
+        $helper->source = $this->context->link->getAdminLink('AdminStats', true, [], ['ajax' => 1, 'action' => 'getKpi', 'kpi' => 'enabled_languages']);
         $helper->refresh = (bool) (ConfigurationKPI::get('ENABLED_LANGUAGES_EXPIRE') < $time);
         $kpis[] = $helper->generate();
 
@@ -1280,7 +1280,7 @@ class AdminTranslationsControllerCore extends AdminController
         if (ConfigurationKPI::get('MAIN_COUNTRY', $this->context->language->id) !== false) {
             $helper->value = ConfigurationKPI::get('MAIN_COUNTRY', $this->context->language->id);
         }
-        $helper->source = $this->context->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=main_country';
+        $helper->source = $this->context->link->getAdminLink('AdminStats', true, [], ['ajax' => 1, 'action' => 'getKpi', 'kpi' => 'main_country']);
         $helper->refresh = (bool) (ConfigurationKPI::get('MAIN_COUNTRY_EXPIRE', $this->context->language->id) < $time);
         $kpis[] = $helper->generate();
 
@@ -1292,7 +1292,7 @@ class AdminTranslationsControllerCore extends AdminController
         if (ConfigurationKPI::get('FRONTOFFICE_TRANSLATIONS') !== false) {
             $helper->value = ConfigurationKPI::get('FRONTOFFICE_TRANSLATIONS');
         }
-        $helper->source = $this->context->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=frontoffice_translations';
+        $helper->source = $this->context->link->getAdminLink('AdminStats', true, [], ['ajax' => 1, 'action' => 'getKpi', 'kpi' => 'frontoffice_translations']);
         $helper->refresh = (bool) (ConfigurationKPI::get('FRONTOFFICE_TRANSLATIONS_EXPIRE') < $time);
         $kpis[] = $helper->generate();
 
