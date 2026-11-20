@@ -6,6 +6,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -20,7 +21,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class CartSummaryType extends AbstractType
 {
     /**
-     * @var FormChoiceProviderInterface
+     * @var ConfigurableFormChoiceProviderInterface
      */
     private $orderStatesChoiceProvider;
 
@@ -35,12 +36,12 @@ class CartSummaryType extends AbstractType
     private $translator;
 
     /**
-     * @param FormChoiceProviderInterface $orderStatesChoiceProvider
+     * @param ConfigurableFormChoiceProviderInterface $orderStatesChoiceProvider
      * @param FormChoiceProviderInterface $paymentModulesChoiceProvider
      * @param TranslatorInterface $translator
      */
     public function __construct(
-        FormChoiceProviderInterface $orderStatesChoiceProvider,
+        ConfigurableFormChoiceProviderInterface $orderStatesChoiceProvider,
         FormChoiceProviderInterface $paymentModulesChoiceProvider,
         TranslatorInterface $translator
     ) {
@@ -72,7 +73,9 @@ class CartSummaryType extends AbstractType
                 'autocomplete' => true,
             ])
             ->add('order_state', ChoiceType::class, [
-                'choices' => $this->orderStatesChoiceProvider->getChoices(),
+                'choices' => $this->orderStatesChoiceProvider->getChoices([
+                    'include_deleted' => false,
+                ]),
                 'required' => true,
                 'placeholder' => $this->translator->trans(
                     '-- Choose --',

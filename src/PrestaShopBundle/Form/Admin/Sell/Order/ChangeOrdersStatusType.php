@@ -6,7 +6,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -17,14 +17,14 @@ use Symfony\Component\Form\FormBuilderInterface;
 class ChangeOrdersStatusType extends AbstractType
 {
     /**
-     * @var FormChoiceProviderInterface
+     * @var ConfigurableFormChoiceProviderInterface
      */
     private $orderStatusChoiceProvider;
 
     /**
-     * @param FormChoiceProviderInterface $orderStatusChoiceProvider
+     * @param ConfigurableFormChoiceProviderInterface $orderStatusChoiceProvider
      */
-    public function __construct(FormChoiceProviderInterface $orderStatusChoiceProvider)
+    public function __construct(ConfigurableFormChoiceProviderInterface $orderStatusChoiceProvider)
     {
         $this->orderStatusChoiceProvider = $orderStatusChoiceProvider;
     }
@@ -36,7 +36,9 @@ class ChangeOrdersStatusType extends AbstractType
     {
         $builder
             ->add('new_order_status_id', ChoiceType::class, [
-                'choices' => $this->orderStatusChoiceProvider->getChoices(),
+                'choices' => $this->orderStatusChoiceProvider->getChoices([
+                    'include_deleted' => false,
+                ]),
                 'translation_domain' => false,
             ])
             ->add('order_ids', CollectionType::class, [
