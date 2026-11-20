@@ -53,7 +53,7 @@
               {{ document.referenceNumber }}
             </a>
           {% elseif document.type == 'credit_slip' %}
-            <a href="{{ getAdminLink('AdminPdf', true, {submitAction: 'generateOrderSlipPDF', id_order_slip: document.id}) }}">
+            <a href="{{ path('admin_orders_generate_credit_slip_pdf', {creditSlipId: document.id}) }}">
               {{ document.referenceNumber }}
             </a>
           {% endif %}

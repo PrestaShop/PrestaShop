@@ -6,8 +6,11 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use DateTime;
+use PrestaShop\PrestaShop\Adapter\Invoice\OrderInvoiceDataProvider;
+use PrestaShop\PrestaShop\Adapter\PDF\PDFGenerator;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShopBundle\Component\PdfResponse;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -70,34 +73,26 @@ class DeliveryController extends PrestaShopAdminController
      *
      * @param Request $request
      *
-     * @return RedirectResponse
+     * @return Response
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('create', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller'))", message: 'Access denied.')]
     public function generatePdfAction(
         Request $request,
         #[Autowire(service: 'prestashop.adapter.order.delivery.slip.pdf.form_handler')] FormHandlerInterface $formHandler,
-        LegacyContext $legacyContext
+        #[Autowire(service: 'prestashop.adapter.data_provider.order_invoice')] OrderInvoiceDataProvider $orderInvoiceDataProvider,
+        #[Autowire(service: 'prestashop.adapter.pdf.generator.delivery_slip')] PDFGenerator $deliverySlipPdfGenerator,
     ) {
         /** @var Form $form */
         $form = $formHandler->getForm();
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $errors = $formHandler->save($form->getData());
+            $data = $form->getData();
+            $errors = $formHandler->save($data);
             if (empty($errors)) {
-                $pdf = $form->getData();
-
-                return $this->redirect(
-                    $legacyContext->getAdminLink(
-                        'AdminPdf',
-                        true,
-                        [
-                            'date_from' => $pdf['date_from'],
-                            'date_to' => $pdf['date_to'],
-                            'submitAction' => 'generateDeliverySlipsPDF',
-                        ]
-                    )
-                );
+                return new PdfResponse($deliverySlipPdfGenerator->generatePDFForResponse(
+                    $orderInvoiceDataProvider->getByDeliveryDateInterval(new DateTime($data['date_from']), new DateTime($data['date_to']))
+                ));
             }
         }
 

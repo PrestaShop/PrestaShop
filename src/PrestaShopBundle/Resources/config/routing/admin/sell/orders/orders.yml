@@ -51,6 +51,15 @@ admin_orders_generate_delivery_slip_pdf:
   requirements:
     orderId: \d+
 
+admin_orders_generate_credit_slip_pdf:
+  path: /credit-slip/{creditSlipId}/generate-pdf
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::generateCreditSlipPdfAction
+    _legacy_controller: AdminOrders
+  requirements:
+    creditSlipId: \d+
+
 admin_orders_generate_shipment_delivery_slip_pdf:
   path: /shipment/{shipmentId}/generate-delivery-slip-pdf
   methods: [ GET ]
