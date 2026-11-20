@@ -202,6 +202,33 @@ class OrderQueryBuilderTest extends KernelTestCase
         }
     }
 
+    public function testOnlyTheFirstOrderOfACustomerIsNew(): void
+    {
+        $address = $this->insertAddress(1);
+        $customer = $this->insertCustomer('Zznewcomer', 'Zzbuyer');
+        $firstOrder = $this->insertOrder($address, 1, $customer);
+        $secondOrder = $this->insertOrder($address, 1, $customer);
+
+        try {
+            $rows = $this->queryBuilder
+                ->getSearchQueryBuilder($this->createSearchCriteria(['customer' => 'Zzbuyer'], 'id_order', 'ASC', 50, 0))
+                ->executeQuery()
+                ->fetchAllAssociative();
+            $this->assertSame(
+                [$firstOrder => 1, $secondOrder => 0],
+                array_map('intval', array_column($rows, 'new', 'id_order'))
+            );
+
+            $newOnly = $this->createSearchCriteria(['customer' => 'Zzbuyer', 'new' => 1], 'id_order', 'ASC', 50, 0);
+            $this->assertSame([$firstOrder], $this->fetchOrderIds($newOnly));
+            $this->assertSame(1, (int) $this->queryBuilder->getCountQueryBuilder($newOnly)->executeQuery()->fetchOne());
+        } finally {
+            $this->deleteOrders([$firstOrder, $secondOrder]);
+            $this->deleteCustomers([$customer]);
+            $this->deleteAddresses([$address]);
+        }
+    }
+
     private function insertCustomer(string $firstname, string $lastname): int
     {
         $this->connection->executeStatement(
