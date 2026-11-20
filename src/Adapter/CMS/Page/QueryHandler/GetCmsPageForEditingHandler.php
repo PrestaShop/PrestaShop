@@ -23,36 +23,16 @@ use PrestaShopException;
 #[AsQueryHandler]
 final class GetCmsPageForEditingHandler extends AbstractCmsPageHandler implements GetCmsPageForEditingHandlerInterface
 {
-    /**
-     * @var Link
-     */
-    private $link;
-
-    /**
-     * @var int
-     */
-    private $langId;
-
-    /**
-     * @param Link $link
-     * @param int $langId
-     */
-    public function __construct(Link $link, $langId)
+    public function __construct(private readonly Link $link, private readonly int $langId)
     {
-        $this->link = $link;
-        $this->langId = $langId;
     }
 
     /**
-     * @param GetCmsPageForEditing $query
-     *
-     * @return EditableCmsPage
-     *
      * @throws CmsPageException
      * @throws CmsPageCategoryException
      * @throws CmsPageNotFoundException
      */
-    public function handle(GetCmsPageForEditing $query)
+    public function handle(GetCmsPageForEditing $query): EditableCmsPage
     {
         $cmsPageId = $query->getCmsPageId()->getValue();
         $cms = $this->getCmsPageIfExistsById($cmsPageId);
@@ -66,8 +46,8 @@ final class GetCmsPageForEditingHandler extends AbstractCmsPageHandler implement
                 $cms->meta_description,
                 $cms->link_rewrite,
                 $cms->content,
-                $cms->indexation,
-                $cms->active,
+                (bool) $cms->indexation,
+                (bool) $cms->active,
                 $cms->getAssociatedShops(),
                 $this->link->getCMSLink($cms, null, null, $this->langId)
             );
