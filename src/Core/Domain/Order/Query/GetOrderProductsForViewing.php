@@ -50,20 +50,25 @@ class GetOrderProductsForViewing
      * @throws OrderException
      * @throws InvalidSortingException
      */
+    public function __construct(
+        int $orderId,
+        ?int $offset = null,
+        ?int $limit = null,
+        string $productsSorting = QuerySorting::ASC
+    ) {
+        $this->orderId = new OrderId($orderId);
+        $this->productsSorting = new QuerySorting($productsSorting);
+        $this->offset = $offset;
+        $this->limit = $limit;
+    }
+
     public static function paginated(
         int $orderId,
         int $offset,
         int $limit,
         string $productsSorting = QuerySorting::ASC
     ) {
-        $query = new self();
-
-        $query->orderId = new OrderId($orderId);
-        $query->productsSorting = new QuerySorting($productsSorting);
-        $query->offset = $offset;
-        $query->limit = $limit;
-
-        return $query;
+        return new self($orderId, $offset, $limit, $productsSorting);
     }
 
     /**
@@ -79,11 +84,7 @@ class GetOrderProductsForViewing
      */
     public static function all(int $orderId, string $productsSorting = QuerySorting::ASC)
     {
-        $query = new self();
-        $query->orderId = new OrderId($orderId);
-        $query->productsSorting = new QuerySorting($productsSorting);
-
-        return $query;
+        return new self($orderId, null, null, $productsSorting);
     }
 
     /**
