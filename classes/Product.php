@@ -5795,6 +5795,9 @@ class ProductCore extends ObjectModel
      */
     public static function getProductsProperties($id_lang, $query_result)
     {
+        if (is_array($query_result)) {
+            Product::prefetchPropertiesQuantities($query_result);
+        }
         $results_array = [];
 
         if (is_array($query_result)) {
@@ -5806,6 +5809,28 @@ class ProductCore extends ObjectModel
         }
 
         return $results_array;
+    }
+
+    /**
+     * Loads in one query the stock getProductProperties() reads for each of the given product rows:
+     * the product, and the combination given by the row or its default one.
+     *
+     * @param array $rows Product rows, as passed to getProductProperties()
+     */
+    public static function prefetchPropertiesQuantities(array $rows): void
+    {
+        $pairs = [];
+        foreach ($rows as $row) {
+            if (empty($row['id_product'])) {
+                continue;
+            }
+            $pairs[] = [$row['id_product'], 0];
+            $idProductAttribute = !empty($row['id_product_attribute']) ? $row['id_product_attribute'] : ($row['cache_default_attribute'] ?? 0);
+            if (Combination::isFeatureActive() && $idProductAttribute) {
+                $pairs[] = [$row['id_product'], $idProductAttribute];
+            }
+        }
+        StockAvailable::prefetchQuantityAvailableByProducts($pairs);
     }
 
     /**
