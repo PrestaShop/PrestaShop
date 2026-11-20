@@ -49,11 +49,10 @@ final class UpdateCategoryPositionHandler implements UpdateCategoryPositionHandl
             throw new CategoryNotFoundException($command->getCategoryId(), sprintf('Category with id "%s" was not found', $categoryId));
         }
 
-        if ($category->updatePosition((bool) $command->getWay(), $position)) {
-            /* Position '0' was not found in given positions so try to reorder parent category */
-            if (!$command->isFoundFirst()) {
-                Category::cleanPositions((int) $category->id_parent);
-            }
+        // The way follows from the stored position, whatever way the caller sent
+        if ($category->updatePosition($position > (int) $category->position, $position)) {
+            // cleanPositions() also rewrites category_shop.position
+            Category::cleanPositions((int) $category->id_parent);
         }
     }
 }
