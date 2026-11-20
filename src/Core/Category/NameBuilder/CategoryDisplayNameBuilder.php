@@ -114,7 +114,7 @@ class CategoryDisplayNameBuilder
     private function getDuplicateCategoriesBreadcrumbs(array $categoryIds, ShopId $shopId, LanguageId $languageId, bool $useCache): array
     {
         if (!$useCache) {
-            return $this->fetchBreadcrumbs($categoryIds, $languageId);
+            return $this->fetchBreadcrumbs($categoryIds, $shopId, $languageId);
         }
         $cacheKey = $this->buildCacheKeyForBreadcrumbs($shopId, $languageId);
 
@@ -123,7 +123,7 @@ class CategoryDisplayNameBuilder
             return Cache::retrieve($cacheKey);
         }
 
-        $duplicateCategoriesBreadcrumbs = $this->fetchBreadcrumbs($categoryIds, $languageId);
+        $duplicateCategoriesBreadcrumbs = $this->fetchBreadcrumbs($categoryIds, $shopId, $languageId);
         Cache::store($cacheKey, $duplicateCategoriesBreadcrumbs);
 
         return $duplicateCategoriesBreadcrumbs;
@@ -131,21 +131,12 @@ class CategoryDisplayNameBuilder
 
     /**
      * @param CategoryId[] $categoryIds
-     * @param LanguageId $languageId
      *
      * @return array<int, string[]>
      */
-    private function fetchBreadcrumbs(array $categoryIds, LanguageId $languageId): array
+    private function fetchBreadcrumbs(array $categoryIds, ShopId $shopId, LanguageId $languageId): array
     {
-        $duplicateCategoriesBreadcrumbs = [];
-        foreach ($categoryIds as $categoryId) {
-            $duplicateCategoriesBreadcrumbs[$categoryId->getValue()] = $this->categoryRepository->getBreadcrumbParts(
-                $categoryId,
-                $languageId
-            );
-        }
-
-        return $duplicateCategoriesBreadcrumbs;
+        return $this->categoryRepository->getBreadcrumbPartsForCategories($categoryIds, $shopId, $languageId);
     }
 
     /**
