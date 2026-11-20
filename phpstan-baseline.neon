@@ -165,7 +165,7 @@ parameters:
 		-
 			message: '#^Class Currency is forbidden, No legacy calls inside the prestashop bundle\. Please create an interface and an adapter if you need to\.$#'
 			identifier: disallowed.class
-			count: 4
+			count: 2
 			path: src/Core/Cart/CartRuleCalculator.php
 
 		-
@@ -183,7 +183,7 @@ parameters:
 		-
 			message: '#^Namespace Currency is forbidden, No legacy calls inside the prestashop bundle\. Please create an interface and an adapter if you need to\.$#'
 			identifier: disallowed.namespace
-			count: 1
+			count: 3
 			path: src/Core/Cart/CartRuleCalculator.php
 
 		-
