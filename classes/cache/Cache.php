@@ -346,7 +346,7 @@ abstract class CacheCore
         // Store query results in cache
         // no need to check the key existence before the set : if the query is already
         // in the cache, setQuery is not invoked
-        $this->set($key, $result);
+        $this->set($key, $result, defined('_PS_CACHE_LIFETIME_') ? _PS_CACHE_LIFETIME_ : 0);
     }
 
     /**
