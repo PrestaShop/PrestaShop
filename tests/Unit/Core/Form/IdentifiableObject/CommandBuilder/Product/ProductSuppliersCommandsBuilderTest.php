@@ -142,6 +142,39 @@ class ProductSuppliersCommandsBuilderTest extends AbstractProductCommandBuilderT
             [$suppliersCommand],
         ];
 
+        // The supplier choice list is built from raw database rows, so the submitted values are
+        // strings. SetSuppliersCommand builds SupplierId (int) under strict_types, so an uncast
+        // value throws a TypeError and saving any product with a supplier fails.
+        // @see https://github.com/PrestaShop/PrestaShop/issues/41102
+        $suppliersCommand = new SetSuppliersCommand(
+            $this->getProductId()->getValue(),
+            [3, 5]
+        );
+
+        yield [
+            [
+                'options' => [
+                    'suppliers' => [
+                        'supplier_ids' => ['3', '5'],
+                    ],
+                ],
+            ],
+            [$suppliersCommand],
+        ];
+
+        // A submission carrying only blank values means no supplier is selected, so it has to reach
+        // RemoveAllAssociatedProductSuppliersCommand instead of SupplierId with 0.
+        yield [
+            [
+                'options' => [
+                    'suppliers' => [
+                        'supplier_ids' => ['', '0'],
+                    ],
+                ],
+            ],
+            [new RemoveAllAssociatedProductSuppliersCommand($this->getProductId()->getValue())],
+        ];
+
         $suppliersCommand = new SetSuppliersCommand(
             $this->getProductId()->getValue(),
             [5, 3]
