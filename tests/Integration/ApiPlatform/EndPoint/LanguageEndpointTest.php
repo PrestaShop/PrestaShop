@@ -98,6 +98,42 @@ class LanguageEndpointTest extends ApiTestCase
         $this->assertEquals('fr-FR', $paginatedLanguages['items'][0]['locale']);
     }
 
+    /**
+     * @dataProvider getInvalidPaginations
+     */
+    public function testInvalidPaginationIsRejected(array $pagination, string $expectedMessage): void
+    {
+        $response = static::createClient()->request('GET', '/languages', [
+            'auth_bearer' => $this->getBearerToken(),
+            'query' => $pagination,
+        ]);
+
+        $this->assertSame(422, $response->getStatusCode());
+        $this->assertStringContainsString($expectedMessage, $response->getContent(false));
+    }
+
+    public static function getInvalidPaginations(): iterable
+    {
+        yield 'negative offset' => [['offset' => -1], 'The offset must be zero or greater.'];
+        yield 'negative limit' => [['limit' => -1], 'The limit must be greater than zero.'];
+        yield 'zero limit' => [['limit' => 0], 'The limit must be greater than zero.'];
+    }
+
+    public function testValidPaginationIsApplied(): void
+    {
+        $response = static::createClient()->request('GET', '/languages', [
+            'auth_bearer' => $this->getBearerToken(),
+            'query' => ['offset' => 1, 'limit' => 1],
+        ]);
+
+        $this->assertSame(200, $response->getStatusCode());
+        $decodedResponse = json_decode($response->getContent(), true);
+        $this->assertSame(1, $decodedResponse['limit']);
+        $this->assertSame(1, $decodedResponse['offset']);
+        $this->assertCount(1, $decodedResponse['items']);
+        $this->assertSame(2, $decodedResponse['totalItems']);
+    }
+
     private function listLanguages(array $filters = []): array
     {
         $bearerToken = $this->getBearerToken();
