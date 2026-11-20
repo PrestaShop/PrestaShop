@@ -108,6 +108,11 @@
 		// serialize the tags with the given delimiter, and write it back into the tagified field
 		serialize: function() {
 			var self = this;
+			// text still being typed (no Enter or comma yet) is a tag too, the form is submitted with it
+			var pendingTag = $.trim( self.tagInput.val() );
+			if ( pendingTag ) {
+				self.add( pendingTag );
+			}
 			var delim = self.options.outputDelimiter;
 			var tagsStr = self.tags.join( delim );
 			
