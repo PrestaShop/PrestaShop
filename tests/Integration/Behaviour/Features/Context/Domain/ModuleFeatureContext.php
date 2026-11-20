@@ -26,10 +26,88 @@ use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotInstalledException;
 use PrestaShop\PrestaShop\Core\Domain\Module\Query\GetModuleInfos;
 use PrestaShop\PrestaShop\Core\Domain\Module\QueryResult\ModuleInfos;
+use PrestaShop\PrestaShop\Core\Module\OverriddenModulesProvider;
+use RuntimeException;
+use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class ModuleFeatureContext extends AbstractDomainFeatureContext
 {
+    /**
+     * @var string[] Override files created by the scenario, removed once it ends
+     */
+    private array $createdOverrideFiles = [];
+
+    /**
+     * @Given module :technicalName is overridden by file :overrideFile
+     *
+     * The file only has to exist for the module to be reported as overridden, its content is
+     * irrelevant, so a bare php file is enough and cannot interfere with the rest of the scenario.
+     */
+    public function overrideModule(string $technicalName, string $overrideFile): void
+    {
+        $overriddenFilePath = _PS_OVERRIDE_DIR_ . 'modules/' . $technicalName . '/' . $overrideFile;
+        $overriddenFileDir = dirname($overriddenFilePath);
+
+        // The scenario writes in the shop override folder, which may hold real overrides on a
+        // developer machine: never overwrite a file the scenario did not create, as the clean up
+        // would then delete it for good
+        if (file_exists($overriddenFilePath) && !in_array($overriddenFilePath, $this->createdOverrideFiles, true)) {
+            throw new RuntimeException(sprintf(
+                'Cannot override module %s for the test, %s already exists',
+                $technicalName,
+                $overriddenFilePath
+            ));
+        }
+
+        if (!is_dir($overriddenFileDir)) {
+            mkdir($overriddenFileDir, 0777, true);
+        }
+        file_put_contents($overriddenFilePath, '<?php' . PHP_EOL);
+
+        $this->createdOverrideFiles[] = $overriddenFilePath;
+        $this->resetOverriddenModulesProvider();
+    }
+
+    /**
+     * Override files live outside the module folder, so they are removed by hand once the scenario
+     * is over to leave the shop as it was found.
+     *
+     * @AfterScenario
+     */
+    public function cleanUpOverrideFiles(): void
+    {
+        foreach ($this->createdOverrideFiles as $overriddenFilePath) {
+            if (is_file($overriddenFilePath)) {
+                unlink($overriddenFilePath);
+            }
+
+            // Remove the folders created for that file, as long as they are left empty
+            $directory = dirname($overriddenFilePath);
+            while (str_starts_with($directory, _PS_OVERRIDE_DIR_ . 'modules') && $this->isEmptyDirectory($directory)) {
+                rmdir($directory);
+                $directory = dirname($directory);
+            }
+        }
+
+        $this->createdOverrideFiles = [];
+        $this->resetOverriddenModulesProvider();
+    }
+
+    private function isEmptyDirectory(string $directory): bool
+    {
+        return is_dir($directory) && [] === array_diff(scandir($directory) ?: [], ['.', '..']);
+    }
+
+    /**
+     * The provider only scans the override folder once, so it has to be told the folder changed.
+     * In production this is not needed: the scan happens once per request.
+     */
+    private function resetOverriddenModulesProvider(): void
+    {
+        CommonFeatureContext::getContainer()->get(OverriddenModulesProvider::class)->reset();
+    }
+
     /**
      * @Given module :technicalName has following infos:
      */
@@ -242,6 +320,13 @@ class ModuleFeatureContext extends AbstractDomainFeatureContext
         }
         if (isset($data['installed'])) {
             Assert::assertEquals(PrimitiveUtils::castStringBooleanIntoBoolean($data['installed']), $moduleInfos->isInstalled(), 'Invalid installed value');
+        }
+        if (isset($data['overridden'])) {
+            Assert::assertEquals(PrimitiveUtils::castStringBooleanIntoBoolean($data['overridden']), $moduleInfos->isOverridden(), 'Invalid overridden value');
+        }
+        if (isset($data['overridden_files'])) {
+            $expectedFiles = '' === $data['overridden_files'] ? [] : array_map('trim', explode(',', $data['overridden_files']));
+            Assert::assertEquals($expectedFiles, $moduleInfos->getOverriddenFiles(), 'Invalid overridden files');
         }
     }
 }
