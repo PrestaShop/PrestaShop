@@ -123,6 +123,7 @@
 
 <script lang="ts">
   import Router from '@components/router';
+  import Sortable from '@components/sortable';
   import {
     getProductImages,
     saveImageInformations,
@@ -133,7 +134,7 @@
   import ProductMap from '@pages/product/product-map';
   import ProductEventMap from '@pages/product/product-event-map';
   import Modal from '@PSVue/components/Modal.vue';
-  import {defineComponent} from 'vue';
+  import {defineComponent, markRaw} from 'vue';
   import DropzoneWindow from './DropzoneWindow.vue';
   import DropzonePhotoSwipe from './DropzonePhotoSwipe.vue';
 
@@ -164,7 +165,7 @@
     buttonLoading: boolean,
     isModalShown: boolean,
     galleryOpened: boolean,
-    sortableContainer: JQuery | null;
+    sortable: Sortable | null;
   }
 
   export default defineComponent({
@@ -191,7 +192,7 @@
         buttonLoading: false,
         isModalShown: false,
         galleryOpened: false,
-        sortableContainer: null,
+        sortable: null,
       };
     },
     props: {
@@ -304,34 +305,25 @@
         ] = this.productId;
         this.configuration.params[`${this.formName}[_token]`] = this.token;
 
-        this.sortableContainer = $('#product-images-dropzone');
-
         this.dropzone = new window.Dropzone(
           DropzoneMap.dropzoneContainer,
           this.configuration,
         );
 
-        this.sortableContainer.sortable({
-          items: DropzoneMap.sortableItems,
-          opacity: 0.9,
-          containment: 'parent',
-          distance: 32,
-          tolerance: 'pointer',
-          cursorAt: {
-            left: 64,
-            top: 64,
+        // The dropzone is initialized again on reset, on the same container
+        this.sortable?.destroy();
+        this.sortable = markRaw(new Sortable(
+          <HTMLElement> document.querySelector('#product-images-dropzone'),
+          {
+            items: DropzoneMap.sortableItems,
+            cancel: 'input, textarea, button, select, option, .disabled',
+            // -1 because the open file manager is always first
+            onDrop: (item: HTMLElement, oldIndex: number, newIndex: number) => this.updateImagePosition(
+              Number(item.dataset.id),
+              newIndex - 1,
+            ),
           },
-          cancel: '.disabled',
-          stop: (event: Event, ui: Record<string, any>) => {
-            // Get new position (-1 because the open file manager is always first)
-            const movedPosition = ui.item.index() - 1;
-            this.updateImagePosition(ui.item.data('id'), movedPosition);
-          },
-          start: (event: Event, ui: Record<string, any>) => {
-            this.sortableContainer?.find(DropzoneMap.dzPreview)?.css('zIndex', 1);
-            ui.item.css('zIndex', 10);
-          },
-        });
+        ));
 
         this.dropzone.on(DropzoneEvents.addedFile, (file: PSDropzoneFile) => {
           // Be aware the file type is not always a PSDropzoneFile.
@@ -582,8 +574,10 @@
             image.isAssociatedToCurrentShop ? this.shopId : null,
           );
         } catch (error: any) {
-          this.sortableContainer?.sortable('cancel');
           $.growl.error({message: error.responseJSON.error});
+
+          // Rejects the drop, the sortable puts the image back
+          throw error;
         }
       },
       /**
