@@ -14,7 +14,7 @@ use Order;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\LazyArrayAttribute;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
-use PrestaShopBundle\Translation\TranslatorComponent;
+use PrestaShopBundle\Translation\TranslatorInterface;
 use TaxConfiguration;
 
 class OrderSubtotalLazyArray extends AbstractLazyArray
@@ -31,7 +31,7 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
     /** @var bool */
     private $includeTaxes;
 
-    /** @var TranslatorComponent */
+    /** @var TranslatorInterface */
     private $translator;
 
     /**
