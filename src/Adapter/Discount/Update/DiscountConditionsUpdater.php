@@ -37,6 +37,7 @@ class DiscountConditionsUpdater
      * @param int[]|null $carrierIds
      * @param int[]|null $countryIds
      * @param int[]|null $customerGroupIds
+     * @param int[]|null $shopIds
      *
      * @return void
      */
@@ -46,12 +47,14 @@ class DiscountConditionsUpdater
         ?array $carrierIds = null,
         ?array $countryIds = null,
         ?array $customerGroupIds = null,
+        ?array $shopIds = null,
     ): void {
         // Nothing to modify we return immediately
         if ($productConditions === null
             && $carrierIds === null
             && $countryIds === null
-            && $customerGroupIds === null) {
+            && $customerGroupIds === null
+            && $shopIds === null) {
             return;
         }
 
@@ -69,6 +72,9 @@ class DiscountConditionsUpdater
         }
         if (null !== $customerGroupIds) {
             $updatableProperties = array_merge($updatableProperties, $this->applyCustomerGroups($discount, $customerGroupIds));
+        }
+        if (null !== $shopIds) {
+            $updatableProperties = array_merge($updatableProperties, $this->applyShopRestriction($discount, $shopIds));
         }
 
         $updatableProperties = array_unique($updatableProperties);
@@ -319,5 +325,50 @@ class DiscountConditionsUpdater
         ;
 
         return ['group_restriction'];
+    }
+
+    /**
+     * @param CartRule $discount
+     * @param int[] $shopIds
+     *
+     * @return array List of updated properties
+     */
+    private function applyShopRestriction(CartRule $discount, array $shopIds): array
+    {
+        $updatableProperties = $this->cleanShopRestriction($discount);
+        if (empty($shopIds)) {
+            return $updatableProperties;
+        }
+
+        $discount->shop_restriction = true;
+        foreach ($shopIds as $shopId) {
+            $this->connection->createQueryBuilder()
+                ->insert($this->dbPrefix . 'cart_rule_shop')
+                ->values([
+                    'id_cart_rule' => (int) $discount->id,
+                    'id_shop' => $shopId,
+                ])
+                ->executeStatement()
+            ;
+        }
+
+        return ['shop_restriction'];
+    }
+
+    /**
+     * @return array List of updated properties
+     */
+    private function cleanShopRestriction(CartRule $discount): array
+    {
+        $discount->shop_restriction = false;
+
+        $this->connection->createQueryBuilder()
+            ->delete($this->dbPrefix . 'cart_rule_shop')
+            ->where('id_cart_rule = :discountId')
+            ->setParameter('discountId', (int) $discount->id)
+            ->executeStatement()
+        ;
+
+        return ['shop_restriction'];
     }
 }
