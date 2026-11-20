@@ -79,13 +79,16 @@ class CombinationAssertionFeatureContext extends AbstractCombinationFeatureConte
     {
         $details = $tableNode->getRowsHash();
 
+        // Every detail is optional, the way the impacts already were, so a scenario can assert
+        // only the ones it is about.
         return new CombinationDetails(
-            $details['ean13'],
-            $details['isbn'],
-            $details['mpn'],
-            $details['reference'],
-            $details['upc'],
-            new DecimalNumber($details['impact on weight'] ?? '0')
+            $details['ean13'] ?? '',
+            $details['isbn'] ?? '',
+            $details['mpn'] ?? '',
+            $details['reference'] ?? '',
+            $details['upc'] ?? '',
+            new DecimalNumber($details['impact on weight'] ?? '0'),
+            new DecimalNumber($details['impact on shipping fees'] ?? '0')
         );
     }
 
@@ -314,6 +317,16 @@ class CombinationAssertionFeatureContext extends AbstractCombinationFeatureConte
                     var_export($expectedDetails->getImpactOnWeight(), true),
                     var_export($actualDetails->getImpactOnWeight(), true),
                     $shopId
+                )
+            );
+
+            Assert::assertTrue(
+                $expectedDetails->getImpactOnShippingCost()->equals($actualDetails->getImpactOnShippingCost()),
+                sprintf(
+                    'Unexpected combination impact on shipping fees for shop %d. Expected "%s" got "%s"',
+                    $shopId,
+                    var_export((string) $expectedDetails->getImpactOnShippingCost(), true),
+                    var_export((string) $actualDetails->getImpactOnShippingCost(), true)
                 )
             );
         }

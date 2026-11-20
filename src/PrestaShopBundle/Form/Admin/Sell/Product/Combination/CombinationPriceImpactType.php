@@ -238,6 +238,22 @@ class CombinationPriceImpactType extends TranslatorAwareType
                 'column_breaker' => true,
                 'modify_all_shops' => true,
             ])
+            ->add('additional_shipping_cost', MoneyType::class, [
+                'required' => false,
+                'label' => $this->trans('Impact on shipping fees', 'Admin.Catalog.Feature'),
+                'label_help_box' => $this->trans(
+                    'Added to the shipping fees set for the product, for each purchased item of this combination. Applies only if shipping is not free.',
+                    'Admin.Catalog.Help'
+                ),
+                'currency' => $this->defaultCurrency->iso_code,
+                'constraints' => [
+                    new NotBlank(),
+                    new Type(['type' => 'float']),
+                    new PositiveOrZero(),
+                ],
+                'default_empty_data' => 0.0,
+                'modify_all_shops' => true,
+            ])
             ->add('wholesale_price', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Cost price (tax excl.)', 'Admin.Catalog.Feature'),
