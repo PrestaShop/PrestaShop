@@ -6,6 +6,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Import\Configuration;
 
+use PrestaShop\PrestaShop\Core\Import\Entity;
 use PrestaShop\PrestaShop\Core\Import\ImportSettings;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -31,7 +32,7 @@ final class ImportConfigFactory implements ImportConfigFactoryInterface
 
         return new ImportConfig(
             $request->request->get('csv', $request->getSession()->get('csv')),
-            $request->request->getInt('entity', $request->getSession()->get('entity', 0)),
+            $request->request->getInt('entity', Entity::AVAILABLE_TYPES[$request->query->get('import_type')] ?? $request->getSession()->get('entity', 0)),
             $request->request->get('iso_lang', $request->getSession()->get('iso_lang')),
             $separator,
             $multivalueSeparator,
