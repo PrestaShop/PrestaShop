@@ -838,6 +838,37 @@ class AdminControllerCore extends Controller
     }
 
     /**
+     * Builds the base URL every legacy link and post-action redirect of the page is derived from.
+     *
+     * It is anchored on the admin directory rather than being the bare `index.php`, because a relative
+     * file name resolves against whatever path the page was served from. A legacy controller reached
+     * through the front-controller form `.../admin-dir/index.php/?controller=...` resolved every one of
+     * those links to `.../admin-dir/index.php/index.php?...`, which matches no route.
+     *
+     * Tools::sanitizeAdminUrl() already expects this shape: it strips the shop's physical URI and only
+     * appends the admin directory when it is absent, so redirects built on top of it stay correct.
+     *
+     * @param string $controller
+     * @param string $back
+     *
+     * @return string
+     */
+    protected static function buildCurrentIndex($controller, $back = '')
+    {
+        $base = 'index.php';
+        if (defined('_PS_ADMIN_DIR_')) {
+            $base = __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/index.php';
+        }
+
+        $currentIndex = $base . ($controller !== '' ? '?controller=' . $controller : '');
+        if ($back !== '') {
+            $currentIndex .= '&back=' . urlencode($back);
+        }
+
+        return $currentIndex;
+    }
+
+    /**
      * Set the filters used for the list display.
      */
     protected function getCookieFilterPrefix()
@@ -2785,11 +2816,10 @@ class AdminControllerCore extends Controller
         }
 
         // Set current index
-        $current_index = 'index.php' . (($controller = Tools::getValue('controller')) ? '?controller=' . $controller : '');
-        if ($back = Tools::getValue('back')) {
-            $current_index .= '&back=' . urlencode($back);
-        }
-        self::$currentIndex = $current_index;
+        self::$currentIndex = self::buildCurrentIndex(
+            (string) Tools::getValue('controller'),
+            (string) Tools::getValue('back')
+        );
 
         if ((int) Tools::getValue('liteDisplaying')) {
             $this->display_header = false;
