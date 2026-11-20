@@ -46,13 +46,16 @@ class PasswordControllerCore extends FrontController
 
     protected function sendRenewPasswordLink(): void
     {
-        if (!($email = $this->IDNConverter->emailToUtf8(trim(Tools::getValue('email')))) || !Validate::isEmail($email)) {
+        $email = Tools::getValue('email');
+        $email = is_string($email) ? $this->IDNConverter->emailToUtf8(trim($email)) : '';
+
+        if (!$email || !Validate::isEmail($email)) {
             $this->errors[] = $this->trans('Invalid email address.', [], 'Shop.Notifications.Error');
         } else {
             $customer = new Customer();
             $customer->getByEmail($email);
             if (null === $customer->email) {
-                $customer->email = Tools::getValue('email');
+                $customer->email = $email;
             }
 
             if (!Validate::isLoadedObject($customer)) {
@@ -107,6 +110,13 @@ class PasswordControllerCore extends FrontController
         $token = Tools::getValue('token');
         $id_customer = (int) Tools::getValue('id_customer');
         $reset_token = Tools::getValue('reset_token');
+
+        if (!is_string($token)) {
+            $this->errors[] = $this->trans('We cannot regenerate your password with the data you\'ve submitted', [], 'Shop.Notifications.Error');
+
+            return;
+        }
+
         $email = Db::getInstance()->getValue(
             'SELECT `email` FROM ' . _DB_PREFIX_ . 'customer c WHERE c.`secure_key` = \'' . pSQL($token) . '\' AND c.id_customer = ' . $id_customer
         );
@@ -118,7 +128,7 @@ class PasswordControllerCore extends FrontController
                 $this->errors[] = $this->trans('Customer account not found', [], 'Shop.Notifications.Error');
             } elseif (!$customer->active) {
                 $this->errors[] = $this->trans('You cannot regenerate the password for this account.', [], 'Shop.Notifications.Error');
-            } elseif (!($validResetToken = $customer->getValidResetPasswordToken()) || !hash_equals($validResetToken, (string) $reset_token)) {
+            } elseif (!is_string($reset_token) || !($validResetToken = $customer->getValidResetPasswordToken()) || !hash_equals($validResetToken, $reset_token)) {
                 $this->errors[] = $this->trans('The password change request expired. You should ask for a new one.', [], 'Shop.Notifications.Error');
             }
 
@@ -128,11 +138,17 @@ class PasswordControllerCore extends FrontController
 
             if ($isSubmit = Tools::isSubmit('passwd')) {
                 // If password is submitted validate pass and confirmation
-                if (!$passwd = Tools::getValue('passwd')) {
+                $passwd = Tools::getValue('passwd');
+                $confirmation = Tools::getValue('confirmation');
+
+                $passwd = is_string($passwd) ? $passwd : '';
+                $confirmation = is_string($confirmation) ? $confirmation : '';
+
+                if (!$passwd) {
                     $this->errors[] = $this->trans('The password is missing: please enter your new password.', [], 'Shop.Notifications.Error');
                 }
 
-                if (!$confirmation = Tools::getValue('confirmation')) {
+                if (!$confirmation) {
                     $this->errors[] = $this->trans('The confirmation is empty: please fill in the password confirmation as well', [], 'Shop.Notifications.Error');
                 }
 
@@ -195,11 +211,11 @@ class PasswordControllerCore extends FrontController
                         ['error_regen_pwd' => 1]
                     ));
                 } else {
-                    $customer->passwd = $this->get('hashing')->hash($password = Tools::getValue('passwd'), _COOKIE_KEY_);
+                    $customer->passwd = $this->get('hashing')->hash($passwd, _COOKIE_KEY_);
                     $customer->last_passwd_gen = date('Y-m-d H:i:s', time());
 
                     if ($customer->update()) {
-                        Hook::exec('actionPasswordRenew', ['customer' => $customer, 'password' => $password]);
+                        Hook::exec('actionPasswordRenew', ['customer' => $customer, 'password' => $passwd]);
                         $customer->removeResetPasswordToken();
                         $customer->update();
 
