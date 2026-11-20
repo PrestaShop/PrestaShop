@@ -1437,7 +1437,7 @@ class FrontControllerCore extends Controller
         $content_only = (int) Tools::getValue('content_only');
 
         // If a module provides its own custom layout, we ignore what is set in configuration
-        if ($overridden_layout = Hook::exec(
+        if ($overridden_layout = $this->getOverriddenTemplatePath(
             'overrideLayoutTemplate',
             [
                 'default_layout' => $layout,
@@ -1493,7 +1493,7 @@ class FrontControllerCore extends Controller
             $locale = $this->context->language->locale;
         }
 
-        if ($overridden_template = Hook::exec(
+        if ($overridden_template = $this->getOverriddenTemplatePath(
             'displayOverrideTemplate',
             [
                 'controller' => $this,
@@ -1512,6 +1512,28 @@ class FrontControllerCore extends Controller
             $params['id'],
             $locale
         );
+    }
+
+    /**
+     * Returns the template path the first module returned on a template override hook, in hook
+     * position order, or null when no module overrides it.
+     *
+     * @param string $hookName
+     * @param array<string, mixed> $hookArgs
+     *
+     * @return string|null
+     */
+    private function getOverriddenTemplatePath(string $hookName, array $hookArgs): ?string
+    {
+        // WHY: each module returns a whole path, so the outputs cannot be joined like display hook
+        // markup; when several modules answer, the merchant picks the winner through the hook positions.
+        foreach (Hook::exec($hookName, $hookArgs, null, true) as $templatePath) {
+            if (is_string($templatePath) && '' !== $templatePath) {
+                return $templatePath;
+            }
+        }
+
+        return null;
     }
 
     /**
