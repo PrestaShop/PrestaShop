@@ -14,6 +14,11 @@ use SplFileInfo;
 class EditableAttachment
 {
     /**
+     * @var int
+     */
+    private $attachmentId;
+
+    /**
      * @var string
      */
     private $fileName;
@@ -37,15 +42,26 @@ class EditableAttachment
      * @param string $fileName
      * @param string[] $name
      * @param string[] $description
+     * @param int $attachmentId
      */
     public function __construct(
         string $fileName,
         array $name,
-        array $description
+        array $description,
+        int $attachmentId = 0
     ) {
+        $this->attachmentId = $attachmentId;
         $this->fileName = $fileName;
         $this->name = $name;
         $this->description = $description;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAttachmentId(): int
+    {
+        return $this->attachmentId;
     }
 
     /**
