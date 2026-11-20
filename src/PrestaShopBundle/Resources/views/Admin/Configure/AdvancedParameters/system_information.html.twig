@@ -128,7 +128,12 @@
         <i class="material-icons">info</i> {{ 'Mail configuration'|trans }}
       </h3>
       <div class="card-body">
-        {% if system.isNativePHPmail %}
+        {# Display the configured mail delivery method #}
+        {% if system.isPHPmail %}
+          <p class="mb-0">
+            <strong>{{ 'Mail method:'|trans }}</strong> {{ 'You are using PHP mail()'|trans({}, 'Admin.Advparameters.Feature') }}
+          </p>
+        {% elseif system.isNativePHPmail %}
           <p class="mb-0">
             <strong>{{ 'Mail method:'|trans }}</strong> {{ 'You are using /usr/sbin/sendmail'|trans }}
           </p>
