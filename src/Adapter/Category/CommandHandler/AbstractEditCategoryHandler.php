@@ -10,6 +10,7 @@ use Category;
 use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryImageUploader;
+use PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameCacheInvalidator;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
@@ -24,6 +25,7 @@ abstract class AbstractEditCategoryHandler extends AbstractObjectModelHandler
     public function __construct(
         protected readonly CategoryImageUploader $categoryImageUploader,
         private readonly CategoryRepository $categoryRepository,
+        protected readonly CategoryDisplayNameCacheInvalidator $categoryDisplayNameCacheInvalidator,
     ) {
     }
 
