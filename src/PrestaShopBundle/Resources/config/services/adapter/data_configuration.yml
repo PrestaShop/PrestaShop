@@ -90,6 +90,7 @@ services:
       - '@prestashop.adapter.cache.clearer.symfony_cache_clearer'
       - '%ps_cache_enable%'
       - '%ps_caching%'
+      - '@PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface'
 
   prestashop.adapter.general.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\GeneralConfiguration'
