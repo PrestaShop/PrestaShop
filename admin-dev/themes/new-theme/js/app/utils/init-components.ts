@@ -30,6 +30,7 @@ import TinyMCEEditor from '@js/components/tinymce-editor';
 import TranslatableField from '@js/components/translatable-field';
 import TranslatableInput from '@js/components/translatable-input';
 import EntitySearchInput from '@js/components/entity-search-input';
+import EntitySearchWidget from '@js/components/entity-search-widget';
 import MultipleZoneChoice from '@js/components/form/multiple-zone-choice';
 import ToggleChildrenChoice from '@js/components/form/toggle-children-choice';
 import FilterLinkGroup from '@components/filter/filter-link-group';
@@ -147,6 +148,7 @@ const initPrestashopComponents = (): void => {
     TranslatableField,
     TranslatableInput,
     EntitySearchInput,
+    EntitySearchWidget,
     EmailInput,
     MultipleZoneChoice,
     ToggleChildrenChoice,
