@@ -20,6 +20,14 @@ services:
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider:
     public: true
 
+  # Same provider, offering currencies that are not enabled yet. Used where the merchant configures a
+  # currency ahead of turning it on - payment restrictions - rather than picking one to be used now.
+  prestashop.core.form.choice_provider.currency_by_id_including_disabled:
+    class: PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider
+    arguments:
+      $currencyDataProvider: '@prestashop.adapter.data_provider.currency'
+      $includeDisabled: true
+
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageChoiceProvider:
     arguments:
       $languages: '@=service("prestashop.adapter.data_provider.language").getLanguages(false)'
