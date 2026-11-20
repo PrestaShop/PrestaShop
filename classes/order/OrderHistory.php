@@ -328,7 +328,8 @@ class OrderHistoryCore extends ObjectModel
             (int) Configuration::get('PS_OS_ERROR'),
             (int) Configuration::get('PS_OS_CANCELED'),
             null,
-            (int) $order->id
+            (int) $order->id,
+            (int) Configuration::get('PS_OS_REFUND')
         );
 
         ShopUrl::resetMainDomainCache();
