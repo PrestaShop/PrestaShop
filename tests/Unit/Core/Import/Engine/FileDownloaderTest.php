@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Import\Engine;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Import\Engine\Exception\FileDownloadException;
 use PrestaShop\PrestaShop\Core\Import\Engine\FileDownloader;
 use Symfony\Component\Filesystem\Filesystem;
@@ -41,7 +42,7 @@ class FileDownloaderTest extends TestCase
         $sourcePath = $this->contentRoot . '/file.txt';
         file_put_contents($sourcePath, 'content');
 
-        $temporaryPath = (new FileDownloader(new Filesystem(), [$this->contentRoot]))->download($sourcePath);
+        $temporaryPath = (new FileDownloader(new Filesystem(), $this->createTools(), [$this->contentRoot]))->download($sourcePath);
 
         $this->assertFileExists($temporaryPath);
         $this->assertSame('content', file_get_contents($temporaryPath));
@@ -74,7 +75,7 @@ class FileDownloaderTest extends TestCase
         file_put_contents($sourcePath, 'content');
 
         try {
-            $temporaryPath = (new FileDownloader(new Filesystem()))->download($sourcePath);
+            $temporaryPath = (new FileDownloader(new Filesystem(), $this->createTools()))->download($sourcePath);
 
             $this->assertFileExists($temporaryPath);
             $this->assertSame('content', file_get_contents($temporaryPath));
@@ -82,6 +83,41 @@ class FileDownloaderTest extends TestCase
         } finally {
             @unlink($sourcePath);
         }
+    }
+
+    /**
+     * An http/https source is untrusted import data and must be fetched through
+     * the SSRF-hardened Tools::copyFromUntrustedSource(), never the raw http
+     * stream wrapper. When that hardened path refuses the URL (a private,
+     * loopback or link-local host, or a redirect to one) the download fails
+     * closed and no file is produced.
+     */
+    public function testAUrlRefusedByTheSsrfHardenedSourceIsRejected(): void
+    {
+        $tools = $this->createTools();
+        $tools->expects($this->once())
+            ->method('copyFromUntrustedSource')
+            ->willReturn(false);
+
+        $this->expectException(FileDownloadException::class);
+        $this->expectExceptionMessage('Could not download');
+        (new FileDownloader(new Filesystem(), $tools))->download('http://169.254.169.254/latest/meta-data/');
+    }
+
+    public function testAUrlIsFetchedThroughTheSsrfHardenedSource(): void
+    {
+        $tools = $this->createTools();
+        $tools->expects($this->once())
+            ->method('copyFromUntrustedSource')
+            ->willReturnCallback(static function (string $source, string $destination): bool {
+                return false !== file_put_contents($destination, 'fetched');
+            });
+
+        $temporaryPath = (new FileDownloader(new Filesystem(), $tools))->download('https://example.com/image.jpg');
+
+        $this->assertFileExists($temporaryPath);
+        $this->assertSame('fetched', file_get_contents($temporaryPath));
+        @unlink($temporaryPath);
     }
 
     /**
@@ -116,12 +152,20 @@ class FileDownloaderTest extends TestCase
      */
     private function confinedToInjectedRootsOnly(array $allowedLocalRoots): FileDownloader
     {
-        return new class(new Filesystem(), $allowedLocalRoots) extends FileDownloader {
+        return new class(new Filesystem(), $this->createTools(), $allowedLocalRoots) extends FileDownloader {
             protected function getAllowedLocalRoots(): array
             {
                 return $this->allowedLocalRoots;
             }
         };
+    }
+
+    /**
+     * @return Tools&\PHPUnit\Framework\MockObject\MockObject
+     */
+    private function createTools(): Tools
+    {
+        return $this->createMock(Tools::class);
     }
 
     /**
