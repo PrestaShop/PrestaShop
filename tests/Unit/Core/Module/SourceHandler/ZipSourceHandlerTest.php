@@ -22,6 +22,7 @@ class ZipSourceHandlerTest extends TestCase
     private const UNHANDLABLE_SOURCE = 'unhandlablesource';
     private const INVALID_SOURCE = __DIR__ . '/../../../../Resources/dummyFile/invalid_module.zip';
     private const VALID_SOURCE = __DIR__ . '/../../../../Resources/dummyFile/valid_module.zip';
+    private const OOXML_DETECTED_SOURCE = __DIR__ . '/../../../../Resources/dummyFile/ooxml_detected_module.zip';
 
     /** @var ZipSourceHandler */
     private $zipSourceHandler;
@@ -61,6 +62,15 @@ class ZipSourceHandlerTest extends TestCase
         $this->assertFalse($this->zipSourceHandler->canHandle(self::UNHANDLABLE_SOURCE));
         $this->assertTrue($this->zipSourceHandler->canHandle(self::INVALID_SOURCE));
         $this->assertTrue($this->zipSourceHandler->canHandle(self::VALID_SOURCE));
+        // Guessed as application/octet-stream by fileinfo since PHP 8.6
+        $this->assertTrue($this->zipSourceHandler->canHandle(self::OOXML_DETECTED_SOURCE));
+        $this->assertFalse($this->zipSourceHandler->canHandle(__DIR__ . '/../../../../Resources/dummyFile/valid_module.tar.gz'));
+    }
+
+    public function testHandleArchiveDetectedAsOoxml(): void
+    {
+        $this->zipSourceHandler->handle(self::OOXML_DETECTED_SOURCE);
+        $this->assertFileExists($this->resourceResetter::TEST_MODULES_DIR . '/test_install_cqrs_command/test_install_cqrs_command.php');
     }
 
     public function testGetNameUnexistingSource(): void

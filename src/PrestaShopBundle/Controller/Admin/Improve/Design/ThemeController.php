@@ -9,6 +9,7 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 use Exception;
 use Monolog\Logger;
 use PrestaShop\PrestaShop\Adapter\Language\RTL\InstalledLanguageChecker;
+use PrestaShop\PrestaShop\Core\Addon\Theme\Exception\ThemeUploadException;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeExporter;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemePageLayoutsCustomizer;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeProvider;
@@ -205,7 +206,7 @@ class ThemeController extends PrestaShopAdminController
                 $this->dispatchCommand(new ImportThemeCommand($sourceType, $source));
 
                 return $this->redirectToRoute('admin_themes_index');
-            } catch (ThemeException $e) {
+            } catch (ThemeException|ThemeUploadException $e) {
                 $this->addFlash(
                     'error',
                     $this->getErrorMessageForException(
@@ -434,6 +435,9 @@ class ThemeController extends PrestaShopAdminController
                 ],
                 'Admin.Design.Notification',
             ),
+            ThemeUploadException::class => [
+                ThemeUploadException::INVALID_MIME_TYPE => $this->trans('Invalid file format.', [], 'Admin.Design.Notification'),
+            ],
             ThemeConstraintException::class => [
                 ThemeConstraintException::RESTRICTED_ONLY_FOR_SINGLE_SHOP => $this->trans(
                     'Themes can only be changed in single store context.', [], 'Admin.Notifications.Error'
