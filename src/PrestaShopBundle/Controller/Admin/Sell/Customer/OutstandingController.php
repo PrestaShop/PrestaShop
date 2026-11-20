@@ -61,7 +61,7 @@ class OutstandingController extends PrestaShopAdminController
         Request $request,
         #[Autowire(service: 'prestashop.core.grid.definition.factory.outstanding')]
         GridDefinitionFactoryInterface $definitionFactory,
-        #[Autowire(service: 'prestashop.bundle.grid.response_builder')]
+        #[Autowire(service: ResponseBuilder::class)]
         ResponseBuilder $responseBuilder
     ) {
         return $responseBuilder->buildSearchResponse(

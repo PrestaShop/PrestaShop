@@ -18,7 +18,7 @@ services:
   prestashop.core.configuration.upload_size_configuration:
     class: 'PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfiguration'
     arguments:
-      - '@prestashop.core.configuration.ini_configuration'
+      - '@PrestaShop\PrestaShop\Core\Configuration\IniConfiguration'
 
   PrestaShop\PrestaShop\Core\ConfigurationInterface: '@PrestaShop\PrestaShop\Adapter\Configuration'
 

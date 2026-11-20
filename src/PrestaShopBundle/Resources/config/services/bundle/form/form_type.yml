@@ -75,7 +75,7 @@ services:
   PrestaShopBundle\Form\Admin\Type\EmailType:
     autowire: true
     arguments:
-      - '@prestashop.bundle.form.data_transformer.idn_converter'
+      - '@PrestaShopBundle\Form\DataTransformer\IDNConverterDataTransformer'
 
   PrestaShopBundle\Form\Admin\Type\GeoCoordinatesType:
 
@@ -93,12 +93,12 @@ services:
   PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByStatusType:
     arguments:
       $translator: '@translator'
-      $orderStateChoiceProvider: '@prestashop.core.form.choice_provider.order_state_by_id'
+      $orderStateChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider'
       $orderCountsByState: '@=service("prestashop.core.api.order_invoice.repository").countByOrderState(service("prestashop.adapter.shop.context").getContextListShopID())'
 
   PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceOptionsType:
     arguments:
-      $invoiceModelChoiceProvider: '@prestashop.core.form.choice_provider.invoice_model_by_name'
+      $invoiceModelChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\InvoiceModelByNameChoiceProvider'
       $nextInvoiceNumber: '@=service("prestashop.adapter.data_provider.order_invoice").getNextInvoiceNumber()'
 
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\MaintenanceType:
@@ -154,8 +154,8 @@ services:
 
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\EmailConfigurationType:
     arguments:
-      $mailMethodChoiceProvider: '@prestashop.core.form.choice_provider.mail_method'
-      $contactsChoiceProvider: '@prestashop.core.form.choice_provider.contact_by_id'
+      $mailMethodChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\MailMethodChoiceProvider'
+      $contactsChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ContactByIdChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Improve\International\Translations\ModifyTranslationsType:
     arguments:
@@ -191,7 +191,7 @@ services:
 
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\UrlSchemaType:
     arguments:
-      $defaultRouteProvider: '@prestashop.adapter.data_provider.default_route'
+      $defaultRouteProvider: '@PrestaShop\PrestaShop\Adapter\Routes\DefaultRouteProvider'
 
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\MetaType:
     arguments:
@@ -316,7 +316,7 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType:
     arguments:
-      $orderStatusChoiceProvider: '@prestashop.core.form.choice_provider.order_state_by_id'
+      $orderStatusChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Sell\Supplier\SupplierType:
     arguments:
@@ -337,7 +337,7 @@ services:
   PrestaShopBundle\Form\Admin\Sell\Order\InternalNoteType:
   PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType:
     arguments:
-      $orderDiscountTypeChoiceProvider: '@prestashop.core.form.choice.provider.order_discount_type'
+      $orderDiscountTypeChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderDiscountTypeChoiceProvider'
       $orderInvoiceByIdChoiceProvider: '@prestashop.adapter.form.choice_provider.order_invoice_by_id'
 
   PrestaShopBundle\Form\Admin\Sell\Order\AddProductRowType:
@@ -350,7 +350,7 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType:
     arguments:
-      - '@prestashop.core.form.choice_provider.order_state_by_id'
+      - '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider'
       - '@=service("prestashop.core.form.choice_provider.order_state_by_id").getChoicesAttributes()'
 
   PrestaShopBundle\Form\Admin\Sell\Order\OrderPaymentType:
@@ -385,7 +385,7 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Address\RequiredFieldsAddressType:
     arguments:
-      $addressRequiredFieldsChoicesProvider: '@prestashop.core.form.choice_provider.address_required_fields'
+      $addressRequiredFieldsChoicesProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\AddressRequiredFieldsChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Sell\CustomerService\ReplyToCustomerThreadType:
 
@@ -397,14 +397,14 @@ services:
   PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\CreditSlipOptionsType:
   PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderAddressType:
     arguments:
-      - '@prestashop.core.form.choice_provider.customer_addresses_by_id'
+      - '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerAddressesChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Sell\CustomerService\OrderMessageType:
 
   PrestaShopBundle\Form\Admin\Sell\Order\OrderMessageType:
     arguments:
-      - '@prestashop.core.form.choice_provider.customer_service_order_messages_name'
-      - '@prestashop.core.form.choice_provider.customer_service_order_messages'
+      - '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerServiceOrderMessagesNameChoiceProvider'
+      - '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerServiceOrderMessagesChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Sell\CustomerService\OrderReturn\OrderReturnType:
     arguments:
@@ -419,12 +419,12 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Order\CartSummaryType:
     arguments:
-      $orderStatesChoiceProvider: '@prestashop.core.form.choice_provider.order_state_by_id'
+      $orderStatesChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider'
       $paymentModulesChoiceProvider: '@prestashop.adapter.form.choice_provider.installed_payment_modules'
 
   PrestaShopBundle\Form\Admin\Sell\Product\ProductTypeType:
     arguments:
-      $formChoiceProvider: '@prestashop.core.form.choice_provider.product_type_choice_provider'
+      $formChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProductTypeChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Description\DescriptionType:
     arguments:
@@ -441,14 +441,14 @@ services:
   PrestaShopBundle\Form\Admin\Sell\Discount\DiscountFeaturesType:
     class: 'PrestaShopBundle\Form\Admin\Sell\Discount\DiscountFeaturesType'
     arguments:
-      $featuresChoiceProvider: '@prestashop.adapter.form.choice_provider.features_choice_provider'
+      $featuresChoiceProvider: '@PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider'
   PrestaShopBundle\Form\Admin\Sell\Discount\DiscountTypeChoiceType:
     arguments:
       $choiceProvider: '@PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\DiscountTypeChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Sell\Discount\DiscountCustomerEligibilityChoiceType:
     arguments:
-      $groupByIdChoiceProvider: '@prestashop.core.form.choice_provider.group_by_id'
+      $groupByIdChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\GroupByIdChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoriesType:
     arguments:
@@ -457,14 +457,14 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Product\Details\DetailsType:
     arguments:
-      $productConditionChoiceProvider: '@prestashop.core.form.choice_provider.product_condition_choice_provider'
+      $productConditionChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProductConditionChoiceProvider'
       $isFeatureEnabled: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_FEATURE_FEATURE_ACTIVE')"
 
   PrestaShopBundle\Form\Admin\Sell\Product\Details\FeatureValueType:
 
   PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockType:
     arguments:
-      $packStockTypeChoiceProvider: '@prestashop.core.form.choice_provider.pack_stock_type_choice_provider'
+      $packStockTypeChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\PackStockTypeChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Stock\VirtualProductFileType:
     arguments:
@@ -473,18 +473,18 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Product\Stock\AvailabilityType:
     arguments:
-      $outOfStockTypeChoiceProvider: '@prestashop.core.form.choice_provider.out_of_stock_type_choice_provider'
+      $outOfStockTypeChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OutOfStockTypeChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Shipping\ShippingType:
     arguments:
       $currencyIsoCode: "@=service('prestashop.adapter.legacy.context').getContext().currency.iso_code"
-      $carrierChoiceProvider: '@prestashop.core.form.choice_provider.carrier_by_reference_id'
-      $additionalDeliveryTimeNoteTypesProvider: '@prestashop.core.form.choice_provider.delivery_time_note_types_provider'
+      $carrierChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CarrierByReferenceChoiceProvider'
+      $additionalDeliveryTimeNoteTypesProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\DeliveryTimeNoteTypesProvider'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Pricing\RetailPriceType:
     arguments:
       $contextLocale: '@prestashop.core.localization.locale.context_locale'
-      $taxRuleGroupChoicesProvider: '@prestashop.core.form.choice_provider.tax_rule_group_choice_provider'
+      $taxRuleGroupChoicesProvider: '@PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\TaxRuleGroupChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPriceType:
     arguments:
@@ -499,7 +499,7 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Product\Pricing\ApplicableGroupsType:
     arguments:
-      $groupByIdChoiceProvider: '@prestashop.core.form.choice_provider.group_by_id'
+      $groupByIdChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\GroupByIdChoiceProvider'
       $shopByIdChoiceProvider: '@prestashop.adapter.form.choice_provider.shop_name_by_id'
 
   PrestaShopBundle\Form\Admin\Sell\Product\SEO\SEOType:
@@ -521,11 +521,11 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Product\Options\VisibilityType:
     arguments:
-      $productVisibilityChoiceProvider: '@prestashop.core.form.choice_provider.product_visibility_choice_provider'
+      $productVisibilityChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProductVisibilityChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Options\CustomizationFieldType:
     arguments:
-      $customizationFieldTypeChoiceProvider: '@prestashop.core.form.choice_provider.customization_field_type_choice_provider'
+      $customizationFieldTypeChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomizationFieldTypeChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Options\SuppliersType:
     arguments:
@@ -537,7 +537,7 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Product\ExtraModulesType:
     arguments:
-      $moduleDataProvider: '@prestashop.adapter.data_provider.module'
+      $moduleDataProvider: '@PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider'
       $moduleRepository: '@PrestaShop\PrestaShop\Core\Module\ModuleRepository'
 
   PrestaShopBundle\Form\Admin\Sell\Product\FooterType:
@@ -549,7 +549,7 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationAvailabilityType:
     arguments:
-      $outOfStockTypeChoiceProvider: '@prestashop.core.form.choice_provider.out_of_stock_type_choice_provider'
+      $outOfStockTypeChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OutOfStockTypeChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationFormType:
     arguments:
@@ -561,7 +561,7 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationImagesChoiceType:
     arguments:
-      $imagesChoiceProvider: '@prestashop.core.form.choice_provider.product_images_choice_provider'
+      $imagesChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProductImagesChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationPriceType:
     arguments:
@@ -575,7 +575,7 @@ services:
   PrestaShopBundle\Form\Admin\Improve\International\Locations\ZoneType:
   PrestaShopBundle\Form\Admin\Improve\International\Locations\CountryType:
     arguments:
-      $zoneChoiceProvider: '@prestashop.core.form.choice_provider.zone_by_id'
+      $zoneChoiceProvider: '@PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ZoneByIdChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Improve\International\Locations\CountryOptionsType:
 
@@ -583,16 +583,16 @@ services:
 
   PrestaShopBundle\Form\Admin\Type\CarrierChoiceType:
     arguments:
-      $carrierChoiceProvider: '@prestashop.core.form.choice_provider.carrier_by_reference_id'
+      $carrierChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CarrierByReferenceChoiceProvider'
       $carrierLogoProvider: '@prestashop.adapter.carrier.carrier_thumbnail_logo_provider'
 
   PrestaShopBundle\Form\Admin\Type\ZoneChoiceType:
     arguments:
-      $zonesChoiceProvider: '@prestashop.core.form.choice_provider.zone_by_id'
+      $zonesChoiceProvider: '@PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ZoneByIdChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Type\MultipleZoneChoiceType:
     arguments:
-      $zonesChoiceProvider: '@prestashop.core.form.choice_provider.zone_by_id'
+      $zonesChoiceProvider: '@PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ZoneByIdChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Type\TaxGroupChoiceType:
     arguments:
@@ -600,20 +600,20 @@ services:
 
   PrestaShopBundle\Form\Admin\Type\ConfigurableCountryChoiceType:
     arguments:
-      - '@prestashop.core.form.choice_provider.configurable_country_by_id'
+      - '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIdConfigurableChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Improve\International\Locations\StateType:
     arguments:
-      $countriesChoiceProvider: '@prestashop.core.form.choice_provider.configurable_country_by_id'
-      $zonesChoiceProvider: '@prestashop.core.form.choice_provider.zone_by_id'
+      $countriesChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIdConfigurableChoiceProvider'
+      $zonesChoiceProvider: '@PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ZoneByIdChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Improve\International\Locations\ChangeStatesZoneType:
     arguments:
-      $zoneChoiceProvider: '@prestashop.core.form.choice_provider.zone_by_id'
+      $zoneChoiceProvider: '@PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ZoneByIdChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Improve\International\Locations\ChangeCountriesZoneType:
     arguments:
-      $zoneChoiceProvider: '@prestashop.core.form.choice_provider.zone_by_id'
+      $zoneChoiceProvider: '@PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ZoneByIdChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Sell\Product\EventListener\SpecificPriceCombinationListener:
     arguments:
@@ -621,12 +621,12 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener:
     arguments:
-      - '@prestashop.adapter.legacy.hook'
+      - '@PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider'
 
   PrestaShopBundle\Form\Toolbar\ProductToolbarButtonsProvider:
     arguments:
       $helpUrlProvider: '@prestashop.adapter.shop.url.help_provider'
-      $moduleDataProvider: '@prestashop.adapter.data_provider.module'
+      $moduleDataProvider: '@PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider'
 
   PrestaShopBundle\Form\Toolbar\ToolbarButtonsProviderInterface: '@PrestaShopBundle\Form\Toolbar\ProductToolbarButtonsProvider'
 

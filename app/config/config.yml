@@ -77,7 +77,7 @@ monolog:
       level: notice
     legacy:
       type: service
-      id: prestashop.handler.log
+      id: PrestaShopBundle\Service\Log\LogHandler
       level: warning
       channels: [ app ]
 

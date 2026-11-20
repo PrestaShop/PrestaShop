@@ -17,21 +17,21 @@ services:
   prestashop.core.grid.filter.category_form_factory:
     class: 'PrestaShop\PrestaShop\Core\Grid\Filter\CategoryFilterFormFactory'
     arguments:
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@router'
       - '@request_stack'
 
   prestashop.core.grid.filter.cms_page_form_factory:
     class: 'PrestaShop\PrestaShop\Core\Grid\Filter\CmsPageFilterFormFactory'
     arguments:
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@router'
       - '@request_stack'
 
   prestashop.core.grid.filter.order_return_form_factory:
     class: 'PrestaShop\PrestaShop\Core\Grid\Filter\FilterFormFactoryFormActionDecorator'
     arguments:
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@router'
       # Route name kept as-is to preserve BC for existing module path() calls.
       - 'admin_merchandise_returns_filter'
@@ -39,6 +39,6 @@ services:
   prestashop.core.grid.filter.credit_slip_form_factory:
     class: 'PrestaShop\PrestaShop\Core\Grid\Filter\FilterFormFactoryFormActionDecorator'
     arguments:
-      - '@prestashop.core.grid.filter.form_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
       - '@router'
       - 'admin_credit_slips_search'

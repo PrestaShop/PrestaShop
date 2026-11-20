@@ -7,7 +7,7 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider:
     arguments:
-      - "@prestashop.adapter.data_provider.module"
+      - '@PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider'
       - '@translator'
       - "@=service('prestashop.adapter.legacy.context').getContext().employee"
       - '@PrestaShop\PrestaShop\Core\Context\ApiClientContext'

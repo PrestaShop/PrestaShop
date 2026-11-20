@@ -4,7 +4,7 @@ services:
 
   PrestaShopBundle\EventListener\Console\MultishopCommandListener:
     arguments:
-      - "@prestashop.adapter.shop.context"
+      - '@PrestaShop\PrestaShop\Adapter\Shop\Context'
       - "@=service('kernel').getRootDir()"
     tags:
       - { name: kernel.event_listener, event: console.command, method: onConsoleCommand }
