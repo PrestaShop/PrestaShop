@@ -86,6 +86,10 @@ class CustomerLoginFormCore extends AbstractForm
             $params['password'] = '';
         }
 
+        if (array_key_exists('back', $params) && !is_string($params['back'])) {
+            $params['back'] = '';
+        }
+
         return parent::fillWith($params);
     }
 
