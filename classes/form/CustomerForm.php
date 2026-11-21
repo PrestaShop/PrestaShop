@@ -73,6 +73,10 @@ class CustomerFormCore extends AbstractForm
             $params['email'] = $this->IDNConverter->emailToUtf8($params['email']);
         }
 
+        if (array_key_exists('back', $params) && !is_string($params['back'])) {
+            $params['back'] = '';
+        }
+
         return parent::fillWith($params);
     }
 

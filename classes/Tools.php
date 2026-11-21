@@ -20,7 +20,6 @@ use PrestaShop\PrestaShop\Core\Security\SafeZipExtractor;
 use PrestaShop\PrestaShop\Core\Util\String\StringModifier;
 use PrestaShopBundle\Security\Admin\UserTokenManager;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\IpUtils;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -569,28 +568,6 @@ class ToolsCore
         }
 
         return $value;
-    }
-
-    /**
-     * Returns a string request parameter, or the default for non-string values.
-     *
-     * Uses getValue() to retrieve the parameter. If Symfony rejects a non-scalar
-     * request parameter with a BadRequestException, the default is returned.
-     *
-     * @param string $key Parameter name
-     * @param string $default Default value
-     *
-     * @return string
-     */
-    public static function getStringValue(string $key, string $default = ''): string
-    {
-        try {
-            $value = static::getValue($key);
-        } catch (BadRequestException $exception) {
-            return $default;
-        }
-
-        return is_string($value) ? $value : $default;
     }
 
     /**
