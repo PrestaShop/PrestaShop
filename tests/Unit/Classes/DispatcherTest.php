@@ -9,9 +9,12 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Classes;
 
+use Context;
 use DispatcherCore;
+use Language;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use Tools;
 
 class DispatcherTest extends TestCase
 {
@@ -82,6 +85,157 @@ class DispatcherTest extends TestCase
             ],
             'module null parameter' => [
                 'module-custom-product', '{rewrite}-p-{id}', ['id' => 3, 'rewrite' => 'item', 'extra' => null], true, 'item-p-3',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider controllerRouteProvider
+     */
+    public function testGetControllerSelectsMostSpecificRoute(
+        array $routes,
+        string $uri,
+        string $expectedController,
+        array $expectedParameters,
+        int $expectedFrontController = DispatcherCore::FC_FRONT,
+    ): void {
+        $context = Context::getContext();
+        $query = $_GET;
+        $post = $_POST;
+        $toolsReflection = new ReflectionClass(Tools::class);
+        $requestProperty = $toolsReflection->getProperty('request');
+        $fallbackProperty = $toolsReflection->getProperty('fallbackParameters');
+        $request = $requestProperty->getValue();
+        $fallbackParameters = $fallbackProperty->getValue();
+
+        try {
+            $_GET = ['existing' => 'keep'];
+            $_POST = [];
+            Tools::resetRequest();
+            Tools::setFallbackParameters([]);
+
+            $testContext = new Context();
+            $testContext->language = (new ReflectionClass(Language::class))->newInstanceWithoutConstructor();
+            $testContext->language->id = 1;
+            Context::setInstanceForTesting($testContext);
+
+            $reflection = new ReflectionClass(DispatcherCore::class);
+            $dispatcher = $reflection->newInstanceWithoutConstructor();
+            $reflection->getProperty('use_routes')->setValue($dispatcher, true);
+            $reflection->getProperty('request_uri')->setValue($dispatcher, $uri);
+            $reflection->getProperty('empty_route')->setValue($dispatcher, null);
+
+            foreach ($routes as $routeName => $route) {
+                $dispatcher->addRoute(
+                    $routeName,
+                    $route['rule'],
+                    $route['controller'],
+                    1,
+                    $route['keywords'],
+                    $route['params'] ?? [],
+                    1,
+                );
+            }
+
+            $this->assertSame($expectedController, $dispatcher->getController(1));
+            $this->assertSame($expectedFrontController, $reflection->getProperty('front_controller')->getValue($dispatcher));
+
+            $expectedQuery = array_merge(['existing' => 'keep'], $expectedParameters, ['controller' => $expectedController]);
+            $actualQuery = $_GET;
+            ksort($expectedQuery);
+            ksort($actualQuery);
+            $this->assertSame($expectedQuery, $actualQuery);
+        } finally {
+            $_GET = $query;
+            $_POST = $post;
+            Context::setInstanceForTesting($context);
+            $requestProperty->setValue(null, $request);
+            $fallbackProperty->setValue(null, $fallbackParameters);
+        }
+    }
+
+    public static function controllerRouteProvider(): array
+    {
+        $defaults = (new ReflectionClass(DispatcherCore::class))->getDefaultProperties()['default_routes'];
+        $product = $defaults['product_rule'];
+        $attachment = $defaults['attachment_rule'];
+        $customProduct = $product;
+        $customProduct['rule'] = '{category:/}{id}{-:id_product_attribute}-{rewrite}{-:ean13}';
+        $issueRoutes = ['product_rule' => $customProduct, 'attachment_rule' => $attachment];
+
+        $generic = [
+            'controller' => 'module-losing-view',
+            'rule' => 'files/{path}',
+            'keywords' => ['path' => ['regexp' => '.+', 'param' => 'path']],
+            'params' => ['fc' => 'module', 'source' => 'losing', 'losing_route' => 'leaked'],
+        ];
+        $customAttachment = $attachment;
+        $customAttachment['rule'] = 'files/manuals/{id}-{rewrite}';
+        $customAttachment['params'] = ['source' => 'selected'];
+        $customRoutes = ['generic' => $generic, 'manual' => $customAttachment];
+
+        $cms = $defaults['cms_rule'];
+        $cms['rule'] = $attachment['rule'];
+        $tiedRoutes = ['attachment_rule' => $attachment, 'cms_rule' => $cms];
+
+        $staticRoute = ['controller' => 'contact', 'rule' => 'files/help', 'keywords' => []];
+        $moduleRoute = $customAttachment;
+        $moduleRoute['controller'] = 'module-catalog-download';
+
+        return [
+            'issue 43575: generic product registered first' => [
+                $issueRoutes, '/attachment/42-guidepdf', 'attachment', ['id_attachment' => '42'],
+            ],
+            'issue 43575: attachment registered first' => [
+                array_reverse($issueRoutes, true), '/attachment/42-guidepdf', 'attachment', ['id_attachment' => '42'],
+            ],
+            'longer static prefix replaces earlier matching route without leaking parameters' => [
+                $customRoutes, '/files/manuals/42-guide', 'attachment', ['id_attachment' => '42', 'source' => 'selected'],
+            ],
+            'later generic route cannot overwrite selected parameters' => [
+                array_reverse($customRoutes, true), '/files/manuals/42-guide', 'attachment', ['id_attachment' => '42', 'source' => 'selected'],
+            ],
+            'equal prefixes preserve attachment registration priority' => [
+                $tiedRoutes, '/attachment/42-guidepdf', 'attachment', ['id_attachment' => '42'],
+            ],
+            'equal prefixes preserve CMS registration priority' => [
+                array_reverse($tiedRoutes, true), '/attachment/42-guidepdf', 'cms', ['id_cms' => '42'],
+            ],
+            'fully static route takes precedence' => [
+                ['generic' => $generic, 'contact' => $staticRoute], '/files/help', 'contact', [],
+            ],
+            'longer prefix without a matching regex is ignored' => [
+                $customRoutes, '/files/other/42-guide', 'view',
+                ['path' => 'other/42-guide', 'fc' => 'module', 'source' => 'losing', 'losing_route' => 'leaked', 'module' => 'losing'],
+                DispatcherCore::FC_MODULE,
+            ],
+            'ordinary product with combination' => [
+                ['product_rule' => $product, 'attachment_rule' => $attachment], '/42-7-shirt.html', 'product',
+                ['id_product' => '42', 'id_product_attribute' => '7', 'rewrite' => 'shirt'],
+            ],
+            'ordinary product without combination' => [
+                ['product_rule' => $product, 'attachment_rule' => $attachment], '/42-shirt.html', 'product',
+                ['id_product' => '42', 'id_product_attribute' => '', 'rewrite' => 'shirt'],
+            ],
+            'custom product with category combination and EAN' => [
+                $issueRoutes, '/clothes/42-7-shirt-1234567890123', 'product',
+                ['id_product' => '42', 'id_product_attribute' => '7', 'rewrite' => 'shirt'],
+            ],
+            'custom product without category or combination' => [
+                $issueRoutes, '/42-shirt', 'product',
+                ['id_product' => '42', 'id_product_attribute' => '', 'rewrite' => 'shirt'],
+            ],
+            'native module route resolves captured controller' => [
+                ['module' => $defaults['module']], '/module/catalog/view', 'view',
+                ['module' => 'catalog', 'fc' => 'module'], DispatcherCore::FC_MODULE,
+            ],
+            'custom module route wins over generic route' => [
+                ['generic' => $generic, 'module-catalog-download' => $moduleRoute], '/files/manuals/42-guide', 'download',
+                ['id_attachment' => '42', 'source' => 'selected', 'module' => 'catalog', 'fc' => 'module'],
+                DispatcherCore::FC_MODULE,
+            ],
+            'no matching route leaves query parameters untouched' => [
+                $issueRoutes, '/unknown/path', 'pagenotfound', [],
             ],
         ];
     }
