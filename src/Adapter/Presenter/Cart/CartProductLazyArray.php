@@ -56,9 +56,9 @@ class CartProductLazyArray extends ProductListingLazyArray
         // All ordered items are in stock
         if ($product['stock_quantity'] >= $product['quantity']) {
             $this->product['availability'] = 'in_stock';
-            if (!empty($combinationData['available_later'])) {
+            if (!empty($combinationData['available_now'])) {
                 $this->product['availability_message'] = $combinationData['available_now'];
-            } elseif (!empty($product['available_later'])) {
+            } elseif (!empty($product['available_now'])) {
                 $this->product['availability_message'] = $product['available_now'];
             } else {
                 $this->product['availability_message'] = $this->configuration->get('PS_LABEL_IN_STOCK_PRODUCTS')[$language->id] ?? null;
@@ -66,9 +66,9 @@ class CartProductLazyArray extends ProductListingLazyArray
         // Ordered items are partially in stock
         } elseif ($product['stock_quantity'] > 0) {
             // Define both parts of the message
-            if (!empty($combinationData['available_later'])) {
+            if (!empty($combinationData['available_now'])) {
                 $messageForInStockProducts = $combinationData['available_now'];
-            } elseif (!empty($product['available_later'])) {
+            } elseif (!empty($product['available_now'])) {
                 $messageForInStockProducts = $product['available_now'];
             } else {
                 $messageForInStockProducts = $this->configuration->get('PS_LABEL_IN_STOCK_PRODUCTS')[$language->id] ?? null;
