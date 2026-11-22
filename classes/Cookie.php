@@ -42,6 +42,13 @@ class CookieCore
      */
     public const SAMESITE_AVAILABLE_VALUES = CookieOptions::SAMESITE_AVAILABLE_VALUES;
 
+    /**
+     * Minimum interval in seconds between consecutive session date_upd database writes.
+     * Session expiration is measured in hours, so refreshing every 5 minutes avoids
+     * an UPDATE query on every authenticated request without affecting session lifetime.
+     */
+    public const SESSION_REFRESH_INTERVAL = 300;
+
     /** @var array Contain cookie content in a key => value format */
     protected $_content = [];
 
@@ -581,18 +588,42 @@ class CookieCore
         }
 
         $this->session = null;
+        $session = null;
 
         if (isset($this->id_employee)) {
-            $this->session = new EmployeeSession($sessionId);
+            $session = new EmployeeSession($sessionId);
         } elseif (isset($this->id_customer)) {
-            $this->session = new CustomerSession($sessionId);
+            $session = new CustomerSession($sessionId);
         }
 
-        if (isset($this->session) && Validate::isLoadedObject($this->session)) {
+        $this->session = $session;
+
+        if ($session !== null && Validate::isLoadedObject($session) && $this->shouldRefreshSessionDateUpd($session->date_upd)) {
             // Update session date_upd
-            $this->session->save();
+            $session->save();
         }
 
         return $this->session;
+    }
+
+    /**
+     * Determine whether a session's date_upd timestamp is stale enough to warrant a DB write.
+     *
+     * @param string|null $dateUpd
+     *
+     * @return bool
+     */
+    protected function shouldRefreshSessionDateUpd($dateUpd): bool
+    {
+        if (empty($dateUpd) || $dateUpd === '0000-00-00 00:00:00') {
+            return true;
+        }
+
+        $lastUpdated = strtotime((string) $dateUpd);
+        if ($lastUpdated === false) {
+            return true;
+        }
+
+        return (time() - $lastUpdated) >= static::SESSION_REFRESH_INTERVAL;
     }
 }
