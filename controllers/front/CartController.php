@@ -599,7 +599,8 @@ class CartControllerCore extends FrontController
      * Check product quantity availability to acknowledge whether
      * an availability error should be raised.
      *
-     * If shop has been configured to oversell, answer is no.
+     * If target quantity is zero or negative (e.g. decreasing quantity to remove an item),
+     * or if shop has been configured to oversell, answer is no.
      * If there is no items available (no stock), answer is yes.
      * If there is items available, but the Cart already contains more than the quantity,
      * answer is yes.
@@ -611,6 +612,10 @@ class CartControllerCore extends FrontController
      */
     protected function shouldAvailabilityErrorBeRaised(Product $product, int $qtyToCheck)
     {
+        if ($qtyToCheck <= 0) {
+            return false;
+        }
+
         if ($this->id_product_attribute) {
             return !Product::isAvailableWhenOutOfStock($product->out_of_stock)
                 && !ProductAttribute::checkAttributeQty($this->id_product_attribute, $qtyToCheck);
