@@ -70,7 +70,7 @@ class SitemapControllerCore extends FrontController
 
     public function getCategoriesLinks(): array
     {
-        return [Category::getRootCategory()->recurseLiteCategTree(0, 0, null, null, 'sitemap')];
+        return [Category::getRootCategory(null, $this->context->shop)->recurseLiteCategTree(0, 0, null, null, 'sitemap')];
     }
 
     /**
