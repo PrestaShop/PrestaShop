@@ -65,14 +65,11 @@ class StockManager
             $products_pack = $packItemsManager->getPackItems($product);
             foreach ($products_pack as $product_pack) {
                 $productStockAvailable = $stockManager->getStockAvailableByProduct($product_pack, $product_pack->id_pack_product_attribute, $id_shop);
-                $productStockAvailable->quantity = $productStockAvailable->quantity + ($delta_quantity * $product_pack->pack_quantity);
-                $productStockAvailable->update();
+                $productStockAvailable->updateQuantityDelta((int) ($delta_quantity * $product_pack->pack_quantity));
 
                 $cacheManager->clean('StockAvailable::getQuantityAvailableByProduct_' . (int) $product_pack->id . '*');
             }
         }
-
-        $stock_available->quantity = $stock_available->quantity + $delta_quantity;
 
         if ($product->pack_stock_type == Pack::STOCK_TYPE_PACK_ONLY
             || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
@@ -82,7 +79,9 @@ class StockManager
                     || $configuration->get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)
             )
         ) {
-            $stock_available->update();
+            $stock_available->updateQuantityDelta((int) $delta_quantity);
+        } else {
+            $stock_available->quantity = $stock_available->quantity + $delta_quantity;
         }
     }
 
@@ -159,8 +158,7 @@ class StockManager
             $this->updatePackQuantity($product, $stockAvailable, $delta_quantity, $id_shop);
         } else {
             // The product is not a pack
-            $stockAvailable->quantity = $stockAvailable->quantity + $delta_quantity;
-            $stockAvailable->update();
+            $stockAvailable->updateQuantityDelta((int) $delta_quantity);
 
             // Decrease case only: the stock of linked packs should be decreased too.
             if ($delta_quantity < 0) {

@@ -301,6 +301,58 @@ class StockAvailableCore extends ObjectModel
     }
 
     /**
+     * Atomically updates the quantity column in SQL by a relative delta, preventing
+     * lost updates when concurrent requests modify stock for the same product simultaneously.
+     *
+     * @param int $deltaQuantity Relative quantity change (positive or negative)
+     *
+     * @return bool
+     */
+    public function updateQuantityDelta(int $deltaQuantity): bool
+    {
+        if (!Validate::isUnsignedId($this->id)) {
+            $this->quantity = (int) $this->quantity + $deltaQuantity;
+
+            return (bool) $this->update();
+        }
+
+        $this->quantity = (int) $this->quantity + $deltaQuantity;
+        $objectName = str_replace('\\', '', get_class($this));
+
+        // @hook actionObject<ObjectClassName>UpdateBefore
+        Hook::exec('actionObjectUpdateBefore', ['object' => $this]);
+        Hook::exec('actionObject' . $objectName . 'UpdateBefore', ['object' => $this]);
+
+        $this->clearCache();
+
+        $result = Db::getInstance()->execute(
+            'UPDATE `' . _DB_PREFIX_ . 'stock_available`
+             SET `quantity` = `quantity` + (' . (int) $deltaQuantity . ')
+             WHERE `id_stock_available` = ' . (int) $this->id
+        );
+
+        if (!$result) {
+            return false;
+        }
+
+        // Reload the authoritative post-update quantity from the master DB
+        $freshQuantity = Db::getInstance()->getValue(
+            'SELECT `quantity`
+             FROM `' . _DB_PREFIX_ . 'stock_available`
+             WHERE `id_stock_available` = ' . (int) $this->id
+        );
+        if ($freshQuantity !== false) {
+            $this->quantity = (int) $freshQuantity;
+        }
+
+        // @hook actionObject<ObjectClassName>UpdateAfter
+        Hook::exec('actionObjectUpdateAfter', ['object' => $this]);
+        Hook::exec('actionObject' . $objectName . 'UpdateAfter', ['object' => $this]);
+
+        return (bool) $this->postSave();
+    }
+
+    /**
      * Updates the total quantity of the given product.
      *
      * If a product has combinations, the quantity id_product = X, id_product_attribute = 0 entry
