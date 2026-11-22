@@ -425,6 +425,67 @@ class SpecificPriceCore extends ObjectModel
     }
 
     /**
+     * Prefetches specific price existence flags for a batch of product IDs into the static cache
+     * used by couldHaveSpecificPrice(), eliminating N+1 existence queries on product listings.
+     *
+     * @param array<int|string> $productIds Product identifiers
+     *
+     * @return void
+     */
+    public static function cacheCouldHaveSpecificPrice(array $productIds): void
+    {
+        if (!self::isFeatureActive()) {
+            return;
+        }
+
+        if (self::$_hasGlobalProductRules === true) {
+            return;
+        }
+
+        $uncachedIds = [];
+        foreach ($productIds as $idProduct) {
+            $pid = (int) $idProduct;
+            if ($pid > 0 && !array_key_exists($pid, self::$_couldHaveSpecificPriceCache)) {
+                $uncachedIds[$pid] = $pid;
+            }
+        }
+
+        if (empty($uncachedIds)) {
+            return;
+        }
+
+        $queryIds = $uncachedIds;
+        if (self::$_hasGlobalProductRules === null) {
+            $queryIds[0] = 0;
+        }
+
+        $rows = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            'SELECT DISTINCT `id_product`
+            FROM `' . _DB_PREFIX_ . 'specific_price`
+            WHERE `id_product` IN (' . implode(',', $queryIds) . ')'
+        );
+
+        $found = [];
+        if (is_array($rows)) {
+            foreach ($rows as $row) {
+                $found[(int) $row['id_product']] = true;
+            }
+        }
+
+        if (self::$_hasGlobalProductRules === null) {
+            self::$_hasGlobalProductRules = isset($found[0]);
+        }
+
+        if (self::$_hasGlobalProductRules) {
+            return;
+        }
+
+        foreach ($uncachedIds as $pid) {
+            self::$_couldHaveSpecificPriceCache[$pid] = isset($found[$pid]);
+        }
+    }
+
+    /**
      * Compute the cache key by setting to 0 the fields which doesn't have any specific values in the DB.
      *
      * @param int $id_product
