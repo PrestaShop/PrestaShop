@@ -190,6 +190,18 @@ class ProductAssemblerCore
     {
         $enrichedProducts = $this->addMissingProductFieldsForMultipleProducts($rawProducts);
 
+        $combinationIds = [];
+        foreach ($enrichedProducts as $productRow) {
+            if (!empty($productRow['id_product_attribute'])) {
+                $combinationIds[] = (int) $productRow['id_product_attribute'];
+            } elseif (!empty($productRow['cache_default_attribute'])) {
+                $combinationIds[] = (int) $productRow['cache_default_attribute'];
+            }
+        }
+        if (!empty($combinationIds)) {
+            Product::cacheCombinationUnitPriceData($combinationIds, (int) $this->context->shop->id);
+        }
+
         foreach ($enrichedProducts as &$product) {
             $product = Product::getProductProperties(
                 $this->searchContext->getIdLang(),

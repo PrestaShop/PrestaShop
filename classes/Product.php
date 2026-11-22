@@ -377,6 +377,9 @@ class ProductCore extends ObjectModel
     /** @var array */
     protected static $_pricesLevel2 = [];
 
+    /** @var array<string, array{price: float, unit_price_impact: float}> */
+    protected static $combinationUnitPriceCache = [];
+
     /** @var array */
     protected static $_incat = [];
 
@@ -1218,6 +1221,7 @@ class ProductCore extends ObjectModel
         static::$_frontFeaturesCombinationCache = [];
         static::$_prices = [];
         static::$_pricesLevel2 = [];
+        static::$combinationUnitPriceCache = [];
         static::$_incat = [];
         static::$_combinations = [];
         static::$psEcotaxTaxRulesGroupId = null;
@@ -5718,6 +5722,63 @@ class ProductCore extends ObjectModel
     }
 
     /**
+     * Prefetches combination price and unit price impact values used by computeUnitPriceRatio(),
+     * eliminating N+1 Combination instantiations in product listings.
+     *
+     * @param array<int|string> $combinationIds Product attribute identifiers
+     * @param int|null $idShop Optional shop identifier (null = current context shop)
+     *
+     * @return void
+     */
+    public static function cacheCombinationUnitPriceData(array $combinationIds, ?int $idShop = null): void
+    {
+        $idShop = $idShop ?? (int) Context::getContext()->shop->id;
+        if ($idShop <= 0) {
+            return;
+        }
+
+        $uncachedIds = [];
+        foreach ($combinationIds as $idCombination) {
+            $cid = (int) $idCombination;
+            if ($cid > 0 && !isset(self::$combinationUnitPriceCache[$cid . '-' . $idShop])) {
+                $uncachedIds[$cid] = $cid;
+            }
+        }
+
+        if (empty($uncachedIds)) {
+            return;
+        }
+
+        $rows = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            'SELECT `id_product_attribute`, `price`, `unit_price_impact`
+            FROM `' . _DB_PREFIX_ . 'product_attribute_shop`
+            WHERE `id_product_attribute` IN (' . implode(',', $uncachedIds) . ')
+            AND `id_shop` = ' . (int) $idShop
+        );
+
+        $found = [];
+        if (is_array($rows)) {
+            foreach ($rows as $row) {
+                $cid = (int) $row['id_product_attribute'];
+                self::$combinationUnitPriceCache[$cid . '-' . $idShop] = [
+                    'price' => (float) $row['price'],
+                    'unit_price_impact' => (float) $row['unit_price_impact'],
+                ];
+                $found[$cid] = true;
+            }
+        }
+
+        foreach ($uncachedIds as $cid) {
+            if (!isset($found[$cid])) {
+                self::$combinationUnitPriceCache[$cid . '-' . $idShop] = [
+                    'price' => 0.0,
+                    'unit_price_impact' => 0.0,
+                ];
+            }
+        }
+    }
+
+    /**
      * Compute unit price ratio based on the saved prices on both product and combinations.
      *
      * @param array $productRow
@@ -5728,9 +5789,17 @@ class ProductCore extends ObjectModel
      */
     private static function computeUnitPriceRatio(array $productRow, int $combinationId, Context $context): float
     {
-        // If we have a combination Id, we will prepare it
+        $combinationData = null;
         if ($combinationId) {
-            $combination = new Combination($combinationId);
+            $idShop = (int) $context->shop->id;
+            $cacheKey = $combinationId . '-' . $idShop;
+            if (!isset(self::$combinationUnitPriceCache[$cacheKey])) {
+                self::cacheCombinationUnitPriceData([$combinationId], $idShop);
+            }
+            $combinationData = self::$combinationUnitPriceCache[$cacheKey] ?? [
+                'price' => 0.0,
+                'unit_price_impact' => 0.0,
+            ];
         }
 
         // First, we get the unit price without tax saved in the database
@@ -5740,8 +5809,8 @@ class ProductCore extends ObjectModel
         }
 
         // Then, if combination has an impact we apply it on unit price
-        if ($combinationId) {
-            $baseUnitPrice = $baseUnitPrice + $combination->unit_price_impact;
+        if ($combinationData !== null) {
+            $baseUnitPrice = $baseUnitPrice + $combinationData['unit_price_impact'];
         }
 
         // If there is none, nothing to calculate
@@ -5756,8 +5825,8 @@ class ProductCore extends ObjectModel
             FROM ' . _DB_PREFIX_ . 'product_shop
             WHERE id_product = ' . (int) $productRow['id_product'] . ' AND id_shop = ' . (int) $context->shop->id
         );
-        if ($combinationId) {
-            $baseProductPrice = $baseProductPrice + $combination->price;
+        if ($combinationData !== null) {
+            $baseProductPrice = $baseProductPrice + $combinationData['price'];
         }
 
         // And we calculate the precise ratio
@@ -5803,6 +5872,20 @@ class ProductCore extends ObjectModel
         $results_array = [];
 
         if (is_array($query_result)) {
+            $combinationIds = [];
+            foreach ($query_result as $row) {
+                if (is_array($row)) {
+                    if (!empty($row['id_product_attribute'])) {
+                        $combinationIds[] = (int) $row['id_product_attribute'];
+                    } elseif (!empty($row['cache_default_attribute'])) {
+                        $combinationIds[] = (int) $row['cache_default_attribute'];
+                    }
+                }
+            }
+            if (!empty($combinationIds)) {
+                Product::cacheCombinationUnitPriceData($combinationIds);
+            }
+
             foreach ($query_result as $row) {
                 if ($row2 = Product::getProductProperties($id_lang, $row)) {
                     $results_array[] = $row2;
@@ -7680,6 +7763,7 @@ class ProductCore extends ObjectModel
     {
         self::$_prices = [];
         self::$_pricesLevel2 = [];
+        self::$combinationUnitPriceCache = [];
     }
 
     /**
