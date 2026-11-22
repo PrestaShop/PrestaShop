@@ -6,10 +6,10 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email;
 
-use Configuration as LegacyConfiguration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Email\EmailConfigurationInheritance;
 use PrestaShop\PrestaShop\Core\Email\MailOption;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
@@ -67,6 +67,7 @@ final class EmailConfigurationFormDataProvider implements FormDataProviderInterf
         $effectiveConfiguration = [];
         $shopConstraint = $this->shopContext->getShopConstraint();
         $isScoped = $this->shopContext->isMultiShopUsed() && !$this->shopContext->isAllShopContext();
+        $parentConstraint = $isScoped ? EmailConfigurationInheritance::getParentShopConstraint($this->shopContext) : null;
         $prefix = MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX;
 
         foreach (['mail_method' => 'PS_MAIL_METHOD', 'server' => 'PS_MAIL_SERVER', 'port' => 'PS_MAIL_SMTP_PORT'] as $field => $configurationKey) {
@@ -74,10 +75,7 @@ final class EmailConfigurationFormDataProvider implements FormDataProviderInterf
             if (!array_key_exists($field, $input)) {
                 $effectiveConfiguration[$field] = $this->configuration->get($configurationKey, null, $shopConstraint);
             } elseif ($isScoped && true !== ($input[$prefix . $field] ?? false)) {
-                // Explicit legacy scopes exclude the current override, which the adapter may read back.
-                $effectiveConfiguration[$field] = $this->shopContext->isSingleShopContext()
-                    ? LegacyConfiguration::get($configurationKey, null, $this->shopContext->getShopGroupId(), 0)
-                    : LegacyConfiguration::getGlobalValue($configurationKey);
+                $effectiveConfiguration[$field] = $this->configuration->get($configurationKey, null, $parentConstraint);
             } else {
                 $effectiveConfiguration[$field] = $input[$field];
             }

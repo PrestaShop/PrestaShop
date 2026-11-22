@@ -6,11 +6,11 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Email;
 
-use Configuration as LegacyConfiguration;
 use PrestaShop\PrestaShop\Adapter\Entity\Mail;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Email\EmailConfigurationInheritance;
 use PrestaShop\PrestaShop\Core\Email\EmailConfigurationTesterInterface;
 use PrestaShop\PrestaShop\Core\Email\MailOption;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -68,6 +68,7 @@ final class EmailConfigurationTester implements EmailConfigurationTesterInterfac
 
         // Unchecked overrides must use inherited values even before saving; the DOM may still hold local values.
         if ($isScoped) {
+            $parentConstraint = EmailConfigurationInheritance::getParentShopConstraint($this->shopContext);
             foreach ([
                 'mail_method' => 'PS_MAIL_METHOD',
                 'smtp_server' => 'PS_MAIL_SERVER',
@@ -81,10 +82,7 @@ final class EmailConfigurationTester implements EmailConfigurationTesterInterfac
                 'dkim_selector' => 'PS_MAIL_DKIM_SELECTOR',
             ] as $field => $configurationKey) {
                 if ('0' === ($config['multistore_' . $field] ?? '')) {
-                    // Explicit legacy scopes avoid the adapter falling back to the current context.
-                    $config[$field] = $this->shopContext->isSingleShopContext()
-                        ? LegacyConfiguration::get($configurationKey, null, $this->shopContext->getShopGroupId(), 0)
-                        : LegacyConfiguration::getGlobalValue($configurationKey);
+                    $config[$field] = $this->configuration->get($configurationKey, null, $parentConstraint);
                 }
             }
         }
