@@ -202,12 +202,13 @@ class GroupReductionCore extends ObjectModel
             return true;
         }
 
-        $query = '';
-
+        $values = [];
         foreach ($res as $row) {
-            $query .= 'INSERT INTO `' . _DB_PREFIX_ . 'product_group_reduction_cache` (`id_product`, `id_group`, `reduction`) VALUES ';
-            $query .= '(' . (int) $id_product . ', ' . (int) $row['id_group'] . ', ' . (float) $row['reduction'] . ') ON DUPLICATE KEY UPDATE `reduction` = ' . (float) $row['reduction'] . ';';
+            $values[] = '(' . (int) $id_product . ', ' . (int) $row['id_group'] . ', ' . (float) $row['reduction'] . ')';
         }
+
+        $query = 'INSERT INTO `' . _DB_PREFIX_ . 'product_group_reduction_cache` (`id_product`, `id_group`, `reduction`)
+			VALUES ' . implode(', ', $values) . ' ON DUPLICATE KEY UPDATE `reduction` = VALUES(`reduction`)';
 
         return Db::getInstance()->execute($query);
     }
