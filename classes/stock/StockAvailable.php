@@ -273,6 +273,59 @@ class StockAvailableCore extends ObjectModel
     }
 
     /**
+     * Prefetches available stock quantities for a batch of product IDs into the static Cache
+     * used by getQuantityAvailableByProduct(), eliminating N+1 queries on product listings.
+     *
+     * @param array<int|string> $productIds Product identifiers
+     * @param int|null $idShop Optional shop identifier (null = current context shop, matching getQuantityAvailableByProduct())
+     *
+     * @return void
+     */
+    public static function cacheQuantities(array $productIds, ?int $idShop = null): void
+    {
+        $shopKeySuffix = '-' . (int) $idShop;
+        $uncachedIds = [];
+        foreach ($productIds as $idProduct) {
+            $pid = (int) $idProduct;
+            if ($pid > 0 && !Cache::isStored('StockAvailable::getQuantityAvailableByProduct_' . $pid . '-0' . $shopKeySuffix)) {
+                $uncachedIds[$pid] = $pid;
+            }
+        }
+
+        if (empty($uncachedIds)) {
+            return;
+        }
+
+        $query = new DbQuery();
+        $query->select('id_product, id_product_attribute, SUM(quantity) AS quantity');
+        $query->from('stock_available');
+        $query->where('id_product IN (' . implode(',', $uncachedIds) . ')');
+        $query = StockAvailable::addSqlShopRestriction($query, $idShop);
+        $query->groupBy('id_product, id_product_attribute');
+
+        $rows = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+
+        $seenParent = [];
+        if (is_array($rows)) {
+            foreach ($rows as $row) {
+                $pid = (int) $row['id_product'];
+                $ipa = (int) $row['id_product_attribute'];
+                $key = 'StockAvailable::getQuantityAvailableByProduct_' . $pid . '-' . $ipa . $shopKeySuffix;
+                Cache::store($key, (int) $row['quantity']);
+                if ($ipa === 0) {
+                    $seenParent[$pid] = true;
+                }
+            }
+        }
+
+        foreach ($uncachedIds as $pid) {
+            if (!isset($seenParent[$pid])) {
+                Cache::store('StockAvailable::getQuantityAvailableByProduct_' . $pid . '-0' . $shopKeySuffix, 0);
+            }
+        }
+    }
+
+    /**
      * Upgrades total_quantity_available after having saved.
      *
      * @see ObjectModel::add()

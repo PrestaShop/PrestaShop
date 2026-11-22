@@ -5803,6 +5803,11 @@ class ProductCore extends ObjectModel
         $results_array = [];
 
         if (is_array($query_result)) {
+            $productIds = array_column($query_result, 'id_product');
+            if (!empty($productIds)) {
+                StockAvailable::cacheQuantities($productIds);
+            }
+
             foreach ($query_result as $row) {
                 if ($row2 = Product::getProductProperties($id_lang, $row)) {
                     $results_array[] = $row2;

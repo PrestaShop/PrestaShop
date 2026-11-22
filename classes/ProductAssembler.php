@@ -190,6 +190,11 @@ class ProductAssemblerCore
     {
         $enrichedProducts = $this->addMissingProductFieldsForMultipleProducts($rawProducts);
 
+        $productIds = array_column($enrichedProducts, 'id_product');
+        if (!empty($productIds)) {
+            StockAvailable::cacheQuantities($productIds);
+        }
+
         foreach ($enrichedProducts as &$product) {
             $product = Product::getProductProperties(
                 $this->searchContext->getIdLang(),
