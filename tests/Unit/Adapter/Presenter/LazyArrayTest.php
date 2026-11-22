@@ -95,4 +95,63 @@ class LazyArrayTest extends TestCase
         $test->clearMethodCacheResults();
         $this->assertEquals(2, $test['b']);
     }
+
+    public function testCloneSharesComputedValues(): void
+    {
+        $dummyLog = new DummyLog();
+        $test = new LazyArrayImplementation();
+        $test->appendClosure('b', function () use ($dummyLog) {
+            $dummyLog->ping();
+
+            return $dummyLog->getPingCounter();
+        });
+        $clone = clone $test;
+
+        $this->assertSame(1, $clone['b']);
+        $this->assertSame(1, $test['b']);
+        $this->assertSame(1, $dummyLog->getPingCounter());
+    }
+
+    public function testValueSetOnCloneDoesNotReachTheOriginal(): void
+    {
+        $test = new LazyArrayImplementation();
+        $test->appendClosure('b', fn () => 'computed');
+        $clone = clone $test;
+
+        $this->assertSame('computed', $clone['b']);
+        $clone->offsetSet('b', 'filtered', true);
+
+        $this->assertSame('filtered', $clone['b']);
+        $this->assertSame('computed', $test['b']);
+    }
+
+    public function testClearMethodCacheResultsOnlyClearsTheInstance(): void
+    {
+        $dummyLog = new DummyLog();
+        $test = new LazyArrayImplementation();
+        $test->appendClosure('b', function () use ($dummyLog) {
+            $dummyLog->ping();
+
+            return $dummyLog->getPingCounter();
+        });
+        $clone = clone $test;
+        $this->assertSame(1, $test['b']);
+
+        $clone->clearMethodCacheResults();
+
+        $this->assertSame(2, $clone['b']);
+        $this->assertSame(1, $test['b']);
+    }
+
+    public function testClosureRedefinedOnCloneDoesNotReachTheOriginal(): void
+    {
+        $test = new LazyArrayImplementation();
+        $test->appendClosure('b', fn () => 'original');
+        $clone = clone $test;
+
+        $clone->appendClosure('b', fn () => 'redefined');
+
+        $this->assertSame('redefined', $clone['b']);
+        $this->assertSame('original', $test['b']);
+    }
 }

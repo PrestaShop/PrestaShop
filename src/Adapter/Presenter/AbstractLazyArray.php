@@ -71,9 +71,9 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
     private $arrayAccessIterator;
 
     /**
-     * @var array
+     * Shared with clones (an object is not copied by clone), so a value computed by one instance serves the others.
      */
-    private $methodCacheResults = [];
+    private ArrayObject $methodCacheResults;
 
     /**
      * AbstractLazyArray constructor.
@@ -82,6 +82,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      */
     public function __construct()
     {
+        $this->methodCacheResults = new ArrayObject();
         $this->arrayAccessList = new ArrayObject();
         $reflectionClass = new ReflectionClass(static::class);
         $methods = $reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC);
@@ -222,6 +223,10 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      */
     public function appendClosure($key, Closure $closure)
     {
+        // a redefined index must not leak its value to the instances sharing the cache
+        if ($this->arrayAccessList->offsetExists($key)) {
+            $this->methodCacheResults = new ArrayObject($this->methodCacheResults->getArrayCopy());
+        }
         $this->arrayAccessList->offsetSet(
             $key,
             [
@@ -359,7 +364,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
 
     public function clearMethodCacheResults()
     {
-        $this->methodCacheResults = [];
+        $this->methodCacheResults = new ArrayObject();
     }
 
     /**
