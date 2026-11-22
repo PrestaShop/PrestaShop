@@ -4145,6 +4145,26 @@ exit;
                     if ($allow_style) {
                         $def->addElement('style', 'Block', 'Flow', 'Common', ['type' => 'Text']);
                     }
+
+                    // The XHTML 1.0 definition has no ARIA attribute and no hreflang. Widget states (aria-expanded...)
+                    // are left out: they need a script to stay true, and purified content cannot carry one.
+                    // Definition objects, not type names: 'Text' is the shared instance that img's required alt
+                    // marks as required, so every img without the new attribute would be removed.
+                    $anonymousModule = $def->getAnonymousModule();
+                    $anonymousModule->attr_collections['Common'] = array_merge(
+                        $anonymousModule->attr_collections['Common'] ?? [],
+                        [
+                            'aria-current' => new HTMLPurifier_AttrDef_Enum(['page', 'step', 'location', 'date', 'time', 'true', 'false']),
+                            'aria-describedby' => new HTMLPurifier_AttrDef_Text(),
+                            'aria-details' => new HTMLPurifier_AttrDef_Text(),
+                            'aria-hidden' => new HTMLPurifier_AttrDef_Enum(['true', 'false']),
+                            'aria-label' => new HTMLPurifier_AttrDef_Text(),
+                            'aria-labelledby' => new HTMLPurifier_AttrDef_Text(),
+                            'role' => new HTMLPurifier_AttrDef_Text(),
+                        ]
+                    );
+                    $def->addAttribute('a', 'hreflang', new HTMLPurifier_AttrDef_Lang());
+
                     Hook::exec('actionModifyHtmlPurifierConfig', [
                         'config' => &$config,
                     ]);
