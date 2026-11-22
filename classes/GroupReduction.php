@@ -133,6 +133,65 @@ class GroupReductionCore extends ObjectModel
         return self::$reduction_cache[$id_product . '-' . $id_group];
     }
 
+    /**
+     * Prefetches category group reductions for a batch of product IDs into the static cache
+     * used by getValueForProduct(), eliminating N+1 queries on product listings.
+     *
+     * @param array<int|string> $productIds Product identifiers
+     * @param int|null $idGroup Optional group identifier (null = current context group)
+     *
+     * @return void
+     */
+    public static function cacheValuesForProducts(array $productIds, ?int $idGroup = null): void
+    {
+        if (!Group::isFeatureActive()) {
+            return;
+        }
+
+        if ($idGroup === null) {
+            $group = Group::getCurrent();
+            $idGroup = Validate::isLoadedObject($group) ? (int) $group->id : 0;
+        }
+
+        if ($idGroup <= 0) {
+            return;
+        }
+
+        $uncachedIds = [];
+        foreach ($productIds as $idProduct) {
+            $pid = (int) $idProduct;
+            if ($pid > 0 && !isset(self::$reduction_cache[$pid . '-' . $idGroup])) {
+                $uncachedIds[$pid] = $pid;
+            }
+        }
+
+        if (empty($uncachedIds)) {
+            return;
+        }
+
+        $rows = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            'SELECT `id_product`, `reduction`
+            FROM `' . _DB_PREFIX_ . 'product_group_reduction_cache`
+            WHERE `id_product` IN (' . implode(',', $uncachedIds) . ')
+            AND `id_group` = ' . (int) $idGroup
+        );
+
+        $found = [];
+        if (is_array($rows)) {
+            foreach ($rows as $row) {
+                $pid = (int) $row['id_product'];
+                self::$reduction_cache[$pid . '-' . $idGroup] = $row['reduction'];
+                $found[$pid] = true;
+            }
+        }
+
+        foreach ($uncachedIds as $pid) {
+            if (!isset($found[$pid])) {
+                self::$reduction_cache[$pid . '-' . $idGroup] = false;
+            }
+        }
+    }
+
     public static function doesExist($id_group, $id_category)
     {
         return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
