@@ -12,11 +12,13 @@ use Configuration as LegacyConfiguration;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Email\EmailDataConfigurator;
 use PrestaShop\PrestaShop\Core\Email\MailOption;
 use PrestaShopBundle\Entity\Shop;
 use PrestaShopBundle\Entity\ShopGroup;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\EmailConfigurationFormDataProvider;
 use Shop as LegacyShop;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Tests\Resources\DatabaseDump;
@@ -234,6 +236,51 @@ class EmailDataConfiguratorTest extends KernelTestCase
         self::assertTrue($this->configuration->has('PS_MAIL_PASSWD', $scope->clone(true)));
         self::assertSame('new+password%42', $settings['smtp_config']['password']);
         self::assertSame('global-password', LegacyConfiguration::getGlobalValue('PS_MAIL_PASSWD'));
+    }
+
+    public function testProviderValidatesInheritedSmtpMethodWhenOverrideIsDisabled(): void
+    {
+        $configurator = $this->createConfigurator(false);
+        $shopConstraint = ShopConstraint::shop($this->shopId);
+        $groupConstraint = ShopConstraint::shopGroup($this->shopGroupId);
+        $this->configuration->set('PS_MAIL_METHOD', MailOption::METHOD_SMTP, $groupConstraint);
+        $this->configuration->set('PS_MAIL_SERVER', '', $groupConstraint);
+        $this->configuration->set('PS_MAIL_SMTP_PORT', '587', $groupConstraint);
+        $this->configuration->set('PS_MAIL_METHOD', MailOption::METHOD_NATIVE, $shopConstraint);
+
+        /** @var ShopContextBuilder $shopContextBuilder */
+        $shopContextBuilder = self::getContainer()->get('test_shop_context_builder');
+        $shopContext = $shopContextBuilder
+            ->setShopId($this->shopId)
+            ->setShopConstraint($shopConstraint)
+            ->build();
+        self::assertTrue($shopContext->isMultiShopUsed());
+
+        $provider = new EmailConfigurationFormDataProvider($configurator, $this->configuration, $shopContext);
+        $data = $provider->getData();
+        self::assertSame(MailOption::METHOD_NATIVE, $data['mail_method']);
+        self::assertSame('', $data['smtp_config']['server']);
+        self::assertSame('587', $data['smtp_config']['port']);
+
+        // An unchecked override leaves the old local value in form data, without multistore_mail_method.
+        self::assertSame([
+            [
+                'key' => 'You must define an SMTP server and an SMTP port. If you do not know it, use the PHP mail() function instead.',
+                'parameters' => [],
+                'domain' => 'Admin.Shopparameters.Notification',
+            ],
+        ], $provider->setData($data));
+
+        LegacyConfiguration::resetStaticCache();
+        self::assertSame(
+            MailOption::METHOD_NATIVE,
+            $configurator->getConfiguration()['mail_method']
+        );
+        self::assertTrue($this->configuration->has('PS_MAIL_METHOD', $shopConstraint->clone(true)));
+        self::assertSame(
+            MailOption::METHOD_SMTP,
+            (int) $this->configuration->get('PS_MAIL_METHOD', null, $groupConstraint)
+        );
     }
 
     public static function provideContexts(): iterable

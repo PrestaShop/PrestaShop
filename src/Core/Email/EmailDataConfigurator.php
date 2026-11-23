@@ -102,11 +102,11 @@ final class EmailDataConfigurator extends AbstractMultistoreConfiguration
         if (isset($config['smtp_config'])) {
             $this->buildNestedResolver([
                 'domain' => 'string',
-                'server' => ['string', 'bool', 'null'],
+                'server' => ['string', 'null'],
                 'username' => 'string',
                 'password' => 'string',
                 'encryption' => 'string',
-                'port' => ['string', 'int', 'bool', 'null'],
+                'port' => ['string', 'int', 'null'],
             ])->resolve($config['smtp_config']);
         }
 
