@@ -233,8 +233,8 @@ class QueryListProvider implements ProviderInterface
             'filters' => $paginationFilters,
             'orderBy' => $orderBy,
             'sortOrder' => $queryParameters['sortOrder'] ?? 'asc',
-            'offset' => array_key_exists('offset', $queryParameters) ? (int) $queryParameters['offset'] : null,
-            'limit' => array_key_exists('limit', $queryParameters) ? (int) $queryParameters['limit'] : null,
+            'offset' => $this->readOffset($queryParameters),
+            'limit' => $this->readLimit($queryParameters),
         ];
 
         /* remove null parameters from the request so the default filter parameters can be used instead of null values. */
@@ -260,6 +260,47 @@ class QueryListProvider implements ProviderInterface
         $filters->add($paginationParameters);
 
         return $filters;
+    }
+
+    /**
+     * @param array<string, mixed> $queryParameters
+     *
+     * A missing offset keeps the filters default. A provided offset must be zero or positive: Doctrine rejects a
+     * negative OFFSET and API Platform would otherwise turn that database error into an HTTP 500.
+     */
+    private function readOffset(array $queryParameters): ?int
+    {
+        if (!array_key_exists('offset', $queryParameters)) {
+            return null;
+        }
+
+        $offset = (int) $queryParameters['offset'];
+        if ($offset < 0) {
+            // UnexpectedValueException is mapped to HTTP 400 by API Platform, same as the other query-parameter errors in this provider.
+            throw new UnexpectedValueException(sprintf('Offset must be a positive integer or zero, %d given.', $offset));
+        }
+
+        return $offset;
+    }
+
+    /**
+     * @param array<string, mixed> $queryParameters
+     *
+     * A missing limit keeps the filters default (or the provider default of 50). Limit 0 is not a valid page size:
+     * Filters::getLimit() treats 0 as "unset", which then reaches PaginationElements as null and raises a TypeError.
+     */
+    private function readLimit(array $queryParameters): ?int
+    {
+        if (!array_key_exists('limit', $queryParameters)) {
+            return null;
+        }
+
+        $limit = (int) $queryParameters['limit'];
+        if ($limit < 1) {
+            throw new UnexpectedValueException(sprintf('Limit must be a positive integer, %d given.', $limit));
+        }
+
+        return $limit;
     }
 
     protected function mapOrderByFieldForGrid(?string $apiOrderBy, array $filtersMapping): ?string
