@@ -51,6 +51,33 @@ Feature: Add product pack in cart
     Then pack "product6" has enough stock for an order of 5 items
     Then pack "product6" has not enough stock for an order of 6 items
 
+  Scenario: Check stock quantity of a pack cart line when config is set to STOCK_TYPE_PACK_ONLY
+    Given I have an empty default cart
+    Given specific shop configuration for "pack stock type" is set to decrement packs only
+    Given there is a product in the catalog named "product5" with a price of 23.86 and 50 items in stock
+    Given there is a product in the catalog named "product6" with a price of 12.34 and 20 items in stock
+    Given product "product6" is a pack containing 10 items of product "product5"
+    When I add 1 items of product "product6" in my cart
+    Then the stock quantity of product "product6" in my cart should be 20
+
+  Scenario: Check stock quantity of a pack cart line when config is set to STOCK_TYPE_PRODUCTS_ONLY
+    Given I have an empty default cart
+    Given specific shop configuration for "pack stock type" is set to decrement products only
+    Given there is a product in the catalog named "product5" with a price of 23.86 and 50 items in stock
+    Given there is a product in the catalog named "product6" with a price of 12.34 and 20 items in stock
+    Given product "product6" is a pack containing 10 items of product "product5"
+    When I add 1 items of product "product6" in my cart
+    Then the stock quantity of product "product6" in my cart should be 5
+
+  Scenario: Check stock quantity of a pack cart line when config is set to STOCK_TYPE_PACK_BOTH
+    Given I have an empty default cart
+    Given specific shop configuration for "pack stock type" is set to decrement both packs and products
+    Given there is a product in the catalog named "product5" with a price of 23.86 and 50 items in stock
+    Given there is a product in the catalog named "product6" with a price of 12.34 and 20 items in stock
+    Given product "product6" is a pack containing 10 items of product "product5"
+    When I add 1 items of product "product6" in my cart
+    Then the stock quantity of product "product6" in my cart should be 5
+
   Scenario: Check product is correctly considered as a pack
     Given there is a product in the catalog named "product5" with a price of 23.86 and 50 items in stock
     Given there is a product in the catalog named "product6" with a price of 12.34 and 10 items in stock

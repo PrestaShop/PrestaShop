@@ -27,6 +27,18 @@ class PermissionFeatureContext extends AbstractDomainFeatureContext
     private const SUPER_ADMIN_ID = 1;
 
     /**
+     * @Then /^the permissions configuration for profile (.+) should (allow|not allow) editing permissions$/
+     */
+    public function assertEmployeeEditPermission(string $profileReference, string $expected): void
+    {
+        $profileId = (int) $this->getSharedStorage()->get($profileReference);
+        /** @var ConfigurablePermissions $configuration */
+        $configuration = $this->getQueryBus()->handle(new GetPermissionsForConfiguration($profileId));
+
+        Assert::assertSame('allow' === $expected, $configuration->hasEmployeeEditPermission());
+    }
+
+    /**
      * @Then profile :profileReference should have the following permissions for tabs:
      *
      * @param string $profileReference

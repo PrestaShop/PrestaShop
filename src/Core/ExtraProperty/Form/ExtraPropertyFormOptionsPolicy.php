@@ -184,6 +184,27 @@ class ExtraPropertyFormOptionsPolicy
     public const URL_OPTIONS = ['download_url'];
 
     /**
+     * Options rendered by the field row (label, help, alerts, external link), not by its widget.
+     * A LANG field is a TranslatableType, which renders the row once and only the widget of each
+     * per-language child: these options are set on the TranslatableType itself.
+     *
+     * @var list<string>
+     */
+    public const TRANSLATABLE_ROW_OPTIONS = [
+        'alert_message',
+        'alert_position',
+        'alert_title',
+        'alert_type',
+        'external_link',
+        'help_attr',
+        'label_attr',
+        'label_help_box',
+        'label_subtitle',
+        'label_tag_name',
+        'row_attr',
+    ];
+
+    /**
      * The option carrying the field's HTML attributes, and the suffix of the other attribute bags
      * (label_attr, row_attr, help_attr…). Every one of them is filtered by DENIED_ATTRIBUTES.
      */
