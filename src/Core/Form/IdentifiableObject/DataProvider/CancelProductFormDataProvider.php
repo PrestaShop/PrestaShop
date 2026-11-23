@@ -6,10 +6,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
+use PrestaShop\PrestaShop\Adapter\Order\OrderTaxMethodProvider;
+use PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
-use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
-use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderProductsForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductsForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 
 /**
@@ -17,26 +20,12 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
  */
 final class CancelProductFormDataProvider implements FormDataProviderInterface
 {
-    /**
-     * @var CommandBusInterface
-     */
-    private $queryBus;
-
-    /**
-     * @var CurrencyDataProviderInterface
-     */
-    private $currencyDataProvider;
-
-    /**
-     * @param CommandBusInterface $queryBus
-     * @param CurrencyDataProviderInterface $currencyDataProvider
-     */
     public function __construct(
-        CommandBusInterface $queryBus,
-        CurrencyDataProviderInterface $currencyDataProvider
+        private readonly CommandBusInterface $queryBus,
+        private readonly CurrencyDataProviderInterface $currencyDataProvider,
+        private readonly OrderRepository $orderRepository,
+        private readonly OrderTaxMethodProvider $orderTaxMethodProvider,
     ) {
-        $this->queryBus = $queryBus;
-        $this->currencyDataProvider = $currencyDataProvider;
     }
 
     /**
@@ -44,15 +33,15 @@ final class CancelProductFormDataProvider implements FormDataProviderInterface
      */
     public function getData($orderId)
     {
-        /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->queryBus->handle(new GetOrderForViewing((int) $orderId));
-        $computingPrecision = new ComputingPrecision();
-        $currency = $this->currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
+        $order = $this->orderRepository->get(new OrderId((int) $orderId));
+        /** @var OrderProductsForViewing $products */
+        $products = $this->queryBus->handle(GetOrderProductsForViewing::all((int) $order->id));
+        $currency = $this->currencyDataProvider->getCurrencyById((int) $order->id_currency);
 
         return [
-            'products' => $orderForViewing->getProducts()->getProducts(),
-            'taxMethod' => $orderForViewing->getTaxMethod(),
-            'precision' => $computingPrecision->getPrecision($currency->precision),
+            'products' => $products->getProducts(),
+            'taxMethod' => $this->orderTaxMethodProvider->getTaxMethod($order),
+            'precision' => (new ComputingPrecision())->getPrecision($currency->precision),
         ];
     }
 
