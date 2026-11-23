@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\IdentifiableObject\DataProvider;
 
 use Currency;
-use Order;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Order\OrderTaxMethodProvider;
 use PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository;
@@ -21,121 +21,63 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CancelProductFormDataProvider;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CancelProductFormDataProviderTest extends TestCase
 {
-    public function testOnlyTheOrderProductsAreQueriedNotTheWholeOrderView(): void
+    private const ORDER_ID = 42;
+    private const CURRENCY_ID = 2;
+
+    private CommandBusInterface&MockObject $queryBus;
+    private OrderRepository&MockObject $orderRepository;
+    private CancelProductFormDataProvider $provider;
+
+    protected function setUp(): void
     {
-        $order = $this->createMock(Order::class);
-        $order->id = 42;
-        $order->id_currency = 2;
-
-        $orderRepository = $this->createMock(OrderRepository::class);
-        $orderRepository
-            ->expects($this->once())
-            ->method('get')
-            ->with($this->equalTo(new OrderId(42)))
-            ->willReturn($order)
-        ;
-
-        $products = [$this->createMock(OrderProductForViewing::class)];
-        $queryBus = $this->createMock(CommandBusInterface::class);
-        $queryBus
-            ->expects($this->once())
-            ->method('handle')
-            ->with($this->equalTo(GetOrderProductsForViewing::all(42)))
-            ->willReturn(new OrderProductsForViewing($products))
-        ;
+        $this->queryBus = $this->createMock(CommandBusInterface::class);
+        $this->orderRepository = $this->createMock(OrderRepository::class);
 
         $currency = $this->createMock(Currency::class);
         $currency->precision = 3;
         $currencyDataProvider = $this->createMock(CurrencyDataProviderInterface::class);
-        $currencyDataProvider
-            ->expects($this->once())
-            ->method('getCurrencyById')
-            ->with(2)
-            ->willReturn($currency)
-        ;
+        $currencyDataProvider->method('getCurrencyById')->with(self::CURRENCY_ID)->willReturn($currency);
 
-        $orderTaxMethodProvider = $this->createMock(OrderTaxMethodProvider::class);
-        $orderTaxMethodProvider
-            ->expects($this->once())
-            ->method('getTaxMethod')
-            ->with($order)
-            ->willReturn('Tax included')
-        ;
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator->method('trans')->willReturnArgument(0);
 
-        $provider = new CancelProductFormDataProvider(
-            $queryBus,
+        $this->provider = new CancelProductFormDataProvider(
+            $this->queryBus,
             $currencyDataProvider,
-            $orderRepository,
-            $orderTaxMethodProvider
+            $this->orderRepository,
+            new OrderTaxMethodProvider($translator)
         );
+    }
+
+    public function testOnlyTheOrderProductsAreQueriedNotTheWholeOrderView(): void
+    {
+        $products = [$this->createMock(OrderProductForViewing::class)];
+        $this->expectOrderIsRead($products, true);
 
         $this->assertSame(
-            [
-                'products' => $products,
-                'taxMethod' => 'Tax included',
-                'precision' => 3,
-            ],
-            $provider->getData(42)
+            ['products' => $products, 'taxMethod' => 'Tax included', 'precision' => 3],
+            $this->provider->getData(self::ORDER_ID)
         );
     }
 
     public function testAPreloadedOrderViewIsUsedOnceWithoutAnyQuery(): void
     {
         $products = [$this->createMock(OrderProductForViewing::class)];
-        $orderForViewing = $this->createMock(OrderForViewing::class);
-        $orderForViewing->method('getId')->willReturn(42);
-        $orderForViewing->method('getCurrencyId')->willReturn(2);
-        $orderForViewing->method('getTaxMethod')->willReturn('Tax excluded');
-        $orderForViewing->method('getProducts')->willReturn(new OrderProductsForViewing($products));
-
-        $order = $this->createMock(Order::class);
-        $order->id = 42;
-        $order->id_currency = 2;
-        $orderRepository = $this->createMock(OrderRepository::class);
-        $orderRepository->expects($this->once())->method('get')->willReturn($order);
-
-        $queryBus = $this->createMock(CommandBusInterface::class);
-        $queryBus
-            ->expects($this->once())
-            ->method('handle')
-            ->willReturn(new OrderProductsForViewing([]))
-        ;
-
-        $currency = $this->createMock(Currency::class);
-        $currency->precision = 2;
-        $currencyDataProvider = $this->createMock(CurrencyDataProviderInterface::class);
-        $currencyDataProvider->method('getCurrencyById')->with(2)->willReturn($currency);
-
-        $orderTaxMethodProvider = $this->createMock(OrderTaxMethodProvider::class);
-        $orderTaxMethodProvider->expects($this->once())->method('getTaxMethod')->willReturn('Tax included');
-
-        $provider = new CancelProductFormDataProvider(
-            $queryBus,
-            $currencyDataProvider,
-            $orderRepository,
-            $orderTaxMethodProvider
-        );
-        $provider->preloadOrderForViewing($orderForViewing);
+        $this->provider->preloadOrderForViewing($this->mockOrderForViewing(self::ORDER_ID, $products));
+        $this->expectOrderIsRead([], false);
 
         $this->assertSame(
-            [
-                'products' => $products,
-                'taxMethod' => 'Tax excluded',
-                'precision' => 2,
-            ],
-            $provider->getData(42)
+            ['products' => $products, 'taxMethod' => 'Tax label of the view', 'precision' => 3],
+            $this->provider->getData(self::ORDER_ID)
         );
         // The preloaded view is dropped after its first use: the order is read again.
         $this->assertSame(
-            [
-                'products' => [],
-                'taxMethod' => 'Tax included',
-                'precision' => 2,
-            ],
-            $provider->getData(42)
+            ['products' => [], 'taxMethod' => 'Tax excluded', 'precision' => 3],
+            $this->provider->getData(self::ORDER_ID)
         );
     }
 
@@ -146,62 +88,52 @@ class CancelProductFormDataProviderTest extends TestCase
             $products[$key] = $this->createMock(OrderProductForViewing::class);
             $products[$key]->method('getReference')->willReturn($reference);
         }
-        $orderForViewing = $this->createMock(OrderForViewing::class);
-        $orderForViewing->method('getId')->willReturn(42);
-        $orderForViewing->method('getCurrencyId')->willReturn(2);
-        $orderForViewing->method('getProducts')->willReturn(new OrderProductsForViewing(array_values($products)));
-
-        $currency = $this->createMock(Currency::class);
-        $currency->precision = 2;
-        $currencyDataProvider = $this->createMock(CurrencyDataProviderInterface::class);
-        $currencyDataProvider->method('getCurrencyById')->willReturn($currency);
-
-        $provider = new CancelProductFormDataProvider(
-            $this->createMock(CommandBusInterface::class),
-            $currencyDataProvider,
-            $this->createMock(OrderRepository::class),
-            $this->createMock(OrderTaxMethodProvider::class)
-        );
-        $provider->preloadOrderForViewing($orderForViewing);
+        $this->provider->preloadOrderForViewing($this->mockOrderForViewing(self::ORDER_ID, array_values($products)));
 
         $this->assertSame(
             // Same as Sorter::natural() with the default sorting of GetOrderProductsForViewing::all()
             [$products['b'], $products['c'], $products['a']],
-            $provider->getData(42)['products']
+            $this->provider->getData(self::ORDER_ID)['products']
         );
     }
 
     public function testAPreloadedViewOfAnotherOrderIsIgnored(): void
     {
-        $orderForViewing = $this->createMock(OrderForViewing::class);
-        $orderForViewing->method('getId')->willReturn(7);
+        $orderForViewing = $this->mockOrderForViewing(7, [$this->createMock(OrderProductForViewing::class)]);
         $orderForViewing->expects($this->never())->method('getProducts');
+        $this->provider->preloadOrderForViewing($orderForViewing);
+        $this->expectOrderIsRead([], true);
 
-        $order = $this->createMock(Order::class);
-        $order->id = 42;
-        $order->id_currency = 2;
-        $orderRepository = $this->createMock(OrderRepository::class);
-        $orderRepository->expects($this->once())->method('get')->willReturn($order);
-
-        $queryBus = $this->createMock(CommandBusInterface::class);
-        $queryBus->expects($this->once())->method('handle')->willReturn(new OrderProductsForViewing([]));
-
-        $currency = $this->createMock(Currency::class);
-        $currency->precision = 2;
-        $currencyDataProvider = $this->createMock(CurrencyDataProviderInterface::class);
-        $currencyDataProvider->method('getCurrencyById')->willReturn($currency);
-
-        $orderTaxMethodProvider = $this->createMock(OrderTaxMethodProvider::class);
-        $orderTaxMethodProvider->method('getTaxMethod')->willReturn('Tax included');
-
-        $provider = new CancelProductFormDataProvider(
-            $queryBus,
-            $currencyDataProvider,
-            $orderRepository,
-            $orderTaxMethodProvider
+        $this->assertSame(
+            ['products' => [], 'taxMethod' => 'Tax included', 'precision' => 3],
+            $this->provider->getData(self::ORDER_ID)
         );
-        $provider->preloadOrderForViewing($orderForViewing);
+    }
 
-        $this->assertSame([], $provider->getData(42)['products']);
+    private function expectOrderIsRead(array $products, bool $isTaxIncluded): void
+    {
+        $this->orderRepository
+            ->expects($this->once())
+            ->method('getPriceDisplaySettings')
+            ->with($this->equalTo(new OrderId(self::ORDER_ID)))
+            ->willReturn(['currency_id' => self::CURRENCY_ID, 'is_tax_included' => $isTaxIncluded])
+        ;
+        $this->queryBus
+            ->expects($this->once())
+            ->method('handle')
+            ->with($this->equalTo(GetOrderProductsForViewing::all(self::ORDER_ID)))
+            ->willReturn(new OrderProductsForViewing($products))
+        ;
+    }
+
+    private function mockOrderForViewing(int $orderId, array $products): OrderForViewing&MockObject
+    {
+        $orderForViewing = $this->createMock(OrderForViewing::class);
+        $orderForViewing->method('getId')->willReturn($orderId);
+        $orderForViewing->method('getCurrencyId')->willReturn(self::CURRENCY_ID);
+        $orderForViewing->method('getTaxMethod')->willReturn('Tax label of the view');
+        $orderForViewing->method('getProducts')->willReturn(new OrderProductsForViewing($products));
+
+        return $orderForViewing;
     }
 }

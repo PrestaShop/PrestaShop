@@ -8,19 +8,18 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Order;
 
-use Order;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class OrderTaxMethodProvider extends AbstractOrderHandler
+final class OrderTaxMethodProvider
 {
     public function __construct(
         private readonly TranslatorInterface $translator,
     ) {
     }
 
-    public function getTaxMethod(Order $order): string
+    public function getTaxMethod(bool $isTaxIncluded): string
     {
-        return $this->isTaxIncludedInOrder($order) ?
+        return $isTaxIncluded ?
             $this->translator->trans('Tax included', [], 'Admin.Global') :
             $this->translator->trans('Tax excluded', [], 'Admin.Global');
     }

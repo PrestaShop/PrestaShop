@@ -58,14 +58,15 @@ final class CancelProductFormDataProvider implements FormDataProviderInterface
             );
         }
 
-        $order = $this->orderRepository->get(new OrderId((int) $orderId));
+        $orderId = new OrderId((int) $orderId);
+        $priceDisplaySettings = $this->orderRepository->getPriceDisplaySettings($orderId);
         /** @var OrderProductsForViewing $products */
-        $products = $this->queryBus->handle(GetOrderProductsForViewing::all((int) $order->id));
+        $products = $this->queryBus->handle(GetOrderProductsForViewing::all($orderId->getValue()));
 
         return $this->buildData(
             $products->getProducts(),
-            $this->orderTaxMethodProvider->getTaxMethod($order),
-            (int) $order->id_currency
+            $this->orderTaxMethodProvider->getTaxMethod($priceDisplaySettings['is_tax_included']),
+            $priceDisplaySettings['currency_id']
         );
     }
 

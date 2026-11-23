@@ -174,7 +174,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
 
         $isTaxIncluded = ($taxCalculationMethod == PS_TAX_INC);
 
-        $taxMethod = $this->orderTaxMethodProvider->getTaxMethod($order);
+        $taxMethod = $this->orderTaxMethodProvider->getTaxMethod($isTaxIncluded);
 
         $invoiceManagementIsEnabled = (bool) $this->configuration->get(
             'PS_INVOICE',
