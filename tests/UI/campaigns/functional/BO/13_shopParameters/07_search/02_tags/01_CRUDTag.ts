@@ -9,6 +9,7 @@ import {
   boTagsCreatePage,
   type BrowserContext,
   dataLanguages,
+  dataProducts,
   FakerSearchTag,
   type Page,
   utilsPlaywright,
@@ -27,7 +28,11 @@ describe('BO - Shop Parameters - Search : Create, update and delete tag in BO', 
   let numberOfTags: number = 0;
 
   const createTagData: FakerSearchTag = new FakerSearchTag({language: dataLanguages.english.name});
-  const editTagData: FakerSearchTag = new FakerSearchTag({language: dataLanguages.french.name});
+  // A product name with a "+": the product search must send it encoded
+  const editTagData: FakerSearchTag = new FakerSearchTag({
+    language: dataLanguages.french.name,
+    products: dataProducts.demo_21.name,
+  });
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
