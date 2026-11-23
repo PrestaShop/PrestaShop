@@ -28,8 +28,9 @@ class AbstractFormTest extends TestCase
 
         self::assertSame($expected, $form->getValue('field'));
         // A subsequent partial submission keeps the normalized value.
+        $normalizedValue = $form->getValue('field');
         $form->fillWith([]);
-        self::assertSame($expected, $form->getValue('field'));
+        self::assertSame($normalizedValue, $form->getValue('field'));
     }
 
     public static function provideSubmittedValues(): iterable
