@@ -128,6 +128,7 @@ final class MailPreviewVariablesBuilder
         $templateVars['{email}'] = $employeeData['email'];
         $templateVars['{shop_name}'] = $this->context->shop->name;
         $templateVars['{shop_url}'] = $this->context->link->getPageLink('index');
+        $templateVars['{mail_themes_url}'] = rtrim($this->context->link->getBaseLink(), '/') . '/mails/themes';
         $templateVars['{my_account_url}'] = $this->context->link->getPageLink('my-account');
         $templateVars['{guest_tracking_url}'] = $this->context->link->getPageLink('guest-tracking');
         $templateVars['{history_url}'] = $this->context->link->getPageLink('history');

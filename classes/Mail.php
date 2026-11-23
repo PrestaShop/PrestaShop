@@ -568,6 +568,7 @@ class MailCore extends ObjectModel
             $templateVars['{history_url}'] = Context::getContext()->link->getPageLink('history', null, $idLang, null, false, $idShop);
             $templateVars['{order_slip_url}'] = Context::getContext()->link->getPageLink('order-slip', null, $idLang, null, false, $idShop);
             $templateVars['{color}'] = Tools::safeOutput(Configuration::get('PS_MAIL_COLOR', null, null, $idShop));
+            $templateVars['{mail_themes_url}'] = rtrim(Context::getContext()->link->getBaseLink($idShop), '/') . '/mails/themes';
 
             // Hook to allow modules to add extra template variables
             // Get extra template_vars
