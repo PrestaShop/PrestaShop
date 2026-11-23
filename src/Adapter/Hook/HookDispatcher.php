@@ -16,6 +16,7 @@ use PrestaShopBundle\DataCollector\HookRegistry;
 use PrestaShopBundle\Service\Hook\HookEvent;
 use PrestaShopBundle\Service\Hook\RenderingHookEvent;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\EventDispatcher\Event;
 
@@ -50,6 +51,11 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
     private $isDebug;
 
     /**
+     * @var iterable|null Hook subscribers waiting for the first use of the listeners to be registered
+     */
+    private $pendingHookSubscribers;
+
+    /**
      * @param RequestStack|null $requestStack (nullable to preserve backward compatibility)
      * @param iterable|null $hookSubscribers
      * @param HookRegistry|null $hookRegistry (nullable to preserve backward compatibility)
@@ -64,10 +70,42 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
         $this->requestStack = $requestStack;
         $this->hookRegistry = $hookRegistry;
         $this->isDebug = $isDebug;
+        $this->pendingHookSubscribers = $hookSubscribers;
+    }
 
-        foreach ($hookSubscribers as $hookSubscriber) {
-            $this->addSubscriber($hookSubscriber);
-        }
+    public function getListeners(?string $eventName = null): array
+    {
+        $this->registerPendingHookSubscribers();
+
+        return parent::getListeners($eventName);
+    }
+
+    public function getListenerPriority(string $eventName, callable|array $listener): ?int
+    {
+        $this->registerPendingHookSubscribers();
+
+        return parent::getListenerPriority($eventName, $listener);
+    }
+
+    public function hasListeners(?string $eventName = null): bool
+    {
+        $this->registerPendingHookSubscribers();
+
+        return parent::hasListeners($eventName);
+    }
+
+    public function removeListener(string $eventName, callable|array $listener)
+    {
+        $this->registerPendingHookSubscribers();
+
+        parent::removeListener($eventName, $listener);
+    }
+
+    public function removeSubscriber(EventSubscriberInterface $subscriber)
+    {
+        $this->registerPendingHookSubscribers();
+
+        parent::removeSubscriber($subscriber);
     }
 
     /**
@@ -246,5 +284,23 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
         $globalParameters['route'] = $request->get('_route');
 
         return $globalParameters;
+    }
+
+    /**
+     * The legacy hook subscriber lists the modules of each hook with the shop of the context at the moment it is
+     * registered. The dispatcher can be built early in the request, before the shop selected in the back office
+     * is applied, so the subscribers are registered the first time the listeners are needed instead.
+     */
+    private function registerPendingHookSubscribers(): void
+    {
+        if (null === $this->pendingHookSubscribers) {
+            return;
+        }
+
+        $hookSubscribers = $this->pendingHookSubscribers;
+        $this->pendingHookSubscribers = null;
+        foreach ($hookSubscribers as $hookSubscriber) {
+            $this->addSubscriber($hookSubscriber);
+        }
     }
 }
