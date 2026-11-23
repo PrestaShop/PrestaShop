@@ -1,6 +1,7 @@
 ---
 paths:
   - "controllers/admin/**"
+  - "install-dev/data/xml/feature_flag.xml"
 ---
 <!-- Generated from .ai/Component/Migration/CONTEXT.md by .ai/bin/generate-ai-index.sh: to change the files it covers, edit the Layers table of the context, not this file -->
 

@@ -4,6 +4,7 @@ on:
     paths:
       - '.ai/**'
       - '.claude/**'
+      - '.coderabbit.yaml'
 
 permissions:
   contents: read
@@ -26,9 +27,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Check the rules generated in .claude/rules/
+      - name: Check the rules of .claude/rules/ and the code guidelines of .coderabbit.yaml
         run: |
           php .ai/bin/generate-context-rules.php --dry-run || {
-            echo "::error::The rules of .claude/rules/domain/ and .claude/rules/component/ do not match the .ai/ contexts. Run 'bash .ai/bin/generate-ai-index.sh' and commit the result.";
+            echo "::error::The rules of .claude/rules/domain/ and .claude/rules/component/ or the code guidelines of .coderabbit.yaml do not match the .ai/ contexts. Run 'bash .ai/bin/generate-ai-index.sh' and commit the result.";
             exit 1;
           }
