@@ -13,13 +13,14 @@ declare(strict_types=1);
  * request is opened or while it is reviewed.
  *
  * Usage (from anywhere in the repository):
- *   php .ai/bin/check-conventions.php [<base-ref>] [--head <ref>] [--json]
+ *   php .ai/bin/check-conventions.php [<base-ref>] [--head <ref>] [--json | --plaintext]
  *
  *   <base-ref>  the branch the work targets. Default: develop on the remote pointing to
  *               PrestaShop/PrestaShop (else origin/develop, else develop). Pass it
  *               explicitly for a bug fix, e.g. upstream/9.2.x.
  *   --head      the commit to check (default: HEAD). The diff is <base-ref>...<head>.
  *   --json      print the result as JSON instead of text.
+ *   --plaintext print the result as instructions to post to CodeRabbit, in one GitHub comment.
  *
  * Three sections:
  *   1. the .ai/ files to read: the root CONTEXT.md, then each Domain or Component
@@ -70,6 +71,8 @@ const STRICT_TYPES_EXEMPT = '#^tests/Resources/#';
 const FINAL_EXEMPT = '#^src/PrestaShopBundle/Entity/#';
 // Doctrine entities, their repositories aside: a mapping change there is a schema change.
 const ENTITY_FILES = '#^src/PrestaShopBundle/Entity/(?!Repository/).+\.php$#';
+// A GitHub comment holds 65,536 characters: the margin leaves room for the command posted before the output.
+const PLAINTEXT_MAX_LENGTH = 65000;
 
 /**
  * Runs git in the repository and returns its output, or null when it fails.
@@ -698,6 +701,80 @@ function render(string $base, string $head, array $files, array $contexts, array
 }
 
 /**
+ * @param string[] $items
+ *
+ * @return string[]
+ */
+function limitList(array $items, int $max): array
+{
+    return count($items) > $max ? array_merge(array_slice($items, 0, $max), [sprintf('(+%d more)', count($items) - $max)]) : $items;
+}
+
+/**
+ * The output meant to be posted to CodeRabbit: plain text without Markdown headings, so that it reads as
+ * instructions. The lists are cut until the whole text fits in one GitHub comment.
+ *
+ * @param array<string, mixed> $contexts
+ * @param string[] $hygiene
+ * @param string[] $standards
+ */
+function renderCoderabbit(array $contexts, array $hygiene, array $standards): string
+{
+    $build = function (int $max) use ($contexts, $hygiene, $standards): string {
+        $read = ['.ai/CONTEXT.md (coding standards, CQRS, testing, PR hygiene)'];
+        $notes = [];
+        foreach ($contexts['crossCutting'] as $doc => $why) {
+            if (str_ends_with($doc, '.md')) {
+                $read[] = sprintf('%s (%s)', $doc, $why);
+            } else {
+                $notes[] = sprintf('%s: %s', $doc, $why);
+            }
+        }
+        foreach ($contexts['matched'] as $context => $hit) {
+            $skills = $hit['skills'] ? sprintf('; expected patterns in %s/skills/: %s', dirname($context), implode(', ', $hit['skills'])) : '';
+            $read[] = sprintf('%s (%d file(s): %s%s)', $context, count($hit['files']), implode(', ', limitList($hit['files'], 3)), $skills);
+            foreach ($hit['companions'] as $companion) {
+                $read[] = sprintf('%s (companion of %s)', $companion, $context);
+            }
+        }
+        $possibly = [];
+        foreach ($contexts['possibly'] as $context => $names) {
+            $possibly[] = sprintf('.ai/%s/CONTEXT.md (%s)', $context, implode(', ', array_slice($names, 0, 3)));
+        }
+
+        $sections = [['Read these .ai/ files before reviewing, the rules of the review come from them:', limitList($read, $max)]];
+        if ($possibly) {
+            $sections[] = ['Possibly related, matched on a file name only: read them if the change is about them:', limitList($possibly, $max)];
+        }
+        if ($contexts['unmatched']) {
+            $sections[] = ['No .ai/ context covers these files: review them against .ai/CONTEXT.md alone:', limitList($contexts['unmatched'], $max)];
+        }
+        if ($notes) {
+            $sections[] = ['Also check:', $notes];
+        }
+        $sections[] = ['Convention findings already reported by check-conventions.php: do not repeat them, review the rest.', []];
+        $sections[] = ['PR hygiene:', limitList($hygiene ?: ['No finding.'], $max)];
+        $sections[] = ['Coding standards:', limitList($standards ?: ['No finding.'], $max)];
+
+        $lines = [];
+        foreach ($sections as [$title, $items]) {
+            $lines = array_merge($lines, $lines ? [''] : [], [$title], array_map(fn (string $item): string => '- ' . $item, $items));
+        }
+
+        return implode("\n", $lines) . "\n";
+    };
+
+    $max = 200;
+    $text = $build($max);
+    while (strlen($text) > PLAINTEXT_MAX_LENGTH && $max > 0) {
+        $max = intdiv($max, 2);
+        $text = $build($max);
+    }
+
+    return $text;
+}
+
+/**
  * @param string[] $argv
  */
 function main(array $argv): int
@@ -705,18 +782,26 @@ function main(array $argv): int
     $base = null;
     $head = 'HEAD';
     $json = false;
+    $plaintext = false;
     for ($i = 1; $i < count($argv); ++$i) {
         if ($argv[$i] === '--head') {
             $head = $argv[++$i] ?? 'HEAD';
         } elseif ($argv[$i] === '--json') {
             $json = true;
+        } elseif ($argv[$i] === '--plaintext') {
+            $plaintext = true;
         } elseif ($argv[$i] === '--help' || $argv[$i] === '-h') {
-            echo "Usage: php .ai/bin/check-conventions.php [<base-ref>] [--head <ref>] [--json]\n";
+            echo "Usage: php .ai/bin/check-conventions.php [<base-ref>] [--head <ref>] [--json | --plaintext]\n";
 
             return 0;
         } else {
             $base = $argv[$i];
         }
+    }
+    if ($json && $plaintext) {
+        fwrite(STDERR, "--json and --plaintext are exclusive: pass one output format\n");
+
+        return 2;
     }
     $base ??= defaultBase();
     foreach ([$base, $head] as $ref) {
@@ -746,6 +831,8 @@ function main(array $argv): int
             'hygiene' => $hygiene,
             'codingStandards' => $standards,
         ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), "\n";
+    } elseif ($plaintext) {
+        echo renderCoderabbit($contexts, $hygiene, $standards);
     } else {
         echo render($base, $head, $files, $contexts, $hygiene, $standards);
     }
