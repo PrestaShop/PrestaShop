@@ -19,6 +19,7 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\CannotUpdateAttachmen
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\EmptyFileException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\EmptySearchException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\EmptySearchInputException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachment;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInformation;
@@ -242,19 +243,20 @@ class AttachmentController extends PrestaShopAdminController
     }
 
     /**
-     * @param string $searchPhrase
-     *
-     * @return JsonResponse
+     * The phrase comes from the query parameter: in the path, a "/" splits the route and the web server refuses its
+     * encoded form. The path parameter is kept for the callers that still use it.
      */
     #[AdminSecurity("is_granted('read', 'AdminProducts') || is_granted('read', 'AdminAttachments')")]
-    public function searchAction(string $searchPhrase): JsonResponse
+    public function searchAction(Request $request, string $searchPhrase = ''): JsonResponse
     {
+        $searchPhrase = $request->query->getString('query', $searchPhrase);
+
         try {
             /** @var AttachmentInformation[] $attachments */
             $attachments = $this->dispatchCommand(new SearchAttachment($searchPhrase));
-        } catch (EmptySearchException $e) {
+        } catch (EmptySearchException|EmptySearchInputException $e) {
             return $this->json(
-                [$e, 'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
                 Response::HTTP_NOT_FOUND
             );
         }
