@@ -69,7 +69,7 @@ class PrestaShopLoggerTest extends TestCase
     {
         PrestaShopLogger::addLog(self::MESSAGE, PrestaShopLogger::LOG_SEVERITY_LEVEL_ERROR, null, 'Cart', 1);
         PrestaShopLogger::addLog(self::MESSAGE, PrestaShopLogger::LOG_SEVERITY_LEVEL_ERROR, null, 'Cart', 2);
-        PrestaShopLogger::addLog(self::MESSAGE, PrestaShopLogger::LOG_SEVERITY_LEVEL_MAJOR, null, 'Cart', 2);
+        PrestaShopLogger::addLog(self::MESSAGE, PrestaShopLogger::LOG_SEVERITY_LEVEL_WARNING, null, 'Cart', 2);
 
         $this->assertSame(3, $this->countLogs());
     }
