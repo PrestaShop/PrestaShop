@@ -121,19 +121,24 @@ class FormOptionsValidator
         }
 
         if (ExtraPropertyScope::LANG === $scope) {
-            // LANG fields are wrapped in a TranslatableType whose per-language children carry
-            // the merged base + extra options (see the modifier) — validate that inner merge.
+            // LANG fields are wrapped in a TranslatableType that takes the row options, while its
+            // per-language children carry the merged base + other options (see the modifier).
+            $rowOptions = array_intersect_key($extraOptions, array_flip(ExtraPropertyFormOptionsPolicy::TRANSLATABLE_ROW_OPTIONS));
+
             return [
                 TranslatableType::class,
-                [
-                    'type' => $baseType,
-                    'label' => 'label',
-                    'help' => 'help',
-                    'mapped' => false,
-                    'required' => false,
-                    'constraints' => [],
-                    'options' => array_merge($baseOptions, $extraOptions),
-                ],
+                array_merge(
+                    [
+                        'type' => $baseType,
+                        'label' => 'label',
+                        'help' => 'help',
+                        'mapped' => false,
+                        'required' => false,
+                        'constraints' => [],
+                        'options' => array_merge($baseOptions, array_diff_key($extraOptions, $rowOptions)),
+                    ],
+                    $rowOptions
+                ),
             ];
         }
 
