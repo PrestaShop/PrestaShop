@@ -253,7 +253,7 @@ class AttachmentController extends PrestaShopAdminController
 
         try {
             /** @var AttachmentInformation[] $attachments */
-            $attachments = $this->dispatchCommand(new SearchAttachment($searchPhrase));
+            $attachments = $this->dispatchQuery(new SearchAttachment($searchPhrase));
         } catch (EmptySearchException|EmptySearchInputException $e) {
             return $this->json(
                 ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],

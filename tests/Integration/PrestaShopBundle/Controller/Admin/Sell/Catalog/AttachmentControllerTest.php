@@ -15,13 +15,13 @@ use Symfony\Component\Routing\RouterInterface;
 use Tests\Integration\Utility\LoginTrait;
 use Tests\TestCase\SymfonyIntegrationTestCase;
 
-class AttachmentControllerTest extends SymfonyIntegrationTestCase
+final class AttachmentControllerTest extends SymfonyIntegrationTestCase
 {
     use LoginTrait;
 
     private const NAMES = ['Att c/d 43618', 'Att a+b 43618', 'Att e&f 43618', 'Att g?h 43618', 'Att plain 43618'];
 
-    protected RouterInterface $router;
+    private RouterInterface $router;
 
     /**
      * @var array<string, int>
@@ -65,7 +65,7 @@ class AttachmentControllerTest extends SymfonyIntegrationTestCase
         );
     }
 
-    public function getNames(): iterable
+    public static function getNames(): iterable
     {
         foreach (self::NAMES as $name) {
             yield $name => [$name];
