@@ -22,7 +22,7 @@ const initMultistoreHeader = () => {
   const $searchInput = $(MultistoreHeaderMap.searchInput);
   const router = new Router();
   const route = router.generate('admin_shops_search', {
-    searchTerm: '__QUERY__',
+    query: '__QUERY__',
   });
 
   new PerfectScrollbar(MultistoreHeaderMap.jsScrollbar);

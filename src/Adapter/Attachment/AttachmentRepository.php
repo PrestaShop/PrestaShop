@@ -104,7 +104,8 @@ class AttachmentRepository extends AbstractObjectModelRepository
 
     public function search(string $searchPhrase): array
     {
-        $searchPhrase = sprintf('%%%s%%', strtolower($searchPhrase));
+        // Escaped so that % and _ are searched as typed instead of acting as LIKE wildcards
+        $searchPhrase = sprintf('%%%s%%', addcslashes(strtolower($searchPhrase), '%_\\'));
         $qb = $this->connection->createQueryBuilder();
         $qb->select('a.*')
             ->from($this->dbPrefix . 'attachment', 'a')
