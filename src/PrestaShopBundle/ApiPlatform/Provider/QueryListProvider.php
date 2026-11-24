@@ -40,6 +40,14 @@ class QueryListProvider implements ProviderInterface
 
     public const DEFAULT_PAGINATED_ITEM_LIMIT = 50;
 
+    /**
+     * QueryListProvider paginates lists itself, so API Platform's pagination_maximum_items_per_page
+     * (unset in this project) never applies. 100 is the maximum API Platform documents as an example
+     * and stays next to the default page of 50: a client can still ask for a full back-office page,
+     * and a value such as 100000000 is rejected before it reaches the database.
+     */
+    public const MAX_PAGINATED_ITEM_LIMIT = 100;
+
     public function __construct(
         protected readonly RequestStack $requestStack,
         protected readonly CQRSApiSerializer $domainSerializer,
@@ -148,8 +156,9 @@ class QueryListProvider implements ProviderInterface
             'filters' => $filter->getFilters(),
             'orderBy' => $filter->getOrderBy(),
             'sortOrder' => $filter->getOrderWay(),
-            'offset' => $filter->getOffset(),
-            'limit' => $filter->getLimit(),
+            // getOffset()/getLimit() turn 0 into null, which would drop a checked offset of 0.
+            'offset' => $filter->has('offset') ? $filter->get('offset') : null,
+            'limit' => $filter->has('limit') ? $filter->get('limit') : null,
         ];
 
         // These are GET parameters
@@ -160,6 +169,13 @@ class QueryListProvider implements ProviderInterface
             $getParameters,
             $this->contextParametersProvider->getContextParameters(),
         );
+        // Raw query strings are merged above and would overwrite the integers readOffset()/readLimit() checked.
+        if ($filter->has('offset')) {
+            $queryParameters['offset'] = $filter->get('offset');
+        }
+        if ($filter->has('limit')) {
+            $queryParameters['limit'] = $filter->get('limit');
+        }
         $queryParameters = $this->applyDefaultValues($queryParameters, $operation);
         $CQRSQuery = $this->domainSerializer->denormalize($queryParameters, $CQRSQueryClass, null, [NormalizationMapper::NORMALIZATION_MAPPING => $this->getCQRSQueryMapping($operation)]);
         $CQRSQueryResult = $this->queryBus->handle($CQRSQuery);
@@ -254,7 +270,9 @@ class QueryListProvider implements ProviderInterface
         ]);
 
         $filters = $this->filtersBuilder->buildFilters();
-        if ($filters->getLimit() === null) {
+        // Default only when the client sent no limit. A limit already checked above must win even when
+        // the filters built from the request report no limit (ParameterBag::getInt rejects values such as "010").
+        if (!array_key_exists('limit', $paginationParameters) && $filters->getLimit() === null) {
             $paginationParameters['limit'] = self::DEFAULT_PAGINATED_ITEM_LIMIT;
         }
         $filters->add($paginationParameters);
@@ -263,10 +281,10 @@ class QueryListProvider implements ProviderInterface
     }
 
     /**
-     * @param array<string, mixed> $queryParameters
+     * A missing offset keeps the filters default. A provided offset must be an integer greater than or equal to zero:
+     * Doctrine rejects a negative OFFSET and API Platform would otherwise turn that database error into an HTTP 500.
      *
-     * A missing offset keeps the filters default. A provided offset must be zero or positive: Doctrine rejects a
-     * negative OFFSET and API Platform would otherwise turn that database error into an HTTP 500.
+     * @param array<string, mixed> $queryParameters
      */
     private function readOffset(array $queryParameters): ?int
     {
@@ -274,20 +292,20 @@ class QueryListProvider implements ProviderInterface
             return null;
         }
 
-        $offset = (int) $queryParameters['offset'];
-        if ($offset < 0) {
-            // UnexpectedValueException is mapped to HTTP 400 by API Platform, same as the other query-parameter errors in this provider.
-            throw new UnexpectedValueException(sprintf('Offset must be a positive integer or zero, %d given.', $offset));
+        $raw = $queryParameters['offset'];
+        $offset = $this->filterInteger($raw);
+        if (false === $offset || $offset < 0) {
+            throw new UnexpectedValueException(sprintf('Offset must be an integer greater than or equal to zero, %s given.', $this->stringifyRawQueryValue($raw)));
         }
 
         return $offset;
     }
 
     /**
-     * @param array<string, mixed> $queryParameters
-     *
      * A missing limit keeps the filters default (or the provider default of 50). Limit 0 is not a valid page size:
      * Filters::getLimit() treats 0 as "unset", which then reaches PaginationElements as null and raises a TypeError.
+     *
+     * @param array<string, mixed> $queryParameters
      */
     private function readLimit(array $queryParameters): ?int
     {
@@ -295,12 +313,47 @@ class QueryListProvider implements ProviderInterface
             return null;
         }
 
-        $limit = (int) $queryParameters['limit'];
-        if ($limit < 1) {
-            throw new UnexpectedValueException(sprintf('Limit must be a positive integer, %d given.', $limit));
+        $raw = $queryParameters['limit'];
+        $limit = $this->filterInteger($raw);
+        if (false === $limit || $limit < 1 || $limit > self::MAX_PAGINATED_ITEM_LIMIT) {
+            throw new UnexpectedValueException(sprintf('Limit must be an integer between 1 and %d, %s given.', self::MAX_PAGINATED_ITEM_LIMIT, $this->stringifyRawQueryValue($raw)));
         }
 
         return $limit;
+    }
+
+    /**
+     * Rejects anything (int) would silently truncate: arrays, empty strings, floats, leading zeros, "1e1".
+     */
+    private function filterInteger(mixed $raw): int|false
+    {
+        if (is_int($raw)) {
+            return $raw;
+        }
+
+        if (!is_string($raw)) {
+            return false;
+        }
+
+        $filtered = filter_var($raw, FILTER_VALIDATE_INT);
+        if (false === $filtered) {
+            return false;
+        }
+
+        return (int) $filtered;
+    }
+
+    private function stringifyRawQueryValue(mixed $raw): string
+    {
+        if (is_string($raw)) {
+            return '' === $raw ? "''" : $raw;
+        }
+
+        if (is_int($raw)) {
+            return (string) $raw;
+        }
+
+        return get_debug_type($raw);
     }
 
     protected function mapOrderByFieldForGrid(?string $apiOrderBy, array $filtersMapping): ?string
