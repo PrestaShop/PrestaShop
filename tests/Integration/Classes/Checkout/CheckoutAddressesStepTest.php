@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Classes\Checkout;
 
+use Address;
 use CheckoutAddressesStep;
 use CheckoutProcess;
 use CheckoutSession;
@@ -26,6 +27,10 @@ class CheckoutAddressesStepTest extends TestCase
      * @var CheckoutSession|MockObject
      */
     private $session;
+    /**
+     * @var CustomerAddressForm|MockObject
+     */
+    private $addressForm;
     /**
      * @var CheckoutAddressesStep
      */
@@ -46,10 +51,11 @@ class CheckoutAddressesStepTest extends TestCase
 
         $process = new CheckoutProcess($context, $this->session);
 
+        $this->addressForm = $this->createMock(CustomerAddressForm::class);
         $this->step = new CheckoutAddressesStep(
             $context,
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(CustomerAddressForm::class)
+            $this->addressForm
         );
         $this->step->setCheckoutProcess($process);
     }
@@ -104,5 +110,24 @@ class CheckoutAddressesStepTest extends TestCase
             $this->assertArrayHasKey($key, $array);
             $this->assertEquals($value, $array[$key]);
         }
+    }
+
+    public function testWhenCustomerSavesTheInvoiceAddressFormThenAnotherAddressIsUsedForInvoice(): void
+    {
+        $address = $this->createMock(Address::class);
+        $address->id = 2;
+        $this->addressForm->method('fillWith')->willReturnSelf();
+        $this->addressForm->method('submit')->willReturn(true);
+        $this->addressForm->method('getAddress')->willReturn($address);
+        $this->session->method('getCustomerAddressesCount')->willReturn(2);
+        $this->session->expects($this->once())->method('setIdAddressInvoice')->with(2);
+
+        // No persisted step data is restored, as when the cart changed since the previous request
+        $this->step->handleRequest([
+            'saveAddress' => 'invoice',
+            'id_address_delivery' => 1,
+        ]);
+
+        $this->assertFalse($this->step->getDataToPersist()['use_same_address']);
     }
 }
