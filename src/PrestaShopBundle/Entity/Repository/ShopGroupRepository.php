@@ -30,7 +30,8 @@ class ShopGroupRepository extends \Doctrine\ORM\EntityRepository
             ->where('sg.active = true')
             ->andWhere('sg.deleted = false')
             ->andWhere('LOWER(sg.name) LIKE :searchTerm')
-            ->setParameter('searchTerm', '%' . strtolower($searchTerm) . '%');
+            // Escaped so that % and _ are searched as typed instead of acting as LIKE wildcards
+            ->setParameter('searchTerm', '%' . addcslashes(strtolower($searchTerm), '%_\\') . '%');
 
         return $qb->getQuery()->getResult();
     }

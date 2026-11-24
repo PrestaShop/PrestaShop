@@ -60,6 +60,23 @@ final class ShopControllerTest extends SymfonyIntegrationTestCase
         );
     }
 
+    /**
+     * @dataProvider getTermsWithWildcards
+     */
+    public function testSearchMatchesWildcardCharactersAsTyped(string $term): void
+    {
+        $this->client->request('GET', $this->router->generate('admin_shops_search', ['query' => $term]));
+
+        $this->assertSame(Response::HTTP_NOT_FOUND, $this->client->getResponse()->getStatusCode());
+    }
+
+    public static function getTermsWithWildcards(): iterable
+    {
+        // As LIKE wildcards, "_" would match the "/" of the shop name and "%" anything in the group name
+        yield 'underscore in a shop name' => ['FR_BE 43635'];
+        yield 'percent in a group name' => ['Def%t'];
+    }
+
     public function testSearchWithoutTermFindsNothing(): void
     {
         $this->client->request('GET', $this->router->generate('admin_shops_search'));
