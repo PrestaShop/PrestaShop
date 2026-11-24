@@ -22,7 +22,6 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionR
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionWriterInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
-use PrestaShopBundle\ApiPlatform\Provider\QueryListProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class CQRSOpenApiFactoryTest extends KernelTestCase
@@ -239,7 +238,7 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
             array_map(fn (Parameter $parameter) => $parameter->getName(), $paginatedList->getParameters())
         );
         $this->assertSame(
-            ['type' => 'integer', 'minimum' => 1, 'maximum' => QueryListProvider::MAX_PAGINATED_ITEM_LIMIT],
+            ['type' => 'integer', 'minimum' => 1],
             $paginatedList->getParameters()[0]->getSchema()
         );
         $this->assertSame(

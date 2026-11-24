@@ -280,7 +280,7 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
         }
 
         $parameters = array_merge($parameters, [
-            new Parameter('limit', 'query', 'Maximum number of items returned', false, false, false, ['type' => 'integer', 'minimum' => 1, 'maximum' => QueryListProvider::MAX_PAGINATED_ITEM_LIMIT]),
+            new Parameter('limit', 'query', 'Maximum number of items returned', false, false, false, ['type' => 'integer', 'minimum' => 1]),
             new Parameter('offset', 'query', 'Number of items skipped', false, false, false, ['type' => 'integer', 'minimum' => 0, 'default' => 0]),
             new Parameter('orderBy', 'query', 'Field used to sort the items', false, false, false, ['type' => 'string']),
             new Parameter('sortOrder', 'query', 'Sort direction', false, false, false, ['type' => 'string', 'enum' => ['asc', 'desc'], 'default' => 'asc']),

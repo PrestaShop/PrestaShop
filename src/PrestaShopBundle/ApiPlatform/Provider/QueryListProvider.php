@@ -40,14 +40,6 @@ class QueryListProvider implements ProviderInterface
 
     public const DEFAULT_PAGINATED_ITEM_LIMIT = 50;
 
-    /**
-     * QueryListProvider paginates lists itself, so API Platform's pagination_maximum_items_per_page
-     * (unset in this project) never applies. 100 is the maximum API Platform documents as an example
-     * and stays next to the default page of 50: a client can still ask for a full back-office page,
-     * and a value such as 100000000 is rejected before it reaches the database.
-     */
-    public const MAX_PAGINATED_ITEM_LIMIT = 100;
-
     public function __construct(
         protected readonly RequestStack $requestStack,
         protected readonly CQRSApiSerializer $domainSerializer,
@@ -156,9 +148,6 @@ class QueryListProvider implements ProviderInterface
             'filters' => $filter->getFilters(),
             'orderBy' => $filter->getOrderBy(),
             'sortOrder' => $filter->getOrderWay(),
-            // getOffset()/getLimit() turn 0 into null, which would drop a checked offset of 0.
-            'offset' => $filter->has('offset') ? $filter->get('offset') : null,
-            'limit' => $filter->has('limit') ? $filter->get('limit') : null,
         ];
 
         // These are GET parameters
@@ -169,7 +158,7 @@ class QueryListProvider implements ProviderInterface
             $getParameters,
             $this->contextParametersProvider->getContextParameters(),
         );
-        // Raw query strings are merged above and would overwrite the integers readOffset()/readLimit() checked.
+        // Raw filters are merged over the checked values, and getOffset() turns 0 into null.
         if ($filter->has('offset')) {
             $queryParameters['offset'] = $filter->get('offset');
         }
@@ -270,8 +259,7 @@ class QueryListProvider implements ProviderInterface
         ]);
 
         $filters = $this->filtersBuilder->buildFilters();
-        // Default only when the client sent no limit. A limit already checked above must win even when
-        // the filters built from the request report no limit (ParameterBag::getInt rejects values such as "010").
+        // A checked client limit wins when the request filters report none.
         if (!array_key_exists('limit', $paginationParameters) && $filters->getLimit() === null) {
             $paginationParameters['limit'] = self::DEFAULT_PAGINATED_ITEM_LIMIT;
         }
@@ -281,14 +269,13 @@ class QueryListProvider implements ProviderInterface
     }
 
     /**
-     * A missing offset keeps the filters default. A provided offset must be an integer greater than or equal to zero:
-     * Doctrine rejects a negative OFFSET and API Platform would otherwise turn that database error into an HTTP 500.
+     * A negative offset becomes an HTTP 500 from Doctrine. An empty string is the same as an omitted offset.
      *
      * @param array<string, mixed> $queryParameters
      */
     private function readOffset(array $queryParameters): ?int
     {
-        if (!array_key_exists('offset', $queryParameters)) {
+        if (!array_key_exists('offset', $queryParameters) || '' === $queryParameters['offset']) {
             return null;
         }
 
@@ -302,28 +289,27 @@ class QueryListProvider implements ProviderInterface
     }
 
     /**
-     * A missing limit keeps the filters default (or the provider default of 50). Limit 0 is not a valid page size:
-     * Filters::getLimit() treats 0 as "unset", which then reaches PaginationElements as null and raises a TypeError.
+     * Limit 0 is stored as unset and then breaks PaginationElements. An empty string is an omitted limit.
      *
      * @param array<string, mixed> $queryParameters
      */
     private function readLimit(array $queryParameters): ?int
     {
-        if (!array_key_exists('limit', $queryParameters)) {
+        if (!array_key_exists('limit', $queryParameters) || '' === $queryParameters['limit']) {
             return null;
         }
 
         $raw = $queryParameters['limit'];
         $limit = $this->filterInteger($raw);
-        if (false === $limit || $limit < 1 || $limit > self::MAX_PAGINATED_ITEM_LIMIT) {
-            throw new UnexpectedValueException(sprintf('Limit must be an integer between 1 and %d, %s given.', self::MAX_PAGINATED_ITEM_LIMIT, $this->stringifyRawQueryValue($raw)));
+        if (false === $limit || $limit < 1) {
+            throw new UnexpectedValueException(sprintf('Limit must be a positive integer, %s given.', $this->stringifyRawQueryValue($raw)));
         }
 
         return $limit;
     }
 
     /**
-     * Rejects anything (int) would silently truncate: arrays, empty strings, floats, leading zeros, "1e1".
+     * An int, or a digit string so "010" stays 10. Signs, spaces and "1e1" are rejected.
      */
     private function filterInteger(mixed $raw): int|false
     {
@@ -331,16 +317,11 @@ class QueryListProvider implements ProviderInterface
             return $raw;
         }
 
-        if (!is_string($raw)) {
+        if (!is_string($raw) || 1 !== preg_match('/^\d+$/', $raw)) {
             return false;
         }
 
-        $filtered = filter_var($raw, FILTER_VALIDATE_INT);
-        if (false === $filtered) {
-            return false;
-        }
-
-        return (int) $filtered;
+        return (int) $raw;
     }
 
     private function stringifyRawQueryValue(mixed $raw): string
