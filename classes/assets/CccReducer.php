@@ -126,12 +126,20 @@ class CccReducerCore
     }
 
     /**
+     * Hashes each file's content, so an edited source gives a new bundle name that is the same on every web node.
+     *
      * @param string[] $files
      *
      * @return string
      */
     private function getFileNameIdentifierFromList(array $files)
     {
-        return substr(sha1(implode('|', $files)), 0, 6);
+        $identity = [];
+        foreach ($files as $file) {
+            // A path that cannot be read keeps a stable identity instead of changing on every request
+            $identity[] = is_file($file) ? $file . ':' . hash_file('xxh3', $file) : $file;
+        }
+
+        return substr(sha1(implode('|', $identity)), 0, 6);
     }
 }
