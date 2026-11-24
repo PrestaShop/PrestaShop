@@ -7524,7 +7524,7 @@ class ProductCore extends ObjectModel
      * the default association (ProductSupplierUpdater::updateDefaultSupplierDataForProduct()), not the
      * other way round.
      */
-    protected function addSupplierReferenceFromWebservice(): void
+    private function addSupplierReferenceFromWebservice(): void
     {
         $idSupplier = (int) $this->id_supplier;
 
