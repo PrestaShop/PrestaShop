@@ -1,0 +1,34 @@
+name: AI context
+on:
+  pull_request:
+    paths:
+      - '.ai/**'
+      - '.claude/**'
+
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  context-rules:
+    name: Context rules up to date
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: none
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check the rules generated in .claude/rules/
+        run: |
+          php .ai/bin/generate-context-rules.php --check || {
+            echo "::error::The rules of .claude/rules/domain/ and .claude/rules/component/ do not match the .ai/ contexts. Run 'bash .ai/bin/generate-ai-index.sh' and commit the result.";
+            exit 1;
+          }

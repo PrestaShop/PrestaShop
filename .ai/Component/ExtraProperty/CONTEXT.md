@@ -15,11 +15,13 @@ Lets modules (or the BO registry page) add **typed extra fields** to existing en
 | Constraint DSL: grammar, parser, renderer | `src/Core/ExtraProperty/Constraint/` |
 | BO form / grid integration | `src/Core/ExtraProperty/Form/`, `src/Core/ExtraProperty/Grid/` |
 | Placement catalogs (forms, grids, API endpoints) | `src/Core/ExtraProperty/Catalog/` |
+| Exceptions | `src/Core/ExtraProperty/Exception/` |
 | Admin API bridge | `src/PrestaShopBundle/EventListener/API/ExtraPropertyApiSubscriber.php`, `src/Core/ExtraProperty/Api/`, `src/PrestaShopBundle/ApiPlatform/{Validator,OpenApi/Adapter}/*ExtraPropert*` |
 | BO registry page (CQRS) | `src/Core/Domain/ExtraProperty/`, `src/Adapter/ExtraProperty/`, `…/Controller/Admin/Configure/AdvancedParameters/ExtraPropertyDefinitionController.php`, `…/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/` |
 | Legacy + FO entry points | `classes/module/Module.php`, `classes/ObjectModel.php`, `src/Adapter/Presenter/AbstractLazyArray.php` |
 | Registry tables DDL | `install-dev/data/db_structure.sql` (`extra_property_definition`, `extra_property_definition_shop`) |
 | Service wiring | `src/PrestaShopBundle/Resources/config/services/extra_property/{common,backend,catalog}.yml`, `…/services/core/grid/grid_extra_properties.yml`, `app/config/admin/services.yml`, `app/config/admin-api/services.yml` |
+| Tests | `tests/Unit/Core/ExtraProperty/`, `tests/Integration/Core/ExtraProperty/` |
 
 ## Storage
 
