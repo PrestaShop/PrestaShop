@@ -882,13 +882,17 @@ class ShopCore extends ObjectModel
     /**
      * Retrieve group ID of a shop.
      *
-     * @param int $shop_id Shop ID
+     * @param int|null $shop_id Shop ID, null when the context is not a single shop
      * @param bool $as_id
      *
      * @return int|array|bool Group ID
      */
     public static function getGroupFromShop($shop_id, $as_id = true)
     {
+        if (null === $shop_id) {
+            return false;
+        }
+
         Shop::cacheShops();
         foreach (self::$shops as $group_id => $group_data) {
             if (array_key_exists($shop_id, $group_data['shops'])) {
