@@ -853,7 +853,7 @@ class AdminControllerCore extends Controller
      *
      * @return string
      */
-    protected static function buildCurrentIndex($controller, $back = '')
+    private static function buildCurrentIndex($controller, $back = '')
     {
         $base = 'index.php';
         if (defined('_PS_ADMIN_DIR_')) {
