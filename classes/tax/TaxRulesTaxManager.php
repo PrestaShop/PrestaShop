@@ -132,7 +132,7 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
      *
      * @return array at most one tax rule row
      */
-    protected function getCountryRuleWithoutZipcodeRestriction(): array
+    private function getCountryRuleWithoutZipcodeRestriction(): array
     {
         return Db::getInstance()->executeS('
 			SELECT tr.*
