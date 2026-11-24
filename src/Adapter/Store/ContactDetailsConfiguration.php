@@ -82,7 +82,7 @@ final class ContactDetailsConfiguration extends AbstractMultistoreConfiguration
             }
         }
 
-        $errors = $this->collectValidationErrors($configuration, $state, $countryId);
+        $errors = $this->collectValidationErrors($configuration, $country, $state, $countryId);
         if (!empty($errors)) {
             return $errors;
         }
@@ -129,6 +129,13 @@ final class ContactDetailsConfiguration extends AbstractMultistoreConfiguration
             && isset($configuration[MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . $field]);
     }
 
+    private function isSavedForContext(array $configuration, string $field): bool
+    {
+        return !$this->multistoreFeature->isUsed()
+            || $this->shopContext->isAllShopContext()
+            || isset($configuration[MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . $field]);
+    }
+
     private function isOverrideRemovedForShop(array $configuration, string $field, string $key): bool
     {
         return $this->multistoreFeature->isUsed()
@@ -163,7 +170,7 @@ final class ContactDetailsConfiguration extends AbstractMultistoreConfiguration
         return $this->configuration->has($key, $strictConstraint);
     }
 
-    private function collectValidationErrors(array $configuration, ?State $state, int $countryId): array
+    private function collectValidationErrors(array $configuration, ?Country $country, ?State $state, int $countryId): array
     {
         $errors = [];
 
@@ -198,6 +205,17 @@ final class ContactDetailsConfiguration extends AbstractMultistoreConfiguration
         if ($state !== null && (int) $state->id_country !== $countryId) {
             $errors[] = [
                 'key' => 'The selected state does not belong to the selected country.',
+                'domain' => 'Admin.Shopparameters.Notification',
+                'parameters' => [],
+            ];
+        }
+
+        // Only when this save writes the Country or the State: a shop inheriting both cannot fix them here.
+        if ($country !== null && $country->contains_states && $state === null
+            && ($this->isSavedForContext($configuration, 'id_country') || $this->isSavedForContext($configuration, 'id_state'))
+        ) {
+            $errors[] = [
+                'key' => 'An address located in a country containing states must have a state selected.',
                 'domain' => 'Admin.Shopparameters.Notification',
                 'parameters' => [],
             ];

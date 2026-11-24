@@ -511,6 +511,29 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
         Assert::assertNotEmpty($errors, 'Expected validation errors but none were returned');
     }
 
+    /**
+     * @Then saving contact details should fail with the error :errorKey
+     */
+    public function assertContactDetailsValidationErrorKey(string $errorKey): void
+    {
+        $errors = SharedStorage::getStorage()->get('contact_details_last_errors');
+        Assert::assertContains($errorKey, array_column($errors, 'key'));
+    }
+
+    /**
+     * Stores a country containing states without a state, as saved before the State became required.
+     *
+     * @Given the contact details of all shops have the country :countryName and no state
+     */
+    public function setAllShopsContactDetailsCountryWithoutState(string $countryName): void
+    {
+        $countryId = (int) Country::getIdByName($this->getDefaultLangId(), $countryName);
+        Configuration::updateGlobalValue('PS_SHOP_COUNTRY_ID', $countryId);
+        Configuration::updateGlobalValue('PS_SHOP_COUNTRY', $countryName);
+        Configuration::updateGlobalValue('PS_SHOP_STATE_ID', 0);
+        Configuration::updateGlobalValue('PS_SHOP_STATE', '');
+    }
+
     // ──────────────────────────────────────────────────────────────────────────
     // Helpers
     // ──────────────────────────────────────────────────────────────────────────
