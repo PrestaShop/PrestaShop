@@ -4112,7 +4112,7 @@ class AdminImportControllerCore extends AdminController
      *
      * @return bool
      */
-    protected static function csvRemovesTheDiscount(array $info)
+    private static function csvRemovesTheDiscount(array $info)
     {
         foreach (['reduction_price', 'reduction_percent'] as $field) {
             if (!isset($info[$field]) || $info[$field] === '') {
@@ -4137,7 +4137,7 @@ class AdminImportControllerCore extends AdminController
      * @param int $idProduct
      * @param array $idShopList
      */
-    protected function deleteImportedSpecificPrices($idProduct, array $idShopList)
+    private function deleteImportedSpecificPrices($idProduct, array $idShopList)
     {
         foreach ($idShopList as $idShop) {
             $query = new DbQuery();
