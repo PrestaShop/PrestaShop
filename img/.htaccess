@@ -9,7 +9,8 @@
 
 # Apache 2.4
 # Grant by media extension in the URI (works even when intermediate folders are gone).
-# Then force a lightweight Apache 404 for missing files (do not fall through to index.php).
+# Disable rewrite inheritance from the shop root so missing media stay on a lightweight Apache 404
+# instead of falling through to index.php.
 <IfModule mod_authz_core.c>
     <If "%{REQUEST_URI} =~ m#\.(jpe?g|gif|png|bmp|tiff|svg|pdf|mov|mpeg|mp4|avi|mpg|wma|flv|webm|ico|webp|avif)$#i">
         Require all granted
@@ -20,10 +21,7 @@
 </IfModule>
 
 <IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_URI} (?i)\.(jpe?g|gif|png|bmp|tiff|svg|pdf|mov|mpeg|mp4|avi|mpg|wma|flv|webm|ico|webp|avif)$
-    RewriteRule ^ - [R=404,L]
+    RewriteEngine Off
 </IfModule>
 
 # Overrides root ErrorDocument 404 /index.php?controller=404 for this directory
