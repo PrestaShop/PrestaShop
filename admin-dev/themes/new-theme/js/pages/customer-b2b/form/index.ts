@@ -5,8 +5,9 @@
 import CustomerB2bFormMap from '@pages/customer-b2b/form/customer-b2b-form-map';
 import CustomerSearchInput from '@components/form/customer-search-input';
 import FormFieldToggler, {ToggleType} from '@components/form/form-field-toggler';
+import onReady from '@components/on-ready';
 
-$(() => {
+onReady(() => {
   if (!document.querySelector(CustomerB2bFormMap.useExistingCustomerChoice)) {
     return;
   }
