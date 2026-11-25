@@ -13,6 +13,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\SearchShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -20,6 +21,11 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ShopController extends PrestaShopAdminController
 {
+    public function __construct(
+        private readonly RequestStack $requestStack,
+    ) {
+    }
+
     /**
      * The term comes from the query parameter: in the path, a "/" splits the route and the web server refuses its
      * encoded form. The path parameter is kept for the callers that still use it, and so is the signature, which a
@@ -27,7 +33,7 @@ class ShopController extends PrestaShopAdminController
      */
     public function searchAction(string $searchTerm): JsonResponse
     {
-        $searchTerm = $this->container->get('request_stack')->getCurrentRequest()->query->getString('query') ?: $searchTerm;
+        $searchTerm = $this->requestStack->getCurrentRequest()?->query->getString('query') ?: $searchTerm;
 
         try {
             $result = [];
