@@ -50,8 +50,11 @@ class CartProductLazyArray extends ProductListingLazyArray
             return;
         }
 
-        // Get combination labels
-        $combinationData = $this->getCombinationSpecificData();
+        // Get combination labels, loaded by Cart::getProducts()
+        $combinationData = [
+            'available_now' => $product['combination_available_now'] ?? null,
+            'available_later' => $product['combination_available_later'] ?? null,
+        ];
 
         // All ordered items are in stock
         if ($product['stock_quantity'] >= $product['quantity']) {

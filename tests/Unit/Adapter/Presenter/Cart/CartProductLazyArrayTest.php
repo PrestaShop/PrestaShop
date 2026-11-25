@@ -29,6 +29,7 @@ class CartProductLazyArrayTest extends TestCase
     private const PRODUCT_IN_STOCK = 'Ready today';
     private const PRODUCT_BACKORDER = 'Backorder';
     private const COMBINATION_IN_STOCK = 'Blue ready';
+    private const COMBINATION_BACKORDER = 'Blue backorder';
 
     private const BASE_PRODUCT = [
         'id_product' => 0,
@@ -71,9 +72,23 @@ class CartProductLazyArrayTest extends TestCase
                 'stock_quantity' => 5,
                 'quantity' => 1,
                 'available_now' => self::PRODUCT_IN_STOCK,
-                'attributes' => [1 => ['available_now' => self::COMBINATION_IN_STOCK, 'available_later' => '']],
+                'attributes' => ['Color' => 'Blue'],
+                'combination_available_now' => self::COMBINATION_IN_STOCK,
+                'combination_available_later' => '',
             ],
             self::COMBINATION_IN_STOCK,
+        ];
+
+        yield 'in stock, combination without own label falls back to the product in-stock label' => [
+            [
+                'stock_quantity' => 5,
+                'quantity' => 1,
+                'available_now' => self::PRODUCT_IN_STOCK,
+                'attributes' => ['Color' => 'Blue'],
+                'combination_available_now' => null,
+                'combination_available_later' => null,
+            ],
+            self::PRODUCT_IN_STOCK,
         ];
 
         yield 'in stock, only the product out-of-stock label is set' => [
@@ -91,12 +106,15 @@ class CartProductLazyArrayTest extends TestCase
             '2 - ' . self::PRODUCT_IN_STOCK . ', the rest - ' . self::DEFAULT_BACKORDER,
         ];
 
-        yield 'partially in stock, only the combination in-stock label is set' => [
+        yield 'partially in stock, combination and product in-stock labels are set' => [
             [
                 'stock_quantity' => 2,
                 'quantity' => 3,
                 'allow_oosp' => 1,
-                'attributes' => [1 => ['available_now' => self::COMBINATION_IN_STOCK, 'available_later' => '']],
+                'available_now' => self::PRODUCT_IN_STOCK,
+                'attributes' => ['Color' => 'Blue'],
+                'combination_available_now' => self::COMBINATION_IN_STOCK,
+                'combination_available_later' => '',
             ],
             '2 - ' . self::COMBINATION_IN_STOCK . ', the rest - ' . self::DEFAULT_BACKORDER,
         ];
@@ -104,6 +122,19 @@ class CartProductLazyArrayTest extends TestCase
         yield 'out of stock with backorders, both product labels are set' => [
             ['stock_quantity' => 0, 'quantity' => 1, 'allow_oosp' => 1, 'available_now' => self::PRODUCT_IN_STOCK, 'available_later' => self::PRODUCT_BACKORDER],
             self::PRODUCT_BACKORDER,
+        ];
+
+        yield 'out of stock with backorders, combination and product out-of-stock labels are set' => [
+            [
+                'stock_quantity' => 0,
+                'quantity' => 1,
+                'allow_oosp' => 1,
+                'available_later' => self::PRODUCT_BACKORDER,
+                'attributes' => ['Color' => 'Blue'],
+                'combination_available_now' => '',
+                'combination_available_later' => self::COMBINATION_BACKORDER,
+            ],
+            self::COMBINATION_BACKORDER,
         ];
     }
 

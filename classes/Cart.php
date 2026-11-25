@@ -787,11 +787,17 @@ class CartCore extends ObjectModel
                 IF (IFNULL(pa.`upc`, \'\') = \'\', p.`upc`, pa.`upc`) AS upc,
                 IF (IFNULL(pa.`mpn`, \'\') = \'\', p.`mpn`, pa.`mpn`) AS mpn,
                 IFNULL(product_attribute_shop.`minimal_quantity`, product_shop.`minimal_quantity`) as minimal_quantity,
-                IF(product_attribute_shop.wholesale_price > 0,  product_attribute_shop.wholesale_price, product_shop.`wholesale_price`) wholesale_price
+                IF(product_attribute_shop.wholesale_price > 0,  product_attribute_shop.wholesale_price, product_shop.`wholesale_price`) wholesale_price,
+                pal.`available_now` AS combination_available_now, pal.`available_later` AS combination_available_later
             ');
 
             $sql->leftJoin('product_attribute', 'pa', 'pa.`id_product_attribute` = cp.`id_product_attribute`');
             $sql->leftJoin('product_attribute_shop', 'product_attribute_shop', '(product_attribute_shop.`id_shop` = cp.`id_shop` AND product_attribute_shop.`id_product_attribute` = pa.`id_product_attribute`)');
+            $sql->leftJoin(
+                'product_attribute_lang',
+                'pal',
+                'pal.`id_product_attribute` = cp.`id_product_attribute` AND pal.`id_lang` = ' . (int) $this->getAssociatedLanguage()->getId()
+            );
         } else {
             $sql->select(
                 'p.`reference` AS reference, p.`ean13`, p.`isbn`,
