@@ -75,4 +75,16 @@ class PrestaShopTranslatorTraitTest extends TestCase
 
         $this->assertSame('Subcategorías de Shoes', $result);
     }
+
+    public function testLiteralPercentageTranslationIsReturnedUnchanged(): void
+    {
+        $translated = 'Nouveautés, coups de cœur et idées cadeaux… Inscrivez-vous à notre newsletter et recevez 10 % de remise sur votre première commande.';
+        $translator = $this->buildTranslator(
+            'fr-FR',
+            ['Newsletter text' => $translated],
+            'ShopOhmyweb'
+        );
+
+        $this->assertSame($translated, $translator->trans('Newsletter text', [], 'ShopOhmyweb', 'fr-FR'));
+    }
 }
