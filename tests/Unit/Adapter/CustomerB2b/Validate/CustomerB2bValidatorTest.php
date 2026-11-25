@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Customer\Repository\CustomerRepository;
 use PrestaShop\PrestaShop\Adapter\CustomerB2b\Validate\CustomerB2bValidator;
 use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\Command\AddCustomerB2bCommand;
-use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\Exception\CannotAddCustomerB2bException;
+use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\Exception\CustomerB2bConstraintException;
 use PrestaShopBundle\Entity\B2B\B2bRole;
 use PrestaShopBundle\Entity\B2B\BusinessEntity;
 use PrestaShopBundle\Entity\Repository\B2bRoleRepository;
@@ -72,8 +72,8 @@ class CustomerB2bValidatorTest extends TestCase
     {
         $validator = $this->buildValidator($this->mockCustomer($customerShopId, $customerShopGroupId), $groupSharesCustomers);
 
-        $this->expectException(CannotAddCustomerB2bException::class);
-        $this->expectExceptionCode(CannotAddCustomerB2bException::SHOP_MISMATCH);
+        $this->expectException(CustomerB2bConstraintException::class);
+        $this->expectExceptionCode(CustomerB2bConstraintException::BUSINESS_ENTITY_SHOP_MISMATCH);
 
         $validator->validate($this->buildCommand());
     }

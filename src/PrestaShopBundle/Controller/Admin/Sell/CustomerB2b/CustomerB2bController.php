@@ -118,7 +118,7 @@ class CustomerB2bController extends PrestaShopAdminController
         $path = match (true) {
             $e instanceof DuplicateCustomerEmailException => 'customer.email',
             $e instanceof CustomerB2bAlreadyExistsException,
-            $e instanceof CannotAddCustomerB2bException && CannotAddCustomerB2bException::DELETED_CUSTOMER === $e->getCode() => 'existing_customer',
+            $e instanceof CustomerB2bConstraintException && CustomerB2bConstraintException::DELETED_CUSTOMER === $e->getCode() => 'existing_customer',
             default => null,
         };
 
@@ -144,17 +144,15 @@ class CustomerB2bController extends PrestaShopAdminController
         return [
             B2bRoleNotFoundException::class => $this->trans('The selected role does not exist.', [], 'Admin.Notifications.Error'),
             BusinessEntityNotFoundException::class => $this->trans('The selected business entity does not exist.', [], 'Admin.Notifications.Error'),
-            CannotAddCustomerB2bException::class => [
-                CannotAddCustomerB2bException::FAILED_SAVE => $this->trans('An error occurred while creating the object.', [], 'Admin.Notifications.Error'),
-                CannotAddCustomerB2bException::GUEST_CUSTOMER => $this->trans('The selected customer is a guest.', [], 'Admin.Notifications.Error'),
-                CannotAddCustomerB2bException::DELETED_CUSTOMER => $this->trans('The selected customer is deleted.', [], 'Admin.Notifications.Error'),
-                CannotAddCustomerB2bException::SHOP_MISMATCH => $this->trans('Customer and business entity belong to different shops.', [], 'Admin.Notifications.Error'),
-            ],
+            CannotAddCustomerB2bException::class => $this->trans('An error occurred while creating the object.', [], 'Admin.Notifications.Error'),
             CustomerB2bAlreadyExistsException::class => $this->trans('This customer already has a B2B profile.', [], 'Admin.Notifications.Error'),
             CustomerB2bConstraintException::class => [
                 CustomerB2bConstraintException::INVALID_EXTERNAL_REF => $this->trans('The %s field is invalid.', [
                     \sprintf('"%s"', $this->trans('External Reference', [], 'Admin.Global')),
                 ], 'Admin.Notifications.Error'),
+                CustomerB2bConstraintException::GUEST_CUSTOMER => $this->trans('The selected customer is a guest.', [], 'Admin.Notifications.Error'),
+                CustomerB2bConstraintException::DELETED_CUSTOMER => $this->trans('The selected customer is deleted.', [], 'Admin.Notifications.Error'),
+                CustomerB2bConstraintException::BUSINESS_ENTITY_SHOP_MISMATCH => $this->trans('Customer and business entity belong to different shops.', [], 'Admin.Notifications.Error'),
             ],
             CustomerConstraintException::class => [
                 CustomerConstraintException::INVALID_FIRST_NAME => $this->trans('The %s field is invalid.', [

@@ -53,7 +53,6 @@ class AddCustomerB2bHandlerTest extends TestCase
             $this->fail('A CannotAddCustomerB2bException should have been thrown.');
         } catch (CannotAddCustomerB2bException $e) {
             $this->assertSame($saveFailure, $e->getPrevious());
-            $this->assertSame(CannotAddCustomerB2bException::FAILED_SAVE, $e->getCode());
         }
     }
 

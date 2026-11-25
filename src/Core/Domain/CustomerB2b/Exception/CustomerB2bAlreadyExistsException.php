@@ -8,6 +8,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\CustomerB2b\Exception;
 
-class CustomerB2bAlreadyExistsException extends CustomerB2bException
+class CustomerB2bAlreadyExistsException extends CustomerB2bConstraintException
 {
 }

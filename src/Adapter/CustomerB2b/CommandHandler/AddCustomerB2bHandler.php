@@ -18,7 +18,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundExcepti
 use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\Command\AddCustomerB2bCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\CommandHandler\AddCustomerB2bHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\Exception\CannotAddCustomerB2bException;
-use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\Exception\CustomerB2bException;
+use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\Exception\CustomerB2bConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\ValueObject\CustomerB2bId;
 use PrestaShopBundle\Entity\B2B\BusinessEntityCustomerB2b;
 use PrestaShopBundle\Entity\B2B\CustomerB2b;
@@ -30,13 +30,14 @@ final class AddCustomerB2bHandler implements AddCustomerB2bHandlerInterface
 {
     public function __construct(
         private readonly CustomerB2bValidator $validator,
-        private readonly CustomerB2bRepository $customerB2bRepository,
+        private readonly CustomerB2bRepository $repository,
         private readonly LoggerInterface $logger,
     ) {
     }
 
     /**
-     * @throws CustomerB2bException
+     * @throws CustomerB2bConstraintException
+     * @throws CannotAddCustomerB2bException
      * @throws CustomerNotFoundException
      * @throws BusinessEntityNotFoundException
      * @throws B2bRoleNotFoundException
@@ -61,7 +62,7 @@ final class AddCustomerB2bHandler implements AddCustomerB2bHandlerInterface
         }
 
         try {
-            $this->customerB2bRepository->save($entity);
+            $this->repository->save($entity);
         } catch (Exception $e) {
             $this->logger->error(\sprintf('Failed to save the B2B customer profile: %s', $e->getMessage()), [
                 'object_type' => 'Customer',
@@ -69,7 +70,7 @@ final class AddCustomerB2bHandler implements AddCustomerB2bHandlerInterface
                 'exception' => $e,
             ]);
 
-            throw new CannotAddCustomerB2bException(\sprintf('Failed to save the B2B profile of customer #%d.', $customerId), CannotAddCustomerB2bException::FAILED_SAVE, $e);
+            throw new CannotAddCustomerB2bException(\sprintf('Failed to save the B2B profile of customer #%d.', $customerId), 0, $e);
         }
 
         if (null === $id = $entity->getId()) {

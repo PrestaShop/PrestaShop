@@ -16,8 +16,8 @@ use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityNot
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\Command\AddCustomerB2bCommand;
-use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\Exception\CannotAddCustomerB2bException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\Exception\CustomerB2bAlreadyExistsException;
+use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\Exception\CustomerB2bConstraintException;
 use PrestaShopBundle\Entity\B2B\B2bRole;
 use PrestaShopBundle\Entity\B2B\BusinessEntity;
 use PrestaShopBundle\Entity\Repository\B2bRoleRepository;
@@ -42,7 +42,7 @@ class CustomerB2bValidator
 
     /**
      * @throws CustomerNotFoundException
-     * @throws CannotAddCustomerB2bException
+     * @throws CustomerB2bConstraintException
      * @throws CustomerB2bAlreadyExistsException
      * @throws BusinessEntityNotFoundException
      * @throws B2bRoleNotFoundException
@@ -60,7 +60,7 @@ class CustomerB2bValidator
     }
 
     /**
-     * @throws CannotAddCustomerB2bException
+     * @throws CustomerB2bConstraintException
      * @throws CustomerB2bAlreadyExistsException
      */
     private function assertCustomerCanHaveProfile(Customer $customer): void
@@ -68,11 +68,11 @@ class CustomerB2bValidator
         $customerId = (int) $customer->id;
 
         if ($customer->deleted) {
-            throw new CannotAddCustomerB2bException(\sprintf('Customer #%d is deleted.', $customerId), CannotAddCustomerB2bException::DELETED_CUSTOMER);
+            throw new CustomerB2bConstraintException(\sprintf('Cannot create a B2B profile for a deleted customer #%d.', $customerId), CustomerB2bConstraintException::DELETED_CUSTOMER);
         }
 
         if ($customer->isGuest()) {
-            throw new CannotAddCustomerB2bException(\sprintf('Customer #%d is a guest.', $customerId), CannotAddCustomerB2bException::GUEST_CUSTOMER);
+            throw new CustomerB2bConstraintException(\sprintf('Cannot create a B2B profile for a guest customer #%d.', $customerId), CustomerB2bConstraintException::GUEST_CUSTOMER);
         }
 
         if (null !== $this->customerB2bRepository->findByCustomerId($customerId)) {
@@ -105,7 +105,7 @@ class CustomerB2bValidator
     }
 
     /**
-     * @throws CannotAddCustomerB2bException
+     * @throws CustomerB2bConstraintException
      */
     private function assertCustomerAndBusinessEntityShareShopAssociation(Customer $customer, BusinessEntity $businessEntity): void
     {
@@ -122,6 +122,6 @@ class CustomerB2bValidator
             return;
         }
 
-        throw new CannotAddCustomerB2bException(\sprintf('Customer #%d and business entity #%d are associated with different shops.', (int) $customer->id, $businessEntity->getId()), CannotAddCustomerB2bException::SHOP_MISMATCH);
+        throw new CustomerB2bConstraintException(\sprintf('Customer #%d and business entity #%d are associated with different shops.', (int) $customer->id, $businessEntity->getId()), CustomerB2bConstraintException::BUSINESS_ENTITY_SHOP_MISMATCH);
     }
 }

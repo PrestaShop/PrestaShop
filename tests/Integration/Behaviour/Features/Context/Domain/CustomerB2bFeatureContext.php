@@ -17,7 +17,6 @@ use PrestaShop\PrestaShop\Core\Domain\B2bRole\Exception\B2bRoleNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\Command\AddCustomerB2bCommand;
-use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\Exception\CannotAddCustomerB2bException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\Exception\CustomerB2bAlreadyExistsException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\Exception\CustomerB2bConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\Exception\CustomerB2bException;
@@ -137,8 +136,8 @@ class CustomerB2bFeatureContext extends AbstractDomainFeatureContext
     public function assertLastErrorIsIneligibleCustomer(string $reason): void
     {
         $this->assertLastErrorIs(
-            CannotAddCustomerB2bException::class,
-            'guest' === $reason ? CannotAddCustomerB2bException::GUEST_CUSTOMER : CannotAddCustomerB2bException::DELETED_CUSTOMER,
+            CustomerB2bConstraintException::class,
+            'guest' === $reason ? CustomerB2bConstraintException::GUEST_CUSTOMER : CustomerB2bConstraintException::DELETED_CUSTOMER,
         );
     }
 
