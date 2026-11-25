@@ -181,6 +181,7 @@ class OrderLazyArray extends AbstractLazyArray
             $orderProduct['quantity'] = $orderProduct['product_quantity'];
             $orderProduct['id_product'] = $orderProduct['product_id'];
             $orderProduct['id_product_attribute'] = $orderProduct['product_attribute_id'];
+            $orderProduct['cover'] = null;
 
             $productPrice = $includeTaxes ? 'product_price_wt' : 'product_price';
             $totalPrice = $includeTaxes ? 'total_wt' : 'total_price';
