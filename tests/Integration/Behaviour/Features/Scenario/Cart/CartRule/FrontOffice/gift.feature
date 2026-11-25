@@ -35,8 +35,7 @@ Feature: Cart calculation with cart rules giving gift
     Given product "product4" is out of stock
     And I am not allowed to add 1 items of product "product4" in my cart
     When I apply the voucher code "foo10"
-    # @todo: when apply_to_discounted_products = false then it throws "You cannot use this voucher on products on sale", but it is misleading (though out of scope now to fix)
-    Then I should get cart rule validation error saying "Cart is empty"
+    Then I should get cart rule validation error saying "The gift product is out of stock"
     And I should have 0 products in my cart
     And my cart total should be 0.0 tax included
 
@@ -47,8 +46,29 @@ Feature: Cart calculation with cart rules giving gift
     And my cart total should be 66.436 tax included
     And I am not allowed to add 1 items of product "product4" in my cart
     When I apply the voucher code "foo13"
+    Then I should get cart rule validation error saying "The gift product is out of stock"
     And I should have 3 products in my cart
-    And my cart total should be 60.4924 tax included
+    And cart rule count in my cart should be 0
+    And my cart total should be 66.436 tax included
+
+  @restore-cart-rules-after-scenario
+  Scenario: A cart rule is removed from the cart with its gift when the gift goes out of stock
+    Given I add 3 items of product "product1" in my cart
+    And I apply the voucher code "foo13"
+    And I should have 4 products in my cart
+    When product "product4" is out of stock
+    And I add 1 items of product "product1" in my cart
+    Then I should have 4 products in my cart
+    And cart rule count in my cart should be 0
+
+  @restore-cart-rules-after-scenario
+  Scenario: A cart rule offering a gift which has a minimal quantity cannot be applied
+    Given the product "product4" minimal quantity is 2
+    And I add 3 items of product "product1" in my cart
+    When I apply the voucher code "foo13"
+    Then I should get cart rule validation error saying "The gift product does not meet the minimum quantity"
+    And I should have 3 products in my cart
+    And cart rule count in my cart should be 0
 
   @restore-cart-rules-after-scenario
   Scenario: 3 products in cart, one cart rule offering a gift and a global 10% discount
@@ -60,6 +80,35 @@ Feature: Cart calculation with cart rules giving gift
     And the current cart should have the following contextual reductions:
       | reference  | reduction |
       | cartrule13 | 41.514    |
+
+  @restore-cart-rules-after-scenario
+  Scenario: A cart rule offering a gift which is not available for order cannot be applied
+    Given product "product4" can no longer be ordered
+    And I add 3 items of product "product1" in my cart
+    When I apply the voucher code "foo13"
+    Then I should get cart rule validation error saying "The gift product is not available for order"
+    And I should have 3 products in my cart
+    And cart rule count in my cart should be 0
+
+  @restore-cart-rules-after-scenario
+  Scenario: A cart rule is removed from the cart with its gift when the gift is no longer available for order
+    Given I add 3 items of product "product1" in my cart
+    And I apply the voucher code "foo13"
+    And I should have 4 products in my cart
+    When product "product4" can no longer be ordered
+    And I add 1 items of product "product1" in my cart
+    Then I should have 4 products in my cart
+    And cart rule count in my cart should be 0
+
+  @restore-cart-rules-after-scenario
+  Scenario: A cart rule is removed from the cart with its gift when the gift product is no longer active
+    Given I add 3 items of product "product1" in my cart
+    And I apply the voucher code "foo13"
+    And I should have 4 products in my cart
+    When product "product4" is no longer active
+    And I add 1 items of product "product1" in my cart
+    Then I should have 4 products in my cart
+    And cart rule count in my cart should be 0
 
   @restore-cart-rules-after-scenario
   Scenario: 2 products in cart including one with specific price, one cart rule offering a gift and a global 10% discount

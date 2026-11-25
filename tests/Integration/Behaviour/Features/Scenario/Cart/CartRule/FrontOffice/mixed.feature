@@ -102,7 +102,7 @@ Feature: Cart rule (mixed) calculation with multiple cart rules
     Then my cart total should be 15.9 tax included
     And I should have 2 products in my cart
 
-  Scenario: 1 product in cart, cart rule giving gift out of stock, and global cart rule should be inserted without error (test PR #8361)
+  Scenario: 1 product in cart, cart rule giving gift out of stock is refused, and global cart rule should be inserted without error (test PR #8361)
     Given product "product4" is out of stock
     And there is a cart rule "cartrule13" with following properties:
       | name[en-US]         | cartrule13 |
@@ -116,7 +116,8 @@ Feature: Cart rule (mixed) calculation with multiple cart rules
     And my cart total shipping fees should be 7.0 tax included
     And my cart total should be 26.8 tax included
     When I apply the voucher code "foo13"
-    Then my cart total should be 24.8 tax included
+    Then I should get cart rule validation error saying "The gift product is out of stock"
+    And my cart total should be 26.8 tax included
     When I apply the voucher code "foo2"
-    Then my cart total should be 15.9 tax included
+    Then my cart total should be 16.9 tax included
     And I should have 1 products in my cart

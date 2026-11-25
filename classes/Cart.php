@@ -1730,7 +1730,8 @@ class CartCore extends ObjectModel
             return $this->deleteProduct($id_product, $id_product_attribute, (int) $id_customization, 0, $preserveGiftRemoval, $useOrderPrices);
         }
 
-        if (!$product->available_for_order
+        // A product that became unavailable for order can still be removed, e.g. the gift of a removed cart rule
+        if ((!$product->available_for_order && $operator !== 'down')
             || (
                 Configuration::isCatalogMode()
                 && !defined('_PS_ADMIN_DIR_')
