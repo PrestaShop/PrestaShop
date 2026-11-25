@@ -1293,4 +1293,33 @@ class ToolsTest extends TestCase
             @unlink($fileName);
         }
     }
+
+    /**
+     * getRobotsContent() was made overridable in #9257. Adding a parameter would fatal
+     * existing overrides that declare a parameterless signature.
+     */
+    public function testGetRobotsContentSignatureIsUnchangedForBackwardCompatibility(): void
+    {
+        $method = new ReflectionMethod(Tools::class, 'getRobotsContent');
+
+        $this->assertSame(0, $method->getNumberOfParameters());
+        $this->assertTrue($method->isPublic());
+        $this->assertTrue($method->isStatic());
+    }
+
+    /**
+     * @dataProvider providerGetRobotsFileNameForDomain
+     */
+    public function testGetRobotsFileNameForDomain(string $domain, string $expected): void
+    {
+        $this->assertSame($expected, Tools::getRobotsFileNameForDomain($domain));
+    }
+
+    public function providerGetRobotsFileNameForDomain(): iterable
+    {
+        yield 'simple domain' => ['shop-a.example', 'robots-shop-a.example.txt'];
+        yield 'uppercase is lowercased' => ['Shop-B.Example', 'robots-shop-b.example.txt'];
+        yield 'invalid characters replaced' => ['shop_c.example/path', 'robots-shop_c.example_path.txt'];
+        yield 'port-like suffix kept via allowed charset' => ['shop.example:8080', 'robots-shop.example_8080.txt'];
+    }
 }

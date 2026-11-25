@@ -478,6 +478,22 @@ class AdminShopUrlControllerCore extends AdminController
         return $return;
     }
 
+    /**
+     * @return bool
+     */
+    public function processDelete()
+    {
+        $return = parent::processDelete();
+        if ($return) {
+            Tools::generateHtaccess();
+            Tools::generateRobotsFile(true);
+            Tools::clearSmartyCache();
+            Media::clearCache();
+        }
+
+        return $return;
+    }
+
     public function processAdd()
     {
         /** @var ShopUrl $object */
