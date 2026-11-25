@@ -31,6 +31,9 @@ final class ExternalReference
         return $this->value;
     }
 
+    /**
+     * @throws CustomerB2bConstraintException
+     */
     private function assertLengthIsValid(string $value): void
     {
         if ('' !== $value && mb_strlen($value) <= self::MAX_LENGTH) {

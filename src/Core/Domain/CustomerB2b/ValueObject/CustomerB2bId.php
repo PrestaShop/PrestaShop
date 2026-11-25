@@ -26,6 +26,9 @@ final class CustomerB2bId
         return $this->id;
     }
 
+    /**
+     * @throws CustomerB2bConstraintException
+     */
     private function assertIsGreaterThanZero(int $id): void
     {
         if ($id > 0) {

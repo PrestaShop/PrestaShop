@@ -26,6 +26,9 @@ final class B2bRoleId
         return $this->id;
     }
 
+    /**
+     * @throws B2bRoleConstraintException
+     */
     private function assertIsGreaterThanZero(int $id): void
     {
         if ($id > 0) {
