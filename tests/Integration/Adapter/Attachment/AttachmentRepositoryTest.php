@@ -15,7 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 final class AttachmentRepositoryTest extends KernelTestCase
 {
-    private const NAMES = ['Att 100% 43635', 'Att 1000 43635', 'Att a_b 43635', 'Att axb 43635', 'Att c\\d 43635', 'Att cd 43635'];
+    private const NAMES = ['Att 100% 43635', 'Att 1000 43635', 'Att a_b 43635', 'Att axb 43635', 'Att c\\d 43635', 'Att cd 43635', 'Att e!f 43635', 'Att ef 43635'];
 
     private AttachmentRepository $repository;
 
@@ -62,6 +62,7 @@ final class AttachmentRepositoryTest extends KernelTestCase
         yield 'percent' => ['100% 43635', 'Att 100% 43635'];
         yield 'underscore' => ['a_b 43635', 'Att a_b 43635'];
         yield 'backslash' => ['c\\d 43635', 'Att c\\d 43635'];
+        yield 'escape character' => ['e!f 43635', 'Att e!f 43635'];
     }
 
     /**

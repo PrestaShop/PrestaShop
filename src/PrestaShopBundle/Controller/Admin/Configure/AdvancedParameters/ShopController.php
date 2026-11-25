@@ -13,7 +13,6 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\SearchShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -23,11 +22,12 @@ class ShopController extends PrestaShopAdminController
 {
     /**
      * The term comes from the query parameter: in the path, a "/" splits the route and the web server refuses its
-     * encoded form. The path parameter is kept for the callers that still use it.
+     * encoded form. The path parameter is kept for the callers that still use it, and so is the signature, which a
+     * module controller extending this one may override.
      */
-    public function searchAction(Request $request, string $searchTerm = ''): JsonResponse
+    public function searchAction(string $searchTerm): JsonResponse
     {
-        $searchTerm = $request->query->getString('query', $searchTerm);
+        $searchTerm = $this->container->get('request_stack')->getCurrentRequest()->query->getString('query') ?: $searchTerm;
 
         try {
             $result = [];

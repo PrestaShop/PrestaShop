@@ -18,7 +18,7 @@ final class ShopControllerTest extends SymfonyIntegrationTestCase
 {
     use LoginTrait;
 
-    private const SHOP_NAME = 'Shop FR/BE 43635';
+    private const SHOP_NAME = 'Shop FR/BE_43635';
 
     private RouterInterface $router;
 
@@ -48,7 +48,12 @@ final class ShopControllerTest extends SymfonyIntegrationTestCase
     {
         $this->assertSame(
             [self::SHOP_NAME],
-            $this->search($this->router->generate('admin_shops_search', ['query' => 'FR/BE 43635']))
+            $this->search($this->router->generate('admin_shops_search', ['query' => 'FR/BE_43635']))
+        );
+        // "_" is searched as typed, whatever the NO_BACKSLASH_ESCAPES SQL mode of the server
+        $this->assertSame(
+            [self::SHOP_NAME],
+            $this->search($this->router->generate('admin_shops_search', ['query' => 'BE_43635']))
         );
     }
 
@@ -57,6 +62,11 @@ final class ShopControllerTest extends SymfonyIntegrationTestCase
         $this->assertSame(
             [self::SHOP_NAME],
             $this->search($this->router->generate('admin_shops_search', ['searchTerm' => 'Shop FR']))
+        );
+        // An empty query parameter falls back to the path
+        $this->assertSame(
+            [self::SHOP_NAME],
+            $this->search($this->router->generate('admin_shops_search', ['searchTerm' => 'Shop FR', 'query' => '']))
         );
     }
 
@@ -73,7 +83,7 @@ final class ShopControllerTest extends SymfonyIntegrationTestCase
     public static function getTermsWithWildcards(): iterable
     {
         // As LIKE wildcards, "_" would match the "/" of the shop name and "%" anything in the group name
-        yield 'underscore in a shop name' => ['FR_BE 43635'];
+        yield 'underscore in a shop name' => ['FR_BE_43635'];
         yield 'percent in a group name' => ['Def%t'];
     }
 
