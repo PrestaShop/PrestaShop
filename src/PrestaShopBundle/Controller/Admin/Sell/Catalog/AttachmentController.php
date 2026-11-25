@@ -38,6 +38,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -45,6 +46,11 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AttachmentController extends PrestaShopAdminController
 {
+    public function __construct(
+        private readonly RequestStack $requestStack,
+    ) {
+    }
+
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(
         Request $request,
@@ -250,7 +256,7 @@ class AttachmentController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('read', 'AdminProducts') || is_granted('read', 'AdminAttachments')")]
     public function searchAction(string $searchPhrase): JsonResponse
     {
-        $searchPhrase = $this->container->get('request_stack')->getCurrentRequest()->query->getString('query') ?: $searchPhrase;
+        $searchPhrase = $this->requestStack->getCurrentRequest()?->query->getString('query') ?: $searchPhrase;
 
         try {
             /** @var AttachmentInformation[] $attachments */
