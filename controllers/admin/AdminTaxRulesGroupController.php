@@ -4,6 +4,8 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+use PrestaShop\PrestaShop\Core\Domain\TaxRule\TaxRuleSettings;
+
 /**
  * @property TaxRulesGroup $object
  */
@@ -138,7 +140,12 @@ class AdminTaxRulesGroupControllerCore extends AdminController
         $this->_use_found_rows = false;
 
         $this->show_toolbar = false;
-        $this->tpl_list_vars = ['id_tax_rules_group' => (int) $id_group];
+        $this->tpl_list_vars = [
+            'id_tax_rules_group' => (int) $id_group,
+            'behavior_tax_only' => TaxRuleSettings::BEHAVIOR_TAX_ONLY,
+            'behavior_combine' => TaxRuleSettings::BEHAVIOR_COMBINE,
+            'behavior_one_after_another' => TaxRuleSettings::BEHAVIOR_ONE_AFTER_ANOTHER,
+        ];
 
         $this->_filter = false;
 

@@ -95,6 +95,8 @@ smartyRegisterFunction($smarty, 'modifier', 'htmlspecialchars', 'htmlspecialchar
 smartyRegisterFunction($smarty, 'modifier', 'implode', 'implode');
 smartyRegisterFunction($smarty, 'modifier', 'in_array', 'in_array');
 smartyRegisterFunction($smarty, 'modifier', 'intval', 'intval');
+// Needed by helpers/form/form.tpl and its many third-party copies
+smartyRegisterFunction($smarty, 'modifier', 'is_object', 'is_object');
 smartyRegisterFunction($smarty, 'modifier', 'json_decode', 'json_decode');
 smartyRegisterFunction($smarty, 'modifier', 'json_encode', 'json_encode');
 smartyRegisterFunction($smarty, 'modifier', 'lcfirst', 'lcfirst');

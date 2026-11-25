@@ -5,7 +5,7 @@
 {if isset($json)}
 {strip}
 {
-{if isset($status) && is_string($status) && trim($status) != ''}{assign 'hasresult' 'ok'}"status" : "{$status}"{/if}
+{if isset($status) && trim($status) != ''}{assign 'hasresult' 'ok'}"status" : "{$status}"{/if}
 {if !empty($confirmations)}{if $hasresult == 'ok'},{/if}{assign 'hasresult' 'ok'}"confirmations" : {$confirmations}{/if}
 {if !empty($informations)}{if $hasresult == 'ok'},{/if}{assign 'hasresult' 'ok'}"informations" : {$informations}{/if}
 {if !empty($errors)}{if $hasresult == 'ok'},{/if}{assign 'hasresult' 'ok'}"error" : {$errors}{/if}

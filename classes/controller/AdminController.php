@@ -1826,7 +1826,7 @@ class AdminControllerCore extends Controller
         if ($this->json) {
             $this->context->smarty->assign([
                 'json' => true,
-                'status' => $this->status,
+                'status' => is_string($this->status) ? $this->status : '',
             ]);
         }
         $this->layout = 'layout-ajax.tpl';
