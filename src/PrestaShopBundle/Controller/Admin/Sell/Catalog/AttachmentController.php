@@ -244,12 +244,13 @@ class AttachmentController extends PrestaShopAdminController
 
     /**
      * The phrase comes from the query parameter: in the path, a "/" splits the route and the web server refuses its
-     * encoded form. The path parameter is kept for the callers that still use it.
+     * encoded form. The path parameter is kept for the callers that still use it, and so is the signature, which a
+     * module controller extending this one may override.
      */
     #[AdminSecurity("is_granted('read', 'AdminProducts') || is_granted('read', 'AdminAttachments')")]
-    public function searchAction(Request $request, string $searchPhrase = ''): JsonResponse
+    public function searchAction(string $searchPhrase): JsonResponse
     {
-        $searchPhrase = $request->query->getString('query', $searchPhrase);
+        $searchPhrase = $this->container->get('request_stack')->getCurrentRequest()->query->getString('query') ?: $searchPhrase;
 
         try {
             /** @var AttachmentInformation[] $attachments */

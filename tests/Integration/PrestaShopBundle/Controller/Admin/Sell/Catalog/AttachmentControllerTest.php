@@ -78,6 +78,11 @@ final class AttachmentControllerTest extends SymfonyIntegrationTestCase
             [$this->attachmentIds['Att plain 43618']],
             $this->search($this->router->generate('admin_attachments_search', ['searchPhrase' => 'Att plain 43618']))
         );
+        // An empty query parameter falls back to the path
+        $this->assertSame(
+            [$this->attachmentIds['Att plain 43618']],
+            $this->search($this->router->generate('admin_attachments_search', ['searchPhrase' => 'Att plain 43618', 'query' => '']))
+        );
     }
 
     public function testSearchWithoutPhraseFindsNothing(): void
