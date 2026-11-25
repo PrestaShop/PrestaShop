@@ -215,6 +215,7 @@ class PrestaShopLoggerCore extends ObjectModel
      * Check if this log already exists among the most recent ones.
      *
      * The table has no index to look a log up with, so only the last rows are read, through the primary key.
+     * The answer is kept for the whole PHP process: a long-running one stores a given log once, whatever the range.
      *
      * @return bool true if exists
      */
@@ -271,11 +272,9 @@ class PrestaShopLoggerCore extends ObjectModel
 
     private static function getDuplicateCheckLimit(): int
     {
-        try {
-            return (int) Configuration::get(self::DUPLICATE_CHECK_LIMIT_CONFIGURATION, null, null, null, self::DEFAULT_DUPLICATE_CHECK_LIMIT);
-        } catch (Throwable) {
-            return self::DEFAULT_DUPLICATE_CHECK_LIMIT;
-        }
+        $limit = Configuration::get(self::DUPLICATE_CHECK_LIMIT_CONFIGURATION);
+
+        return is_numeric($limit) ? (int) $limit : self::DEFAULT_DUPLICATE_CHECK_LIMIT;
     }
 
     protected static function getMinimumLevelInDB(): int

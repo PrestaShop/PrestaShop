@@ -64,10 +64,8 @@ final class LogQueryBuilder extends AbstractDoctrineQueryBuilder
         $queryBuilder = $this->getQueryBuilder()
             ->select('COUNT(lg.id_log)')
             ->from($this->dbPrefix . 'log', 'lg');
-
-        if (array_key_exists('employee', $searchCriteria->getFilters())) {
-            $this->joinEmployee($queryBuilder);
-        }
+        // Kept even when unused: modules reach the "e" alias through the grid query builder modifier hook
+        $this->joinEmployee($queryBuilder);
 
         return $this->applyFilters($searchCriteria->getFilters(), $queryBuilder);
     }

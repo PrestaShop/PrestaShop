@@ -21,6 +21,7 @@ class PrestaShopLoggerTest extends TestCase
 
     private int $shopContext;
     private ?int $shopContextId;
+    private ?int $minLevel;
 
     protected function setUp(): void
     {
@@ -34,8 +35,8 @@ class PrestaShopLoggerTest extends TestCase
         Shop::setContext(Shop::CONTEXT_SHOP, 1);
 
         // The minimum level is kept by the class, another test may have raised it
-        $minLevel = new ReflectionProperty(PrestaShopLogger::class, 'minLevelInDb');
-        $minLevel->setAccessible(true);
+        $minLevel = $this->getMinLevelProperty();
+        $this->minLevel = $minLevel->isInitialized() ? $minLevel->getValue() : null;
         $minLevel->setValue(null, PrestaShopLogger::LOG_SEVERITY_LEVEL_INFORMATIVE);
 
         PrestaShopLogger::eraseAllLogs();
@@ -46,7 +47,18 @@ class PrestaShopLoggerTest extends TestCase
         Configuration::deleteByName(PrestaShopLogger::DUPLICATE_CHECK_LIMIT_CONFIGURATION);
         Shop::setContext($this->shopContext, $this->shopContextId);
         PrestaShopLogger::eraseAllLogs();
+        if ($this->minLevel !== null) {
+            $this->getMinLevelProperty()->setValue(null, $this->minLevel);
+        }
         parent::tearDown();
+    }
+
+    private function getMinLevelProperty(): ReflectionProperty
+    {
+        $minLevel = new ReflectionProperty(PrestaShopLogger::class, 'minLevelInDb');
+        $minLevel->setAccessible(true);
+
+        return $minLevel;
     }
 
     public function testSameLogIsStoredOnlyOncePerRequest(): void
@@ -106,7 +118,7 @@ class PrestaShopLoggerTest extends TestCase
         $this->assertSame(2, $this->countLogs());
     }
 
-    public function provideShopContexts(): iterable
+    public static function provideShopContexts(): iterable
     {
         yield 'single shop' => [Shop::CONTEXT_SHOP, 1];
         yield 'shop group' => [Shop::CONTEXT_GROUP, 1];
@@ -162,6 +174,16 @@ class PrestaShopLoggerTest extends TestCase
 
         $this->assertTrue(PrestaShopLogger::addLog(self::MESSAGE, PrestaShopLogger::LOG_SEVERITY_LEVEL_ERROR));
         $this->assertSame(2, $this->countLogs());
+    }
+
+    public function testDefaultRangeIsUsedWhenTheStoredOneIsNotANumber(): void
+    {
+        Configuration::updateGlobalValue(PrestaShopLogger::DUPLICATE_CHECK_LIMIT_CONFIGURATION, '');
+
+        PrestaShopLogger::addLog(self::MESSAGE, PrestaShopLogger::LOG_SEVERITY_LEVEL_ERROR);
+        $this->startNewRequest();
+
+        $this->assertFalse(PrestaShopLogger::addLog(self::MESSAGE, PrestaShopLogger::LOG_SEVERITY_LEVEL_ERROR));
     }
 
     private function startNewRequest(): void

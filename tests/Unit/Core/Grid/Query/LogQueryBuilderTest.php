@@ -20,30 +20,27 @@ class LogQueryBuilderTest extends TestCase
 {
     private const DB_PREFIX = 'ps_';
 
-    public function testCountQueryOnlyReadsTheLogTable(): void
+    public function testCountQueryOnlyJoinsTheEmployeeTable(): void
     {
         $qb = $this->buildQueryBuilder()->getCountQueryBuilder($this->getFilters([]));
 
-        $this->assertSame('SELECT COUNT(lg.id_log) FROM ps_log lg', $qb->getSQL());
+        $this->assertSame(
+            'SELECT COUNT(lg.id_log) FROM ps_log lg LEFT JOIN ps_employee e ON e.id_employee = lg.id_employee',
+            $qb->getSQL()
+        );
     }
 
     public function testCountQueryAppliesFilters(): void
     {
-        $qb = $this->buildQueryBuilder()->getCountQueryBuilder($this->getFilters(['message' => 'cart']));
+        $qb = $this->buildQueryBuilder()->getCountQueryBuilder(
+            $this->getFilters(['message' => 'cart', 'employee' => 'doe'])
+        );
 
-        $this->assertSame('SELECT COUNT(lg.id_log) FROM ps_log lg WHERE `message` LIKE :message', $qb->getSQL());
-        $this->assertSame(['message' => '%cart%'], $qb->getParameters());
-    }
-
-    public function testCountQueryJoinsEmployeeWhenFilteredOnIt(): void
-    {
-        $qb = $this->buildQueryBuilder()->getCountQueryBuilder($this->getFilters(['employee' => 'doe']));
-
-        $this->assertStringContainsString(
-            'LEFT JOIN ps_employee e ON e.id_employee = lg.id_employee',
+        $this->assertStringEndsWith(
+            'WHERE (`message` LIKE :message) AND (CONCAT(e.`firstname`, \' \', e.`lastname`) LIKE :employee)',
             $qb->getSQL()
         );
-        $this->assertSame(['employee' => '%doe%'], $qb->getParameters());
+        $this->assertSame(['message' => '%cart%', 'employee' => '%doe%'], $qb->getParameters());
     }
 
     public function testSearchQueryKeepsEmployeeAndContextColumns(): void

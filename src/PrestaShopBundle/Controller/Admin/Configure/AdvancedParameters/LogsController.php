@@ -128,7 +128,9 @@ class LogsController extends PrestaShopAdminController
         $databaseForm = $formHandler->getForm();
         $databaseForm->handleRequest($request);
 
-        if ($databaseForm->isSubmitted()) {
+        if ($databaseForm->isSubmitted() && !$databaseForm->isValid()) {
+            $this->addFlashFormErrors($databaseForm, true);
+        } elseif ($databaseForm->isSubmitted()) {
             $data = $databaseForm->getData();
 
             $saveErrors = $formHandler->save($data);
