@@ -14,8 +14,9 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SendCustomerPasswordSetupLinkCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CannotSendPasswordSetupLinkException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SendCustomerWelcomeEmailCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\CustomerAccountOrigin;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CannotSendCustomerWelcomeEmailException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\Command\AddCustomerB2bCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\Exception\CustomerB2bConstraintException;
@@ -57,7 +58,7 @@ class CustomerB2bFormDataHandlerTest extends TestCase
             AddCustomerCommand::class => static fn () => new CustomerId(10),
             AddCustomerB2bCommand::class => static fn () => new CustomerB2bId(20),
             DeleteCustomerCommand::class => static fn () => null,
-            SendCustomerPasswordSetupLinkCommand::class => static fn () => null,
+            SendCustomerWelcomeEmailCommand::class => static fn () => null,
         ];
 
         $commandBus = $this->createMock(CommandBusInterface::class);
@@ -95,7 +96,6 @@ class CustomerB2bFormDataHandlerTest extends TestCase
         $this->assertSame(20, $id);
         $this->assertCount(2, $this->dispatched);
 
-        /** @var AddCustomerCommand $addCustomer */
         $addCustomer = $this->dispatched[0];
         $this->assertInstanceOf(AddCustomerCommand::class, $addCustomer);
         $this->assertSame('new', $addCustomer->getFirstName()->getValue());
@@ -111,7 +111,6 @@ class CustomerB2bFormDataHandlerTest extends TestCase
         $this->assertFalse($addCustomer->isNewsletterSubscribed());
         $this->assertFalse($addCustomer->isGuest());
 
-        /** @var AddCustomerB2bCommand $addProfile */
         $addProfile = $this->dispatched[1];
         $this->assertInstanceOf(AddCustomerB2bCommand::class, $addProfile);
         $this->assertSame(10, $addProfile->customerId->getValue());
@@ -162,7 +161,6 @@ class CustomerB2bFormDataHandlerTest extends TestCase
         }
 
         $this->assertCount(3, $this->dispatched);
-        /** @var DeleteCustomerCommand $delete */
         $delete = $this->dispatched[2];
         $this->assertInstanceOf(DeleteCustomerCommand::class, $delete);
         $this->assertSame(10, $delete->getCustomerId()->getValue());
@@ -225,15 +223,16 @@ class CustomerB2bFormDataHandlerTest extends TestCase
         $this->handler->create($this->data(['send_password_setup_link' => true]));
 
         $this->assertCount(3, $this->dispatched);
-        $this->assertInstanceOf(SendCustomerPasswordSetupLinkCommand::class, $this->dispatched[2]);
+        $this->assertInstanceOf(SendCustomerWelcomeEmailCommand::class, $this->dispatched[2]);
         $this->assertSame(10, $this->dispatched[2]->customerId->getValue());
+        $this->assertSame(CustomerAccountOrigin::BACK_OFFICE, $this->dispatched[2]->origin);
         $this->assertNull($this->request->attributes->get(CustomerB2bFormDataHandler::MAIL_ERROR_ATTRIBUTE));
     }
 
     public function testCreatedIdIsReturnedWhenMailFails(): void
     {
-        $mailFailure = new CannotSendPasswordSetupLinkException('unlucky');
-        $this->handlers[SendCustomerPasswordSetupLinkCommand::class] = static function () use ($mailFailure): never {
+        $mailFailure = new CannotSendCustomerWelcomeEmailException('unlucky');
+        $this->handlers[SendCustomerWelcomeEmailCommand::class] = static function () use ($mailFailure): never {
             throw $mailFailure;
         };
         $this->logger

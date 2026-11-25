@@ -15,12 +15,12 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SendCustomerPasswordSetupLinkCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SendCustomerWelcomeEmailCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetPrivateNoteAboutCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetRequiredFieldsForCustomerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CannotSendPasswordSetupLinkException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerWelcomeEmailConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\SearchCustomers;
@@ -221,7 +221,7 @@ class CustomerFeatureContext extends AbstractDomainFeatureContext
         $this->getMailDevClient()->deleteAllEmails();
 
         try {
-            $this->getCommandBus()->handle(new SendCustomerPasswordSetupLinkCommand($this->referenceToId($customerReference)));
+            $this->getCommandBus()->handle(new SendCustomerWelcomeEmailCommand($this->referenceToId($customerReference)));
         } catch (CustomerException $e) {
             $this->setLastException($e);
         }
@@ -300,12 +300,12 @@ class CustomerFeatureContext extends AbstractDomainFeatureContext
     public function assertLastErrorIsIneligibleForPasswordSetupLink(string $reason): void
     {
         $errorCodes = [
-            'guest' => CannotSendPasswordSetupLinkException::GUEST_CUSTOMER,
-            'deleted' => CannotSendPasswordSetupLinkException::DELETED_CUSTOMER,
-            'inactive' => CannotSendPasswordSetupLinkException::INACTIVE_CUSTOMER,
+            'guest' => CustomerWelcomeEmailConstraintException::GUEST_CUSTOMER,
+            'deleted' => CustomerWelcomeEmailConstraintException::DELETED_CUSTOMER,
+            'inactive' => CustomerWelcomeEmailConstraintException::INACTIVE_CUSTOMER,
         ];
 
-        $this->assertLastErrorIs(CannotSendPasswordSetupLinkException::class, $errorCodes[$reason]);
+        $this->assertLastErrorIs(CustomerWelcomeEmailConstraintException::class, $errorCodes[$reason]);
     }
 
     /**

@@ -8,9 +8,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Exception;
 
-class CannotSendPasswordSetupLinkException extends CustomerException
+class CustomerWelcomeEmailConstraintException extends CustomerConstraintException
 {
-    public const GUEST_CUSTOMER = 1;
-    public const DELETED_CUSTOMER = 2;
-    public const INACTIVE_CUSTOMER = 3;
+    public const GUEST_CUSTOMER = 101;
+    public const DELETED_CUSTOMER = 102;
+    public const INACTIVE_CUSTOMER = 103;
 }

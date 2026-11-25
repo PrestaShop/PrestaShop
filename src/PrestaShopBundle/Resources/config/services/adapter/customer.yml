@@ -92,11 +92,11 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Customer\Repository\CustomerRepository: ~
 
-  PrestaShop\PrestaShop\Adapter\Customer\PasswordSetupLinkMailer:
+  PrestaShop\PrestaShop\Adapter\Customer\CustomerWelcomeMailer:
     public: false
     autowire: true
 
-  PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\SendCustomerPasswordSetupLinkHandler:
+  PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\SendCustomerWelcomeEmailHandler:
     public: false
     autowire: true
     autoconfigure: true

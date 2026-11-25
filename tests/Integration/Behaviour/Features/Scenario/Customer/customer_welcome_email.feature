@@ -1,9 +1,9 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s customer --tags customer-password-setup-link
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s customer --tags customer-welcome-email
 @restore-all-tables-before-feature
-@customer-password-setup-link
-Feature: Send the password setup link to a customer
+@customer-welcome-email
+Feature: Send the welcome email to a customer
   As a BO user
-  I must be able to send the password setup link to a customer
+  I must be able to send the welcome email with a password setup link to a customer
 
   Scenario: Send the password setup link to a customer without a reset password token
     When I create customer "customer1" with following details:

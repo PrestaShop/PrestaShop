@@ -13,8 +13,8 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SendCustomerPasswordSetupLinkCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CannotSendPasswordSetupLinkException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SendCustomerWelcomeEmailCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CannotSendCustomerWelcomeEmailException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerDeleteMethod;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\Command\AddCustomerB2bCommand;
@@ -136,8 +136,8 @@ final class CustomerB2bFormDataHandler implements FormDataHandlerInterface
     private function sendPasswordSetupLink(int $customerId, CustomerB2bId $id): void
     {
         try {
-            $this->commandBus->handle(new SendCustomerPasswordSetupLinkCommand($customerId));
-        } catch (CannotSendPasswordSetupLinkException $e) {
+            $this->commandBus->handle(new SendCustomerWelcomeEmailCommand($customerId));
+        } catch (CannotSendCustomerWelcomeEmailException $e) {
             $this->logger->error('Failed to send the password setup link to the new B2B customer', [
                 'object_type' => 'CustomerB2b',
                 'object_id' => $id->getValue(),

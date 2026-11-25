@@ -8,9 +8,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SendCustomerPasswordSetupLinkCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SendCustomerWelcomeEmailCommand;
 
-interface SendCustomerPasswordSetupLinkHandlerInterface
+interface SendCustomerWelcomeEmailHandlerInterface
 {
-    public function handle(SendCustomerPasswordSetupLinkCommand $command): void;
+    public function handle(SendCustomerWelcomeEmailCommand $command): void;
 }
