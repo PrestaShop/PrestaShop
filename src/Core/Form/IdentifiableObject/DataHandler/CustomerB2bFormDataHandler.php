@@ -18,16 +18,18 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CannotSendPasswordSetup
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerDeleteMethod;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\Command\AddCustomerB2bCommand;
-use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\Exception\PasswordSetupLinkNotSentException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\ValueObject\CustomerB2bId;
 use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroupsProviderInterface;
 use PrestaShop\PrestaShop\Core\Security\OpenSsl\OpenSSL;
 use PrestaShop\PrestaShop\Core\Security\PasswordGenerator;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Throwable;
 
 final class CustomerB2bFormDataHandler implements FormDataHandlerInterface
 {
+    public const MAIL_ERROR_ATTRIBUTE = '_customer_b2b.mail_error';
+
     private const GENERATED_PASSWORD_LENGTH = 16;
 
     public function __construct(
@@ -35,6 +37,7 @@ final class CustomerB2bFormDataHandler implements FormDataHandlerInterface
         private readonly ShopContext $shopContext,
         private readonly DefaultGroupsProviderInterface $defaultGroupsProvider,
         private readonly LoggerInterface $logger,
+        private readonly RequestStack $requestStack,
         private readonly PasswordGenerator $passwordGenerator = new PasswordGenerator(new OpenSSL()),
     ) {
     }
@@ -130,9 +133,6 @@ final class CustomerB2bFormDataHandler implements FormDataHandlerInterface
         }
     }
 
-    /**
-     * @throws PasswordSetupLinkNotSentException
-     */
     private function sendPasswordSetupLink(int $customerId, CustomerB2bId $id): void
     {
         try {
@@ -144,7 +144,7 @@ final class CustomerB2bFormDataHandler implements FormDataHandlerInterface
                 'exception' => $e,
             ]);
 
-            throw new PasswordSetupLinkNotSentException($id, $e);
+            $this->requestStack->getCurrentRequest()?->attributes->set(self::MAIL_ERROR_ATTRIBUTE, $e);
         }
     }
 }

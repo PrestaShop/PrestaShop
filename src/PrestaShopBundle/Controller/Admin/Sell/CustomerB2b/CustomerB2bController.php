@@ -18,8 +18,8 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\MissingCustomerRequired
 use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\Exception\CannotAddCustomerB2bException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\Exception\CustomerB2bAlreadyExistsException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\Exception\CustomerB2bConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\Exception\PasswordSetupLinkNotSentException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CustomerB2bFormDataHandler;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
@@ -68,14 +68,14 @@ class CustomerB2bController extends PrestaShopAdminController
         try {
             $result = $formHandler->handle($form);
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation', [], 'Admin.Notifications.Success'));
+                if ($request->attributes->has(CustomerB2bFormDataHandler::MAIL_ERROR_ATTRIBUTE)) {
+                    $this->addFlash('warning', $this->trans('The B2B customer was created, but the password reset email could not be sent.', [], 'Admin.Orderscustomers.Notification'));
+                } else {
+                    $this->addFlash('success', $this->trans('Successful creation', [], 'Admin.Notifications.Success'));
+                }
 
                 return $this->redirectToRoute('admin_customer_b2b_list');
             }
-        } catch (PasswordSetupLinkNotSentException) {
-            $this->addFlash('warning', $this->trans('The B2B customer was created, but the password reset email could not be sent.', [], 'Admin.Orderscustomers.Notification'));
-
-            return $this->redirectToRoute('admin_customer_b2b_list');
         } catch (Exception $e) {
             $message = $this->getErrorMessageForException($e, $this->getErrorMessages($e));
             if (!$this->mapFormError($form, $e, $message)) {

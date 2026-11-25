@@ -19,7 +19,6 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CannotSendPasswordSetup
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\Command\AddCustomerB2bCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\Exception\CustomerB2bConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\Exception\PasswordSetupLinkNotSentException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerB2b\ValueObject\CustomerB2bId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CustomerB2bFormDataHandler;
 use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroup;
@@ -28,6 +27,8 @@ use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroupsProviderInterface;
 use PrestaShopBundle\Entity\Enum\CustomerB2bStatus;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class CustomerB2bFormDataHandlerTest extends TestCase
 {
@@ -45,6 +46,7 @@ class CustomerB2bFormDataHandlerTest extends TestCase
     private array $handlers = [];
 
     private MockObject&LoggerInterface $logger;
+    private Request $request;
 
     private CustomerB2bFormDataHandler $handler;
 
@@ -76,7 +78,12 @@ class CustomerB2bFormDataHandlerTest extends TestCase
         ));
 
         $this->logger = $this->createMock(LoggerInterface::class);
-        $this->handler = new CustomerB2bFormDataHandler($commandBus, $shopContext, $defaultGroupsProvider, $this->logger);
+
+        $this->request = new Request();
+        $requestStack = new RequestStack();
+        $requestStack->push($this->request);
+
+        $this->handler = new CustomerB2bFormDataHandler($commandBus, $shopContext, $defaultGroupsProvider, $this->logger, $requestStack);
     }
 
     public function testItCreatesCustomerThenProfile(): void
@@ -220,9 +227,10 @@ class CustomerB2bFormDataHandlerTest extends TestCase
         $this->assertCount(3, $this->dispatched);
         $this->assertInstanceOf(SendCustomerPasswordSetupLinkCommand::class, $this->dispatched[2]);
         $this->assertSame(10, $this->dispatched[2]->customerId->getValue());
+        $this->assertNull($this->request->attributes->get(CustomerB2bFormDataHandler::MAIL_ERROR_ATTRIBUTE));
     }
 
-    public function testItReportsCreatedIdWhenMailFails(): void
+    public function testCreatedIdIsReturnedWhenMailFails(): void
     {
         $mailFailure = new CannotSendPasswordSetupLinkException('unlucky');
         $this->handlers[SendCustomerPasswordSetupLinkCommand::class] = static function () use ($mailFailure): never {
@@ -238,13 +246,10 @@ class CustomerB2bFormDataHandlerTest extends TestCase
             ));
         $this->logger->expects($this->never())->method('warning');
 
-        try {
-            $this->handler->create($this->data(['send_password_setup_link' => true]));
-            $this->fail('A PasswordSetupLinkNotSentException should have been thrown.');
-        } catch (PasswordSetupLinkNotSentException $e) {
-            $this->assertSame(20, $e->id->getValue());
-            $this->assertSame($mailFailure, $e->getPrevious());
-        }
+        $id = $this->handler->create($this->data(['send_password_setup_link' => true]));
+
+        $this->assertSame($mailFailure, $this->request->attributes->get(CustomerB2bFormDataHandler::MAIL_ERROR_ATTRIBUTE));
+        $this->assertSame(20, $id);
     }
 
     /**
