@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\CustomerB2b\CommandHandler;
 
 use Exception;
+use LogicException;
 use PrestaShop\PrestaShop\Adapter\CustomerB2b\Validate\CustomerB2bValidator;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\B2bRole\Exception\B2bRoleNotFoundException;
@@ -71,7 +72,10 @@ final class AddCustomerB2bHandler implements AddCustomerB2bHandlerInterface
             throw new CannotAddCustomerB2bException(\sprintf('Failed to save the B2B profile of customer #%d.', $customerId), CannotAddCustomerB2bException::FAILED_SAVE, $e);
         }
 
-        $id = (int) $entity->getId();
+        if (null === $id = $entity->getId()) {
+            throw new LogicException('B2B profile ID should be known at this point.');
+        }
+
         $this->logger->info('B2B customer created', [
             'object_type' => 'CustomerB2b',
             'object_id' => $id,
