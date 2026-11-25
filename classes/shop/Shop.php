@@ -421,23 +421,14 @@ class ShopCore extends ObjectModel
                     throw new PrestaShopException('Shop not found');
                 }
 
-                $params = $_GET;
-                unset($params['id_shop']);
-                $url = $default_shop->domain;
-                if (!Configuration::get('PS_REWRITING_SETTINGS')) {
-                    $url .= $default_shop->getBaseURI() . 'index.php?' . http_build_query($params);
-                } else {
-                    // Catch url with subdomain "www"
-                    if (strpos($url, 'www.') === 0 && 'www.' . $_SERVER['HTTP_HOST'] === $url || $_SERVER['HTTP_HOST'] === 'www.' . $url) {
-                        $url .= $_SERVER['REQUEST_URI'];
-                    } else {
-                        $url .= $default_shop->getBaseURI();
-                    }
-
-                    if (count($params)) {
-                        $url .= '?' . http_build_query($params);
-                    }
-                }
+                $url = self::getDefaultShopRedirectUrl(
+                    (string) $default_shop->domain,
+                    (string) $default_shop->getBaseURI(),
+                    (bool) Configuration::get('PS_REWRITING_SETTINGS'),
+                    $_SERVER['HTTP_HOST'] ?? '',
+                    $_SERVER['REQUEST_URI'] ?? '',
+                    $_GET
+                );
 
                 $redirect_type = Configuration::get('PS_CANONICAL_REDIRECT');
                 $redirect_code = ($redirect_type == 1 ? '302' : '301');
@@ -1385,6 +1376,48 @@ class ShopCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      */
+    /**
+     * Builds the URL (without protocol) of the default shop to redirect to when the requested shop is not found or not active.
+     *
+     * @param string $domain Domain of the default shop
+     * @param string $baseUri Base URI of the default shop
+     * @param bool $rewritingEnabled Whether friendly URLs are enabled
+     * @param string $httpHost Host of the current request
+     * @param string $requestUri URI of the current request, query string included
+     * @param array $queryParameters GET parameters of the current request
+     *
+     * @return string
+     */
+    private static function getDefaultShopRedirectUrl(
+        string $domain,
+        string $baseUri,
+        bool $rewritingEnabled,
+        string $httpHost,
+        string $requestUri,
+        array $queryParameters
+    ): string {
+        unset($queryParameters['id_shop']);
+
+        if (!$rewritingEnabled) {
+            return $domain . $baseUri . 'index.php?' . http_build_query($queryParameters);
+        }
+
+        $url = $domain;
+        // Catch url with subdomain "www"
+        if (strpos($domain, 'www.') === 0 && 'www.' . $httpHost === $domain || $httpHost === 'www.' . $domain) {
+            // Keep the path only: the query string is rebuilt below from $queryParameters (without id_shop)
+            $url .= explode('?', $requestUri, 2)[0];
+        } else {
+            $url .= $baseUri;
+        }
+
+        if (count($queryParameters)) {
+            $url .= '?' . http_build_query($queryParameters);
+        }
+
+        return $url;
+    }
+
     private static function findShopByHost($host)
     {
         $sql = 'SELECT s.id_shop, CONCAT(su.physical_uri, su.virtual_uri) AS uri, su.domain, su.main
