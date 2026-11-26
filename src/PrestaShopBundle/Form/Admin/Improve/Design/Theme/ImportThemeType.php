@@ -53,7 +53,8 @@ class ImportThemeType extends TranslatorAwareType
                 ),
                 'required' => false,
                 'constraints' => new File([
-                    'mimeTypes' => 'application/zip',
+                    // Some valid zip archives are guessed as application/octet-stream since PHP 8.6, the uploader checks the content
+                    'mimeTypes' => ['application/zip', 'application/octet-stream'],
                     'mimeTypesMessage' => $this->trans('Invalid file format.', 'Admin.Design.Notification'),
                 ]),
             ])

@@ -12,6 +12,9 @@ services:
     arguments:
       $sandboxPath: '%prestashop.legacy_cache_dir%sandbox'
 
+  PrestaShop\PrestaShop\Core\Security\ZipArchiveDetector:
+    public: false
+
   PrestaShop\PrestaShop\Core\Security\AccessCheckerInterface:
     alias: 'PrestaShop\PrestaShop\Adapter\Security\Access'
     public: false

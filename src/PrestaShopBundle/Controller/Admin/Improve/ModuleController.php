@@ -362,6 +362,8 @@ class ModuleController extends ModuleAbstractController
                         'maxSize' => ini_get('upload_max_filesize'),
                         'mimeTypes' => [
                             'application/zip',
+                            // Some valid zip archives are guessed as application/octet-stream since PHP 8.6, the source handler checks the content
+                            'application/octet-stream',
                             'application/x-gzip',
                             'application/gzip',
                             'application/x-gtar',
