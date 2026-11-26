@@ -79,6 +79,48 @@ class ProductGridDataFactoryDecoratorTest extends KernelTestCase
         self::assertSame(self::PACK_QUANTITY, $records[0]['quantity']);
     }
 
+    /**
+     * @dataProvider getProductTypeLabels
+     */
+    public function testItAddsTheProductTypeLabel(string $productType, string $expectedLabel): void
+    {
+        self::bootKernel();
+
+        $productRow = [
+            'id_product' => '7',
+            'id_shop_default' => '1',
+            'id_image' => '0',
+            'legend' => '',
+            'name' => 'A product',
+            'reference' => '',
+            'price' => '10.000000',
+            'id_tax_rules_group' => '0',
+            'quantity' => '3',
+            'product_type' => $productType,
+        ];
+
+        $packRepository = $this->createMock(ProductPackRepository::class);
+        $packRepository->method('getDynamicPackQuantity')->willReturn(self::PACK_QUANTITY);
+
+        $records = $this->buildDecorator($productRow, $packRepository)
+            ->getData(new ProductFilters(ShopConstraint::shop(1)))
+            ->getRecords()
+            ->all()
+        ;
+
+        self::assertSame($expectedLabel, $records[0]['product_type_label']);
+        self::assertSame($productType, $records[0]['product_type']);
+    }
+
+    public static function getProductTypeLabels(): iterable
+    {
+        yield 'standard' => [ProductType::TYPE_STANDARD, 'Standard product'];
+        yield 'combinations' => [ProductType::TYPE_COMBINATIONS, 'Product with combinations'];
+        yield 'pack' => [ProductType::TYPE_PACK, 'Pack of products'];
+        yield 'virtual' => [ProductType::TYPE_VIRTUAL, 'Virtual product'];
+        yield 'undefined type of an old product' => [ProductType::TYPE_UNDEFINED, ''];
+    }
+
     private function buildDecorator(
         array $productRow,
         ProductPackRepository $packRepository
