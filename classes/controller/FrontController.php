@@ -512,7 +512,7 @@ class FrontControllerCore extends Controller
      *
      * @return bool whether an address was assigned and the cart therefore needs saving
      */
-    protected function assignFirstCustomerAddresses(Cart $cart)
+    private function assignFirstCustomerAddresses(Cart $cart)
     {
         $assigned = false;
 
