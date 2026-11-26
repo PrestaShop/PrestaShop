@@ -42,6 +42,9 @@ class WebserviceOrderStockTest extends TestCase
     private int $productId = 0;
     private int $cartId = 0;
     private int $createdOrderId = 0;
+
+    /** @var Cart|null */
+    private $previousContextCart;
     private array $stockBefore = [];
 
     protected function setUp(): void
@@ -53,6 +56,7 @@ class WebserviceOrderStockTest extends TestCase
         // takes the place of a real payment module without anything being installed.
         $this->moduleInstances()->setValue(null, [self::STUB_MODULE => new StockGuardStubPaymentModule()]);
         WebserviceRequest::resetStaticCache();
+        $this->previousContextCart = Context::getContext()->cart;
 
         $this->productId = $this->aSimpleProductOnSale();
         // The product is shared with the rest of the suite, so what this test does to its stock has to
@@ -93,6 +97,7 @@ class WebserviceOrderStockTest extends TestCase
             );
             Cache::clean('*');
         }
+        Context::getContext()->cart = $this->previousContextCart;
 
         parent::tearDown();
     }
