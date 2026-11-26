@@ -53,9 +53,15 @@ function build {
 
   touch buildLock
   chmod 664 buildLock
+  # wait-build.sh and the container entrypoint block until this file disappears, so it
+  # must not survive a failed install or build.
+  local lock="$PWD/buildLock"
+  trap "rm -f '$lock'" EXIT
+
   npm ci
   npm run build
-  rm buildLock
+  rm -f "$lock"
+  trap - EXIT
   popd
 }
 
