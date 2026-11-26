@@ -83,8 +83,16 @@ admin_attachments_search:
   methods: GET
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\AttachmentController::searchAction
-    searchPhrase: ''
     _legacy_controller: AdminAttachments
     _legacy_link: AdminAttachments:search
+  options:
+    expose: true
+
+admin_attachments_search_by_query:
+  path: /search
+  methods: GET
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\AttachmentController::searchByQueryAction
+    _legacy_controller: AdminAttachments
   options:
     expose: true

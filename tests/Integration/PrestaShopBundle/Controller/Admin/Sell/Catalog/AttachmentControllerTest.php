@@ -61,7 +61,7 @@ final class AttachmentControllerTest extends SymfonyIntegrationTestCase
     {
         $this->assertSame(
             [$this->attachmentIds[$name]],
-            $this->search($this->router->generate('admin_attachments_search', ['query' => $name]))
+            $this->search($this->router->generate('admin_attachments_search_by_query', ['query' => $name]))
         );
     }
 
@@ -78,16 +78,11 @@ final class AttachmentControllerTest extends SymfonyIntegrationTestCase
             [$this->attachmentIds['Att plain 43618']],
             $this->search($this->router->generate('admin_attachments_search', ['searchPhrase' => 'Att plain 43618']))
         );
-        // An empty query parameter falls back to the path
-        $this->assertSame(
-            [$this->attachmentIds['Att plain 43618']],
-            $this->search($this->router->generate('admin_attachments_search', ['searchPhrase' => 'Att plain 43618', 'query' => '']))
-        );
     }
 
     public function testSearchWithoutPhraseFindsNothing(): void
     {
-        $this->client->request('GET', $this->router->generate('admin_attachments_search'));
+        $this->client->request('GET', $this->router->generate('admin_attachments_search_by_query'));
 
         $this->assertSame(Response::HTTP_NOT_FOUND, $this->client->getResponse()->getStatusCode());
     }

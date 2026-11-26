@@ -38,7 +38,6 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -46,11 +45,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AttachmentController extends PrestaShopAdminController
 {
-    public function __construct(
-        private readonly RequestStack $requestStack,
-    ) {
-    }
-
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
     public function indexAction(
         Request $request,
@@ -249,15 +243,28 @@ class AttachmentController extends PrestaShopAdminController
     }
 
     /**
-     * The phrase comes from the query parameter: in the path, a "/" splits the route and the web server refuses its
-     * encoded form. The path parameter is kept for the callers that still use it, and so is the signature, which a
-     * module controller extending this one may override.
+     * @param string $searchPhrase
+     *
+     * @return JsonResponse
      */
     #[AdminSecurity("is_granted('read', 'AdminProducts') || is_granted('read', 'AdminAttachments')")]
     public function searchAction(string $searchPhrase): JsonResponse
     {
-        $searchPhrase = $this->requestStack->getCurrentRequest()?->query->getString('query') ?: $searchPhrase;
+        return $this->searchAttachments($searchPhrase);
+    }
 
+    /**
+     * Same search with the phrase in the query string: in the path, a "/" splits the route and the web server
+     * refuses its encoded form.
+     */
+    #[AdminSecurity("is_granted('read', 'AdminProducts') || is_granted('read', 'AdminAttachments')")]
+    public function searchByQueryAction(Request $request): JsonResponse
+    {
+        return $this->searchAttachments($request->query->getString('query'));
+    }
+
+    private function searchAttachments(string $searchPhrase): JsonResponse
+    {
         try {
             /** @var AttachmentInformation[] $attachments */
             $attachments = $this->dispatchQuery(new SearchAttachment($searchPhrase));
