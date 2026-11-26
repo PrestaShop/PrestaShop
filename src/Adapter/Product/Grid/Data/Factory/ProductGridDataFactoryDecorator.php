@@ -120,7 +120,7 @@ class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
         ShopRepository $shopRepository,
         ProductRepository $productRepository,
         private ProductPackRepository $productPackRepository,
-        private Configuration $configuration,
+        private ?Configuration $configuration = null,
     ) {
         $this->productGridDataFactory = $productGridDataFactory;
 
@@ -192,7 +192,7 @@ class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
             return $products;
         }
 
-        $defaultLanguageId = $this->configuration->getInt('PS_LANG_DEFAULT');
+        $defaultLanguageId = ($this->configuration ?? new Configuration())->getInt('PS_LANG_DEFAULT');
         $shopConstraint = $searchCriteria->getShopConstraint();
         $shopId = null !== $shopConstraint->getShopId() ? $shopConstraint->getShopId()->getValue() : null;
 
