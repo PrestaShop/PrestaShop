@@ -27,16 +27,16 @@ final class CarrierByReferenceChoiceProvider implements FormChoiceProviderInterf
     private $langId;
 
     /**
-     * @var TranslatorInterface
+     * @var TranslatorInterface|null
      */
     private $translator;
 
     /**
      * @param CarrierDataProvider $carrierDataProvider
      * @param int $langId
-     * @param TranslatorInterface $translator
+     * @param TranslatorInterface|null $translator
      */
-    public function __construct(CarrierDataProvider $carrierDataProvider, $langId, TranslatorInterface $translator)
+    public function __construct(CarrierDataProvider $carrierDataProvider, $langId, ?TranslatorInterface $translator = null)
     {
         $this->carrierDataProvider = $carrierDataProvider;
         $this->langId = $langId;
@@ -68,7 +68,7 @@ final class CarrierByReferenceChoiceProvider implements FormChoiceProviderInterf
             // before it is turned on, and disabling one temporarily must not silently detach it from
             // every product. They are labelled instead of hidden so the merchant can tell them apart.
             if (!$carrier['active']) {
-                $choiceId .= ' - ' . $this->translator->trans('Disabled', [], 'Admin.Global');
+                $choiceId .= ' - ' . ($this->translator?->trans('Disabled', [], 'Admin.Global') ?? 'Disabled');
             }
 
             $choices[$choiceId] = $carrier['id_reference'];
