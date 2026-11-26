@@ -28,7 +28,7 @@ jobs:
 
       - name: Check the rules generated in .claude/rules/
         run: |
-          php .ai/bin/generate-context-rules.php --check || {
+          php .ai/bin/generate-context-rules.php --dry-run || {
             echo "::error::The rules of .claude/rules/domain/ and .claude/rules/component/ do not match the .ai/ contexts. Run 'bash .ai/bin/generate-ai-index.sh' and commit the result.";
             exit 1;
           }

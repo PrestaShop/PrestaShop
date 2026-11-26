@@ -16,9 +16,9 @@ declare(strict_types=1);
  * when the files the context covers change.
  *
  * Usage (run by generate-ai-index.sh):
- *   php .ai/bin/generate-context-rules.php [--check]
+ *   php .ai/bin/generate-context-rules.php [--dry-run]
  *
- *   --check  write nothing; exit 1 when a rule is missing, stale or left over (CI).
+ *   --dry-run  write nothing; exit 1 when a rule is missing, stale or left over (CI).
  *
  * Needs PHP 8.1+ only.
  */
@@ -71,7 +71,7 @@ function listFiles(array $folders): array
  */
 function main(array $argv): int
 {
-    $check = in_array('--check', $argv, true);
+    $dryRun = in_array('--dry-run', $argv, true);
     [$rules, $warnings] = contextRules(readAiDocs());
     foreach ($warnings as $warning) {
         fwrite(STDERR, '  ⚠ ' . $warning . "\n");
@@ -81,7 +81,7 @@ function main(array $argv): int
         || file_get_contents(REPO_ROOT . '/' . $path) !== $content, ARRAY_FILTER_USE_BOTH));
     $leftOver = array_values(array_diff(listFiles(RULE_FOLDERS), array_keys($rules)));
 
-    if ($check) {
+    if ($dryRun) {
         if (!$changed && !$leftOver) {
             printf("The %d context rules are up to date.\n", count($rules));
 

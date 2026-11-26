@@ -1,5 +1,6 @@
 ---
 paths:
+  - "classes/module/*.php"
   - "src/Adapter/Module/**"
   - "src/Core/Domain/Module/**"
   - "src/PrestaShopBundle/Controller/Admin/Improve/ModuleController.php"
