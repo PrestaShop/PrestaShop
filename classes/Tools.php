@@ -3033,13 +3033,34 @@ FileETag none
         }
 
         if (isset($robots_content['FilesByShop'])) {
+            $allowedFiles = [];
             foreach ($robots_content['Files'] as $iso_code => $files) {
-                foreach ($files as $file) {
-                    if (in_array($file, $filesBaseline[$iso_code] ?? [], true)) {
-                        continue;
+                $allowedFiles[$iso_code] = array_fill_keys($files, true);
+            }
+
+            foreach ($robots_content['FilesByShop'] as $idShopKey => $shopFiles) {
+                // Removals: drop anything the module removed from Files.
+                foreach ($shopFiles as $iso_code => $files) {
+                    $kept = [];
+                    foreach ($files as $file) {
+                        if (isset($allowedFiles[$iso_code][$file])) {
+                            $kept[] = $file;
+                        }
                     }
-                    foreach ($robots_content['FilesByShop'] as $idShopKey => $shopFiles) {
-                        if (!in_array($file, $shopFiles[$iso_code] ?? [], true)) {
+                    if ($kept) {
+                        $robots_content['FilesByShop'][$idShopKey][$iso_code] = $kept;
+                    } else {
+                        unset($robots_content['FilesByShop'][$idShopKey][$iso_code]);
+                    }
+                }
+
+                // Additions: propagate new Files entries to every shop section.
+                foreach ($robots_content['Files'] as $iso_code => $files) {
+                    foreach ($files as $file) {
+                        if (in_array($file, $filesBaseline[$iso_code] ?? [], true)) {
+                            continue;
+                        }
+                        if (!in_array($file, $robots_content['FilesByShop'][$idShopKey][$iso_code] ?? [], true)) {
                             $robots_content['FilesByShop'][$idShopKey][$iso_code][] = $file;
                         }
                     }
@@ -3288,7 +3309,13 @@ FileETag none
         }
         if (null === $idShops ? Configuration::get('PS_REWRITING_SETTINGS') : count($idShops)) {
             $query = new DbQuery();
-            $query->select('DISTINCT ml.url_rewrite, l.iso_code, ml.id_shop');
+            // id_shop only when building FilesByShop: otherwise DISTINCT keeps one row per
+            // (url_rewrite, iso) so public getRobotsContent() stays deduplicated.
+            if (null !== $idShops) {
+                $query->select('DISTINCT ml.url_rewrite, l.iso_code, ml.id_shop');
+            } else {
+                $query->select('DISTINCT ml.url_rewrite, l.iso_code');
+            }
             $query->from('meta', 'm');
             $query->innerJoin('meta_lang', 'ml', 'ml.id_meta = m.id_meta');
             $query->innerJoin('lang', 'l', 'l.id_lang = ml.id_lang');
@@ -3304,6 +3331,12 @@ FileETag none
                     if (null !== $idShops) {
                         $tab['FilesByShop'][(int) $row['id_shop']][$row['iso_code']][] = $row['url_rewrite'];
                     }
+                }
+            }
+            // Domain files union Files across shops; keep hook-facing lists unique.
+            if (null !== $idShops) {
+                foreach ($tab['Files'] as $iso_code => $files) {
+                    $tab['Files'][$iso_code] = array_values(array_unique($files));
                 }
             }
         }
