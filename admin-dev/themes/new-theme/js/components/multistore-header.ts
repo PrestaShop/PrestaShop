@@ -21,7 +21,7 @@ const initMultistoreHeader = () => {
   const modalMultishopDialog = document.querySelector(MultistoreHeaderMap.modalDialog);
   const $searchInput = $(MultistoreHeaderMap.searchInput);
   const router = new Router();
-  const route = router.generate('admin_shops_search', {
+  const route = router.generate('admin_shops_search_by_query', {
     query: '__QUERY__',
   });
 

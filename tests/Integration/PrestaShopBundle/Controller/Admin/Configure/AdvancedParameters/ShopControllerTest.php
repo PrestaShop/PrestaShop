@@ -48,12 +48,12 @@ final class ShopControllerTest extends SymfonyIntegrationTestCase
     {
         $this->assertSame(
             [self::SHOP_NAME],
-            $this->search($this->router->generate('admin_shops_search', ['query' => 'FR/BE_43635']))
+            $this->search($this->router->generate('admin_shops_search_by_query', ['query' => 'FR/BE_43635']))
         );
         // "_" is searched as typed, whatever the NO_BACKSLASH_ESCAPES SQL mode of the server
         $this->assertSame(
             [self::SHOP_NAME],
-            $this->search($this->router->generate('admin_shops_search', ['query' => 'BE_43635']))
+            $this->search($this->router->generate('admin_shops_search_by_query', ['query' => 'BE_43635']))
         );
     }
 
@@ -63,11 +63,6 @@ final class ShopControllerTest extends SymfonyIntegrationTestCase
             [self::SHOP_NAME],
             $this->search($this->router->generate('admin_shops_search', ['searchTerm' => 'Shop FR']))
         );
-        // An empty query parameter falls back to the path
-        $this->assertSame(
-            [self::SHOP_NAME],
-            $this->search($this->router->generate('admin_shops_search', ['searchTerm' => 'Shop FR', 'query' => '']))
-        );
     }
 
     /**
@@ -75,7 +70,7 @@ final class ShopControllerTest extends SymfonyIntegrationTestCase
      */
     public function testSearchMatchesWildcardCharactersAsTyped(string $term): void
     {
-        $this->client->request('GET', $this->router->generate('admin_shops_search', ['query' => $term]));
+        $this->client->request('GET', $this->router->generate('admin_shops_search_by_query', ['query' => $term]));
 
         $this->assertSame(Response::HTTP_NOT_FOUND, $this->client->getResponse()->getStatusCode());
     }
@@ -89,7 +84,7 @@ final class ShopControllerTest extends SymfonyIntegrationTestCase
 
     public function testSearchWithoutTermFindsNothing(): void
     {
-        $this->client->request('GET', $this->router->generate('admin_shops_search'));
+        $this->client->request('GET', $this->router->generate('admin_shops_search_by_query'));
 
         $this->assertSame(Response::HTTP_NOT_FOUND, $this->client->getResponse()->getStatusCode());
     }

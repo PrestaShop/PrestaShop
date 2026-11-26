@@ -3,6 +3,13 @@ admin_shops_search:
   methods: [ GET ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ShopController::searchAction'
-    searchTerm: ''
+  options:
+    expose: true
+
+admin_shops_search_by_query:
+  path: /search
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ShopController::searchByQueryAction'
   options:
     expose: true

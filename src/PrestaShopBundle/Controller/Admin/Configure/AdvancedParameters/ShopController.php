@@ -13,7 +13,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\SearchShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -21,20 +21,29 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ShopController extends PrestaShopAdminController
 {
-    public function __construct(
-        private readonly RequestStack $requestStack,
-    ) {
-    }
-
     /**
-     * The term comes from the query parameter: in the path, a "/" splits the route and the web server refuses its
-     * encoded form. The path parameter is kept for the callers that still use it, and so is the signature, which a
-     * module controller extending this one may override.
+     * Search for shops by query.
+     *
+     * @param string $searchTerm
+     *
+     * @return JsonResponse
      */
     public function searchAction(string $searchTerm): JsonResponse
     {
-        $searchTerm = $this->requestStack->getCurrentRequest()?->query->getString('query') ?: $searchTerm;
+        return $this->searchShops($searchTerm);
+    }
 
+    /**
+     * Same search with the term in the query string: in the path, a "/" splits the route and the web server refuses
+     * its encoded form.
+     */
+    public function searchByQueryAction(Request $request): JsonResponse
+    {
+        return $this->searchShops($request->query->getString('query'));
+    }
+
+    private function searchShops(string $searchTerm): JsonResponse
+    {
         try {
             $result = [];
             $result['shops'] = $this->dispatchQuery(new SearchShops($searchTerm));
