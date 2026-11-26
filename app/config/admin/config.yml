@@ -3,6 +3,7 @@
 imports:
   - { resource: security.yml }
   - { resource: services.yml }
+  - { resource: ../scheb_two_factor.yml }
 
 framework:
   router:

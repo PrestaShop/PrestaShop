@@ -21,9 +21,6 @@ scheb_two_factor:
     cookie_name: trusted_device
 
 services:
-  PrestaShop\PrestaShop\Adapter\TotMailer\TwoFactorAuthCodePrestashopMailer:
-    autowire: true
-
   PrestaShopBundle\SchebTwoFactor\DynamicIssuerTotpAuthenticator:
     decorates: 'scheb_two_factor.security.totp_authenticator'
     decoration_on_invalid: ignore
