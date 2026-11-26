@@ -31,14 +31,21 @@ final class AverageCustomerAgeKpi implements KpiInterface
      */
     private $sourceUrl;
 
+    /**
+     * @var int
+     */
+    private $employeeIdLang;
+
     public function __construct(
         TranslatorInterface $translator,
         ConfigurationInterface $kpiConfiguration,
-        $sourceUrl
+        $sourceUrl,
+        int $employeeIdLang
     ) {
         $this->translator = $translator;
         $this->kpiConfiguration = $kpiConfiguration;
         $this->sourceUrl = $sourceUrl;
+        $this->employeeIdLang = $employeeIdLang;
     }
 
     /**
@@ -54,12 +61,14 @@ final class AverageCustomerAgeKpi implements KpiInterface
         $helper->title = $this->translator->trans('Average Age', [], 'Admin.Orderscustomers.Feature');
         $helper->subtitle = $this->translator->trans('All time', [], 'Admin.Global');
 
-        if (false !== $this->kpiConfiguration->get('AVG_CUSTOMER_AGE')) {
-            $helper->value = $this->kpiConfiguration->get('AVG_CUSTOMER_AGE');
+        $averageCustomerAge = $this->kpiConfiguration->get('AVG_CUSTOMER_AGE');
+        if (isset($averageCustomerAge[$this->employeeIdLang])) {
+            $helper->value = $averageCustomerAge[$this->employeeIdLang];
         }
 
         $helper->source = $this->sourceUrl;
-        $helper->refresh = $this->kpiConfiguration->get('AVG_CUSTOMER_AGE_EXPIRE') < time();
+        $averageCustomerAgeExpire = $this->kpiConfiguration->get('AVG_CUSTOMER_AGE_EXPIRE');
+        $helper->refresh = ($averageCustomerAgeExpire[$this->employeeIdLang] ?? false) < time();
 
         return $helper->generate();
     }
