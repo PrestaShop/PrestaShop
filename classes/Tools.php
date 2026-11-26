@@ -3012,6 +3012,9 @@ FileETag none
         }
 
         $robots_content = static::getRobotsContentByShops($shopIds);
+        // Snapshot Files before hooks so module additions (original [iso => [...]] shape) can be
+        // merged into FilesByShop without re-applying the whole multi-shop union.
+        $filesBaseline = $robots_content['Files'];
 
         $hookParams = [
             'robots_file' => $robotsFile,
@@ -3022,10 +3025,26 @@ FileETag none
         // Allow modules to modify the contents of the file
         // Hooks run once per generated file (and also when a shop URL is saved/deleted).
         // Prefer $hookParams['domain'] over $_SERVER['SERVER_NAME'] when appending Sitemap lines.
+        // rb_data['Files'] keeps the historical [iso => [...]] shape for BC; per-shop data is in FilesByShop.
         if (true === $executeHook) {
             Hook::exec('actionAdminMetaBeforeWriteRobotsFile', [
                 'rb_data' => &$robots_content,
             ] + $hookParams);
+        }
+
+        if (isset($robots_content['FilesByShop'])) {
+            foreach ($robots_content['Files'] as $iso_code => $files) {
+                foreach ($files as $file) {
+                    if (in_array($file, $filesBaseline[$iso_code] ?? [], true)) {
+                        continue;
+                    }
+                    foreach ($robots_content['FilesByShop'] as $idShopKey => $shopFiles) {
+                        if (!in_array($file, $shopFiles[$iso_code] ?? [], true)) {
+                            $robots_content['FilesByShop'][$idShopKey][$iso_code][] = $file;
+                        }
+                    }
+                }
+            }
         }
 
         // File header
@@ -3102,9 +3121,10 @@ FileETag none
                 }
 
                 // Friendly URLs blocked from crawling
+                // Files stays [iso => [...]] for hook BC; FilesByShop is used for precise per-shop output.
                 $filesByIso = $robots_content['Files'];
-                if (null !== $idShop) {
-                    $filesByIso = $robots_content['Files'][$idShop] ?? [];
+                if (null !== $idShop && isset($robots_content['FilesByShop'])) {
+                    $filesByIso = $robots_content['FilesByShop'][$idShop] ?? [];
                 }
                 if (count($filesByIso)) {
                     fwrite($write_fd, "# Friendly URLs blocked from crawling\n");
@@ -3223,7 +3243,8 @@ FileETag none
 
     /**
      * @param int[]|null $idShops Shops whose friendly URLs are blocked, null for the current context.
-     *                            When set, Files are keyed by id_shop then iso_code.
+     *                            When set, Files stays [iso => [...]] for hook BC and FilesByShop
+     *                            holds the per-shop structure used when writing Disallow lines.
      *
      * @return array
      */
@@ -3260,6 +3281,7 @@ FileETag none
         ];
         $tab['Files'] = [];
         if (null !== $idShops) {
+            $tab['FilesByShop'] = [];
             $idShops = array_values(array_filter(array_map('intval', (array) $idShops), function (int $idShop) {
                 return (bool) static::getRobotsShopConfiguration('PS_REWRITING_SETTINGS', $idShop);
             }));
@@ -3278,10 +3300,9 @@ FileETag none
             }
             if ($results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query)) {
                 foreach ($results as $row) {
+                    $tab['Files'][$row['iso_code']][] = $row['url_rewrite'];
                     if (null !== $idShops) {
-                        $tab['Files'][(int) $row['id_shop']][$row['iso_code']][] = $row['url_rewrite'];
-                    } else {
-                        $tab['Files'][$row['iso_code']][] = $row['url_rewrite'];
+                        $tab['FilesByShop'][(int) $row['id_shop']][$row['iso_code']][] = $row['url_rewrite'];
                     }
                 }
             }
@@ -3361,12 +3382,14 @@ FileETag none
             return Configuration::get($key);
         }
 
-        $idShopGroup = Shop::getGroupFromShop((int) $idShop, true);
+        // getGroupFromShop() uses cacheShops() which depends on Context->employee and can
+        // return false for shops the employee cannot access. Read id_shop_group from DB instead.
+        $idShopGroup = Shop::getGroupIdFromShopId((int) $idShop);
 
         return Configuration::get(
             $key,
             null,
-            $idShopGroup !== false ? (int) $idShopGroup : null,
+            null !== $idShopGroup ? (int) $idShopGroup : null,
             (int) $idShop
         );
     }

@@ -30,6 +30,10 @@ class RobotsFileMultistoreTest extends KernelTestCase
     /** @var list<string> */
     private static array $createdFiles = [];
 
+    private static ?string $robotsTxtBackup = null;
+
+    private static bool $robotsTxtExisted = false;
+
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
@@ -37,6 +41,11 @@ class RobotsFileMultistoreTest extends KernelTestCase
         LegacyConfiguration::resetStaticCache();
         LegacyShop::resetStaticCache();
         ShopUrl::resetMainDomainCache();
+
+        $robotsTxt = _PS_ROOT_DIR_ . '/robots.txt';
+        self::$robotsTxtExisted = is_file($robotsTxt);
+        self::$robotsTxtBackup = self::$robotsTxtExisted ? (string) file_get_contents($robotsTxt) : null;
+
         self::bootKernel();
 
         $container = self::$kernel->getContainer();
@@ -88,6 +97,14 @@ class RobotsFileMultistoreTest extends KernelTestCase
                 @unlink($file);
             }
         }
+
+        $robotsTxt = _PS_ROOT_DIR_ . '/robots.txt';
+        if (self::$robotsTxtExisted) {
+            file_put_contents($robotsTxt, (string) self::$robotsTxtBackup);
+        } elseif (is_file($robotsTxt)) {
+            @unlink($robotsTxt);
+        }
+
         DatabaseDump::restoreTables(self::TABLES_TO_RESTORE);
         LegacyShop::resetStaticCache();
         LegacyConfiguration::resetStaticCache();
@@ -122,15 +139,17 @@ class RobotsFileMultistoreTest extends KernelTestCase
         $content1 = (string) file_get_contents($file1);
         $content2 = (string) file_get_contents($file2);
 
-        $this->assertStringContainsString('Sitemap: ', $content1);
-        $this->assertStringContainsString($idShop1 . '_index_sitemap.xml', $content1);
-        $this->assertStringNotContainsString(self::SHOP2_DOMAIN, $content1);
-        $this->assertStringNotContainsString(self::$secondShopId . '_index_sitemap.xml', $content1);
+        $sitemapLine1 = 'Sitemap: ' . Tools::getProtocol((bool) LegacyConfiguration::get('PS_SSL_ENABLED', null, null, $idShop1))
+            . $domain1 . '/' . $idShop1 . '_index_sitemap.xml';
+        $sitemapLine2 = 'Sitemap: ' . Tools::getProtocol((bool) LegacyConfiguration::get('PS_SSL_ENABLED', null, null, self::$secondShopId))
+            . self::SHOP2_DOMAIN . '/' . self::$secondShopId . '_index_sitemap.xml';
 
-        $this->assertStringContainsString('Sitemap: ', $content2);
-        $this->assertStringContainsString(self::SHOP2_DOMAIN, $content2);
-        $this->assertStringContainsString(self::$secondShopId . '_index_sitemap.xml', $content2);
-        $this->assertStringNotContainsString($idShop1 . '_index_sitemap.xml', $content2);
+        $this->assertStringContainsString($sitemapLine1, $content1);
+        $this->assertStringNotContainsString(self::SHOP2_DOMAIN, $content1);
+        $this->assertStringNotContainsString($sitemapLine2, $content1);
+
+        $this->assertStringContainsString($sitemapLine2, $content2);
+        $this->assertStringNotContainsString($sitemapLine1, $content2);
 
         $this->assertStringContainsString('Disallow: ', $content1);
         $this->assertStringContainsString('Disallow: ', $content2);
