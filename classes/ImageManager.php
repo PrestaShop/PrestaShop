@@ -195,7 +195,7 @@ class ImageManagerCore
      *
      * @return int one of 0, 90, -90 or 180
      */
-    public static function getRotationForExifOrientation(int $orientation): int
+    private static function getRotationForExifOrientation(int $orientation): int
     {
         switch ($orientation) {
             case 3:

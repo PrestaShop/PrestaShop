@@ -10,6 +10,7 @@ namespace Tests\Unit\Classes;
 
 use ImageManager;
 use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
 
 /**
  * The rotation an EXIF orientation asks for, extracted so that the webservice image writer can apply
@@ -38,7 +39,7 @@ class ImageManagerExifRotationTest extends TestCase
      */
     public function testTheRotationMatchesTheOrientation(int $orientation, int $expected): void
     {
-        $this->assertSame($expected, ImageManager::getRotationForExifOrientation($orientation));
+        $this->assertSame($expected, (new ReflectionMethod(ImageManager::class, 'getRotationForExifOrientation'))->invoke(null, $orientation));
     }
 
     /**
