@@ -34,10 +34,26 @@ class ProductStockLocationTest extends KernelTestCase
     /** @var array<int, string> */
     private array $previousLocations = [];
 
+    /** @var array<string, mixed> */
+    private array $previousContext = [];
+
+    /** @var array<string, mixed> */
+    private array $previousGet = [];
+
+    /** @var array<string, mixed> */
+    private array $previousPost = [];
+
     protected function setUp(): void
     {
         parent::setUp();
         self::bootKernel();
+
+        $context = Context::getContext();
+        foreach (['controller', 'customer', 'currency', 'language', 'cart', 'container', 'currentLocale'] as $property) {
+            $this->previousContext[$property] = $context->{$property} ?? null;
+        }
+        $this->previousGet = $_GET;
+        $this->previousPost = $_POST;
 
         foreach ($this->stockRows() as $row) {
             $this->previousLocations[(int) $row['id_product_attribute']] = (string) $row['location'];
@@ -50,6 +66,14 @@ class ProductStockLocationTest extends KernelTestCase
             $this->setLocation($idProductAttribute, $location);
         }
         $this->previousLocations = [];
+
+        $context = Context::getContext();
+        foreach ($this->previousContext as $property => $value) {
+            $context->{$property} = $value;
+        }
+        $this->previousContext = [];
+        $_GET = $this->previousGet;
+        $_POST = $this->previousPost;
 
         parent::tearDown();
     }
@@ -109,13 +133,6 @@ class ProductStockLocationTest extends KernelTestCase
             }
         };
         $controller->loadProduct(self::PRODUCT_ID);
-
-        fwrite(STDERR, sprintf(
-            "\n  DEBUG pa=%d getLocation(direct)=%s db=%s\n",
-            $idProductAttribute,
-            var_export(StockAvailable::getLocation(self::PRODUCT_ID, $idProductAttribute), true),
-            var_export(Db::getInstance()->getValue('SELECT location FROM ' . _DB_PREFIX_ . 'stock_available WHERE id_product=' . self::PRODUCT_ID . ' AND id_product_attribute=' . $idProductAttribute, false), true)
-        ));
 
         return (string) $controller->getTemplateVarProduct()['location'];
     }
