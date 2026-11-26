@@ -73,9 +73,9 @@ class EditEmployeeCommand
     private $hasEnabledGravatar;
 
     /**
-     * @var bool
+     * @var bool|null
      */
-    private $twoFactorEnabled = false;
+    private $twoFactorEnabled;
 
     /**
      * @var bool|null
@@ -83,14 +83,14 @@ class EditEmployeeCommand
     private $twoFactorRequired;
 
     /**
-     * @var bool
+     * @var bool|null
      */
-    private $twoFactorTotEnabled = false;
+    private $twoFactorTotpEnabled;
 
     /**
-     * @var bool
+     * @var bool|null
      */
-    private $twoFactorEmailEnabled = false;
+    private $twoFactorEmailEnabled;
 
     /**
      * @param int $employeeId
@@ -324,14 +324,14 @@ class EditEmployeeCommand
     }
 
     /**
-     * @return bool
+     * @return bool|null Null when the setting is not changed
      */
-    public function getTwoFactorEnabled()
+    public function getTwoFactorEnabled(): ?bool
     {
         return $this->twoFactorEnabled;
     }
 
-    public function setTwoFactorEnabled($twoFactorEnabled): self
+    public function setTwoFactorEnabled(bool $twoFactorEnabled): self
     {
         $this->twoFactorEnabled = $twoFactorEnabled;
 
@@ -351,29 +351,29 @@ class EditEmployeeCommand
     }
 
     /**
-     * @return bool
+     * @return bool|null Null when the setting is not changed
      */
-    public function getTwoFactorTotEnabled()
+    public function getTwoFactorTotpEnabled(): ?bool
     {
-        return $this->twoFactorTotEnabled;
+        return $this->twoFactorTotpEnabled;
     }
 
-    public function setTwoFactorTotEnabled($twoFactorTotEnabled): self
+    public function setTwoFactorTotpEnabled(bool $twoFactorTotpEnabled): self
     {
-        $this->twoFactorTotEnabled = $twoFactorTotEnabled;
+        $this->twoFactorTotpEnabled = $twoFactorTotpEnabled;
 
         return $this;
     }
 
     /**
-     * @return bool
+     * @return bool|null Null when the setting is not changed
      */
-    public function getTwoFactorEmailEnabled()
+    public function getTwoFactorEmailEnabled(): ?bool
     {
         return $this->twoFactorEmailEnabled;
     }
 
-    public function setTwoFactorEmailEnabled($twoFactorEmailEnabled): self
+    public function setTwoFactorEmailEnabled(bool $twoFactorEmailEnabled): self
     {
         $this->twoFactorEmailEnabled = $twoFactorEmailEnabled;
 

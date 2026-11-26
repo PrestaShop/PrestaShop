@@ -130,15 +130,21 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
             $employee->has_enabled_gravatar = $command->hasEnabledGravatar();
         }
 
-        $employee->two_factor_enabled = $command->getTwoFactorEnabled();
-        $employee->two_factor_totp_enabled = $command->getTwoFactorTotEnabled();
-        $employee->two_factor_email_enabled = $command->getTwoFactorEmailEnabled();
+        if (null !== $command->getTwoFactorEnabled()) {
+            $employee->two_factor_enabled = $command->getTwoFactorEnabled();
+        }
+        if (null !== $command->getTwoFactorTotpEnabled()) {
+            $employee->two_factor_totp_enabled = $command->getTwoFactorTotpEnabled();
+        }
+        if (null !== $command->getTwoFactorEmailEnabled()) {
+            $employee->two_factor_email_enabled = $command->getTwoFactorEmailEnabled();
+        }
 
         if (null !== $command->getTwoFactorRequired()) {
             $employee->two_factor_required = $command->getTwoFactorRequired();
         }
 
-        if (!$command->getTwoFactorTotEnabled()) {
+        if (false === $command->getTwoFactorTotpEnabled()) {
             $employee->two_factor_totp_secret = null;
         }
 

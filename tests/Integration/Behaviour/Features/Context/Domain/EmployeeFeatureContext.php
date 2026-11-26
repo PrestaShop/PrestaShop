@@ -8,6 +8,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use Context;
+use Doctrine\DBAL\Connection;
 use Employee;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\AddEmployeeCommand;
@@ -28,6 +29,7 @@ use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProfileChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TabChoiceProvider;
 use PrestaShopBundle\Entity\Repository\EmployeeRepository;
+use PrestaShopBundle\SchebTwoFactor\TotpSecretEncryptor;
 use RuntimeException;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
@@ -124,6 +126,21 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['active'])) {
             $command->setActive($data['active']);
         }
+        if (isset($data['hasEnabledGravatar'])) {
+            $command->setHasEnabledGravatar($data['hasEnabledGravatar']);
+        }
+        if (isset($data['twoFactorEnabled'])) {
+            $command->setTwoFactorEnabled($data['twoFactorEnabled']);
+        }
+        if (isset($data['twoFactorRequired'])) {
+            $command->setTwoFactorRequired($data['twoFactorRequired']);
+        }
+        if (isset($data['twoFactorTotpEnabled'])) {
+            $command->setTwoFactorTotpEnabled($data['twoFactorTotpEnabled']);
+        }
+        if (isset($data['twoFactorEmailEnabled'])) {
+            $command->setTwoFactorEmailEnabled($data['twoFactorEmailEnabled']);
+        }
 
         try {
             $this->getCommandBus()->handle($command);
@@ -202,6 +219,21 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['active'])) {
             Assert::assertEquals($data['active'], $employeeDetails->isActive());
         }
+        if (isset($data['hasEnabledGravatar'])) {
+            Assert::assertSame($data['hasEnabledGravatar'], $employeeDetails->hasEnabledGravatar());
+        }
+        if (isset($data['twoFactorEnabled'])) {
+            Assert::assertSame($data['twoFactorEnabled'], $employeeDetails->getTwoFactorEnabled());
+        }
+        if (isset($data['twoFactorRequired'])) {
+            Assert::assertSame($data['twoFactorRequired'], $employeeDetails->isTwoFactorRequired());
+        }
+        if (isset($data['twoFactorTotpEnabled'])) {
+            Assert::assertSame($data['twoFactorTotpEnabled'], $employeeDetails->getTwoFactorTotpEnabled());
+        }
+        if (isset($data['twoFactorEmailEnabled'])) {
+            Assert::assertSame($data['twoFactorEmailEnabled'], $employeeDetails->getTwoFactorEmailEnabled());
+        }
         if (isset($data['languageId'])) {
             Assert::assertEquals($data['languageId'], $employeeDetails->getLanguageId());
         }
@@ -210,6 +242,52 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
         }
         if (isset($data['password'])) {
             $this->checkPassword($data['password'], $employeeReference);
+        }
+    }
+
+    /**
+     * @Given employee :employeeReference has a TOTP secret
+     */
+    public function setEmployeeTotpSecret(string $employeeReference): void
+    {
+        $encryptor = new TotpSecretEncryptor($this->getContainer()->getParameter('new_cookie_key'));
+        $secret = $encryptor->encrypt('JBSWY3DPEHPK3PXP');
+        /** @var Connection $connection */
+        $connection = $this->getContainer()->get('doctrine.dbal.default_connection');
+        $connection->createQueryBuilder()
+            ->update(_DB_PREFIX_ . 'employee')
+            ->set('two_factor_totp_secret', ':secret')
+            ->where('id_employee = :employeeId')
+            ->setParameter('secret', $secret)
+            ->setParameter('employeeId', $this->referenceToId($employeeReference))
+            ->executeStatement();
+
+        $this->getSharedStorage()->set('employee_totp_secret_' . $employeeReference, $secret);
+    }
+
+    /**
+     * @Then employee :employeeReference should have a :state TOTP secret
+     */
+    public function assertEmployeeTotpSecret(string $employeeReference, string $state): void
+    {
+        /** @var Connection $connection */
+        $connection = $this->getContainer()->get('doctrine.dbal.default_connection');
+        $secret = $connection->createQueryBuilder()
+            ->select('two_factor_totp_secret')
+            ->from(_DB_PREFIX_ . 'employee')
+            ->where('id_employee = :employeeId')
+            ->setParameter('employeeId', $this->referenceToId($employeeReference))
+            ->setMaxResults(1)
+            ->executeQuery()
+            ->fetchOne();
+        Assert::assertNotFalse($secret, 'Employee must exist when checking the stored TOTP secret.');
+
+        if ('preserved' === $state) {
+            Assert::assertSame($this->getSharedStorage()->get('employee_totp_secret_' . $employeeReference), $secret);
+        } elseif ('cleared' === $state) {
+            Assert::assertEmpty($secret);
+        } else {
+            throw new RuntimeException('Unsupported TOTP secret state: ' . $state);
         }
     }
 
@@ -371,6 +449,22 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
 
         if (isset($testCaseData['Active'])) {
             $data['active'] = PrimitiveUtils::castStringBooleanIntoBoolean($testCaseData['Active']);
+        }
+
+        if (isset($testCaseData['Gravatar enabled'])) {
+            $data['hasEnabledGravatar'] = PrimitiveUtils::castStringBooleanIntoBoolean($testCaseData['Gravatar enabled']);
+        }
+        if (isset($testCaseData['2FA enabled'])) {
+            $data['twoFactorEnabled'] = PrimitiveUtils::castStringBooleanIntoBoolean($testCaseData['2FA enabled']);
+        }
+        if (isset($testCaseData['2FA required'])) {
+            $data['twoFactorRequired'] = PrimitiveUtils::castStringBooleanIntoBoolean($testCaseData['2FA required']);
+        }
+        if (isset($testCaseData['TOTP enabled'])) {
+            $data['twoFactorTotpEnabled'] = PrimitiveUtils::castStringBooleanIntoBoolean($testCaseData['TOTP enabled']);
+        }
+        if (isset($testCaseData['Email 2FA enabled'])) {
+            $data['twoFactorEmailEnabled'] = PrimitiveUtils::castStringBooleanIntoBoolean($testCaseData['Email 2FA enabled']);
         }
 
         return $data;

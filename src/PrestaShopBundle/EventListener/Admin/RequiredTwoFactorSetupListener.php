@@ -10,6 +10,7 @@ namespace PrestaShopBundle\EventListener\Admin;
 
 use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Entity\Repository\EmployeeRepository;
+use PrestaShopBundle\Security\Admin\TwoFactorSetupRequirementChecker;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -32,6 +33,7 @@ final class RequiredTwoFactorSetupListener
         private readonly Security $security,
         private readonly EmployeeRepository $employeeRepository,
         private readonly RouterInterface $router,
+        private readonly TwoFactorSetupRequirementChecker $twoFactorSetupRequirementChecker,
     ) {
     }
 
@@ -52,7 +54,7 @@ final class RequiredTwoFactorSetupListener
         }
 
         $employee = $this->employeeRepository->loadEmployeeByIdentifier($user->getUserIdentifier(), true);
-        if (!$employee instanceof Employee || !$this->requiresTwoFactorSetup($employee)) {
+        if (!$employee instanceof Employee || !$this->twoFactorSetupRequirementChecker->isRequired($employee)) {
             return;
         }
 
@@ -70,19 +72,6 @@ final class RequiredTwoFactorSetupListener
             'employeeId' => $employee->getId(),
         ])));
         $event->stopPropagation();
-    }
-
-    private function requiresTwoFactorSetup(Employee $employee): bool
-    {
-        if (!$employee->isTwoFactorRequired()) {
-            return false;
-        }
-
-        if (!$employee->getTwoFactorEnabled()) {
-            return true;
-        }
-
-        return !$employee->isEmailAuthEnabled() && !$employee->isTotpAuthenticationEnabled();
     }
 
     private function isAllowedRoute(string $route, Employee $employee, \Symfony\Component\HttpFoundation\Request $request): bool

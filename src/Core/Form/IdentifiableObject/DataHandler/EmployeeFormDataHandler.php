@@ -166,11 +166,17 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
             ->setActive((bool) $data['active'])
             ->setProfileId((int) $data['profile'])
             ->setHasEnabledGravatar((bool) $data['has_enabled_gravatar'])
-            ->setTwoFactorEnabled((bool) $data['two_factor_enabled'])
-            ->setTwoFactorTotEnabled((bool) $data['two_factor_totp_enabled'])
-            ->setTwoFactorEmailEnabled((bool) $data['two_factor_email_enabled'])
         ;
 
+        if (array_key_exists('two_factor_enabled', $data)) {
+            $command->setTwoFactorEnabled((bool) $data['two_factor_enabled']);
+        }
+        if (array_key_exists('two_factor_totp_enabled', $data)) {
+            $command->setTwoFactorTotpEnabled((bool) $data['two_factor_totp_enabled']);
+        }
+        if (array_key_exists('two_factor_email_enabled', $data)) {
+            $command->setTwoFactorEmailEnabled((bool) $data['two_factor_email_enabled']);
+        }
         if (array_key_exists('two_factor_required', $data)) {
             $command->setTwoFactorRequired((bool) $data['two_factor_required']);
         }

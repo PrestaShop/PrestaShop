@@ -209,6 +209,54 @@ Feature: Employee management
       | Permission profile | Salesman                    |
       | Associated shops   | shop1                       |
 
+  Scenario Outline: Partial employee updates preserve omitted 2FA settings and only clear an explicitly disabled TOTP secret
+    Given I Add new employee "two_factor_employee" to shop "shop1" with the following details:
+      | First name         | Ada                            |
+      | Last name          | Byron                          |
+      | Email address      | ada.twofactor@prestashop.com    |
+      | Password           | secretpassword                 |
+      | Default page       | Products                       |
+      | Language           | English (English)              |
+      | Active             | true                           |
+      | Permission profile | Salesman                       |
+    And I edit employee "two_factor_employee" with the following details:
+      | Gravatar enabled  | true |
+      | 2FA enabled       | true |
+      | 2FA required      | true |
+      | TOTP enabled      | true |
+      | Email 2FA enabled | true |
+    And employee "two_factor_employee" has a TOTP secret
+    When I edit employee "two_factor_employee" with the following details:
+      | Last name | Lovelace |
+    Then employee two_factor_employee should have the following details:
+      | Last name         | Lovelace |
+      | Gravatar enabled  | true     |
+      | 2FA enabled       | true     |
+      | 2FA required      | true     |
+      | TOTP enabled      | true     |
+      | Email 2FA enabled | true     |
+    And employee "two_factor_employee" should have a "preserved" TOTP secret
+    When I edit employee "two_factor_employee" with the following details:
+      | <Setting> | <Value> |
+    Then employee two_factor_employee should have the following details:
+      | Last name         | Lovelace |
+      | Gravatar enabled  | true     |
+      | 2FA enabled       | <2FA>    |
+      | 2FA required      | true     |
+      | TOTP enabled      | <TOTP>   |
+      | Email 2FA enabled | <Email>  |
+    And employee "two_factor_employee" should have a "<Secret>" TOTP secret
+    When I delete the employee two_factor_employee
+    Then employee two_factor_employee does not exist
+
+    Examples:
+      | Setting           | Value    | 2FA   | TOTP  | Email | Secret    |
+      | Last name         | Lovelace | true  | true  | true  | preserved |
+      | 2FA enabled       | false    | false | true  | true  | preserved |
+      | TOTP enabled      | false    | true  | false | true  | cleared   |
+      | TOTP enabled      | true     | true  | true  | true  | preserved |
+      | Email 2FA enabled | false    | true  | true  | false | preserved |
+
   Scenario: I cannot edit an employee that does not exist
     Given I delete the employee partial_employee
     When I edit employee "partial_employee" with the following details:

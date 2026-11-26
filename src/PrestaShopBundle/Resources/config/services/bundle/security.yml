@@ -28,6 +28,9 @@ services:
   PrestaShopBundle\Security\Admin\EmployeeHomepageProvider:
     autowire: true
 
+  PrestaShopBundle\Security\Admin\TwoFactorSetupRequirementChecker:
+    autowire: true
+
   PrestaShopBundle\Security\Admin\AdminAuthenticationSuccessHandler:
     autowire: true
 

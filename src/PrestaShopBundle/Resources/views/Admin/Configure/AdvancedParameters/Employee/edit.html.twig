@@ -47,8 +47,9 @@
   {% endif %}
 
   {% if isRestrictedAccess
+    and employeeForm.two_factor_enabled is defined
     and editableEmployee.isTwoFactorRequired
-    and (not editableEmployee.twoFactorEnabled or (not editableEmployee.twoFactorTotEnabled and not editableEmployee.twoFactorEmailEnabled))
+    and (not editableEmployee.twoFactorEnabled or (not editableEmployee.twoFactorTotpEnabled and not editableEmployee.twoFactorEmailEnabled))
   %}
     <div class="alert alert-warning" role="alert">
       <p class="alert-text mb-0">

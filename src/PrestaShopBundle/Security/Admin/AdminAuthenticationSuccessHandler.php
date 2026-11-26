@@ -29,6 +29,7 @@ class AdminAuthenticationSuccessHandler implements AuthenticationSuccessHandlerI
         private readonly EmployeeHomepageProvider $employeeHomepageProvider,
         private readonly EmployeeRepository $employeeRepository,
         private readonly RouterInterface $router,
+        private readonly TwoFactorSetupRequirementChecker $twoFactorSetupRequirementChecker,
     ) {
     }
 
@@ -39,7 +40,7 @@ class AdminAuthenticationSuccessHandler implements AuthenticationSuccessHandlerI
         }
 
         $user = $this->employeeRepository->loadEmployeeByIdentifier($token->getUserIdentifier(), true);
-        if ($user instanceof Employee && $this->requiresTwoFactorSetup($user)) {
+        if ($user instanceof Employee && $this->twoFactorSetupRequirementChecker->isRequired($user)) {
             return new RedirectResponse($this->router->generate('admin_employees_edit', [
                 'employeeId' => $user->getId(),
             ]));
@@ -56,18 +57,5 @@ class AdminAuthenticationSuccessHandler implements AuthenticationSuccessHandlerI
         }
 
         return new RedirectResponse($redirectUrl);
-    }
-
-    private function requiresTwoFactorSetup(Employee $employee): bool
-    {
-        if (!$employee->isTwoFactorRequired()) {
-            return false;
-        }
-
-        if (!$employee->getTwoFactorEnabled()) {
-            return true;
-        }
-
-        return !$employee->isEmailAuthEnabled() && !$employee->isTotpAuthenticationEnabled();
     }
 }

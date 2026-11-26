@@ -74,7 +74,7 @@ final class EmployeeFormDataProvider implements FormDataProviderInterface
             'avatar_url' => $editableEmployee->getAvatarUrl(),
             'two_factor_enabled' => $editableEmployee->getTwoFactorEnabled(),
             'two_factor_required' => $editableEmployee->isTwoFactorRequired(),
-            'two_factor_totp_enabled' => $editableEmployee->getTwoFactorTotEnabled(),
+            'two_factor_totp_enabled' => $editableEmployee->getTwoFactorTotpEnabled(),
             'two_factor_email_enabled' => $editableEmployee->getTwoFactorEmailEnabled(),
         ];
     }

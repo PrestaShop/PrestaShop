@@ -80,7 +80,7 @@ class EmployeeRepository extends EntityRepository
 
         return $qb->update($this->getEntityName(), 'e')
             ->set('e.twoFactorEnabled', ':false')
-            ->set('e.twoFactorTotEnabled', ':false')
+            ->set('e.twoFactorTotpEnabled', ':false')
             ->set('e.twoFactorEmailEnabled', ':false')
             ->set('e.twoFactorTotpSecretEncrypted', ':null')
             ->set('e.twoFactorEmailAuthCode', ':null')

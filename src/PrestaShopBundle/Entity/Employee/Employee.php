@@ -208,7 +208,7 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface, Equ
     /**
      * @ORM\Column(name="two_factor_totp_enabled", type="boolean", options={"default": 0})
      */
-    private bool $twoFactorTotEnabled = false;
+    private bool $twoFactorTotpEnabled = false;
 
     /**
      * @ORM\Column(name="two_factor_email_enabled", type="boolean", options={"default": 0})
@@ -734,7 +734,7 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface, Equ
     public function isTotpAuthenticationEnabled(): bool
     {
         return $this->twoFactorEnabled
-            && $this->twoFactorTotEnabled
+            && $this->twoFactorTotpEnabled
         ;
     }
 

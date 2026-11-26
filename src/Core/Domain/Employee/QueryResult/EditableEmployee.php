@@ -84,7 +84,7 @@ class EditableEmployee
     /**
      * @var bool
      */
-    private $twoFactorTotEnabled = false;
+    private $twoFactorTotpEnabled = false;
 
     /**
      * @var bool
@@ -105,7 +105,7 @@ class EditableEmployee
      * @param bool $hasEnabledGravatar
      * @param bool $twoFactorEnabled
      * @param bool $twoFactorRequired
-     * @param bool $twoFactorTotEnabled
+     * @param bool $twoFactorTotpEnabled
      * @param bool $twoFactorEmailEnabled
      */
     public function __construct(
@@ -122,7 +122,7 @@ class EditableEmployee
         bool $hasEnabledGravatar = false,
         bool $twoFactorEnabled = false,
         bool $twoFactorRequired = false,
-        bool $twoFactorTotEnabled = false,
+        bool $twoFactorTotpEnabled = false,
         bool $twoFactorEmailEnabled = false
     ) {
         $this->employeeId = $employeeId;
@@ -138,7 +138,7 @@ class EditableEmployee
         $this->hasEnabledGravatar = $hasEnabledGravatar;
         $this->twoFactorEnabled = $twoFactorEnabled;
         $this->twoFactorRequired = $twoFactorRequired;
-        $this->twoFactorTotEnabled = $twoFactorTotEnabled;
+        $this->twoFactorTotpEnabled = $twoFactorTotpEnabled;
         $this->twoFactorEmailEnabled = $twoFactorEmailEnabled;
     }
 
@@ -249,9 +249,9 @@ class EditableEmployee
     /**
      * @return bool
      */
-    public function getTwoFactorTotEnabled()
+    public function getTwoFactorTotpEnabled()
     {
-        return $this->twoFactorTotEnabled;
+        return $this->twoFactorTotpEnabled;
     }
 
     /**
