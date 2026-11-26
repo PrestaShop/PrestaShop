@@ -11,7 +11,7 @@
         <h3>{{ 'Two-factor authentication'|trans({}, 'Admin.Advparameters.Notification') }}</h3>
         {% if not twoFactorTotpEnabled %}
             <p>
-                {{ 'Scan this QR code with your authenticator app.'|trans({}, 'Admin.Admin.Global') }}<br/>
+                {{ 'Scan this QR code with your authenticator app.'|trans({}, 'Admin.Global') }}<br/>
             </p>
             <img id="employee_two_factor_tot_qr_code" src="{{ qrCodeSrc }}">
         {% else %}

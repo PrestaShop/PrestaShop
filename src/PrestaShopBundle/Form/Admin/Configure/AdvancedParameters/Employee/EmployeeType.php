@@ -273,7 +273,6 @@ final class EmployeeType extends AbstractType
             ->add('two_factor_totp_enabled', SwitchType::class, [
                 'label' => $this->trans('Use authenticator app (TOTP)', [], 'Admin.Global'),
                 'required' => false,
-                'help' => $this->trans('', [], 'Admin.Global'),
             ])
         ;
 

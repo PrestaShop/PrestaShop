@@ -38,7 +38,7 @@ final class TwoFactorCheckRateLimitListener implements EventSubscriberInterface
 
         throw new CustomUserMessageAuthenticationException(
             $this->translator->trans(
-                'Too many verification attempts. Please retry in 15 minutes.',
+                'Too many verification attempts. Please try again later.',
                 [],
                 'Admin.Login.Notification'
             )

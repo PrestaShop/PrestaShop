@@ -20,7 +20,7 @@
 
   {% set providerLabels = {
     email: 'Email'|trans({}, 'Admin.Global'),
-    totp: 'Authenticator app'|trans({}, 'Admin.TwoFactor.Login'),
+    totp: 'Authenticator app'|trans({}, 'Admin.Login.Feature'),
   } %}
 
   <div class="text-center mb-4">
@@ -52,7 +52,7 @@
       <form method="post" action="{{ path('2fa_resend') }}" class="text-center mt-3">
         <input type="hidden" name="_token" value="{{ csrf_token('2fa_resend') }}">
         <button class="btn btn-outline-secondary btn-block" type="submit">
-          {{ 'Send a new code'|trans({}, 'Admin.TwoFactor.Login') }}
+          {{ 'Send a new code'|trans({}, 'Admin.Login.Feature') }}
         </button>
       </form>
     {% endif %}

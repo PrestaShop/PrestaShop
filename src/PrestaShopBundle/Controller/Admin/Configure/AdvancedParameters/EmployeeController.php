@@ -672,7 +672,7 @@ class EmployeeController extends PrestaShopAdminController
                 $this->trans(
                     'A verification code has been sent to your email address.',
                     [],
-                    'Admin.TwoFactor.Login'
+                    'Admin.Login.Notification'
                 )
             );
 

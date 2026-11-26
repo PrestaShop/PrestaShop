@@ -35,7 +35,7 @@ class TwoFactorResendController extends PrestaShopAdminController
 
         $user = $this->security->getUser();
         if (!$user instanceof TwoFactorInterface || null === $this->codeGenerator) {
-            throw $this->createAccessDeniedException($this->trans('Email 2FA is not enabled for this user.', [], 'Admin.TwoFactor.Login'));
+            throw $this->createAccessDeniedException($this->trans('Email 2FA is not enabled for this user.', [], 'Admin.Login.Notification'));
         }
 
         $limit = $this->twoFactorResendLimiter->create($this->getRateLimitKey($request, $user))->consume();
@@ -43,9 +43,9 @@ class TwoFactorResendController extends PrestaShopAdminController
             $this->addFlash(
                 'error',
                 $this->trans(
-                    'Too many requests for a new authentication code. Please retry in 15 minutes.',
+                    'Too many requests for a new authentication code. Please try again later.',
                     [],
-                    'Admin.TwoFactor.Login'
+                    'Admin.Login.Notification'
                 )
             );
 
@@ -54,7 +54,7 @@ class TwoFactorResendController extends PrestaShopAdminController
 
         $this->codeGenerator->generateAndSend($user);
 
-        $this->addFlash('success', $this->trans('Code resent. Please check your spam folder as well.', [], 'Admin.TwoFactor.Login'));
+        $this->addFlash('success', $this->trans('Code resent. Please check your spam folder as well.', [], 'Admin.Login.Notification'));
 
         return $this->redirectToRoute('2fa_login');
     }

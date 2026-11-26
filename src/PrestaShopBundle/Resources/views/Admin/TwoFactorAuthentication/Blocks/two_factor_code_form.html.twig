@@ -11,14 +11,14 @@
 
 {% if displayProviderSelector and availableTwoFactorProviders|default([])|length > 1 %}
   <div class="form-group">
-    <p class="mb-3 text-center">{{ 'Select a verification method'|trans({}, 'Admin.TwoFactor.Login') }}</p>
+    <p class="mb-3 text-center">{{ 'Select a verification method'|trans({}, 'Admin.Login.Feature') }}</p>
     <div class="d-flex flex-wrap justify-content-center mb-3">
       {% for provider in availableTwoFactorProviders %}
         <a
           href="{{ path(providerSwitchRoute, providerSwitchRouteParams|merge({preferProvider: provider})) }}"
           class="btn mr-2 mb-2 {% if provider == twoFactorProvider|default(null) %}btn-primary{% else %}btn-outline-secondary{% endif %}"
         >
-          {{ provider == 'email' ? 'Email'|trans({}, 'Admin.Global') : 'Authenticator app'|trans({}, 'Admin.TwoFactor.Login') }}
+          {{ provider == 'email' ? 'Email'|trans({}, 'Admin.Global') : 'Authenticator app'|trans({}, 'Admin.Login.Feature') }}
         </a>
       {% endfor %}
     </div>
@@ -29,7 +29,7 @@
   <form method="post" action="{{ actionUrl }}" class="form-horizontal">
     <div class="form-group">
       <label class="form-control-label" for="two_factor_code">
-        {{ 'Authentication code'|trans({}, 'Admin.TwoFactor.Login') }}
+        {{ 'Authentication code'|trans({}, 'Admin.Login.Feature') }}
       </label>
 
       <input
@@ -55,7 +55,7 @@
             value="1"
           >
           <label class="form-check-label" for="two_factor_trusted">
-            {{ 'Don\'t ask me again on this device'|trans({}, 'Admin.TwoFactor.Login') }}
+            {{ 'Don\'t ask me again on this device'|trans({}, 'Admin.Login.Feature') }}
           </label>
         </div>
       </div>
@@ -66,12 +66,12 @@
     {% endif %}
 
     <button class="btn btn-primary btn-lg btn-block" type="submit">
-      {{ submitLabel|default('Verify'|trans({}, 'Admin.TwoFactor.Login')) }}
+      {{ submitLabel|default('Verify'|trans({}, 'Admin.Login.Feature')) }}
     </button>
 
     {% if logoutPath|default(null) %}
       <div class="text-center mt-3">
-        <a href="{{ logoutPath }}">{{ 'Cancel and log out'|trans({}, 'Admin.TwoFactor.Login') }}</a>
+        <a href="{{ logoutPath }}">{{ 'Cancel and log out'|trans({}, 'Admin.Login.Feature') }}</a>
       </div>
     {% endif %}
   </form>

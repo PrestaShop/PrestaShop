@@ -4,6 +4,8 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\TotMailer;
 
 use Mail;
@@ -35,7 +37,7 @@ final class TwoFactorAuthCodePrestashopMailer implements AuthCodeMailerInterface
         Mail::Send(
             $user->getDefaultLanguage()->getId(),
             'two_factor_auth_code',
-            $this->translator->trans('Your authentication code', [], 'Admin.Advparameters.Feature'),
+            $this->translator->trans('Your authentication code', [], 'Emails.Subject'),
             $templateVars,
             $user->getEmailAuthRecipient(),
             null,
