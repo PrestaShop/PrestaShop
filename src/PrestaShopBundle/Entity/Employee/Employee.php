@@ -7,6 +7,7 @@
 namespace PrestaShopBundle\Entity\Employee;
 
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -229,9 +230,26 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface, Equ
     private ?string $twoFactorTotpSecretEncrypted = null;
 
     /**
-     * @ORM\Column(name="two_factor_email_auth_code", type="string", length=255, nullable=true)
+     * @ORM\Column(name="two_factor_email_auth_code", type="string", length=10, nullable=true, insertable=false, updatable=false)
      */
     private ?string $twoFactorEmailAuthCode = null;
+
+    /**
+     * Written only by conditional repository operations, never by a stale ORM entity.
+     *
+     * @ORM\Column(name="two_factor_email_auth_code_issued_at", type="datetime_immutable", nullable=true, insertable=false, updatable=false, columnDefinition="DATETIME(6) DEFAULT NULL")
+     */
+    private ?DateTimeImmutable $twoFactorEmailAuthCodeIssuedAt = null;
+
+    /**
+     * @ORM\Column(name="two_factor_email_auth_code_context", type="string", length=32, nullable=true, insertable=false, updatable=false)
+     */
+    private ?string $twoFactorEmailAuthCodeContext = null;
+
+    /**
+     * @ORM\Column(name="two_factor_email_auth_code_version", type="integer", nullable=true, options={"unsigned": true}, insertable=false, updatable=false)
+     */
+    private ?int $twoFactorEmailAuthCodeVersion = null;
 
     /**
      * @ORM\Column(name="two_factor_backup_codes", type="json", nullable=true)

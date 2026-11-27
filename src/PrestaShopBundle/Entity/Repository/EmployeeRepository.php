@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Entity\Repository;
 
+use DateTimeImmutable;
 use Doctrine\DBAL\Connections\PrimaryReadReplicaConnection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Types\Types;
@@ -15,6 +16,7 @@ use Doctrine\ORM\EntityRepository;
 use PrestaShop\PrestaShop\Adapter\Employee\TwoFactor\TrustedDeviceVersionUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeTwoFactorException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeEmailOtp;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
 use PrestaShopBundle\Entity\Employee\Employee;
@@ -94,6 +96,9 @@ class EmployeeRepository extends EntityRepository
             ->set('e.twoFactorEmailEnabled', ':false')
             ->set('e.twoFactorTotpSecretEncrypted', ':null')
             ->set('e.twoFactorEmailAuthCode', ':null')
+            ->set('e.twoFactorEmailAuthCodeIssuedAt', ':null')
+            ->set('e.twoFactorEmailAuthCodeContext', ':null')
+            ->set('e.twoFactorEmailAuthCodeVersion', ':null')
             ->set('e.twoFactorBackupCodes', ':null')
             ->setParameter('false', false)
             ->setParameter('null', null)
@@ -234,9 +239,10 @@ class EmployeeRepository extends EntityRepository
         int $employeeId,
         array $backupCodes,
         ?string $expectedBackupCodes,
-        bool $clearEmailCode = false,
         string $provider = '',
         ?string $expectedVerificationValue = null,
+        ?EmployeeEmailOtp $emailChallenge = null,
+        ?DateTimeImmutable $now = null,
     ): void {
         $qb = $this->getEntityManager()->getConnection()->createQueryBuilder()
             ->update($this->getClassMetadata()->getTableName())
@@ -249,14 +255,19 @@ class EmployeeRepository extends EntityRepository
         $this->addExpectedValue($qb, 'two_factor_backup_codes', 'expectedCodes', $expectedBackupCodes);
 
         if ('email' === $provider) {
-            $qb->andWhere('two_factor_email_enabled = 1');
-            $this->addExpectedValue($qb, 'two_factor_email_auth_code', 'expectedVerification', $expectedVerificationValue);
+            if (
+                null === $emailChallenge
+                || null === $now
+                || EmployeeEmailOtp::BACKUP_REGENERATION !== $emailChallenge->context
+                || $employeeId !== $emailChallenge->employeeId
+            ) {
+                throw new EmployeeTwoFactorException('An email regeneration challenge is required.', EmployeeTwoFactorException::CONCURRENT_UPDATE);
+            }
+            $this->addEmailOtpConditions($qb, $emailChallenge, $now);
+            $this->clearEmailOtpFields($qb);
         } elseif ('totp' === $provider) {
             $qb->andWhere('two_factor_totp_enabled = 1');
             $this->addExpectedValue($qb, 'two_factor_totp_secret', 'expectedVerification', $expectedVerificationValue);
-        }
-        if ($clearEmailCode) {
-            $qb->set('two_factor_email_auth_code', 'NULL');
         }
         if (1 !== $qb->executeStatement()) {
             throw new EmployeeTwoFactorException('Two-factor settings changed during this operation.', EmployeeTwoFactorException::CONCURRENT_UPDATE);
@@ -271,8 +282,8 @@ class EmployeeRepository extends EntityRepository
             return;
         }
 
-        // HEX is available on MySQL/MariaDB and SQLite and avoids case-insensitive text collations.
-        $qb->andWhere('HEX(' . $column . ') = :' . $parameter)
+        // Cast numeric metadata before HEX; MySQL otherwise encodes integers as numbers, not strings.
+        $qb->andWhere('HEX(CAST(' . $column . ' AS CHAR)) = :' . $parameter)
             ->setParameter($parameter, strtoupper(bin2hex($expected)));
     }
 
@@ -290,15 +301,89 @@ class EmployeeRepository extends EntityRepository
             ->getQuery()->execute();
     }
 
-    public function saveEmailAuthCode(int $employeeId, string $code): void
+    /**
+     * @return array<string, mixed>
+     */
+    public function getEmailOtpState(int $employeeId): array
     {
-        $this->getEntityManager()->createQueryBuilder()
-            ->update($this->getEntityName(), 'e')
-            ->set('e.twoFactorEmailAuthCode', ':code')
-            ->where('e.id = :employeeId')
-            ->setParameter('code', $code)
+        $connection = $this->getEntityManager()->getConnection();
+        if ($connection instanceof PrimaryReadReplicaConnection) {
+            $connection->ensureConnectedToPrimary();
+        }
+        $state = $connection->createQueryBuilder()
+            ->select('id_employee', 'email', 'active', 'two_factor_enabled', 'two_factor_email_enabled', 'two_factor_trusted_version', 'two_factor_email_auth_code', 'two_factor_email_auth_code_issued_at', 'two_factor_email_auth_code_context', 'two_factor_email_auth_code_version')
+            ->from($this->getClassMetadata()->getTableName())
+            ->where('id_employee = :employeeId')
             ->setParameter('employeeId', $employeeId)
-            ->getQuery()->execute();
+            ->setMaxResults(1)
+            ->executeQuery()->fetchAssociative();
+        if (false === $state) {
+            throw new EmployeeNotFoundException(new EmployeeId($employeeId));
+        }
+
+        return $state;
+    }
+
+    /**
+     * @param array<string, mixed> $expectedState
+     */
+    public function replaceEmailOtp(EmployeeEmailOtp $challenge, array $expectedState): bool
+    {
+        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->update($this->getClassMetadata()->getTableName())
+            ->set('two_factor_email_auth_code', ':code')
+            ->set('two_factor_email_auth_code_issued_at', ':issuedAt')
+            ->set('two_factor_email_auth_code_context', ':context')
+            ->set('two_factor_email_auth_code_version', ':version')
+            ->where('id_employee = :employeeId')
+            ->andWhere('active = 1 AND two_factor_enabled = 1 AND two_factor_email_enabled = 1')
+            ->andWhere('two_factor_trusted_version = :version')
+            ->setParameter('employeeId', $challenge->employeeId)
+            ->setParameter('code', $challenge->code)
+            ->setParameter('issuedAt', $challenge->issuedAt->format('Y-m-d H:i:s.u'))
+            ->setParameter('context', $challenge->context)
+            ->setParameter('version', $challenge->version);
+        foreach (['two_factor_email_auth_code', 'two_factor_email_auth_code_issued_at', 'two_factor_email_auth_code_context', 'two_factor_email_auth_code_version'] as $index => $column) {
+            $expected = $expectedState[$column];
+            $this->addExpectedValue($qb, $column, 'previous' . $index, null === $expected ? null : (string) $expected);
+        }
+
+        return 1 === $qb->executeStatement();
+    }
+
+    public function consumeEmailOtp(EmployeeEmailOtp $challenge, DateTimeImmutable $now): bool
+    {
+        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->update($this->getClassMetadata()->getTableName())
+            ->where('id_employee = :employeeId')
+            ->setParameter('employeeId', $challenge->employeeId);
+        $this->addEmailOtpConditions($qb, $challenge, $now);
+        $this->clearEmailOtpFields($qb);
+
+        return 1 === $qb->executeStatement();
+    }
+
+    private function addEmailOtpConditions(QueryBuilder $qb, EmployeeEmailOtp $challenge, DateTimeImmutable $now): void
+    {
+        $qb->andWhere('active = 1 AND two_factor_enabled = 1 AND two_factor_email_enabled = 1')
+            ->andWhere('two_factor_trusted_version = :otpVersion')
+            ->andWhere('two_factor_email_auth_code_version = :otpVersion')
+            ->andWhere('two_factor_email_auth_code_issued_at = :otpIssuedAt')
+            ->andWhere('two_factor_email_auth_code_issued_at > :otpCutoff')
+            ->andWhere('two_factor_email_auth_code_issued_at <= :otpNow')
+            ->setParameter('otpVersion', $challenge->version)
+            ->setParameter('otpIssuedAt', $challenge->issuedAt->format('Y-m-d H:i:s.u'))
+            ->setParameter('otpCutoff', $now->modify('-' . EmployeeEmailOtp::LIFETIME . ' seconds')->format('Y-m-d H:i:s.u'))
+            ->setParameter('otpNow', $now->format('Y-m-d H:i:s.u'));
+        $this->addExpectedValue($qb, 'two_factor_email_auth_code', 'otpCode', $challenge->code);
+        $this->addExpectedValue($qb, 'two_factor_email_auth_code_context', 'otpContext', $challenge->context);
+    }
+
+    private function clearEmailOtpFields(QueryBuilder $qb): void
+    {
+        foreach (['two_factor_email_auth_code', 'two_factor_email_auth_code_issued_at', 'two_factor_email_auth_code_context', 'two_factor_email_auth_code_version'] as $column) {
+            $qb->set($column, 'NULL');
+        }
     }
 
     /**

@@ -27,6 +27,25 @@
     <h1 class="h3 mt-3">{{ shopName }}</h1>
   </div>
 
+  {% if shouldDisplayVerificationForm and activeProvider == 'email' %}
+    {% if emailPreparationStatus|default('') == 'throttled' %}
+      <div class="alert alert-warning" role="alert">
+        {{ 'Too many requests for an authentication code. Please try again later.'|trans({}, 'Admin.Login.Notification') }}
+        {% if emailRetryAt|default(null) %}
+          {{ 'You can request another code after %time%.'|trans({'%time%': emailRetryAt|date('H:i:s')}, 'Admin.Login.Notification') }}
+        {% endif %}
+      </div>
+    {% elseif emailPreparationStatus|default('') == 'failed' %}
+      <div class="alert alert-danger" role="alert">
+        {{ 'The authentication email could not be sent. Please try again later.'|trans({}, 'Admin.Login.Notification') }}
+      </div>
+    {% elseif emailChallengeAvailable is defined and not emailChallengeAvailable %}
+      <div class="alert alert-warning" role="alert">
+        {{ 'No valid authentication code is available. Please request a code.'|trans({}, 'Admin.Login.Notification') }}
+      </div>
+    {% endif %}
+  {% endif %}
+
   {% if authenticationError %}
     <div class="alert alert-danger" role="alert">
       <div class="alert-text">
@@ -52,7 +71,7 @@
       <form method="post" action="{{ path('2fa_resend') }}" class="text-center mt-3">
         <input type="hidden" name="_token" value="{{ csrf_token('2fa_resend') }}">
         <button class="btn btn-outline-secondary btn-block" type="submit">
-          {{ 'Send a new code'|trans({}, 'Admin.Login.Feature') }}
+          {{ 'Resend code'|trans({}, 'Admin.Login.Feature') }}
         </button>
       </form>
     {% endif %}

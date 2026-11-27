@@ -10,6 +10,7 @@ namespace PrestaShop\PrestaShop\Adapter\TotMailer;
 
 use Mail;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeTwoFactorException;
 use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Translation\TranslatorInterface;
 use Scheb\TwoFactorBundle\Mailer\AuthCodeMailerInterface;
@@ -34,7 +35,7 @@ final class TwoFactorAuthCodePrestashopMailer implements AuthCodeMailerInterface
             '{lastname}' => $user->getLastName(),
         ];
 
-        Mail::Send(
+        $sent = Mail::Send(
             $user->getDefaultLanguage()->getId(),
             'two_factor_auth_code',
             $this->translator->trans('Your authentication code', [], 'Emails.Subject'),
@@ -51,5 +52,8 @@ final class TwoFactorAuthCodePrestashopMailer implements AuthCodeMailerInterface
             null,
             null
         );
+        if (false === $sent) {
+            throw new EmployeeTwoFactorException('The authentication email could not be sent.', EmployeeTwoFactorException::EMAIL_DELIVERY_FAILED);
+        }
     }
 }

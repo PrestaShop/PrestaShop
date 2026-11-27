@@ -16,4 +16,7 @@ final class EmployeeTwoFactorException extends EmployeeException
     public const CONFIRMATION_REQUIRED = 4;
     public const INVALID_CODE = 5;
     public const CONCURRENT_UPDATE = 6;
+    public const TOO_MANY_ATTEMPTS = 7;
+    public const TOO_MANY_EMAILS = 8;
+    public const EMAIL_DELIVERY_FAILED = 9;
 }

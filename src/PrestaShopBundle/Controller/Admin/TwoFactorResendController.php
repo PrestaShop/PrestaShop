@@ -8,22 +8,20 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin;
 
-use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGeneratorInterface;
+use PrestaShop\PrestaShop\Adapter\Employee\TwoFactor\EmailOtpPreparation;
+use PrestaShop\PrestaShop\Adapter\Employee\TwoFactor\EmployeeEmailOtpManager;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeTwoFactorException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeEmailOtp;
+use PrestaShopBundle\Entity\Employee\Employee;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\RateLimiter\RateLimiterFactory;
 
 class TwoFactorResendController extends PrestaShopAdminController
 {
     public function __construct(
         private readonly Security $security,
-        #[Autowire(service: 'limiter.two_factor_resend')]
-        private readonly RateLimiterFactory $twoFactorResendLimiter,
-        #[Autowire(service: 'scheb_two_factor.security.email.code_generator')]
-        private readonly ?CodeGeneratorInterface $codeGenerator = null,
+        private readonly EmployeeEmailOtpManager $otpManager,
     ) {
     }
 
@@ -34,36 +32,25 @@ class TwoFactorResendController extends PrestaShopAdminController
         }
 
         $user = $this->security->getUser();
-        if (!$user instanceof TwoFactorInterface || null === $this->codeGenerator) {
-            throw $this->createAccessDeniedException($this->trans('Email 2FA is not enabled for this user.', [], 'Admin.Login.Notification'));
+        if (!$user instanceof Employee) {
+            throw $this->createAccessDeniedException();
         }
-
-        $limit = $this->twoFactorResendLimiter->create($this->getRateLimitKey($request, $user))->consume();
-        if (!$limit->isAccepted()) {
-            $this->addFlash(
-                'error',
-                $this->trans(
-                    'Too many requests for a new authentication code. Please try again later.',
-                    [],
-                    'Admin.Login.Notification'
-                )
-            );
-
-            return $this->redirectToRoute('2fa_login');
+        try {
+            $outcome = $this->otpManager->prepare($user, EmployeeEmailOtp::LOGIN, true);
+        } catch (EmployeeTwoFactorException $e) {
+            if (EmployeeTwoFactorException::DISABLED !== $e->getCode()) {
+                throw $e;
+            }
+            throw $this->createAccessDeniedException();
         }
+        $message = match ($outcome->status) {
+            EmailOtpPreparation::SENT => $this->trans('Code resent. Please check your spam folder as well.', [], 'Admin.Login.Notification'),
+            EmailOtpPreparation::THROTTLED => $this->trans('Too many requests for an authentication code. Please try again later.', [], 'Admin.Login.Notification'),
+            EmailOtpPreparation::FAILED => $this->trans('The authentication email could not be sent. Please try again later.', [], 'Admin.Login.Notification'),
+            default => $this->trans('Your authentication code changed. Please request another code.', [], 'Admin.Login.Notification'),
+        };
+        $this->addFlash(EmailOtpPreparation::SENT === $outcome->status ? 'success' : 'error', $message);
 
-        $this->codeGenerator->generateAndSend($user);
-
-        $this->addFlash('success', $this->trans('Code resent. Please check your spam folder as well.', [], 'Admin.Login.Notification'));
-
-        return $this->redirectToRoute('2fa_login');
-    }
-
-    private function getRateLimitKey(Request $request, TwoFactorInterface $user): string
-    {
-        $userId = method_exists($user, 'getId') ? (string) $user->getId() : 'unknown-user';
-        $ipAddress = $request->getClientIp() ?? 'unknown-ip';
-
-        return $userId . ':' . $ipAddress;
+        return $this->redirectToRoute('2fa_login', ['preferProvider' => 'email']);
     }
 }

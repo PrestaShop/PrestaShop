@@ -8,12 +8,15 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Entity\Repository;
 
+use DateTimeImmutable;
+use DateTimeZone;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeTwoFactorException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeEmailOtp;
 use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Entity\Repository\EmployeeRepository;
 use PrestaShopBundle\SchebTwoFactor\EmployeeBackupCodeManager;
@@ -59,6 +62,9 @@ final class EmployeeTwoFactorPersistenceTest extends KernelTestCase
             'two_factor_totp_enabled' => 0,
             'two_factor_email_enabled' => 1,
             'two_factor_email_auth_code' => '123456',
+            'two_factor_email_auth_code_issued_at' => $this->otpNow()->format('Y-m-d H:i:s.u'),
+            'two_factor_email_auth_code_context' => EmployeeEmailOtp::BACKUP_REGENERATION,
+            'two_factor_email_auth_code_version' => 1,
         ];
         $qb = $this->connection->createQueryBuilder()->insert($this->employeeTable);
         foreach ($fixture as $column => $value) {
@@ -121,7 +127,7 @@ final class EmployeeTwoFactorPersistenceTest extends KernelTestCase
 
     public function testRegenerationReplacesHashesAndClearsEmailCode(): void
     {
-        $this->repository->saveBackupCodes($this->employeeId, ['new-hash'], null, true, 'email', '123456');
+        $this->repository->saveBackupCodes($this->employeeId, ['new-hash'], null, 'email', null, $this->otpChallenge(), $this->otpNow());
         $row = $this->employeeRow();
         self::assertSame(['new-hash'], json_decode($row['two_factor_backup_codes'], true));
         self::assertNull($row['two_factor_email_auth_code']);
@@ -153,7 +159,7 @@ final class EmployeeTwoFactorPersistenceTest extends KernelTestCase
     public function testEmailPreparationDoesNotChangeBackupCodes(): void
     {
         $this->repository->saveBackupCodes($this->employeeId, ['existing-hash'], null);
-        $this->repository->saveEmailAuthCode($this->employeeId, '654321');
+        self::assertTrue($this->repository->replaceEmailOtp($this->otpChallenge('654321'), $this->repository->getEmailOtpState($this->employeeId)));
         $row = $this->employeeRow();
         self::assertSame(['existing-hash'], json_decode($row['two_factor_backup_codes'], true));
         self::assertSame('654321', $row['two_factor_email_auth_code']);
@@ -184,9 +190,9 @@ final class EmployeeTwoFactorPersistenceTest extends KernelTestCase
     {
         $this->repository->saveBackupCodes($this->employeeId, ['original'], null);
         $snapshot = $this->repository->getBackupCodesSnapshot($this->employeeId);
-        $this->repository->saveBackupCodes($this->employeeId, ['winner'], $snapshot, true, 'email', '123456');
+        $this->repository->saveBackupCodes($this->employeeId, ['winner'], $snapshot, 'email', null, $this->otpChallenge(), $this->otpNow());
         try {
-            $this->repository->saveBackupCodes($this->employeeId, ['loser'], $snapshot, true, 'email', '123456');
+            $this->repository->saveBackupCodes($this->employeeId, ['loser'], $snapshot, 'email', null, $this->otpChallenge(), $this->otpNow());
             self::fail('The stale regeneration must fail.');
         } catch (EmployeeTwoFactorException $exception) {
             self::assertSame(EmployeeTwoFactorException::CONCURRENT_UPDATE, $exception->getCode());
@@ -197,17 +203,17 @@ final class EmployeeTwoFactorPersistenceTest extends KernelTestCase
 
     public function testAnAlreadyConsumedEmailCodeCannotAuthorizeAnotherWrite(): void
     {
-        $this->repository->saveBackupCodes($this->employeeId, ['winner'], null, true, 'email', '123456');
+        $this->repository->saveBackupCodes($this->employeeId, ['winner'], null, 'email', null, $this->otpChallenge(), $this->otpNow());
         $snapshot = $this->repository->getBackupCodesSnapshot($this->employeeId);
         $this->expectException(EmployeeTwoFactorException::class);
-        $this->repository->saveBackupCodes($this->employeeId, ['loser'], $snapshot, true, 'email', '123456');
+        $this->repository->saveBackupCodes($this->employeeId, ['loser'], $snapshot, 'email', null, $this->otpChallenge(), $this->otpNow());
     }
 
-    public function testEmailResendInvalidatesAPreviouslyValidatedProof(): void
+    public function testEmailReplacementInvalidatesAPreviouslyValidatedProof(): void
     {
-        $this->repository->saveEmailAuthCode($this->employeeId, '654321');
+        self::assertTrue($this->repository->replaceEmailOtp($this->otpChallenge('654321'), $this->repository->getEmailOtpState($this->employeeId)));
         try {
-            $this->repository->saveBackupCodes($this->employeeId, ['loser'], null, true, 'email', '123456');
+            $this->repository->saveBackupCodes($this->employeeId, ['loser'], null, 'email', null, $this->otpChallenge(), $this->otpNow());
             self::fail('A superseded email code must not authorize regeneration.');
         } catch (EmployeeTwoFactorException) {
             self::assertNull($this->storedCodes());
@@ -233,16 +239,16 @@ final class EmployeeTwoFactorPersistenceTest extends KernelTestCase
     {
         $this->updateEmployee(['two_factor_totp_enabled' => 1, 'two_factor_totp_secret' => 'new-secret']);
         $this->expectException(EmployeeTwoFactorException::class);
-        $this->repository->saveBackupCodes($this->employeeId, ['new-codes'], null, true, 'totp', 'old-secret');
+        $this->repository->saveBackupCodes($this->employeeId, ['new-codes'], null, 'totp', 'old-secret');
     }
 
     public function testOnlyOneTotpRegenerationWinsForTheSameSnapshot(): void
     {
         $this->updateEmployee(['two_factor_totp_enabled' => 1, 'two_factor_totp_secret' => 'encrypted-secret']);
         $snapshot = $this->repository->getBackupCodesSnapshot($this->employeeId);
-        $this->repository->saveBackupCodes($this->employeeId, ['winner'], $snapshot, true, 'totp', 'encrypted-secret');
+        $this->repository->saveBackupCodes($this->employeeId, ['winner'], $snapshot, 'totp', 'encrypted-secret');
         try {
-            $this->repository->saveBackupCodes($this->employeeId, ['loser'], $snapshot, true, 'totp', 'encrypted-secret');
+            $this->repository->saveBackupCodes($this->employeeId, ['loser'], $snapshot, 'totp', 'encrypted-secret');
             self::fail('A concurrent TOTP regeneration must not replace the winning set.');
         } catch (EmployeeTwoFactorException) {
             self::assertSame(['winner'], $this->storedCodes());
@@ -253,7 +259,7 @@ final class EmployeeTwoFactorPersistenceTest extends KernelTestCase
     {
         $this->updateEmployee(['two_factor_email_enabled' => 0, 'two_factor_totp_enabled' => 1]);
         $this->expectException(EmployeeTwoFactorException::class);
-        $this->repository->saveBackupCodes($this->employeeId, ['new-codes'], null, true, 'email', '123456');
+        $this->repository->saveBackupCodes($this->employeeId, ['new-codes'], null, 'email', null, $this->otpChallenge(), $this->otpNow());
     }
 
     public function testSnapshotComparisonIsByteExactEvenOnCaseInsensitiveColumns(): void
@@ -347,6 +353,97 @@ final class EmployeeTwoFactorPersistenceTest extends KernelTestCase
         } catch (BadCredentialsException) {
             self::assertSame(['hash:new'], $this->storedCodes());
         }
+    }
+
+    private function otpNow(): DateTimeImmutable
+    {
+        return new DateTimeImmutable('2026-11-27 12:00:00.123456', new DateTimeZone('UTC'));
+    }
+
+    private function otpChallenge(string $code = '123456', string $context = EmployeeEmailOtp::BACKUP_REGENERATION): EmployeeEmailOtp
+    {
+        return new EmployeeEmailOtp($this->employeeId, $code, $this->otpNow(), $context, 1);
+    }
+
+    public function testOnlyOneLoginCanConsumeAnEmailChallenge(): void
+    {
+        $this->updateEmployee(['two_factor_email_auth_code_context' => EmployeeEmailOtp::LOGIN]);
+        $challenge = $this->otpChallenge('123456', EmployeeEmailOtp::LOGIN);
+        self::assertTrue($this->repository->consumeEmailOtp($challenge, $this->otpNow()));
+        self::assertFalse($this->repository->consumeEmailOtp($challenge, $this->otpNow()));
+        foreach (['two_factor_email_auth_code', 'two_factor_email_auth_code_issued_at', 'two_factor_email_auth_code_context', 'two_factor_email_auth_code_version'] as $column) {
+            self::assertNull($this->employeeValue($column));
+        }
+    }
+
+    public function testStaleEmissionCannotOverwriteANewerChallenge(): void
+    {
+        $snapshot = $this->repository->getEmailOtpState($this->employeeId);
+        self::assertTrue($this->repository->replaceEmailOtp($this->otpChallenge('654321'), $snapshot));
+        self::assertFalse($this->repository->replaceEmailOtp($this->otpChallenge('999999'), $snapshot));
+        self::assertSame('654321', $this->employeeValue('two_factor_email_auth_code'));
+    }
+
+    public function testRevocationRejectsAnEmissionBasedOnThePreviousSecurityVersion(): void
+    {
+        $snapshot = $this->repository->getEmailOtpState($this->employeeId);
+        $this->updateEmployee(['two_factor_trusted_version' => 2]);
+        self::assertFalse($this->repository->replaceEmailOtp($this->otpChallenge('654321'), $snapshot));
+        self::assertSame('123456', $this->employeeValue('two_factor_email_auth_code'));
+    }
+
+    public function testStaleConsumptionCannotClearAReplacement(): void
+    {
+        self::assertTrue($this->repository->replaceEmailOtp($this->otpChallenge('654321'), $this->repository->getEmailOtpState($this->employeeId)));
+        self::assertFalse($this->repository->consumeEmailOtp($this->otpChallenge(), $this->otpNow()));
+        self::assertSame('654321', $this->employeeValue('two_factor_email_auth_code'));
+    }
+
+    #[DataProvider('invalidOtpStates')]
+    public function testInvalidChallengeCannotBeConsumedOrAuthorizeBackupCodeReplacement(array $changes): void
+    {
+        $this->updateEmployee($changes);
+        self::assertFalse($this->repository->consumeEmailOtp($this->otpChallenge(), $this->otpNow()));
+        try {
+            $this->repository->saveBackupCodes($this->employeeId, ['unauthorized'], null, 'email', null, $this->otpChallenge(), $this->otpNow());
+            self::fail('An invalid challenge must not authorize backup code replacement.');
+        } catch (EmployeeTwoFactorException) {
+            self::assertNull($this->storedCodes());
+        }
+    }
+
+    public static function invalidOtpStates(): iterable
+    {
+        yield 'expired' => [['two_factor_email_auth_code_issued_at' => '2026-11-27 11:50:00.123456']];
+        yield 'future' => [['two_factor_email_auth_code_issued_at' => '2026-11-27 12:00:01.123456']];
+        yield 'legacy code' => [['two_factor_email_auth_code_issued_at' => null]];
+        yield 'login context' => [['two_factor_email_auth_code_context' => EmployeeEmailOtp::LOGIN]];
+        yield 'security version changed' => [['two_factor_trusted_version' => 2]];
+        yield 'inactive employee' => [['active' => 0]];
+        yield 'email disabled' => [['two_factor_email_enabled' => 0]];
+    }
+
+    public function testTotpRegenerationPreservesAnIndependentEmailChallenge(): void
+    {
+        $this->updateEmployee(['two_factor_totp_enabled' => 1, 'two_factor_totp_secret' => 'secret']);
+        $this->repository->saveBackupCodes($this->employeeId, ['new'], null, 'totp', 'secret');
+        self::assertSame('123456', $this->employeeValue('two_factor_email_auth_code'));
+    }
+
+    public function testAStaleManagedEntityCannotRestoreOrReplaceOtpData(): void
+    {
+        $employee = $this->repository->getForTwoFactor($this->employeeId);
+        self::assertTrue($this->repository->consumeEmailOtp($this->otpChallenge(), $this->otpNow()));
+        $employee->setEmailAuthCode('obsolete');
+        $employee->setFirstName('Updated');
+        $this->entityManager->flush();
+        self::assertNull($this->employeeValue('two_factor_email_auth_code'));
+        self::assertSame('Updated', $this->employeeValue('firstname'));
+        self::assertTrue($this->repository->replaceEmailOtp($this->otpChallenge('654321'), $this->repository->getEmailOtpState($this->employeeId)));
+        $employee->setEmailAuthCode(null);
+        $employee->setFirstName('Updated again');
+        $this->entityManager->flush();
+        self::assertSame('654321', $this->employeeValue('two_factor_email_auth_code'));
     }
 
     /**

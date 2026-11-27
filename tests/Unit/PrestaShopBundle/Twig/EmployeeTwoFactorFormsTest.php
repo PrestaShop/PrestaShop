@@ -78,6 +78,43 @@ class EmployeeTwoFactorFormsTest extends TestCase
         self::assertSame(1, $xpath->query('//noscript//button[@type="submit" and @form="employee-initialize-totp-form"]')->length);
     }
 
+    public function testEmailOnlyConfirmationHasADedicatedCsrfProtectedResendWithoutJavascript(): void
+    {
+        $loader = new FilesystemLoader();
+        $loader->addPath(dirname(__DIR__, 4) . '/src/PrestaShopBundle/Resources/views', 'PrestaShop');
+        $twig = new Environment(new ChainLoader([new ArrayLoader([
+            '@PrestaShop/Admin/layout.html.twig' => '{% block content %}{% endblock %}',
+        ]), $loader]));
+        $twig->addExtension(new TranslationExtension(new Translator('en')));
+        $twig->addFunction(new TwigFunction('path', static fn (string $name): string => '/' . $name));
+        $twig->addFunction(new TwigFunction('csrf_token', static fn (string $id): string => 'csrf-' . $id));
+        $html = $twig->render('@PrestaShop/Admin/Configure/AdvancedParameters/Employee/confirm_regenerate_backup_codes.html.twig', [
+            'employeeId' => 42,
+            'authenticationError' => null,
+            'emailCodePreparationRequired' => false,
+            'providerSwitchRoute' => 'admin_employees_prepare_regenerate_backup_codes',
+            'providerSwitchRouteParams' => ['employeeId' => 42, 'sendCode' => 1],
+            'providerSwitchMethod' => 'post',
+            'providerSwitchCsrfParameter' => '_token_prepare_backup_codes',
+            'providerSwitchCsrfTokenId' => 'prepare_backup_codes_42',
+            'twoFactorProvider' => 'email',
+            'availableTwoFactorProviders' => ['email'],
+            'checkPathRoute' => 'admin_employees_regenerate_backup_codes',
+            'checkPathUrl' => null,
+            'authCodeParameterName' => '_auth_code',
+            'displayTrustedOption' => false,
+            'isCsrfProtectionEnabled' => true,
+            'csrfParameterName' => '_token',
+            'csrfTokenId' => 'regenerate_backup_codes_42',
+            'submitLabel' => 'Regenerate backup codes',
+            'logoutPath' => null,
+        ]);
+        self::assertStringContainsString('Resend code', $html);
+        self::assertStringContainsString('method="post" action="/admin_employees_prepare_regenerate_backup_codes"', $html);
+        self::assertStringContainsString('name="_token_prepare_backup_codes" value="csrf-prepare_backup_codes_42"', $html);
+        self::assertSame(2, substr_count($html, '<form method="post"'));
+    }
+
     public static function backupCodeStates(): iterable
     {
         yield 'first generation' => [false, 'generate', 'admin_employees_generate_backup_codes', 'generate_backup_codes'];

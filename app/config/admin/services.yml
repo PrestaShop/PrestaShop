@@ -26,10 +26,31 @@ services:
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 7 }
 
-  PrestaShopBundle\EventListener\Admin\TwoFactorCheckRateLimitListener:
-    autowire: true
+  PrestaShopBundle\EventListener\Admin\TwoFactorCheckRateLimitListener: ~
+
+  PrestaShop\PrestaShop\Adapter\Employee\TwoFactor\EmployeeTwoFactorRateLimiter:
     arguments:
-      $twoFactorCheckLimiter: '@limiter.two_factor_check'
+      $lockFactory: '@lock.factory'
+      $checkLimiter: '@limiter.two_factor_check'
+      $sendLimiter: '@limiter.two_factor_resend'
+
+  PrestaShop\PrestaShop\Adapter\Employee\TwoFactor\EmployeeEmailOtpManager:
+    arguments:
+      $clock: '@clock'
+      $mailer: '@PrestaShop\PrestaShop\Adapter\TotMailer\TwoFactorAuthCodePrestashopMailer'
+
+  PrestaShopBundle\SchebTwoFactor\EmployeeEmailCodeGenerator: ~
+
+  PrestaShopBundle\SchebTwoFactor\EmployeeEmailFormRenderer:
+    arguments:
+      $inner: '@scheb_two_factor.security.email.default_form_renderer'
+      $preparationRecorder: '@scheb_two_factor.provider_preparation_recorder'
+
+  PrestaShopBundle\SchebTwoFactor\EmployeeEmailTwoFactorProvider:
+    decorates: 'scheb_two_factor.security.email.provider'
+    arguments:
+      $inner: '@PrestaShopBundle\SchebTwoFactor\EmployeeEmailTwoFactorProvider.inner'
+      $formRenderer: '@PrestaShopBundle\SchebTwoFactor\EmployeeEmailFormRenderer'
 
   PrestaShopBundle\Controller\Admin\TwoFactorResendController:
     autowire: true
@@ -156,8 +177,6 @@ services:
   PrestaShop\PrestaShop\Adapter\Employee\TwoFactor\EmployeeTwoFactorManager:
     autowire: true
     autoconfigure: true
-    arguments:
-      $mailer: '@PrestaShop\PrestaShop\Adapter\TotMailer\TwoFactorAuthCodePrestashopMailer'
 
   PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\InitializeEmployeeTotpSecretHandler:
     autowire: true

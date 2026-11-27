@@ -14,13 +14,12 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeTwoFactorException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\EmployeeTwoFactorSettings;
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeEmailOtp;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\GeneratedEmployeeBackupCodes;
 use PrestaShop\PrestaShop\Core\Employee\Access\EmployeeFormAccessCheckerInterface;
-use PrestaShop\PrestaShop\Core\Util\String\RandomString;
 use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Entity\Repository\EmployeeRepository;
 use PrestaShopBundle\SchebTwoFactor\TotpSecretEncryptor;
-use Scheb\TwoFactorBundle\Mailer\AuthCodeMailerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Totp\TotpAuthenticatorInterface;
 
 /**
@@ -36,7 +35,8 @@ final class EmployeeTwoFactorManager
         private readonly EmployeeBackupCodeGenerator $backupCodeGenerator,
         private readonly TotpAuthenticatorInterface $totpAuthenticator,
         private readonly TotpSecretEncryptor $secretEncryptor,
-        private readonly AuthCodeMailerInterface $mailer,
+        private readonly EmployeeEmailOtpManager $emailOtpManager,
+        private readonly EmployeeTwoFactorRateLimiter $rateLimiter,
     ) {
     }
 
@@ -69,7 +69,7 @@ final class EmployeeTwoFactorManager
             $provider,
             $secret,
             $qrCodeSrc,
-            'email' === $provider && null === $employee->getEmailAuthCode()
+            'email' === $provider && !$this->emailOtpManager->hasValidChallenge($employeeId, EmployeeEmailOtp::BACKUP_REGENERATION)
         );
     }
 
@@ -110,11 +110,17 @@ final class EmployeeTwoFactorManager
             throw new EmployeeTwoFactorException('No backup codes to regenerate.', EmployeeTwoFactorException::NOT_CONFIGURED);
         }
         $provider = $this->selectProvider($this->getAvailableProviders($employee), $preferredProvider);
-        if ('email' === $provider && ($resend || null === $employee->getEmailAuthCode())) {
-            $code = RandomString::generateFromCharacters('0123456789', 6);
-            $this->employeeRepository->saveEmailAuthCode($employeeId, $code);
-            $employee->setEmailAuthCode($code);
-            $this->mailer->sendAuthCode($employee);
+        if ('email' === $provider) {
+            $outcome = $this->emailOtpManager->prepare($employee, EmployeeEmailOtp::BACKUP_REGENERATION, $resend);
+            $errorCode = match ($outcome->status) {
+                EmailOtpPreparation::THROTTLED => EmployeeTwoFactorException::TOO_MANY_EMAILS,
+                EmailOtpPreparation::FAILED => EmployeeTwoFactorException::EMAIL_DELIVERY_FAILED,
+                EmailOtpPreparation::CHANGED => EmployeeTwoFactorException::CONCURRENT_UPDATE,
+                default => null,
+            };
+            if (null !== $errorCode) {
+                throw new EmployeeTwoFactorException('The email challenge could not be prepared.', $errorCode);
+            }
         }
 
         return $provider;
@@ -124,34 +130,53 @@ final class EmployeeTwoFactorManager
     {
         $employee = $this->getConfiguredSelf($employeeId);
         $provider = $this->selectProvider($this->getAvailableProviders($employee), $preferredProvider);
-        $code = trim($code);
-        $valid = '' !== $code && ('totp' === $provider
-            ? $this->totpAuthenticator->checkCode($employee, $code)
-            : (null !== $employee->getEmailAuthCode() && hash_equals($employee->getEmailAuthCode(), $code)));
-        if (!$valid) {
-            // Preserve the existing retry behavior without doing any work on GET.
-            $this->prepareRegeneration($employeeId, $provider);
-            throw new EmployeeTwoFactorException('Invalid verification code.', EmployeeTwoFactorException::INVALID_CODE);
-        }
+        $lock = $this->rateLimiter->startVerification($employeeId);
+        try {
+            $code = trim($code);
+            $challenge = 'email' === $provider
+                ? $this->emailOtpManager->getVerificationChallenge($employeeId, EmployeeEmailOtp::BACKUP_REGENERATION, $code)
+                : null;
+            $valid = '' !== $code && ('totp' === $provider
+                ? $this->totpAuthenticator->checkCode($employee, $code)
+                : null !== $challenge);
+            if (!$valid) {
+                $this->rateLimiter->recordFailure($employeeId, $lock);
+                throw new EmployeeTwoFactorException('Invalid verification code.', EmployeeTwoFactorException::INVALID_CODE);
+            }
 
-        return $this->persistBackupCodes(
-            $employeeId,
-            $this->getBackupCodesSnapshot($employeeId, $employee),
-            true,
-            $provider,
-            'email' === $provider ? $employee->getEmailAuthCode() : $employee->getTwoFactorSecret()
-        );
+            $this->rateLimiter->assertVerificationLock($lock);
+            $result = $this->persistBackupCodes(
+                $employeeId,
+                $this->getBackupCodesSnapshot($employeeId, $employee),
+                $provider,
+                'totp' === $provider ? $employee->getTwoFactorSecret() : null,
+                $challenge
+            );
+            $this->rateLimiter->assertVerificationLock($lock);
+
+            return $result;
+        } finally {
+            $lock->release();
+        }
     }
 
     private function persistBackupCodes(
         int $employeeId,
         ?string $expectedCodes,
-        bool $clearEmailCode = false,
         string $provider = '',
         ?string $expectedVerificationValue = null,
+        ?EmployeeEmailOtp $emailChallenge = null,
     ): GeneratedEmployeeBackupCodes {
         $codeSet = $this->backupCodeGenerator->generateBackupCodeSet();
-        $this->employeeRepository->saveBackupCodes($employeeId, $codeSet['hashedBackupCodes'], $expectedCodes, $clearEmailCode, $provider, $expectedVerificationValue);
+        $this->employeeRepository->saveBackupCodes(
+            $employeeId,
+            $codeSet['hashedBackupCodes'],
+            $expectedCodes,
+            $provider,
+            $expectedVerificationValue,
+            $emailChallenge,
+            $this->emailOtpManager->now()
+        );
 
         return new GeneratedEmployeeBackupCodes($employeeId, $codeSet['plainBackupCodes']);
     }
@@ -159,6 +184,9 @@ final class EmployeeTwoFactorManager
     private function getBackupCodesSnapshot(int $employeeId, Employee $employee): ?string
     {
         $snapshot = $this->employeeRepository->getBackupCodesSnapshot($employeeId);
+        if (null === $snapshot && null === $employee->getTwoFactorBackupCodes()) {
+            return null;
+        }
         $codes = null === $snapshot ? null : json_decode($snapshot, true, 512, JSON_THROW_ON_ERROR);
         if ($codes !== $employee->getTwoFactorBackupCodes()) {
             throw new EmployeeTwoFactorException('Backup codes changed during this operation.', EmployeeTwoFactorException::CONCURRENT_UPDATE);

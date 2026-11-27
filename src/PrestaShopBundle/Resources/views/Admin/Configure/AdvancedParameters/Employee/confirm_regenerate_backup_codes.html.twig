@@ -24,11 +24,15 @@
         </div>
       {% endif %}
 
-      {% if emailCodePreparationRequired|default(false) %}
+      {% if twoFactorProvider == 'email' %}
         <form method="post" action="{{ path(providerSwitchRoute, providerSwitchRouteParams|merge({preferProvider: 'email'})) }}">
           <input type="hidden" name="{{ providerSwitchCsrfParameter }}" value="{{ csrf_token(providerSwitchCsrfTokenId) }}">
           <button type="submit" class="btn btn-primary">
-            {{ 'Send verification code'|trans({}, 'Admin.Login.Feature') }}
+            {% if emailCodePreparationRequired|default(false) %}
+              {{ 'Send verification code'|trans({}, 'Admin.Login.Feature') }}
+            {% else %}
+              {{ 'Resend code'|trans({}, 'Admin.Login.Feature') }}
+            {% endif %}
           </button>
         </form>
       {% endif %}

@@ -8,11 +8,14 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Adapter\Employee\TwoFactor;
 
+use DateTimeImmutable;
 use PhpEncryption;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Employee\TwoFactor\EmployeeBackupCodeGenerator;
+use PrestaShop\PrestaShop\Adapter\Employee\TwoFactor\EmployeeEmailOtpManager;
 use PrestaShop\PrestaShop\Adapter\Employee\TwoFactor\EmployeeTwoFactorManager;
+use PrestaShop\PrestaShop\Adapter\Employee\TwoFactor\EmployeeTwoFactorRateLimiter;
 use PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\GenerateEmployeeBackupCodesHandler;
 use PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\InitializeEmployeeTotpSecretHandler;
 use PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\PrepareEmployeeBackupCodeRegenerationHandler;
@@ -27,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Command\PrepareEmployeeBackupCode
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\RegenerateEmployeeBackupCodesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeTwoFactorException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeTwoFactorSettings;
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeEmailOtp;
 use PrestaShop\PrestaShop\Core\Employee\Access\EmployeeFormAccessCheckerInterface;
 use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Entity\Repository\EmployeeRepository;
@@ -34,7 +38,12 @@ use PrestaShopBundle\SchebTwoFactor\TotpSecretEncryptor;
 use RuntimeException;
 use Scheb\TwoFactorBundle\Mailer\AuthCodeMailerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Totp\TotpAuthenticatorInterface;
+use Symfony\Component\Clock\MockClock;
+use Symfony\Component\Lock\LockFactory;
+use Symfony\Component\Lock\Store\InMemoryStore;
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
+use Symfony\Component\RateLimiter\Storage\InMemoryStorage;
 
 class EmployeeTwoFactorManagerTest extends TestCase
 {
@@ -83,7 +92,7 @@ class EmployeeTwoFactorManagerTest extends TestCase
     {
         [$manager, $repository, $totp, $mailer] = $this->dependencies();
         $repository->expects(self::never())->method('initializeTotpSecret');
-        $repository->expects(self::never())->method('saveEmailAuthCode');
+        $repository->expects(self::never())->method('replaceEmailOtp');
         $totp->expects(self::never())->method('generateSecret');
         $mailer->expects(self::never())->method('sendAuthCode');
         $settings = (new GetEmployeeTwoFactorSettingsHandler($manager))->handle(new GetEmployeeTwoFactorSettings(42));
@@ -145,7 +154,7 @@ class EmployeeTwoFactorManagerTest extends TestCase
 
                 return count($saved) === 8;
             }
-        ), null, false, '', null);
+        ), null, '', null);
         $result = (new GenerateEmployeeBackupCodesHandler($manager))->handle(new GenerateEmployeeBackupCodesCommand(42));
         self::assertSame(42, $result->getValue());
         self::assertSame(array_map(static fn (string $code): string => 'hashed:' . $code, $result->getBackupCodes()), $hashes);
@@ -166,24 +175,25 @@ class EmployeeTwoFactorManagerTest extends TestCase
         [$manager, $repository, , $mailer, $employee] = $this->dependencies();
         $employee->setTwoFactorBackupCodes(['existing-hash']);
         $saved = false;
-        $repository->expects(self::once())->method('saveEmailAuthCode')->with(42, self::callback(
-            static function (string $code) use (&$saved): bool {
+        $repository->expects(self::once())->method('replaceEmailOtp')->with(self::callback(
+            static function (EmployeeEmailOtp $challenge) use (&$saved): bool {
                 $saved = true;
 
-                return preg_match('/^[0-9]{6}$/', $code) === 1;
+                return EmployeeEmailOtp::BACKUP_REGENERATION === $challenge->context && 1 === preg_match('/^[0-9]{6}$/', $challenge->code);
             }
-        ));
-        $mailer->expects(self::once())->method('sendAuthCode')->with($employee)->willReturnCallback(
+        ))->willReturn(true);
+        $mailer->expects(self::once())->method('sendAuthCode')->willReturnCallback(
             static function () use (&$saved): void { self::assertTrue($saved); }
         );
         self::assertSame('email', (new PrepareEmployeeBackupCodeRegenerationHandler($manager))->handle(new PrepareEmployeeBackupCodeRegenerationCommand(42)));
+        self::assertNull($employee->getEmailAuthCode());
     }
 
     public function testEmailPreparationKeepsExistingCodeUnlessResendRequested(): void
     {
         [$manager, $repository, , $mailer, $employee] = $this->dependencies();
         $employee->setTwoFactorBackupCodes(['existing-hash'])->setEmailAuthCode('123456');
-        $repository->expects(self::once())->method('saveEmailAuthCode');
+        $repository->expects(self::never())->method('replaceEmailOtp');
         $mailer->expects(self::once())->method('sendAuthCode');
         $manager->prepareRegeneration(42, 'email');
         self::assertSame('123456', $employee->getEmailAuthCode());
@@ -194,7 +204,7 @@ class EmployeeTwoFactorManagerTest extends TestCase
     {
         [$manager, $repository, , $mailer, $employee] = $this->dependencies(true, true);
         $employee->setTwoFactorBackupCodes(['existing-hash']);
-        $repository->expects(self::never())->method('saveEmailAuthCode');
+        $repository->expects(self::never())->method('replaceEmailOtp');
         $mailer->expects(self::never())->method('sendAuthCode');
         self::assertSame('totp', $manager->prepareRegeneration(42, 'totp', true));
     }
@@ -203,7 +213,7 @@ class EmployeeTwoFactorManagerTest extends TestCase
     {
         [$manager, $repository, , , $employee] = $this->dependencies();
         $employee->setTwoFactorBackupCodes(['existing-hash'])->setEmailAuthCode('123456');
-        $repository->expects(self::once())->method('saveBackupCodes')->with(42, self::callback(static fn (array $codes): bool => count($codes) === 8), '["existing-hash"]', true, 'email', '123456');
+        $repository->expects(self::once())->method('saveBackupCodes')->with(42, self::callback(static fn (array $codes): bool => count($codes) === 8), '["existing-hash"]', 'email', null, self::isInstanceOf(EmployeeEmailOtp::class), self::isInstanceOf(DateTimeImmutable::class));
         $result = (new RegenerateEmployeeBackupCodesHandler($manager))->handle(new RegenerateEmployeeBackupCodesCommand(42, 'email', ' 123456 '));
         self::assertCount(8, $result->getBackupCodes());
     }
@@ -225,6 +235,76 @@ class EmployeeTwoFactorManagerTest extends TestCase
         $totp->expects(self::once())->method('checkCode')->with($employee, '123456')->willReturn(true);
         $repository->expects(self::once())->method('saveBackupCodes');
         self::assertCount(8, $manager->regenerateBackupCodes(42, 'totp', '123456')->getBackupCodes());
+    }
+
+    public function testSuccessfulRegenerationsDoNotConsumeTheVerificationBudget(): void
+    {
+        [$manager, $repository, $totp, , $employee] = $this->dependencies(true, true);
+        $employee->setTwoFactorBackupCodes(['existing-hash'])->setEmailAuthCode('123456');
+        $totp->method('checkCode')->willReturn(true);
+        $repository->expects(self::exactly(8))->method('saveBackupCodes');
+        for ($i = 0; $i < 8; ++$i) {
+            $manager->regenerateBackupCodes(42, 'totp', '123456');
+        }
+        for ($i = 0; $i < 5; ++$i) {
+            try {
+                $manager->regenerateBackupCodes(42, 'email', '000000');
+                self::fail('An incorrect code must fail.');
+            } catch (EmployeeTwoFactorException $e) {
+                self::assertSame(EmployeeTwoFactorException::INVALID_CODE, $e->getCode());
+            }
+        }
+        $this->expectException(EmployeeTwoFactorException::class);
+        $this->expectExceptionCode(EmployeeTwoFactorException::TOO_MANY_ATTEMPTS);
+        $manager->regenerateBackupCodes(42, 'totp', '123456');
+    }
+
+    public function testSuccessfulRegenerationPreservesEarlierFailures(): void
+    {
+        [$manager, $repository, $totp, , $employee] = $this->dependencies(true, true);
+        $employee->setTwoFactorBackupCodes(['existing-hash'])->setEmailAuthCode('123456');
+        $totp->method('checkCode')->willReturn(true);
+        $repository->expects(self::once())->method('saveBackupCodes');
+        for ($i = 0; $i < 4; ++$i) {
+            try {
+                $manager->regenerateBackupCodes(42, 'email', '000000');
+                self::fail('An incorrect code must fail.');
+            } catch (EmployeeTwoFactorException $e) {
+                self::assertSame(EmployeeTwoFactorException::INVALID_CODE, $e->getCode());
+            }
+        }
+        $manager->regenerateBackupCodes(42, 'totp', '123456');
+        try {
+            $manager->regenerateBackupCodes(42, 'email', '000000');
+            self::fail('The fifth incorrect code must fail.');
+        } catch (EmployeeTwoFactorException $e) {
+            self::assertSame(EmployeeTwoFactorException::INVALID_CODE, $e->getCode());
+        }
+        $this->expectException(EmployeeTwoFactorException::class);
+        $this->expectExceptionCode(EmployeeTwoFactorException::TOO_MANY_ATTEMPTS);
+        $manager->regenerateBackupCodes(42, 'totp', '123456');
+    }
+
+    public function testTechnicalRegenerationErrorsReleaseTheLockWithoutConsumingQuota(): void
+    {
+        [$manager, $repository, $totp, , $employee, , $lockFactory] = $this->dependencies(true, true);
+        $employee->setTwoFactorBackupCodes(['existing-hash']);
+        $totp->method('checkCode')->willReturn(true);
+        $repository->method('saveBackupCodes')->willThrowException(new RuntimeException('Database unavailable'));
+        for ($i = 0; $i < 6; ++$i) {
+            try {
+                $manager->regenerateBackupCodes(42, 'totp', '123456');
+                self::fail('The database error must propagate.');
+            } catch (RuntimeException $e) {
+                self::assertSame('Database unavailable', $e->getMessage());
+            }
+            $probe = $lockFactory->createLock('employee_2fa_verification:42');
+            try {
+                self::assertTrue($probe->acquire());
+            } finally {
+                $probe->release();
+            }
+        }
     }
 
     public function testFailedWriteDoesNotReturnPlaintext(): void
@@ -262,7 +342,8 @@ class EmployeeTwoFactorManagerTest extends TestCase
 
     private function dependencies(bool $global = true, bool $totpEnabled = false): array
     {
-        $employee = $this->createPartialMock(Employee::class, ['isTotpAuthenticationEnabled']);
+        $employee = $this->createPartialMock(Employee::class, ['isTotpAuthenticationEnabled', 'getId']);
+        $employee->method('getId')->willReturn(42);
         $employee->method('isTotpAuthenticationEnabled')->willReturn($totpEnabled);
         $employee->setTwoFactorEnabled(true)->setTwoFactorEmailEnabled(true);
         $repository = $this->createMock(EmployeeRepository::class);
@@ -270,6 +351,18 @@ class EmployeeTwoFactorManagerTest extends TestCase
         $repository->method('getBackupCodesSnapshot')->with(42)->willReturnCallback(
             static fn (): ?string => null === $employee->getTwoFactorBackupCodes() ? null : json_encode($employee->getTwoFactorBackupCodes(), JSON_THROW_ON_ERROR)
         );
+        $repository->method('getEmailOtpState')->willReturnCallback(static fn (): array => [
+            'id_employee' => 42,
+            'email' => 'employee@example.com',
+            'active' => 1,
+            'two_factor_enabled' => 1,
+            'two_factor_email_enabled' => 1,
+            'two_factor_trusted_version' => 1,
+            'two_factor_email_auth_code' => $employee->getEmailAuthCode(),
+            'two_factor_email_auth_code_issued_at' => '2026-11-27 12:00:00.000000',
+            'two_factor_email_auth_code_context' => EmployeeEmailOtp::BACKUP_REGENERATION,
+            'two_factor_email_auth_code_version' => 1,
+        ]);
         $actor = $this->createMock(ContextEmployee::class);
         $actor->method('getId')->willReturn(42);
         $checker = $this->createMock(EmployeeFormAccessCheckerInterface::class);
@@ -282,6 +375,14 @@ class EmployeeTwoFactorManagerTest extends TestCase
         $mailer = $this->createMock(AuthCodeMailerInterface::class);
         $encryptor = new TotpSecretEncryptor(PhpEncryption::createNewRandomKey());
 
-        return [new EmployeeTwoFactorManager($repository, new EmployeeContext($actor, []), $checker, $config, new EmployeeBackupCodeGenerator($hasher), $totp, $encryptor, $mailer), $repository, $totp, $mailer, $employee, $encryptor];
+        $lockFactory = new LockFactory(new InMemoryStore());
+        $limiter = new EmployeeTwoFactorRateLimiter(
+            new RateLimiterFactory(['id' => 'check', 'policy' => 'fixed_window', 'limit' => 5, 'interval' => '15 minutes'], new InMemoryStorage()),
+            new RateLimiterFactory(['id' => 'send', 'policy' => 'fixed_window', 'limit' => 3, 'interval' => '15 minutes'], new InMemoryStorage()),
+            $lockFactory
+        );
+        $otpManager = new EmployeeEmailOtpManager($repository, $limiter, $mailer, $config, new MockClock('2026-11-27 12:00:00 UTC'));
+
+        return [new EmployeeTwoFactorManager($repository, new EmployeeContext($actor, []), $checker, $config, new EmployeeBackupCodeGenerator($hasher), $totp, $encryptor, $otpManager, $limiter), $repository, $totp, $mailer, $employee, $encryptor, $lockFactory];
     }
 }

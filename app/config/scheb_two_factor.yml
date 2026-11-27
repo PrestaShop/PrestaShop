@@ -10,6 +10,8 @@ scheb_two_factor:
 
   email:
     enabled: true
+    digits: 6
+    code_generator: 'PrestaShopBundle\SchebTwoFactor\EmployeeEmailCodeGenerator'
     mailer: 'PrestaShop\PrestaShop\Adapter\TotMailer\TwoFactorAuthCodePrestashopMailer'
     template: '@PrestaShop/Admin/TwoFactorAuthentication/2fa_form.html.twig'
 

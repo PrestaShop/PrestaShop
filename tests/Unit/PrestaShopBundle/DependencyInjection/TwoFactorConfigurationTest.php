@@ -30,6 +30,8 @@ class TwoFactorConfigurationTest extends TestCase
             self::assertSame($kernel === 'admin', $configuration[$feature]['enabled'], $feature);
         }
         if ('admin' === $kernel) {
+            self::assertSame(6, $configuration['email']['digits']);
+            self::assertSame('PrestaShopBundle\SchebTwoFactor\EmployeeEmailCodeGenerator', $configuration['email']['code_generator']);
             self::assertSame('PrestaShopBundle\SchebTwoFactor\TrustedDeviceTokenFactory', $configuration['two_factor_token_factory']);
             self::assertSame('PrestaShopBundle\SchebTwoFactor\EmployeeTrustedDeviceManager', $configuration['trusted_device']['manager']);
         } else {

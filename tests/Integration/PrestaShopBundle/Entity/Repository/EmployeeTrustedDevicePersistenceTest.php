@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Entity\Repository;
 
+use DateTimeImmutable;
+use DateTimeZone;
 use Db;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
@@ -18,6 +20,7 @@ use Employee as LegacyEmployee;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\ResetEmployeeTwoFactorHandler;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ResetEmployeeTwoFactorCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeEmailOtp;
 use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Entity\Repository\EmployeeRepository;
 use PrestaShopBundle\SchebTwoFactor\TotpSecretEncryptor;
@@ -429,7 +432,15 @@ final class EmployeeTrustedDevicePersistenceTest extends KernelTestCase
     public function testDirectBackupAndEmailWritesPreserveTrust(): void
     {
         $this->repository->initializeTotpSecret($this->employeeId, 'draft-secret');
-        $this->repository->saveEmailAuthCode($this->employeeId, '654321');
+        $state = $this->repository->getEmailOtpState($this->employeeId);
+        $challenge = new EmployeeEmailOtp(
+            $this->employeeId,
+            '654321',
+            new DateTimeImmutable('now', new DateTimeZone('UTC')),
+            EmployeeEmailOtp::LOGIN,
+            (int) $state['two_factor_trusted_version']
+        );
+        self::assertTrue($this->repository->replaceEmailOtp($challenge, $state));
         $this->repository->saveBackupCodes($this->employeeId, ['first'], null);
         $this->repository->saveBackupCodes($this->employeeId, ['second'], $this->repository->getBackupCodesSnapshot($this->employeeId));
         self::assertSame(1, $this->repository->getTrustedDeviceVersion($this->employeeId));
