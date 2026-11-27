@@ -359,7 +359,9 @@ class StockManager
 
         $sfContainer = SymfonyContainer::getInstance();
         if (null === $sfContainer) {
-            return false;
+            // The webservice and command-line scripts run without the Symfony kernel, so the Doctrine
+            // repository is out of reach; the adapter writes the same row through the legacy model.
+            return ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager')->saveMovementWithoutKernel($stockMvt, $params);
         }
 
         $stockMvtRepository = $sfContainer->get('prestashop.core.api.stock_movement.repository');

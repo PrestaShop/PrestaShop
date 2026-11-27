@@ -8,7 +8,9 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use Db;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopAdapter;
+use PrestaShopBundle\Entity\StockMvt as StockMvtEntity;
 use StockAvailable;
+use StockMvt;
 
 /**
  * Data provider for new Architecture, about Product stocks.
@@ -266,5 +268,30 @@ class StockManager
     public function outOfStock($productId, $shopId = null)
     {
         return StockAvailable::outOfStock($productId, $shopId);
+    }
+
+    /**
+     * Writes a stock movement through the legacy model, for a request that runs without the Symfony
+     * kernel and so cannot reach the Doctrine repository (the webservice, command-line scripts).
+     *
+     * @param array $params
+     *
+     * @return int|false
+     */
+    public function saveMovementWithoutKernel(StockMvtEntity $stockMvt, $params = [])
+    {
+        $legacyMovement = new StockMvt();
+        $legacyMovement->id_stock = $stockMvt->getIdStock();
+        $legacyMovement->id_order = !empty($params['id_order']) ? (int) $params['id_order'] : 0;
+        $legacyMovement->id_stock_mvt_reason = $stockMvt->getIdStockMvtReason();
+        $legacyMovement->id_employee = $stockMvt->getIdEmployee();
+        $legacyMovement->employee_firstname = (string) $stockMvt->getEmployeeFirstname();
+        $legacyMovement->employee_lastname = (string) $stockMvt->getEmployeeLastname();
+        $legacyMovement->physical_quantity = $stockMvt->getPhysicalQuantity();
+        $legacyMovement->sign = $stockMvt->getSign();
+        $legacyMovement->price_te = (float) $stockMvt->getPriceTe();
+        $legacyMovement->date_add = $stockMvt->getDateAdd()->format('Y-m-d H:i:s');
+
+        return $legacyMovement->add() ? (int) $legacyMovement->id : false;
     }
 }
