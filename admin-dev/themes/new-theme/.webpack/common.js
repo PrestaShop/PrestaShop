@@ -106,6 +106,7 @@ module.exports = {
     currency_form: './js/pages/currency/form',
     customer: './js/pages/customer/index',
     customer_address_form: './js/pages/address/form',
+    customer_b2b_form: './js/pages/customer-b2b/form',
     customer_form: './js/pages/customer/form',
     customer_groups: './js/pages/customer-groups',
     customer_outstanding: './js/pages/outstanding',

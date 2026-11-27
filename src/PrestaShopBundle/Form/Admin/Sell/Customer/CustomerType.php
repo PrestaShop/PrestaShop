@@ -8,16 +8,12 @@ namespace PrestaShopBundle\Form\Admin\Sell\Customer;
 
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\FirstName;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\LastName;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email as DomainEmail;
 use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 use PrestaShopBundle\Form\Admin\Type\ApeType;
-use PrestaShopBundle\Form\Admin\Type\EmailType;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\FormBuilderModifier;
 use PrestaShopBundle\Form\FormCloner;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -29,7 +25,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Range;
@@ -79,6 +74,7 @@ class CustomerType extends TranslatorAwareType
      * @param bool $isPartnerOffersEnabled
      * @param ConfigurationInterface $configuration
      * @param FormCloner $formCloner
+     * @param FormBuilderModifier $formBuilderModifier
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -88,7 +84,8 @@ class CustomerType extends TranslatorAwareType
         $isB2bFeatureEnabled,
         $isPartnerOffersEnabled,
         ConfigurationInterface $configuration,
-        FormCloner $formCloner
+        FormCloner $formCloner,
+        private readonly FormBuilderModifier $formBuilderModifier = new FormBuilderModifier(),
     ) {
         parent::__construct($translator, $locales);
         $this->isB2bFeatureEnabled = $isB2bFeatureEnabled;
@@ -97,6 +94,11 @@ class CustomerType extends TranslatorAwareType
         $this->configuration = $configuration;
         $this->formCloner = $formCloner;
         $this->groupByIdChoiceProvider = $groupByIdChoiceProvider;
+    }
+
+    public function getParent(): string
+    {
+        return CustomerBasicDataType::class;
     }
 
     /**
@@ -138,95 +140,17 @@ class CustomerType extends TranslatorAwareType
 
         // We show the guest field only when creating the customer AND guest checkout is enabled.
         if ($options['show_guest_field'] === true) {
-            $builder
-                ->add('is_guest', SwitchType::class, [
-                    'label' => $this->trans('Guest account', 'Admin.Global'),
-                    'help' => $this->trans(
-                        'Quick customers with no password, who don\'t have access to the privileges of registered ones. You can create as many guests as needed using the same email. It could be helpful if you take phone call orders.',
-                        'Admin.Orderscustomers.Help'
-                    ),
-                    'required' => false,
-                ]);
+            $this->formBuilderModifier->addBefore($builder, 'gender_id', 'is_guest', SwitchType::class, [
+                'label' => $this->trans('Guest account', 'Admin.Global'),
+                'help' => $this->trans(
+                    'Quick customers with no password, who don\'t have access to the privileges of registered ones. You can create as many guests as needed using the same email. It could be helpful if you take phone call orders.',
+                    'Admin.Orderscustomers.Help'
+                ),
+                'required' => false,
+            ]);
         }
 
         $builder
-            ->add('gender_id', GenderType::class, [
-                'expanded' => true,
-                'required' => false,
-                'placeholder' => null,
-            ])
-            ->add('first_name', TextType::class, [
-                'label' => $this->trans('First name', 'Admin.Global'),
-                'help' => $this->trans(
-                    'Only letters and the dot (.) character, followed by a space, are allowed.',
-                    'Admin.Orderscustomers.Help'
-                ),
-                'constraints' => [
-                    new NotBlank([
-                        'message' => $this->trans('This field cannot be empty.', 'Admin.Notifications.Error'),
-                    ]),
-                    new Length([
-                        'max' => FirstName::MAX_LENGTH,
-                        'maxMessage' => $this->trans(
-                            'This field cannot be longer than %limit% characters',
-                            'Admin.Notifications.Error',
-                            ['%limit%' => FirstName::MAX_LENGTH]
-                        ),
-                    ]),
-                    new CustomerName([
-                        'message' => $this->trans('The %s field is invalid.',
-                            'Admin.Notifications.Error',
-                            [sprintf('"%s"', $this->trans('First name', 'Admin.Global'))]
-                        ),
-                    ]),
-                ],
-            ])
-            ->add('last_name', TextType::class, [
-                'label' => $this->trans('Last name', 'Admin.Global'),
-                'help' => $this->trans(
-                    'Only letters and the dot (.) character, followed by a space, are allowed.',
-                    'Admin.Orderscustomers.Help'
-                ),
-                'constraints' => [
-                    new NotBlank([
-                        'message' => $this->trans('This field cannot be empty.', 'Admin.Notifications.Error'),
-                    ]),
-                    new Length([
-                        'max' => LastName::MAX_LENGTH,
-                        'maxMessage' => $this->trans(
-                            'This field cannot be longer than %limit% characters',
-                            'Admin.Notifications.Error',
-                            ['%limit%' => LastName::MAX_LENGTH]
-                        ),
-                    ]),
-                    new CustomerName([
-                        'message' => $this->trans(
-                            'The %s field is invalid.',
-                            'Admin.Notifications.Error',
-                            [sprintf('"%s"', $this->trans('Last name', 'Admin.Global'))]
-                        ),
-                    ]),
-                ],
-            ])
-            ->add('email', EmailType::class, [
-                'label' => $this->trans('Email', 'Admin.Global'),
-                'constraints' => [
-                    new NotBlank([
-                        'message' => $this->trans('This field cannot be empty.', 'Admin.Notifications.Error'),
-                    ]),
-                    new Length([
-                        'max' => DomainEmail::MAX_LENGTH,
-                        'maxMessage' => $this->trans(
-                            'This field cannot be longer than %limit% characters.',
-                            'Admin.Notifications.Error',
-                            ['%limit%' => DomainEmail::MAX_LENGTH]
-                        ),
-                    ]),
-                    new Email([
-                        'message' => $this->trans('This field is invalid.', 'Admin.Notifications.Error'),
-                    ]),
-                ],
-            ])
             ->add('password', PasswordType::class, [
                 'label' => $this->trans('Password', 'Admin.Global'),
                 'attr' => [

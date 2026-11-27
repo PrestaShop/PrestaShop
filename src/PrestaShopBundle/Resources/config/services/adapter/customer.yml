@@ -91,3 +91,12 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\CustomerDataSource'
 
   PrestaShop\PrestaShop\Adapter\Customer\Repository\CustomerRepository: ~
+
+  PrestaShop\PrestaShop\Adapter\Customer\CustomerWelcomeMailer:
+    public: false
+    autowire: true
+
+  PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\SendCustomerWelcomeEmailHandler:
+    public: false
+    autowire: true
+    autoconfigure: true

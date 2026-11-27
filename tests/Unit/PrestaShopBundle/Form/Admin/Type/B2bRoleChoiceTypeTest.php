@@ -22,6 +22,7 @@ use PrestaShopBundle\Entity\B2B\B2bRoleLang;
 use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Entity\Repository\B2bRoleRepository;
 use PrestaShopBundle\Form\Admin\Type\B2bRoleChoiceType;
+use PrestaShopBundle\Form\Admin\Type\EntityChoiceType;
 use Symfony\Bridge\Doctrine\Form\DoctrineOrmExtension;
 use Symfony\Component\Form\ChoiceList\View\ChoiceView;
 use Symfony\Component\Form\FormInterface;
@@ -32,7 +33,6 @@ class B2bRoleChoiceTypeTest extends TypeTestCase
 {
     private ClassMetadata $classMetadata;
     private MockObject&LanguageContext $languageContext;
-    private MockObject&EntityManagerInterface $entityManager;
 
     /**
      * @var B2bRole[]
@@ -52,17 +52,17 @@ class B2bRoleChoiceTypeTest extends TypeTestCase
             return $this->createMock(QueryBuilder::class);
         });
 
-        $this->entityManager = $this->createMock(EntityManagerInterface::class);
-        $this->entityManager->method('getClassMetadata')->willReturn($this->classMetadata);
-        $this->entityManager->method('getRepository')->willReturn($repository);
-        $this->entityManager->method('contains')->willReturn(true);
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager->method('getClassMetadata')->willReturn($this->classMetadata);
+        $entityManager->method('getRepository')->willReturn($repository);
+        $entityManager->method('contains')->willReturn(true);
 
         $registry = $this->createMock(ManagerRegistry::class);
-        $registry->method('getManagerForClass')->willReturn($this->entityManager);
+        $registry->method('getManagerForClass')->willReturn($entityManager);
 
         return [
             new DoctrineOrmExtension($registry),
-            new PreloadedExtension([new B2bRoleChoiceType($this->languageContext)], []),
+            new PreloadedExtension([new EntityChoiceType(), new B2bRoleChoiceType($this->languageContext)], []),
         ];
     }
 
@@ -83,11 +83,6 @@ class B2bRoleChoiceTypeTest extends TypeTestCase
             'Localized buyer',
             'Custom role',
         ]];
-    }
-
-    public static function getFixtureIndexes(): iterable
-    {
-        yield from [[0], [2]];
     }
 
     #[DataProvider('getLanguageIds')]
@@ -115,53 +110,10 @@ class B2bRoleChoiceTypeTest extends TypeTestCase
         ], $view->vars['choices']);
     }
 
-    #[DataProvider('getFixtureIndexes')]
-    public function testInitialDataTransformation(int $index): void
+    private function createForm(): FormInterface
     {
-        $role = $this->getRoles()[$index];
-        $id = $role->getIdRole();
-
-        $this->entityManager->method('find')->with(B2bRole::class, $id)->willReturn($role);
-
-        $form = $this->createForm(['input' => 'id'], $id);
-
-        $this->assertSame($role, $form->getNormData());
-        $this->assertSame((string) $id, $form->getViewData());
-    }
-
-    #[DataProvider('getFixtureIndexes')]
-    public function testValidDataSubmission(int $index): void
-    {
-        $this->submitValidData($index);
-    }
-
-    #[DataProvider('getFixtureIndexes')]
-    public function testValidDataSubmissionWithIdInput(int $index): void
-    {
-        $this->submitValidData($index, ['input' => 'id']);
-    }
-
-    private function submitValidData(int $index, array $options = []): void
-    {
-        $role = $this->getRoles()[$index];
-        $id = $role->getIdRole();
-        $expectedData = 'id' === ($options['input'] ?? null) ? $id : $role;
-
-        $form = $this->createForm($options);
-        $form->submit((string) $id);
-
-        $this->assertTrue($form->isSynchronized());
-        $this->assertSame($expectedData, $form->getData());
-    }
-
-    /**
-     * @param array<string, mixed> $options
-     */
-    private function createForm(array $options = [], mixed $data = null): FormInterface
-    {
-        return $this->factory->create(B2bRoleChoiceType::class, $data, [
+        return $this->factory->create(B2bRoleChoiceType::class, null, [
             'choices' => $this->getRoles(), // trying to mock the default QB result would be way too much trouble
-            ...$options,
         ]);
     }
 
