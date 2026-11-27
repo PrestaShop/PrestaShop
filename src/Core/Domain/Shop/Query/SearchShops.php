@@ -47,7 +47,7 @@ class SearchShops
      */
     private function assertSearchTermNotEmpty(string $searchTerm): void
     {
-        if (empty(trim($searchTerm))) {
+        if (trim($searchTerm) === '') {
             throw new SearchShopException('Search term cannot be empty.');
         }
     }
