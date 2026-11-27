@@ -460,7 +460,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
      *
      * @return int
      */
-    public static function getAverageCostPercentage()
+    private static function getAverageCostPercentage()
     {
         return 100 - (int) Configuration::get('CONF_AVERAGE_PRODUCT_MARGIN');
     }
