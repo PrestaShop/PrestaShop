@@ -7,6 +7,6 @@ description: "Admin API: API Platform infrastructure in the core, endpoints in t
 
 # Admin API
 
-Read `.ai/Component/AdminAPI/CONTEXT.md` (core infrastructure: providers, processors, normalizers, OpenAPI adapters, test environment) and the domain context of the entity (`.ai/Domain/{Domain}/CONTEXT.md`) before changing these files.
+Read `.ai/Component/AdminAPI/CONTEXT.md` (core infrastructure: providers, processors, normalizers, OpenAPI adapters, test environment) and the domain context of the entity (`.ai/Domain/{Domain}/CONTEXT.md`) before changing or reviewing these files, or answering a question about them.
 
 Endpoint conventions (URI, scopes, mappings, DTOs, errors, tests) are in `modules/ps_apiresources/.ai/CONTEXT.md`; the review checklist is `modules/ps_apiresources/.ai/REVIEW.md`. Read them for any work on a resource, even when `modules/ps_apiresources` is a symlink to another clone.
