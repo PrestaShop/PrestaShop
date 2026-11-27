@@ -564,7 +564,19 @@ sync_rules() {
             "applyTo: \"$globs\"" "$rule_name" "$body"
     done < <(find "$rules_dir" -maxdepth 1 -type f -name "*.md" | sort)
 
-    echo "  ✓ rules          ($RULE_COPIES_WRITTEN tool copies written, $RULE_COPIES_UNCHANGED unchanged)"
+    # A copy whose source left .ai/rules/ would keep applying: remove it
+    local copy source removed=0
+    while IFS= read -r copy; do
+        source=$(sed -n 's/^<!-- Generated from \(\.ai\/rules\/[^ ]*\.md\) by .*/\1/p' "$copy" | head -1)
+        if [[ -n "$source" && ! -f "$REPO_ROOT/$source" ]]; then
+            rm -f "$copy"
+            removed=$((removed + 1))
+        fi
+    done < <(grep -l -- "^<!-- Generated from \.ai/rules/" \
+        "$REPO_ROOT"/.claude/rules/*.md "$REPO_ROOT"/.cursor/rules/*.mdc \
+        "$REPO_ROOT"/.windsurf/rules/*.md "$REPO_ROOT"/.github/instructions/*.instructions.md 2>/dev/null | sort)
+
+    echo "  ✓ rules          ($RULE_COPIES_WRITTEN tool copies written, $RULE_COPIES_UNCHANGED unchanged, $removed removed)"
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
