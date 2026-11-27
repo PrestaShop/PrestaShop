@@ -75,6 +75,11 @@ services:
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationFeatureValuesCommandsBuilder:
     tags: [ 'core.combination_command_builder' ]
 
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationContentCommandsBuilder:
+    tags: [ 'core.combination_command_builder' ]
+    arguments:
+      - !php/const PrestaShopBundle\Form\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
+
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\UpdateCombinationCommandsBuilder:
     tags: [ 'core.combination_command_builder' ]
     arguments:
