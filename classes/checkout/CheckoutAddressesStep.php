@@ -92,6 +92,10 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
                     $this->getCheckoutSession()->setIdAddressInvoice($idAddressInvoice);
                 } else {
                     $this->getCheckoutSession()->setIdAddressInvoice($id_address);
+                    // The invoice address form is only displayed when another address is used for invoice.
+                    // Do not rely on the persisted step data for it: it is dropped when the cart changed
+                    // since the previous request (e.g. the empty invoice address was filled in meanwhile).
+                    $this->use_same_address = false;
                 }
             }
         } elseif (isset($requestParams['newAddress'])) {
