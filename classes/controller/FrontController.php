@@ -1996,9 +1996,12 @@ class FrontControllerCore extends Controller
             $structuredData['organization']['logo'] = [
                 '@type' => 'ImageObject',
                 'url' => $logo['src'],
-                'width' => $logo['width'],
-                'height' => $logo['height'],
             ];
+            // An SVG logo without an intrinsic size has no width or height to declare.
+            if (!empty($logo['width']) && !empty($logo['height'])) {
+                $structuredData['organization']['logo']['width'] = $logo['width'];
+                $structuredData['organization']['logo']['height'] = $logo['height'];
+            }
         }
 
         // Add breadcrumbs, if at least 2 links are present (home + at least one other)
