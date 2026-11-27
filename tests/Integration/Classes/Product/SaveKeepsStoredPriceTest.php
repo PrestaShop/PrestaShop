@@ -32,10 +32,14 @@ class SaveKeepsStoredPriceTest extends KernelTestCase
     /** @var string|false */
     private $previousEcotaxSetting;
 
+    /** @var mixed */
+    private $previousContainer;
+
     protected function setUp(): void
     {
         parent::setUp();
         self::bootKernel();
+        $this->previousContainer = Context::getContext()->container ?? null;
         Context::getContext()->container = self::getContainer();
 
         $this->previousEcotaxSetting = Configuration::get('PS_USE_ECOTAX');
@@ -62,6 +66,7 @@ class SaveKeepsStoredPriceTest extends KernelTestCase
         }
         Configuration::updateValue('PS_USE_ECOTAX', $this->previousEcotaxSetting);
         Product::resetStaticCache();
+        Context::getContext()->container = $this->previousContainer;
 
         parent::tearDown();
     }
