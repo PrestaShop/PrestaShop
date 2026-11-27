@@ -10,6 +10,7 @@ namespace Tests\Integration\PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\AddAttachmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\DeleteAttachmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
@@ -41,6 +42,10 @@ final class AttachmentControllerTest extends SymfonyIntegrationTestCase
         $this->router = $this->client->getContainer()->get('router');
         $this->commandBus = self::getContainer()->get('prestashop.core.command_bus');
         $defaultLanguageId = (int) self::getContainer()->get(ConfigurationInterface::class)->get('PS_LANG_DEFAULT');
+        // Outside a request nothing builds the language context, which the command checks the default name against
+        /** @var LanguageContextBuilder $languageContextBuilder */
+        $languageContextBuilder = self::getContainer()->get('test_language_context_builder');
+        $languageContextBuilder->setDefaultLanguageId($defaultLanguageId);
 
         $file = (string) tempnam(sys_get_temp_dir(), 'att');
         foreach (self::NAMES as $name) {
