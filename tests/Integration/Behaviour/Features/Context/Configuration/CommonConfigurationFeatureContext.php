@@ -9,13 +9,31 @@ namespace Tests\Integration\Behaviour\Features\Context\Configuration;
 use Configuration;
 use Country;
 use Group;
+use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
 use PrestaShop\PrestaShop\Adapter\Feature\GroupFeature;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tools;
 
 class CommonConfigurationFeatureContext extends AbstractConfigurationFeatureContext
 {
+    /**
+     * @Given configuration :index for shop :shopReference is set to :value
+     */
+    public function configurationForShopIsSetTo(string $index, string $shopReference, string $value): void
+    {
+        if ($index === 'PS_ECOTAX_TAX_RULES_GROUP_ID') {
+            $value = (int) SharedStorage::getStorage()->get($value);
+        }
+
+        $this->configurationModified = true;
+        /** @var ConfigurationAdapter $configuration */
+        $configuration = CommonFeatureContext::getContainer()->get(ConfigurationAdapter::class);
+        $configuration->set($index, $value, ShopConstraint::shop((int) SharedStorage::getStorage()->get($shopReference)));
+        Configuration::resetStaticCache();
+    }
+
     /**
      * @Given /^shop configuration for "(.+)" is set to (.+)$/
      */

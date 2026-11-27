@@ -372,12 +372,12 @@ class CombinationAssertionFeatureContext extends AbstractCombinationFeatureConte
                 )
             );
             Assert::assertTrue(
-                $expectedPrices->getImpactOnPriceTaxIncluded()->equals($actualPrices->getImpactOnPriceTaxIncluded()),
+                $expectedPrices->getImpactOnUnitPriceTaxIncluded()->equals($actualPrices->getImpactOnUnitPriceTaxIncluded()),
                 sprintf(
                     'Unexpected combination impact on unit price with taxes for shop %d. Expected "%s", got "%s"',
                     $shopId,
-                    (string) $expectedPrices->getImpactOnPriceTaxIncluded(),
-                    (string) $actualPrices->getImpactOnPriceTaxIncluded()
+                    (string) $expectedPrices->getImpactOnUnitPriceTaxIncluded(),
+                    (string) $actualPrices->getImpactOnUnitPriceTaxIncluded()
                 )
             );
 
