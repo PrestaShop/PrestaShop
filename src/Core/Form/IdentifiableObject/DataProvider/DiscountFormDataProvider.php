@@ -144,10 +144,12 @@ class DiscountFormDataProvider implements FormDataProviderInterface
         } elseif ($productSegmentDefined) {
             $selectedProductCondition = ProductConditionsType::PRODUCT_SEGMENT;
         }
-        // Cheapest product condition has been decided not relevant
-        /*elseif ($discountForEditing->getCheapestProduct()) {
+        // Not offered to a discount that does not already use it - see ProductConditionsType - but a
+        // discount that does has to report it, or the form shows "none", which is not a valid target
+        // for this type, and the discount can no longer be saved.
+        elseif ($discountForEditing->getCheapestProduct()) {
             $selectedProductCondition = ProductConditionsType::CHEAPEST_PRODUCT;
-        }*/
+        }
 
         if ($discountForEditing->getMinimumProductQuantity()) {
             $selectedCartCondition = CartConditionsType::MINIMUM_PRODUCT_QUANTITY;
