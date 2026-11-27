@@ -12,7 +12,9 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
 use PrestaShopBundle\Form\Admin\Type\EmailType;
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -43,6 +45,7 @@ final class ContactDetailsType extends TranslatorAwareType
 
         $builder
             ->add('name', TextType::class, [
+                'multistore_configuration_key' => 'PS_SHOP_NAME',
                 'label' => $this->trans('Shop name', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans(
                     'Displayed in emails and page titles.',
@@ -59,6 +62,7 @@ final class ContactDetailsType extends TranslatorAwareType
                 ],
             ])
             ->add('email', EmailType::class, [
+                'multistore_configuration_key' => 'PS_SHOP_EMAIL',
                 'label' => $this->trans('Shop email address', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans(
                     'Displayed in emails sent to customers.',
@@ -78,6 +82,7 @@ final class ContactDetailsType extends TranslatorAwareType
                 ],
             ])
             ->add('registration_number', TextareaType::class, [
+                'multistore_configuration_key' => 'PS_SHOP_DETAILS',
                 'label' => $this->trans('Registration number', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans(
                     'Shop\'s registration information (e.g. SIRET or RCS).',
@@ -90,26 +95,31 @@ final class ContactDetailsType extends TranslatorAwareType
             // postcode/city/phone/fax, with no length limit: these options are stored in
             // ps_configuration, not in the ps_store columns. See AdminStoresController::getConfigFieldsShop().
             ->add('address1', TextType::class, [
+                'multistore_configuration_key' => 'PS_SHOP_ADDR1',
                 'label' => $this->trans('Shop address line 1', 'Admin.Shopparameters.Feature'),
                 'required' => false,
                 'constraints' => [new TypedRegex(['type' => TypedRegex::TYPE_ADDRESS])],
             ])
             ->add('address2', TextType::class, [
+                'multistore_configuration_key' => 'PS_SHOP_ADDR2',
                 'label' => $this->trans('Shop address line 2', 'Admin.Shopparameters.Feature'),
                 'required' => false,
                 'constraints' => [new TypedRegex(['type' => TypedRegex::TYPE_ADDRESS])],
             ])
             ->add('postcode', TextType::class, [
+                'multistore_configuration_key' => 'PS_SHOP_CODE',
                 'label' => $this->trans('Zip/Postal code', 'Admin.Global'),
                 'required' => false,
                 'constraints' => [new TypedRegex(['type' => TypedRegex::TYPE_GENERIC_NAME])],
             ])
             ->add('city', TextType::class, [
+                'multistore_configuration_key' => 'PS_SHOP_CITY',
                 'label' => $this->trans('City', 'Admin.Global'),
                 'required' => false,
                 'constraints' => [new TypedRegex(['type' => TypedRegex::TYPE_GENERIC_NAME])],
             ])
             ->add('id_country', CountryChoiceType::class, [
+                'multistore_configuration_key' => 'PS_SHOP_COUNTRY_ID',
                 'label' => $this->trans('Country', 'Admin.Global'),
                 'required' => false,
                 'autocomplete' => true,
@@ -124,11 +134,13 @@ final class ContactDetailsType extends TranslatorAwareType
 
         $builder
             ->add('phone', TextType::class, [
+                'multistore_configuration_key' => 'PS_SHOP_PHONE',
                 'label' => $this->trans('Phone', 'Admin.Global'),
                 'required' => false,
                 'constraints' => [new TypedRegex(['type' => TypedRegex::TYPE_GENERIC_NAME])],
             ])
             ->add('fax', TextType::class, [
+                'multistore_configuration_key' => 'PS_SHOP_FAX',
                 'label' => $this->trans('Fax', 'Admin.Global'),
                 'required' => false,
                 'constraints' => [new TypedRegex(['type' => TypedRegex::TYPE_GENERIC_NAME])],
@@ -141,8 +153,30 @@ final class ContactDetailsType extends TranslatorAwareType
         });
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event): void {
-            $this->rebuildStateField($event->getForm(), (int) ($event->getData()['id_country'] ?? 0));
+            $data = $event->getData() ?? [];
+            $form = $event->getForm();
+            // A Country not overridden for the shop is disabled, so not submitted: the states are those of the inherited country
+            $countryId = array_key_exists('id_country', $data)
+                ? (int) $data['id_country']
+                : (int) $form->get('id_country')->getData();
+
+            // A country without states empties the State select, which then submits nothing: the multistore forms
+            // are sent with PATCH, which would keep the saved State. A State left disabled (inherited) stays as is.
+            $stateCheckbox = MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . 'id_state';
+            if (array_key_exists('id_country', $data) && !array_key_exists('id_state', $data)
+                && (!$form->has($stateCheckbox) || !empty($data[$stateCheckbox]))
+            ) {
+                $data['id_state'] = '';
+                $event->setData($data);
+            }
+
+            $this->rebuildStateField($form, $countryId);
         });
+    }
+
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 
     /**
@@ -151,7 +185,7 @@ final class ContactDetailsType extends TranslatorAwareType
     private function rebuildStateField($form, int $countryId): void
     {
         $stateChoices = $countryId > 0 ? $this->statesChoiceProvider->getChoices(['id_country' => $countryId]) : [];
-        $form->add('id_state', ChoiceType::class, [
+        $options = [
             'label' => $this->trans('State', 'Admin.Global'),
             'required' => false,
             'choices' => $stateChoices,
@@ -162,6 +196,21 @@ final class ContactDetailsType extends TranslatorAwareType
             'attr' => [
                 'visible' => !empty($stateChoices),
             ],
-        ]);
+            'multistore_configuration_key' => 'PS_SHOP_STATE_ID',
+        ];
+
+        // Keep what the multistore extension set on the field (disabled when not overridden, shops dropdown),
+        // the listeners below rebuild it after the extension ran.
+        if ($form instanceof FormFormInterface && $form->has('id_state')) {
+            $previousOptions = $form->get('id_state')->getConfig()->getOptions();
+            if (isset($previousOptions['attr']['disabled'])) {
+                $options['attr']['disabled'] = $previousOptions['attr']['disabled'];
+            }
+            if (isset($previousOptions['multistore_dropdown'])) {
+                $options['multistore_dropdown'] = $previousOptions['multistore_dropdown'];
+            }
+        }
+
+        $form->add('id_state', ChoiceType::class, $options);
     }
 }
