@@ -18,12 +18,25 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 final class OrderCountriesChoiceProvider implements FormChoiceProviderInterface
 {
     /**
+     * The orders grid asks for these twice while it is being built, once to decide whether the delivery
+     * column is worth showing and once to fill the country filter. The service is shared, so remembering
+     * the answer saves the whole second round trip - and the query behind it scans every order.
+     *
+     * @var array<string, int>|null
+     */
+    private $choices;
+
+    /**
      * {@inheritdoc}
      */
     public function getChoices()
     {
+        if (null !== $this->choices) {
+            return $this->choices;
+        }
+
         if (!Country::isCurrentlyUsed('country', true)) {
-            return [];
+            return $this->choices = [];
         }
 
         $countries = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
@@ -39,7 +52,7 @@ final class OrderCountriesChoiceProvider implements FormChoiceProviderInterface
 			ORDER BY cl.name ASC'
         );
 
-        return FormChoiceFormatter::formatFormChoices(
+        return $this->choices = FormChoiceFormatter::formatFormChoices(
             $countries,
             'id_country',
             'name'
