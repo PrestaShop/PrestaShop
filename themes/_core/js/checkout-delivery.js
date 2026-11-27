@@ -12,12 +12,18 @@ export default function () {
   const {summarySelector} = prestashop.selectors.checkout;
   const {deliveryStepSelector} = prestashop.selectors.checkout;
   const {editDeliveryButtonSelector} = prestashop.selectors.checkout;
+  let pendingUpdates = 0;
 
   const updateDeliveryForm = (event) => {
     const $deliveryMethodForm = $(deliveryFormSelector);
     const requestData = $deliveryMethodForm.serialize();
     const $inputChecked = $(event.currentTarget);
     const $newDeliveryOption = $inputChecked.parents(prestashop.selectors.checkout.deliveryOption);
+    // A carrier update saved after "Continue" marks this step incomplete again and sends the customer back to it
+    const $confirmButton = $deliveryMethodForm.find('button[name="confirmDeliveryOption"]');
+
+    pendingUpdates += 1;
+    $confirmButton.prop('disabled', true);
 
     $.post($deliveryMethodForm.data('url-update'), requestData)
       .then((resp) => {
@@ -40,6 +46,12 @@ export default function () {
           eventType: 'updateDeliveryOptions',
           resp,
         });
+      })
+      .always(() => {
+        pendingUpdates -= 1;
+        if (pendingUpdates === 0) {
+          $confirmButton.prop('disabled', false);
+        }
       });
   };
 
