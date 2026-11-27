@@ -2589,7 +2589,7 @@ class ToolsCore
      *
      * @return string
      */
-    public static function getHtaccessDomainPattern($domain)
+    private static function getHtaccessDomainPattern($domain)
     {
         /*
          * WHY: a domain is free text - ShopUrl validates it with isCleanHtml - but it ends up

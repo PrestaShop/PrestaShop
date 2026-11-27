@@ -1299,7 +1299,7 @@ class ToolsTest extends TestCase
      */
     public function testGetHtaccessDomainPatternMatchesOnlyThatDomain(string $domain, string $lookalike): void
     {
-        $regex = $this->htaccessDomainPatternToRegex(Tools::getHtaccessDomainPattern($domain));
+        $regex = $this->htaccessDomainPatternToRegex($this->getHtaccessDomainPattern($domain));
 
         $this->assertSame(1, preg_match($regex, $domain), 'a domain must still match its own pattern');
         $this->assertSame(0, preg_match($regex, $lookalike), 'the pattern must not match anything else');
@@ -1321,7 +1321,7 @@ class ToolsTest extends TestCase
         // which Apache rejects with "RewriteCond: bad flag delimiters". That is a parse error
         // on .htaccess, so every request - the back office included - answers HTTP 500 and the
         // merchant can no longer correct the domain. Quoting keeps it a single argument.
-        $pattern = Tools::getHtaccessDomainPattern('10.0.1.34 10.0.6.3');
+        $pattern = $this->getHtaccessDomainPattern('10.0.1.34 10.0.6.3');
 
         $this->assertStringStartsWith('"', $pattern);
         $this->assertStringEndsWith('"', $pattern);
@@ -1330,6 +1330,13 @@ class ToolsTest extends TestCase
             substr($pattern, 1, -1),
             'the quoted argument must not be terminated early'
         );
+    }
+
+    private function getHtaccessDomainPattern(string $domain): string
+    {
+        $method = new ReflectionMethod(Tools::class, 'getHtaccessDomainPattern');
+
+        return $method->invoke(null, $domain);
     }
 
     private function htaccessDomainPatternToRegex(string $pattern): string
