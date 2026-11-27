@@ -260,19 +260,75 @@ final class EmployeeTrustedDeviceManagerTest extends TestCase
         self::assertSame($token, $tokens->getToken());
     }
 
-    public function testPendingAuthenticationCannotIssueTrust(): void
+    #[DataProvider('pendingProviders')]
+    public function testPendingAuthenticationOffersTrustWithoutIssuingACookie(string $provider): void
     {
         $user = $this->user(1);
         $authenticated = new UsernamePasswordToken($user, 'main', ['ROLE_EMPLOYEE']);
-        $pending = (new TrustedDeviceTokenFactory(new TwoFactorTokenFactory()))->create($authenticated, 'main', ['email']);
+        $pending = (new TrustedDeviceTokenFactory(new TwoFactorTokenFactory()))->create($authenticated, 'main', [$provider]);
         $tokens = new TokenStorage();
         $tokens->setToken($pending);
         $inner = $this->createMock(TrustedDeviceManagerInterface::class);
         $inner->expects(self::never())->method('addTrustedDevice');
         $repository = $this->createMock(EmployeeRepository::class);
+        $repository->method('getTrustedDeviceVersion')->willReturn(1);
+        $inner->expects(self::once())->method('canSetTrustedDevice')->willReturn(true);
         $manager = new EmployeeTrustedDeviceManager($inner, $tokens, $repository);
+        self::assertTrue($manager->canSetTrustedDevice($user, new Request(), 'main'));
+        $manager->addTrustedDevice($user, 'main');
+    }
+
+    public static function pendingProviders(): iterable
+    {
+        yield 'email' => ['email'];
+        yield 'TOTP' => ['totp'];
+    }
+
+    #[DataProvider('differentAuthentications')]
+    public function testPendingAuthenticationRejectsMismatchedSnapshot(int $version, int $id, string $email, string $firewall): void
+    {
+        $authenticated = new UsernamePasswordToken($this->user(1), 'main', ['ROLE_EMPLOYEE']);
+        $pending = (new TrustedDeviceTokenFactory(new TwoFactorTokenFactory()))->create($authenticated, 'main', ['email']);
+        $user = $this->user($version, $id, $email);
+        $pending->setUser($user);
+        $tokens = new TokenStorage();
+        $tokens->setToken($pending);
+        $inner = $this->createMock(TrustedDeviceManagerInterface::class);
+        $inner->expects(self::never())->method('canSetTrustedDevice');
+        $inner->expects(self::never())->method('addTrustedDevice');
+        $repository = $this->createMock(EmployeeRepository::class);
+        $repository->expects(self::never())->method('getTrustedDeviceVersion');
+        $manager = new EmployeeTrustedDeviceManager($inner, $tokens, $repository);
+
+        self::assertFalse($manager->canSetTrustedDevice($user, new Request(), $firewall));
+        $manager->addTrustedDevice($user, $firewall);
+    }
+
+    #[DataProvider('pendingSnapshotStates')]
+    public function testPendingAuthenticationRejectsMissingOrRevokedSnapshot(bool $missing): void
+    {
+        $user = $this->user(1);
+        $authenticated = new UsernamePasswordToken($user, 'main', ['ROLE_EMPLOYEE']);
+        $factory = $missing ? new TwoFactorTokenFactory() : new TrustedDeviceTokenFactory(new TwoFactorTokenFactory());
+        $pending = $factory->create($authenticated, 'main', ['email']);
+        $tokens = new TokenStorage();
+        $tokens->setToken($pending);
+        $inner = $this->createMock(TrustedDeviceManagerInterface::class);
+        $inner->expects(self::never())->method('canSetTrustedDevice');
+        $inner->expects(self::never())->method('addTrustedDevice');
+        $repository = $this->createMock(EmployeeRepository::class);
+        $repository->expects($missing ? self::never() : self::once())->method('getTrustedDeviceVersion')->willReturn(2);
+        $manager = new EmployeeTrustedDeviceManager($inner, $tokens, $repository);
+
         self::assertFalse($manager->canSetTrustedDevice($user, new Request(), 'main'));
         $manager->addTrustedDevice($user, 'main');
+        self::assertSame($pending, $tokens->getToken());
+    }
+
+    public static function pendingSnapshotStates(): iterable
+    {
+        yield 'missing snapshot' => [true];
+        yield 'revoked database version' => [false];
     }
 
     public function testFactoryCannotReplaceTheInitialSnapshotAfterRefresh(): void

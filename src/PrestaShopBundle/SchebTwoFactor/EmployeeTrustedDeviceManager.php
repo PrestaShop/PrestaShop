@@ -47,6 +47,7 @@ final class EmployeeTrustedDeviceManager implements TrustedDeviceManagerInterfac
     public function addTrustedDevice(object $user, string $firewallName): void
     {
         if (!$user instanceof Employee
+            || $this->tokenStorage->getToken() instanceof TwoFactorTokenInterface
             || !$this->matchesOriginalAuthentication($user, $firewallName)
             || !$this->hasCurrentVersion($user)
         ) {
@@ -62,7 +63,7 @@ final class EmployeeTrustedDeviceManager implements TrustedDeviceManagerInterfac
     {
         $token = $this->tokenStorage->getToken();
         if ($token instanceof TwoFactorTokenInterface) {
-            return false;
+            $token = $token->getAuthenticatedToken();
         }
         if (null === $token || !$token->hasAttribute(TrustedDeviceTokenFactory::AUTHENTICATION_ATTRIBUTE)) {
             return false;
