@@ -29,17 +29,21 @@
     {{ include('@PrestaShop/Admin/Sell/Order/Cart/Blocks/View/cart_summary.html.twig') }}
   {% endblock %}
 
-  {% if cartView.cartSummary.cart_link is not empty %}
+  {% if cartView.orderInformation.id is empty %}
     <div class="card" data-role="customer-information">
       <h3 class="card-header">
         <i class="material-icons">mail</i>
         {{ 'Share this cart'|trans({}, 'Admin.Orderscustomers.Feature') }}
       </h3>
       <div class="card-body">
-        <p>{{ 'Thanks to this link, your customer can open the cart, check its contents and validate the order, if it suits them.'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
-        <div class="card bg-light p-2 mb-0">
-        {{ cartView.cartSummary.cart_link }}
-        </div>
+        {% if cartView.cartSummary.cart_link is not empty %}
+          <p>{{ 'Thanks to this link, your customer can open the cart, check its contents and validate the order, if it suits them.'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+          <div class="card bg-light p-2 mb-0">
+            {{ cartView.cartSummary.cart_link }}
+          </div>
+        {% else %}
+          <p class="mb-0">{{ 'This cart cannot be shared because it is not associated with a customer.'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+        {% endif %}
       </div>
     </div>
   {% endif %}
