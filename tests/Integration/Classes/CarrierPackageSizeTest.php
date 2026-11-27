@@ -41,10 +41,16 @@ class CarrierPackageSizeTest extends KernelTestCase
     private static $idCarrier;
     /** @var array<int> */
     private static $cartIds = [];
+    /** @var array<string, mixed> */
+    private static $previousContext = [];
 
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
+        $context = Context::getContext();
+        foreach (['controller', 'container', 'shop', 'language', 'currency', 'country', 'customer', 'cart'] as $property) {
+            self::$previousContext[$property] = $context->{$property} ?? null;
+        }
         Configuration::loadConfiguration();
         Configuration::updateValue('PS_ORDER_OUT_OF_STOCK', true);
 
@@ -54,6 +60,10 @@ class CarrierPackageSizeTest extends KernelTestCase
     public static function tearDownAfterClass(): void
     {
         self::removeFixture();
+        $context = Context::getContext();
+        foreach (self::$previousContext as $property => $value) {
+            $context->{$property} = $value;
+        }
         parent::tearDownAfterClass();
     }
 
