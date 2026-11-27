@@ -4,6 +4,7 @@
 > For cross-domain naming traps and identity gotchas, see [GOTCHAS.md](GOTCHAS.md).
 > For multi-store scoping (ShopConstraint, AbstractMultistoreConfiguration), see [MULTISTORE.md](MULTISTORE.md).
 > For the service-container / kernel topology (3 Symfony kernels vs the hand-built FO legacy container, and where service definitions live), see [CONTAINERS.md](CONTAINERS.md).
+> For reviewing a pull request (severity and format of a finding), see [REVIEW.md](REVIEW.md).
 
 ## Project overview
 
@@ -88,6 +89,7 @@ Common slips unrelated to the feature itself — check before pushing:
 | `domain-context-generator` | [skills/domain-context-generator/SKILL.md](skills/domain-context-generator/SKILL.md) | "generate context for [Domain]" |
 | `component-context-generator` | [skills/component-context-generator/SKILL.md](skills/component-context-generator/SKILL.md) | "generate context for [Component]" |
 | `create-pr` | [skills/create-pr/SKILL.md](skills/create-pr/SKILL.md) | "create a PR", "open a pull request", "submit a PR" |
+| `review-pr` | [skills/review-pr/SKILL.md](skills/review-pr/SKILL.md) | "review PR #N", "review this pull request", "pre-review my PR" |
 
 ## Domain contexts
 

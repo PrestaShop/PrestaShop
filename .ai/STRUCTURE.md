@@ -18,6 +18,7 @@ Each AI tool has its own configuration format (`CLAUDE.md`, `.cursorrules`, `.gi
 .ai/
 ├── CONTEXT.md              # Root context: project-wide rules, architecture, and index of all sub-contexts
 ├── STRUCTURE.md            # This file — explains the architecture of the .ai/ folder
+├── REVIEW.md               # Review checklist: severity and comment format of a finding (procedure: skills/review-pr)
 │
 ├── bin/                    # Tooling: generate-ai-index.sh (builds generated/),
 │                           # check-conventions.php (checks a branch diff against these files)
@@ -57,6 +58,7 @@ Each AI tool has its own configuration format (`CLAUDE.md`, `.cursorrules`, `.gi
 | `STRUCTURE.md` | This file — architecture documentation | N/A |
 | `GOTCHAS.md` | Cross-domain naming traps, identity pitfalls, and legacy mismatches | N/A |
 | `MULTISTORE.md` | Cross-cutting multi-store guide: ShopConstraint, scoped config, multi-shop repositories | N/A |
+| `REVIEW.md` | Review checklist: how a finding is rated and written, read by the `review-pr` skill and by automated reviewers; points to the contexts, never restates them | < 200 lines |
 
 ### CONTEXT.md template
 
