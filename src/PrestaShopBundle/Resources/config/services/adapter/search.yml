@@ -7,3 +7,16 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Search\CommandHandler\SearchIndexationHandler
     autowire: true
     autoconfigure: true
+
+  # Repositories
+  PrestaShop\PrestaShop\Adapter\Search\Repository\IndexedProductsRepository:
+    autowire: true
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+
+  # Query Handlers
+  prestashop.adapter.search.query_handler.get_indexed_products_count_handler:
+    class: PrestaShop\PrestaShop\Adapter\Search\QueryHandler\GetIndexedProductsCountHandler
+    autowire: true
+    autoconfigure: true
