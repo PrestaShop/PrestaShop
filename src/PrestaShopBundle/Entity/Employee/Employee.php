@@ -15,6 +15,7 @@ use PrestaShopBundle\Security\Admin\SessionEmployeeInterface;
 use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface as EmailTwoFactorInterface;
 use Scheb\TwoFactorBundle\Model\Totp\TotpConfiguration;
 use Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface as TotpTwoFactorInterface;
+use Scheb\TwoFactorBundle\Model\TrustedDeviceInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -31,7 +32,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *     },
  *  )
  */
-class Employee implements UserInterface, PasswordAuthenticatedUserInterface, EquatableInterface, SessionEmployeeInterface, TotpTwoFactorInterface, EmailTwoFactorInterface
+class Employee implements UserInterface, PasswordAuthenticatedUserInterface, EquatableInterface, SessionEmployeeInterface, TotpTwoFactorInterface, EmailTwoFactorInterface, TrustedDeviceInterface
 {
     public const ROLE_EMPLOYEE = 'ROLE_EMPLOYEE';
 
@@ -201,6 +202,13 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface, Equ
     private bool $twoFactorEnabled = false;
 
     /**
+     * Written only by atomic increments, never by a stale ORM entity.
+     *
+     * @ORM\Column(name="two_factor_trusted_version", type="integer", options={"unsigned": true, "default": 1}, insertable=false, updatable=false)
+     */
+    private int $trustedTokenVersion = 1;
+
+    /**
      * @ORM\Column(name="two_factor_required", type="boolean", options={"default": 0})
      */
     private bool $twoFactorRequired = false;
@@ -242,6 +250,11 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface, Equ
     public function getId(): int
     {
         return $this->id;
+    }
+
+    public function getTrustedTokenVersion(): int
+    {
+        return $this->trustedTokenVersion;
     }
 
     public function getUserIdentifier(): string

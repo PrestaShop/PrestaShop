@@ -20,6 +20,7 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkUpdateEmployeeStatusC
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\DeleteEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\EditEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ResetEmployeePasswordCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ResetEmployeeTwoFactorCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\SendEmployeePasswordResetEmailCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ToggleEmployeeStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeConstraintException;
@@ -48,6 +49,46 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
     private const MIN_PASSWORD_SCORE = 1;
 
     private ?Employee $contextEmployee = null;
+
+    /**
+     * @When I edit employee :employeeReference and :effect trusted devices:
+     */
+    public function editEmployeeAndCheckTrustedDevices(string $employeeReference, string $effect, TableNode $table): void
+    {
+        Assert::assertContains($effect, ['revoke', 'preserve']);
+        $employeeId = $this->referenceToId($employeeReference);
+        /** @var EmployeeRepository $repository */
+        $repository = $this->getContainer()->get(EmployeeRepository::class);
+        $before = $repository->getTrustedDeviceVersion($employeeId);
+        $command = new EditEmployeeCommand($employeeId);
+        foreach ($table->getRowsHash() as $field => $value) {
+            match ($field) {
+                '2FA enabled' => $command->setTwoFactorEnabled(filter_var($value, FILTER_VALIDATE_BOOLEAN)),
+                'TOTP enabled' => $command->setTwoFactorTotpEnabled(filter_var($value, FILTER_VALIDATE_BOOLEAN)),
+                'Email 2FA enabled' => $command->setTwoFactorEmailEnabled(filter_var($value, FILTER_VALIDATE_BOOLEAN)),
+                '2FA required' => $command->setTwoFactorRequired(filter_var($value, FILTER_VALIDATE_BOOLEAN)),
+                'Last name' => $command->setLastName($value),
+                'Email address' => $command->setEmail($value),
+                'Password' => $command->setPlainPassword($value, self::MIN_PASSWORD_LENGTH, self::MAX_PASSWORD_LENGTH, self::MIN_PASSWORD_SCORE),
+                default => throw new RuntimeException('Unsupported field: ' . $field),
+            };
+        }
+        $this->getCommandBus()->handle($command);
+        Assert::assertSame($before + ('revoke' === $effect ? 1 : 0), $repository->getTrustedDeviceVersion($employeeId));
+    }
+
+    /**
+     * @When I reset 2FA for employee :employeeReference and revoke trusted devices
+     */
+    public function resetTwoFactorAndCheckTrustedDevices(string $employeeReference): void
+    {
+        $employeeId = $this->referenceToId($employeeReference);
+        /** @var EmployeeRepository $repository */
+        $repository = $this->getContainer()->get(EmployeeRepository::class);
+        $before = $repository->getTrustedDeviceVersion($employeeId);
+        $this->getCommandBus()->handle(new ResetEmployeeTwoFactorCommand($employeeId));
+        Assert::assertSame($before + 1, $repository->getTrustedDeviceVersion($employeeId));
+    }
 
     /**
      * @Given I Add new employee :employeeReference to shop :shopReference with the following details:

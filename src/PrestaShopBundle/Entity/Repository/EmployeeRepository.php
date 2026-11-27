@@ -8,9 +8,11 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Entity\Repository;
 
+use Doctrine\DBAL\Connections\PrimaryReadReplicaConnection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityRepository;
+use PrestaShop\PrestaShop\Adapter\Employee\TwoFactor\TrustedDeviceVersionUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeTwoFactorException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
@@ -86,6 +88,7 @@ class EmployeeRepository extends EntityRepository
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         return $qb->update($this->getEntityName(), 'e')
+            ->set('e.trustedTokenVersion', 'e.trustedTokenVersion + 1')
             ->set('e.twoFactorEnabled', ':false')
             ->set('e.twoFactorTotpEnabled', ':false')
             ->set('e.twoFactorEmailEnabled', ':false')
@@ -96,6 +99,70 @@ class EmployeeRepository extends EntityRepository
             ->setParameter('null', null)
             ->getQuery()
             ->execute();
+    }
+
+    /**
+     * Read without hydrating or refreshing the user involved in authentication.
+     */
+    public function getTrustedDeviceVersion(int $employeeId): int
+    {
+        $connection = $this->getEntityManager()->getConnection();
+        if ($connection instanceof PrimaryReadReplicaConnection) {
+            $connection->ensureConnectedToPrimary();
+        }
+        $version = $connection->createQueryBuilder()
+            ->select(TrustedDeviceVersionUpdater::COLUMN)
+            ->from($this->getClassMetadata()->getTableName())
+            ->where('id_employee = :employeeId')
+            ->setParameter('employeeId', $employeeId)
+            ->setMaxResults(1)
+            ->executeQuery()->fetchOne();
+
+        if (false === $version) {
+            throw new EmployeeNotFoundException(new EmployeeId($employeeId));
+        }
+
+        return (int) $version;
+    }
+
+    /**
+     * Called from preUpdate using the event's EntityManager. This statement and
+     * the ORM update share the flush transaction and hold the same row lock.
+     *
+     * @param array<string, array{0: mixed, 1: mixed}> $changeSet
+     */
+    public function revokeTrustedDevicesForChanges(int $employeeId, array $changeSet): void
+    {
+        $columns = [
+            'password' => ['passwd', Types::STRING],
+            'email' => ['email', Types::STRING],
+            'twoFactorEnabled' => ['two_factor_enabled', Types::BOOLEAN],
+            'twoFactorTotpEnabled' => ['two_factor_totp_enabled', Types::BOOLEAN],
+            'twoFactorEmailEnabled' => ['two_factor_email_enabled', Types::BOOLEAN],
+            'twoFactorTotpSecretEncrypted' => ['two_factor_totp_secret', Types::STRING],
+        ];
+        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
+        $values = [];
+        foreach ($columns as $property => [$column, $type]) {
+            if (!array_key_exists($property, $changeSet)) {
+                continue;
+            }
+
+            $parameter = 'trusted_' . $column;
+            $values[$column] = ':' . $parameter;
+            $qb->setParameter($parameter, $changeSet[$property][1], $type);
+        }
+
+        $expression = (new TrustedDeviceVersionUpdater())->getIncrementExpression($values);
+        if (null === $expression) {
+            return;
+        }
+
+        $qb->update($this->getClassMetadata()->getTableName())
+            ->set(TrustedDeviceVersionUpdater::COLUMN, $expression)
+            ->where('id_employee = :employeeId')
+            ->setParameter('employeeId', $employeeId)
+            ->executeStatement();
     }
 
     public function clearBackupCodes(int $employeeId): void

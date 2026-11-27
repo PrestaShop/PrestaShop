@@ -4,6 +4,7 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 use PrestaShop\PrestaShop\Adapter\CoreException;
+use PrestaShop\PrestaShop\Adapter\Employee\TwoFactor\TrustedDeviceVersionUpdater;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
@@ -110,6 +111,18 @@ class EmployeeCore extends ObjectModel
     public $two_factor_totp_secret;
 
     /**
+     * @var int
+     */
+    public $two_factor_trusted_version = 1;
+
+    /**
+     * @var array{nullValues: bool, force: bool}|null
+     */
+    private ?array $trustedDeviceUpdateContext = null;
+
+    private bool $trustedDeviceRevocationRequested = false;
+
+    /**
      * @see ObjectModel::$definition
      */
     public static $definition = [
@@ -147,6 +160,7 @@ class EmployeeCore extends ObjectModel
             'two_factor_totp_enabled' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'two_factor_email_enabled' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'two_factor_totp_secret' => ['type' => self::TYPE_STRING, 'required' => false, 'size' => 512],
+            'two_factor_trusted_version' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'copy_post' => false],
         ],
     ];
 
@@ -159,6 +173,7 @@ class EmployeeCore extends ObjectModel
             'stats_compare_from' => ['setter' => false],
             'stats_compare_to' => ['setter' => false],
             'passwd' => ['setter' => 'setWsPasswd'],
+            'two_factor_trusted_version' => ['setter' => false],
         ],
     ];
 
@@ -209,7 +224,19 @@ class EmployeeCore extends ObjectModel
             $this->stats_compare_to = null;
         }
 
-        return parent::getFields();
+        $fields = parent::getFields();
+        unset($fields[TrustedDeviceVersionUpdater::COLUMN]);
+
+        if (null === $this->trustedDeviceUpdateContext) {
+            // Inserts, including installation with force_id, use the database default.
+            return $fields;
+        }
+
+        return (new TrustedDeviceVersionUpdater())->getLegacyUpdateFields(
+            $fields,
+            $this->trustedDeviceUpdateContext['nullValues'],
+            $this->trustedDeviceUpdateContext['force']
+        );
     }
 
     /**
@@ -255,7 +282,27 @@ class EmployeeCore extends ObjectModel
 
         $this->updateTextDirection();
 
-        return parent::update($nullValues);
+        $previousContext = $this->trustedDeviceUpdateContext;
+        $this->trustedDeviceUpdateContext = [
+            'nullValues' => (bool) $nullValues,
+            'force' => $this->trustedDeviceRevocationRequested,
+        ];
+        $this->trustedDeviceRevocationRequested = false;
+
+        try {
+            return parent::update($nullValues);
+        } finally {
+            $this->trustedDeviceUpdateContext = $previousContext;
+        }
+    }
+
+    /**
+     * An explicit reset must revoke trust even when 2FA was already disabled.
+     * The increment is persisted by the next update, together with the flags.
+     */
+    public function requestTrustedDeviceRevocation(): void
+    {
+        $this->trustedDeviceRevocationRequested = true;
     }
 
     /**

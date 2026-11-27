@@ -6,6 +6,14 @@ services:
     autoconfigure: true
 
   # SECURITY
+  PrestaShopBundle\SchebTwoFactor\TrustedDeviceTokenFactory:
+    arguments:
+      $inner: '@scheb_two_factor.default_token_factory'
+
+  PrestaShopBundle\SchebTwoFactor\EmployeeTrustedDeviceManager:
+    arguments:
+      $inner: '@scheb_two_factor.default_trusted_device_manager'
+
   PrestaShopBundle\EventListener\Admin\TokenizedUrlsListener:
     autowire: true
     arguments:

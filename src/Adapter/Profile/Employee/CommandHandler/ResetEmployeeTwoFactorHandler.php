@@ -32,6 +32,7 @@ final class ResetEmployeeTwoFactorHandler extends AbstractEmployeeHandler
         $employee->two_factor_totp_enabled = false;
         $employee->two_factor_email_enabled = false;
         $employee->two_factor_totp_secret = null;
+        $employee->requestTrustedDeviceRevocation();
 
         if (false === $employee->update()) {
             throw new EmployeeException(sprintf('Cannot reset 2FA for employee with id "%s"', $employee->id));

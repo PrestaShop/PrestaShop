@@ -50,8 +50,11 @@ class GeneralConfiguration implements DataConfigurationInterface
 
             if ($wasEnabled && !$willBeEnabled) {
                 // 2FA is being disabled - clear all employee 2FA data
-                if ($this->employeeRepository->hasAnyEmployeeWithTwoFactorData()) {
-                    $this->employeeRepository->resetAllTwoFactorData();
+                $hadTwoFactorData = $this->employeeRepository->hasAnyEmployeeWithTwoFactorData();
+                // Revoke cookies for every employee, including those without remaining 2FA data.
+                // If this fails, leave the global setting enabled. Never restore an older version.
+                $this->employeeRepository->resetAllTwoFactorData();
+                if ($hadTwoFactorData) {
                     $infoMessages[] = [
                         'type' => 'info',
                         'key' => '2fa_data_reset',

@@ -296,6 +296,43 @@ Feature: Employee management
     When I delete the employee backup_lifecycle_employee
     Then employee backup_lifecycle_employee does not exist
 
+  @trusted-devices
+  Scenario: CQRS employee changes revoke trusted devices only for security events
+    Given I Add new employee "trusted_employee" to shop "shop1" with the following details:
+      | First name         | Ada                            |
+      | Last name          | Byron                          |
+      | Email address      | ada.trusted@prestashop.com      |
+      | Password           | secretpassword                 |
+      | Default page       | Products                       |
+      | Language           | English (English)              |
+      | Active             | true                           |
+      | Permission profile | Salesman                       |
+    When I edit employee "trusted_employee" and "revoke" trusted devices:
+      | 2FA enabled       | true |
+      | Email 2FA enabled | true |
+    And I edit employee "trusted_employee" and "preserve" trusted devices:
+      | 2FA enabled       | true |
+      | Email 2FA enabled | true |
+    And I edit employee "trusted_employee" and "preserve" trusted devices:
+      | Last name    | Lovelace |
+      | 2FA required | true     |
+    And I edit employee "trusted_employee" and "revoke" trusted devices:
+      | Email address | ada.trusted.changed@prestashop.com |
+      | Password      | anothersecretpassword             |
+    Given employee "trusted_employee" has a TOTP secret
+    When I edit employee "trusted_employee" and "revoke" trusted devices:
+      | TOTP enabled | true |
+    And I edit employee "trusted_employee" and "revoke" trusted devices:
+      | Email 2FA enabled | false |
+    And I edit employee "trusted_employee" and "revoke" trusted devices:
+      | 2FA enabled | false |
+    And I edit employee "trusted_employee" and "revoke" trusted devices:
+      | 2FA enabled | true |
+    And I reset 2FA for employee "trusted_employee" and revoke trusted devices
+    And I reset 2FA for employee "trusted_employee" and revoke trusted devices
+    When I delete the employee trusted_employee
+    Then employee trusted_employee does not exist
+
   Scenario: I cannot edit an employee that does not exist
     Given I delete the employee partial_employee
     When I edit employee "partial_employee" with the following details:

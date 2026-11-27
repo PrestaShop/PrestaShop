@@ -29,6 +29,13 @@ class TwoFactorConfigurationTest extends TestCase
         foreach (['totp', 'email', 'backup_codes', 'trusted_device'] as $feature) {
             self::assertSame($kernel === 'admin', $configuration[$feature]['enabled'], $feature);
         }
+        if ('admin' === $kernel) {
+            self::assertSame('PrestaShopBundle\SchebTwoFactor\TrustedDeviceTokenFactory', $configuration['two_factor_token_factory']);
+            self::assertSame('PrestaShopBundle\SchebTwoFactor\EmployeeTrustedDeviceManager', $configuration['trusted_device']['manager']);
+        } else {
+            self::assertNotSame('PrestaShopBundle\SchebTwoFactor\TrustedDeviceTokenFactory', $configuration['two_factor_token_factory']);
+            self::assertNotSame('PrestaShopBundle\SchebTwoFactor\EmployeeTrustedDeviceManager', $configuration['trusted_device']['manager']);
+        }
     }
 
     public static function kernelEnvironments(): iterable

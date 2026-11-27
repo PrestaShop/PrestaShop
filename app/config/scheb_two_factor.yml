@@ -1,4 +1,5 @@
 scheb_two_factor:
+  two_factor_token_factory: 'PrestaShopBundle\SchebTwoFactor\TrustedDeviceTokenFactory'
   security_tokens:
     - Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken
 
@@ -18,6 +19,7 @@ scheb_two_factor:
 
   trusted_device:
     enabled: true
+    manager: 'PrestaShopBundle\SchebTwoFactor\EmployeeTrustedDeviceManager'
     cookie_name: trusted_device
 
 services:

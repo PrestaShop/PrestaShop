@@ -863,6 +863,7 @@ CREATE TABLE `PREFIX_employee` (
   `reset_password_validity` datetime DEFAULT NULL,
   `has_enabled_gravatar` TINYINT UNSIGNED DEFAULT 0 NOT NULL,
   `two_factor_enabled` TINYINT(1) unsigned NOT NULL DEFAULT '0',
+  `two_factor_trusted_version` INT unsigned NOT NULL DEFAULT '1',
   `two_factor_required` TINYINT(1) unsigned NOT NULL DEFAULT '0',
   `two_factor_totp_enabled` TINYINT(1) unsigned NOT NULL DEFAULT '0',
   `two_factor_totp_secret` VARCHAR(512) DEFAULT NULL,
