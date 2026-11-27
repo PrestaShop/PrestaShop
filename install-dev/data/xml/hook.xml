@@ -5943,5 +5943,25 @@
       <title>Order detail product line</title>
       <description>This hook is displayed on each product line of the order's details in Front Office</description>
     </hook>
+    <hook id="actionWithdrawalRequestSubmitted">
+      <name>actionWithdrawalRequestSubmitted</name>
+      <title>Withdrawal request submitted</title>
+      <description>This hook is called after a customer confirmed the withdrawal from an order with the withdrawal function, once the acknowledgement of receipt is sent</description>
+    </hook>
+    <hook id="actionWithdrawalRequestStatusUpdate">
+      <name>actionWithdrawalRequestStatusUpdate</name>
+      <title>Withdrawal request status updated</title>
+      <description>This hook is called after the merchant updated the processing status of a withdrawal request</description>
+    </hook>
+    <hook id="actionWithdrawalRequestGridDefinitionModifier">
+      <name>actionWithdrawalRequestGridDefinitionModifier</name>
+      <title>Modify withdrawal request grid definition</title>
+      <description>This hook allows to alter withdrawal request grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionWithdrawalRequestGridQueryBuilderModifier">
+      <name>actionWithdrawalRequestGridQueryBuilderModifier</name>
+      <title>Modify withdrawal request grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for withdrawal request grid</description>
+    </hook>
   </entities>
 </entity_hook>

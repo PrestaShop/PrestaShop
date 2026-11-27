@@ -6,6 +6,7 @@
  */
 
 use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderPresenter;
+use PrestaShop\PrestaShop\Adapter\WithdrawalRequest\WithdrawalButtonPresenter;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 
@@ -214,6 +215,7 @@ class OrderDetailControllerCore extends FrontController
             'orderIsVirtual' => $this->order->isVirtual(),
             'HOOK_DISPLAYORDERDETAIL' => Hook::exec('displayOrderDetail', ['order' => $this->order]),
             'is_multishipment_enabled' => $featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT),
+            'withdrawal_button' => $this->get(WithdrawalButtonPresenter::class)->present($this->order),
         ]);
 
         $this->setTemplate('customer/order-detail');

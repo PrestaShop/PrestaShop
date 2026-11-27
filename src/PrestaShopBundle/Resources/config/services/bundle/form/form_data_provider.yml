@@ -330,3 +330,8 @@ services:
 
   PrestaShopBundle\Form\Admin\Login\ResetPasswordFormDataProvider:
     autowire: true
+
+  prestashop.admin.withdrawal_request_options.form_data_provider:
+    class: 'PrestaShopBundle\Form\Admin\Sell\CustomerService\WithdrawalRequest\WithdrawalRequestOptionsFormDataProvider'
+    arguments:
+      - '@prestashop.core.withdrawal_request.configuration.withdrawal_request_options_configuration'

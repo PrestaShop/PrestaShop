@@ -104,6 +104,12 @@
   <configuration id="PS_ORDER_RETURN_NB_DAYS" name="PS_ORDER_RETURN_NB_DAYS">
     <value>14</value>
   </configuration>
+  <configuration id="PS_WITHDRAWAL_FUNCTION" name="PS_WITHDRAWAL_FUNCTION">
+    <value>1</value>
+  </configuration>
+  <configuration id="PS_WITHDRAWAL_PERIOD" name="PS_WITHDRAWAL_PERIOD">
+    <value>14</value>
+  </configuration>
   <configuration id="PS_MAIL_TYPE" name="PS_MAIL_TYPE">
     <value>3</value>
   </configuration>

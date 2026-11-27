@@ -336,3 +336,10 @@ services:
 
   PrestaShop\PrestaShop\Adapter\AdminAPI\AdminAPIConfiguration:
     autowire: true
+
+  prestashop.core.withdrawal_request.configuration.withdrawal_request_options_configuration:
+    class: 'PrestaShop\PrestaShop\Core\WithdrawalRequest\Configuration\WithdrawalRequestOptionsConfiguration'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
