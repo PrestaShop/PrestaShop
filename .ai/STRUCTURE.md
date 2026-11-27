@@ -19,14 +19,15 @@ Each AI tool has its own configuration format (`CLAUDE.md`, `.cursorrules`, `.gi
 ├── CONTEXT.md              # Root context: project-wide rules, architecture, and index of all sub-contexts
 ├── STRUCTURE.md            # This file — explains the architecture of the .ai/ folder
 │
-├── bin/                    # Tooling: generate-ai-index.sh (builds generated/),
-│                           # check-conventions.php (checks a branch diff against these files)
+├── bin/                    # Tooling: generate-ai-index.sh (builds generated/ and the rules of .claude/rules/),
+│                           # check-conventions.php (checks a branch diff against these files),
+│                           # context-index.php (the files each context covers, shared by both)
 │
 ├── skills/                 # Cross-cutting skills not tied to a single domain or component
 │   └── {skill-name}/
 │       └── SKILL.md
 │
-├── rules/                  # Path-scoped rules: source of the per-tool copies the generator writes (.claude/rules symlinks to it)
+├── rules/                  # Path-scoped rules: source of the per-tool copies the generator writes (.claude/rules/ included)
 │   └── {name}.md
 │
 ├── Domain/                 # Business domain contexts (maps to src/Core/Domain/)
@@ -126,7 +127,7 @@ These fields are **a PrestaShop project convention**, not part of any official s
 
 | Tool | Pointer file | How it works |
 |------|-------------|--------------|
-| **Claude Code** | `CLAUDE.md` + `.claude/rules/*.md` | Uses `@.ai/CONTEXT.md` reference — loaded at session start. Agent reads domain/component files on demand. `.claude/rules/*.md` are symlinks to the shared path-scoped rules of `.ai/rules/` (see below). When `modules/ps_apiresources` is a symlink to a separate clone, the module context still reaches the agent through the routing table and the `admin-api` rule; `CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1 claude --add-dir <path to the module clone>` also loads the module's own `CLAUDE.md` (`--add-dir` alone loads no `CLAUDE.md`). |
+| **Claude Code** | `CLAUDE.md` + `.claude/rules/*.md` | Uses `@.ai/CONTEXT.md` reference — loaded at session start. Agent reads domain/component files on demand. `.claude/rules/*.md` are generated copies of the shared path-scoped rules of `.ai/rules/`, and `.claude/rules/{domain,component}/` the rules generated from the contexts (see below). When `modules/ps_apiresources` is a symlink to a separate clone, the module context still reaches the agent through the routing table and the `admin-api` rule; `CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1 claude --add-dir <path to the module clone>` also loads the module's own `CLAUDE.md` (`--add-dir` alone loads no `CLAUDE.md`). |
 | **Gemini CLI** | `GEMINI.md` | Instructs Gemini to read `.ai/CONTEXT.md` and domain files when relevant. |
 | **Cursor** | `.cursor/rules/*.mdc` | One `.mdc` rule per domain/component with glob patterns to auto-attach. |
 | **GitHub Copilot** | `.github/copilot-instructions.md` + `.github/instructions/*.instructions.md` | Repo-wide instructions reference `.ai/CONTEXT.md`. Path-specific files use `applyTo` globs. |
@@ -152,19 +153,29 @@ The body says which `CONTEXT.md` files to read and why, never the conventions th
 
 ```
 .ai/rules/admin-api.md                         ← the source (hand-maintained)
-.claude/rules/admin-api.md                     → symlink to the source (Claude Code reads `paths`)
+.claude/rules/admin-api.md                     ← generated: the source frontmatter as is (Claude Code reads `paths`)
 .cursor/rules/admin-api.mdc                    ← generated: `description`, `globs: a/**,b/**`, `alwaysApply: false`
 .windsurf/rules/admin-api.md                   ← generated: `trigger: glob`, `globs: a/**,b/**`, `description`
 .github/instructions/admin-api.instructions.md ← generated: `applyTo: "a/**,b/**"`
 ```
 
-The generated copies carry a "generated from … do not edit" header and the same body; they are committed like `generated/*.md`, and a stale copy is a generator run away. A new rule only needs its `.ai/rules/{name}.md` file, a generator run, and a row in the "Which context to read" table of `.ai/CONTEXT.md` (the table names the rule instead of repeating its globs). `admin-api` is the first rule; the other components keep the always-on pointers until they get their own. Verified with Claude Code; Cursor, Windsurf and Copilot copies follow their documented keys but are not tested here (Windsurf documents one glob per rule, the comma-separated list is an assumption) — report a tool rejecting a copy so the generator can adapt its format.
+The generated copies carry a "generated from … do not edit" header and the same body; they are committed like `generated/*.md`, and a stale copy is a generator run away. A new rule only needs its `.ai/rules/{name}.md` file, a generator run, and a row in the "Which context to read" table of `.ai/CONTEXT.md` (the table names the rule instead of repeating its globs). `admin-api` is the only hand-written rule; every context also gets a generated rule (see below). Verified with Claude Code; Cursor, Windsurf and Copilot copies follow their documented keys but are not tested here (Windsurf documents one glob per rule, the comma-separated list is an assumption) — report a tool rejecting a copy so the generator can adapt its format.
+
+### Generated context rules (`.claude/rules/domain/`, `.claude/rules/component/`)
+
+Every Domain and Component `CONTEXT.md` also gets a generated rule, `.claude/rules/domain/{name}.md` or `.claude/rules/component/{name}.md` (kebab-case: `AdminAPI` → `admin-api.md`): a `paths` frontmatter, a "generated from … do not edit" header, then a link to the context. Claude Code loads the rule when it reads a file its `paths` match, and the rule sends the agent to the context. The content of a context is never copied: editing a `CONTEXT.md` changes no rule, except when its Layers table changes the files it covers.
+
+- **`paths`** come from `context-index.php`, the mapping `check-conventions.php` uses too: the paths of the `## Layers` table (a folder covers what it holds, `…/` any depth, `{Name}` one segment), the `src/Core/Domain/{Name}/` and `src/Adapter/{Name}/` namespaces of a domain, `EXTRA_GLOBS` for what a table does not say (`*.twig` → Twig, `tests/UI/` → Playwright…), the `paths` of the hand-written rules naming the context, and the `tests/Unit/` and `tests/Integration/` folders mirroring a `src/` folder. To change which files a context covers, edit its Layers table (or `EXTRA_GLOBS`), never the generated rule.
+- **A context with no path** gets no rule (a rule without `paths` would apply to the whole repository): the generator prints a warning naming it.
+- **Regenerate** with `bash .ai/bin/generate-ai-index.sh` (PHP 8.1+) after adding, removing or renaming a context, or after changing its Layers table, `EXTRA_GLOBS` or the `paths` of a hand-written rule, and commit the result; the "AI context" workflow runs `php .ai/bin/generate-context-rules.php --dry-run` on every pull request touching `.ai/`, `.claude/` or `.coderabbit.yaml`, and fails on a missing, stale or left-over rule.
+- Cursor, Windsurf and Copilot get no copy of these rules.
+- **CodeRabbit** gets the same mapping: the generator writes one `knowledge_base.code_guidelines.filePatterns` entry per context in `.coderabbit.yaml`, between its `# BEGIN generated by .ai/bin/generate-ai-index.sh` and `# END generated` lines, the markdown files of the context applied to the globs of its rule (CodeRabbit loads the files themselves, it follows no link), plus the `.ai/` files of `ps_apiresources` the `admin-api` rule names (`PrestaShop/ps_apiresources:.ai/CONTEXT.md`). The entries above the markers (the root guides) stay hand-written; `--dry-run` also fails on a stale block.
 
 ### Maintenance
 
 The context rots when the code moves. Regular hygiene, ideally after each merge touching the areas concerned:
 
-- `bash .ai/bin/generate-ai-index.sh`: regenerates `generated/*.md`, creates the missing skill symlinks, regenerates the per-tool copies of the `.ai/rules/*.md` rules, lists the module skills without component association. To run at least monthly and after any change to `.ai/rules/` (a GitHub action or a skill can carry it).
+- `bash .ai/bin/generate-ai-index.sh`: regenerates `generated/*.md`, creates the missing skill symlinks, regenerates the per-tool copies of the `.ai/rules/*.md` rules and the context rules of `.claude/rules/{domain,component}/`, lists the module skills without component association. To run at least monthly and after any change to `.ai/rules/` (a GitHub action or a skill can carry it).
 - Check the links of the `CONTEXT.md` files (paths, class names, section anchors) against the code; a renamed class or moved file is a stale context.
 - Keep the examples in the contexts and skills aligned with the code they name: an outdated example propagates (a file copied from an older one carries its obsolete patterns).
 - When a review (human or automated) finds a rule the context does not state, or a false positive it should prevent, update the context in the same PR as the fix (see `modules/ps_apiresources/.ai/REVIEW.md` → "Maintaining the automated review" for the module side).
@@ -192,7 +203,7 @@ Contributors using web-based AI assistants should copy-paste the relevant `CONTE
 
 1. Create `.ai/Domain/{DomainName}/CONTEXT.md` using the template above. A skill exists to help: use the `domain-context-generator` skill.
 2. Add an entry to the index in `.ai/CONTEXT.md`.
-3. Optionally create a path-scoped rule `.ai/rules/{name}.md` so the context loads when matching files are touched (see "Path-scoped rules"), run the index generator for the symlinks, and add the topic to the "Which context to read" table of `.ai/CONTEXT.md`.
+3. Run the index generator: it writes the path-scoped rule of the context from its Layers table (see "Generated context rules"). A hand-written rule `.ai/rules/{name}.md` is only for an area a context does not cover (see "Path-scoped rules"); run the index generator for its per-tool copies, and add the topic to the "Which context to read" table of `.ai/CONTEXT.md`.
 
 ### Adding context for a new component
 

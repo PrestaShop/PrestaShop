@@ -7,6 +7,8 @@ parameters:
   level: 5
   bootstrapFiles:
     - .github/workflows/phpstan/autoload.php
+  scanFiles:
+    - .ai/bin/context-index.php
   paths:
     - admin-dev
     - app
