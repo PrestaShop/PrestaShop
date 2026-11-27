@@ -19,6 +19,7 @@ use Customer;
 use DateInterval;
 use DateTime;
 use Exception;
+use Link;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Cart\Repository\CartRepository;
@@ -45,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\MinimalQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartView;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
@@ -1343,6 +1345,25 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     public function viewCurrentCartInBackOffice(): void
     {
         $this->getQueryBus()->handle(new GetCartForViewing((int) Context::getContext()->cart->id));
+    }
+
+    /**
+     * @Then the link to share the current cart in the back office should start with :prefix
+     */
+    public function linkToShareCurrentCartShouldStartWith(string $prefix): void
+    {
+        // The context link is built once at bootstrap, rebuild it so it follows the current SSL configuration
+        $originalLink = Context::getContext()->link;
+        Context::getContext()->link = new Link();
+
+        try {
+            /** @var CartView $cartView */
+            $cartView = $this->getQueryBus()->handle(new GetCartForViewing((int) Context::getContext()->cart->id));
+        } finally {
+            Context::getContext()->link = $originalLink;
+        }
+
+        Assert::assertStringStartsWith($prefix, (string) $cartView->getCartSummary()['cart_link']);
     }
 
     /**
