@@ -11,6 +11,7 @@ use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Image\ImageDimensions;
 use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -1748,7 +1749,7 @@ class FrontControllerCore extends Controller
             return [];
         }
 
-        list($logoWidth, $logoHeight) = getimagesize($logoFileDir);
+        [$logoWidth, $logoHeight] = ImageDimensions::of($logoFileDir);
 
         return [
             'src' => ($this->getTemplateVarUrls()['img_ps_url'] ?? _PS_IMG_) . $logoFileName,
@@ -1995,9 +1996,12 @@ class FrontControllerCore extends Controller
             $structuredData['organization']['logo'] = [
                 '@type' => 'ImageObject',
                 'url' => $logo['src'],
-                'width' => $logo['width'],
-                'height' => $logo['height'],
             ];
+            // An SVG logo without an intrinsic size has no width or height to declare.
+            if (!empty($logo['width']) && !empty($logo['height'])) {
+                $structuredData['organization']['logo']['width'] = $logo['width'];
+                $structuredData['organization']['logo']['height'] = $logo['height'];
+            }
         }
 
         // Add breadcrumbs, if at least 2 links are present (home + at least one other)
