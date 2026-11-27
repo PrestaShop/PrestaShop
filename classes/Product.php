@@ -989,53 +989,36 @@ class ProductCore extends ObjectModel
      */
     public static function cleanPositions($id_category, $position = 0)
     {
-        $return = true;
+        $db = Db::getInstance();
+        $date = date('Y-m-d H:i:s');
+
+        // Runs before the position update: it selects the products by their position before removal
+        $return = $db->execute(
+            'UPDATE `' . _DB_PREFIX_ . 'product` p' . Shop::addSqlAssociation('product', 'p') . '
+            INNER JOIN `' . _DB_PREFIX_ . 'category_product` cp ON cp.`id_product` = p.`id_product`
+            SET p.`date_upd` = "' . $date . '", product_shop.`date_upd` = "' . $date . '"
+            WHERE cp.`id_category` = ' . (int) $id_category
+            . ((int) $position ? ' AND cp.`position` > ' . (int) $position : '')
+        );
 
         if (!(int) $position) {
-            $result = Db::getInstance()->executeS('
-                SELECT `id_product`
-                FROM `' . _DB_PREFIX_ . 'category_product`
+            $db->execute('SET @i = -1', false);
+            $return &= $db->execute(
+                'UPDATE `' . _DB_PREFIX_ . 'category_product`
+                SET `position` = @i := @i + 1
                 WHERE `id_category` = ' . (int) $id_category . '
-                ORDER BY `position`
-            ');
-            $total = count($result);
-
-            for ($i = 0; $i < $total; ++$i) {
-                $return &= Db::getInstance()->update(
-                    'category_product',
-                    ['position' => $i],
-                    '`id_category` = ' . (int) $id_category . ' AND `id_product` = ' . (int) $result[$i]['id_product']
-                );
-                $return &= Db::getInstance()->execute(
-                    'UPDATE `' . _DB_PREFIX_ . 'product` p' . Shop::addSqlAssociation('product', 'p') . '
-                    SET p.`date_upd` = "' . date('Y-m-d H:i:s') . '", product_shop.`date_upd` = "' . date('Y-m-d H:i:s') . '"
-                    WHERE p.`id_product` = ' . (int) $result[$i]['id_product']
-                );
-            }
+                ORDER BY `position`, `id_product`',
+                false
+            );
         } else {
-            $result = Db::getInstance()->executeS('
-                SELECT `id_product`
-                FROM `' . _DB_PREFIX_ . 'category_product`
-                WHERE `id_category` = ' . (int) $id_category . ' AND `position` > ' . (int) $position . '
-                ORDER BY `position`
-            ');
-            $total = count($result);
-            $return &= Db::getInstance()->update(
+            $return &= $db->update(
                 'category_product',
                 ['position' => ['type' => 'sql', 'value' => '`position`-1']],
                 '`id_category` = ' . (int) $id_category . ' AND `position` > ' . (int) $position
             );
-
-            for ($i = 0; $i < $total; ++$i) {
-                $return &= Db::getInstance()->execute(
-                    'UPDATE `' . _DB_PREFIX_ . 'product` p' . Shop::addSqlAssociation('product', 'p') . '
-                    SET p.`date_upd` = "' . date('Y-m-d H:i:s') . '", product_shop.`date_upd` = "' . date('Y-m-d H:i:s') . '"
-                    WHERE p.`id_product` = ' . (int) $result[$i]['id_product']
-                );
-            }
         }
 
-        return $return;
+        return (bool) $return;
     }
 
     /**
