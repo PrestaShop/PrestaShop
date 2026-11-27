@@ -874,6 +874,19 @@ Feature: Order from Back Office (BO)
       | total_tax_excl | rate | total_amount |
       | 5.0            | 0.00 | 0.00         |
 
+  Scenario: The order form shows the carrier used to price shipping
+    Given shop configuration for "PS_CARRIER_DEFAULT" is set to -1
+    And I edit carrier "price_carrier" with specified properties and update its reference:
+      | active | true |
+    And I edit carrier "weight_carrier" with specified properties and update its reference:
+      | active | false |
+    And I create an empty cart "shipping_cart" for customer "testCustomer"
+    When I add 2 products "Mug The best is yet to come" to the cart "shipping_cart"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "shipping_cart"
+    Then the order form for cart "shipping_cart" should show carrier "price_carrier" with shipping price "6.36"
+    When I select carrier "default_carrier" for cart "shipping_cart"
+    Then the order form for cart "shipping_cart" should show carrier "default_carrier" with shipping price "7.42"
+
   Scenario: In rounding per item mode, I use an address without taxes (no order_detail_tax created), then I change to a country with taxes all is correctly computed
     Given shop configuration for "PS_TAX_ADDRESS_TYPE" is set to id_address_delivery
     Given specific shop configuration for "rounding type" is set to round each article

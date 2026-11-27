@@ -921,6 +921,18 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then the order form for cart :cartReference should show carrier :carrierReference with shipping price :shippingPrice
+     */
+    public function assertCartShippingForOrderCreation(string $cartReference, string $carrierReference, string $shippingPrice): void
+    {
+        // Check the carrier and price returned to the order form.
+        $shipping = $this->getCartForOrderCreationByReference($cartReference)->getShipping();
+        Assert::assertNotNull($shipping);
+        Assert::assertSame($this->referenceToId($carrierReference), $shipping->getSelectedCarrierId());
+        Assert::assertEquals((float) $shippingPrice, (float) $shipping->getShippingPrice());
+    }
+
+    /**
      * @Then cart :cartReference should belong to customer :customerReference
      */
     public function assertCartBelongsToCustomer(string $cartReference, string $customerReference): void

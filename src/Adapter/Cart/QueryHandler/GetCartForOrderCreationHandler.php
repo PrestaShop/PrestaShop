@@ -8,7 +8,6 @@ namespace PrestaShop\PrestaShop\Adapter\Cart\QueryHandler;
 
 use Address;
 use AddressFormat;
-use Carrier;
 use Cart;
 use CartRule;
 use Currency;
@@ -64,29 +63,21 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
     private $contextStateManager;
 
     /**
-     * @var int
-     */
-    private $defaultCarrierId;
-
-    /**
      * @param LocaleInterface $locale
      * @param int $contextLangId
      * @param Link $contextLink
      * @param ContextStateManager $contextStateManager
-     * @param int $defaultCarrierId
      */
     public function __construct(
         LocaleInterface $locale,
         int $contextLangId,
         Link $contextLink,
-        ContextStateManager $contextStateManager,
-        int $defaultCarrierId
+        ContextStateManager $contextStateManager
     ) {
         $this->locale = $locale;
         $this->contextLangId = $contextLangId;
         $this->contextLink = $contextLink;
         $this->contextStateManager = $contextStateManager;
-        $this->defaultCarrierId = $defaultCarrierId;
     }
 
     /**
@@ -346,15 +337,18 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
             return null;
         }
 
-        /** @var Carrier $carrier */
-        $carrier = $legacySummary['carrier'];
+        // Resolve the displayed carrier from the same delivery option used for the shipping total.
+        $selectedOption = $cart->getDeliveryOption(null, false, false)[$deliveryAddress] ?? '';
+        $selectedCarrierId = array_key_first($deliveryOptionsByAddress[$deliveryAddress][$selectedOption]['carrier_list'] ?? []);
+
+        // Apply free shipping to the displayed amount when discounts are hidden.
         $isFreeShipping = !empty($cart->getCartRules(CartRule::FILTER_ACTION_SHIPPING));
 
         return new CartShipping(
             $isFreeShipping && $hideDiscounts ? '0' : (string) $legacySummary['total_shipping'],
             $isFreeShipping,
             $this->fetchCartDeliveryOptions($deliveryOptionsByAddress, $deliveryAddress),
-            (int) $carrier->id ?: $this->defaultCarrierId ?: null,
+            $selectedCarrierId,
             (bool) $cart->gift,
             (bool) $cart->recyclable,
             $cart->gift_message,
