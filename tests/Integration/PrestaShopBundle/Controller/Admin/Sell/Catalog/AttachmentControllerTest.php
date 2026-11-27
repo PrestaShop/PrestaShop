@@ -8,8 +8,12 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
-use Attachment;
-use Configuration;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\AddAttachmentCommand;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\DeleteAttachmentCommand;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
+use PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductAttachmentsType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Tests\Integration\Utility\LoginTrait;
@@ -20,6 +24,8 @@ final class AttachmentControllerTest extends SymfonyIntegrationTestCase
     use LoginTrait;
 
     private const NAMES = ['Att c/d 43618', 'Att a+b 43618', 'Att e&f 43618', 'Att g?h 43618', 'Att plain 43618'];
+
+    private CommandBusInterface $commandBus;
 
     private RouterInterface $router;
 
@@ -33,23 +39,24 @@ final class AttachmentControllerTest extends SymfonyIntegrationTestCase
         parent::setUp();
         $this->loginUser($this->client);
         $this->router = $this->client->getContainer()->get('router');
+        $this->commandBus = self::getContainer()->get('prestashop.core.command_bus');
+        $defaultLanguageId = (int) self::getContainer()->get(ConfigurationInterface::class)->get('PS_LANG_DEFAULT');
 
+        $file = (string) tempnam(sys_get_temp_dir(), 'att');
         foreach (self::NAMES as $name) {
-            $attachment = new Attachment();
-            $attachment->name = [(int) Configuration::get('PS_LANG_DEFAULT') => $name];
-            $attachment->file = sha1($name);
-            $attachment->file_name = 'file.txt';
-            $attachment->file_size = 0;
-            $attachment->mime = 'text/plain';
-            $attachment->add();
-            $this->attachmentIds[$name] = (int) $attachment->id;
+            $command = new AddAttachmentCommand([$defaultLanguageId => $name], []);
+            $command->setFileInformation($file, 0, 'text/plain', 'file.txt');
+            /** @var AttachmentId $attachmentId */
+            $attachmentId = $this->commandBus->handle($command);
+            $this->attachmentIds[$name] = $attachmentId->getValue();
         }
+        unlink($file);
     }
 
     protected function tearDown(): void
     {
         foreach ($this->attachmentIds as $attachmentId) {
-            (new Attachment($attachmentId))->delete();
+            $this->commandBus->handle(new DeleteAttachmentCommand($attachmentId));
         }
         parent::tearDown();
     }
@@ -70,6 +77,21 @@ final class AttachmentControllerTest extends SymfonyIntegrationTestCase
         foreach (self::NAMES as $name) {
             yield $name => [$name];
         }
+    }
+
+    /**
+     * @dataProvider getNames
+     */
+    public function testSearchFindsTheNameSentByTheProductForm(string $name): void
+    {
+        $remoteUrl = self::getContainer()->get('form.factory')->create(ProductAttachmentsType::class)
+            ->get('attached_files')->getConfig()->getOption('remote_url');
+
+        // entity-search-input.ts puts the phrase in place of __QUERY__ with encodeURIComponent
+        $this->assertSame(
+            [$this->attachmentIds[$name]],
+            $this->search(str_replace('__QUERY__', rawurlencode($name), $remoteUrl))
+        );
     }
 
     public function testSearchStillReadsThePhraseFromThePath(): void
