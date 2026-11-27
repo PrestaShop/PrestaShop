@@ -335,7 +335,9 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         ;
 
         // Set the sort order if provided in the URL and valid.
-        if ($encodedSortOrder = Tools::getValue('order')) {
+        // Non-string values (e.g. ?order[]=) must be ignored: SortOrder::newFromString()
+        // would throw a TypeError, which is not a CoreException and would still 500.
+        if (($encodedSortOrder = Tools::getValue('order')) && is_string($encodedSortOrder)) {
             try {
                 $query->setSortOrder(SortOrder::newFromString($encodedSortOrder));
             } catch (CoreException $e) {
