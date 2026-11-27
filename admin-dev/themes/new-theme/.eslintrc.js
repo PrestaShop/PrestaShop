@@ -1,5 +1,41 @@
 // http://eslint.org/docs/user-guide/configuring
 
+const fs = require('fs');
+const path = require('path');
+const airbnbBestPractices = require('eslint-config-airbnb-base/rules/best-practices');
+const airbnbStyle = require('eslint-config-airbnb-base/rules/style');
+const airbnbVariables = require('eslint-config-airbnb-base/rules/variables');
+// Files that still rely on jQuery: remove an entry once its file is converted or deleted,
+// and only add one when a listed file is moved or renamed.
+const jqueryLegacyFiles = require('./.eslint-jquery-legacy.json');
+
+const missingLegacyFiles = jqueryLegacyFiles.filter((file) => !fs.existsSync(path.join(__dirname, file)));
+
+if (missingLegacyFiles.length > 0) {
+  throw new Error(`.eslint-jquery-legacy.json lists files that no longer exist: ${missingLegacyFiles.join(', ')}`);
+}
+
+const globalRestriction = {
+  name: 'global',
+  message: 'Use window variable instead.',
+};
+const jqueryMessage = 'jQuery is being phased out of the back office, use native DOM APIs instead.';
+const jqueryGlobals = ['$', 'jQuery'].map((name) => ({name, message: jqueryMessage}));
+const noJqueryRules = {
+  'no-restricted-imports': ['error', {paths: [{name: 'jquery', message: jqueryMessage}]}],
+  'no-restricted-properties': [
+    ...airbnbBestPractices.rules['no-restricted-properties'],
+    ...jqueryGlobals.map(({name}) => ({object: 'window', property: name, message: jqueryMessage})),
+  ],
+  'no-restricted-syntax': [
+    ...airbnbStyle.rules['no-restricted-syntax'],
+    {
+      selector: 'TSTypeReference[typeName.name=/^JQuery/], TSTypeReference TSQualifiedName[left.name=/^JQuery/]',
+      message: jqueryMessage,
+    },
+  ],
+};
+
 module.exports = {
   root: true,
   env: {
@@ -54,7 +90,7 @@ module.exports = {
     'import/no-extraneous-dependencies': [
       'error',
       {
-        devDependencies: ['tests/**/*.js', '.webpack/**/*.js'],
+        devDependencies: ['tests/**/*.js', '.webpack/**/*.js', '.eslintrc.js'],
       },
     ],
     'max-len': ['error', {code: 120}],
@@ -62,13 +98,7 @@ module.exports = {
     'no-bitwise': 0,
     'no-new': 0,
     'no-param-reassign': ['error', {props: false}],
-    'no-restricted-globals': [
-      'error',
-      {
-        name: 'global',
-        message: 'Use window variable instead.',
-      },
-    ],
+    'no-restricted-globals': ['error', globalRestriction],
     'prefer-destructuring': ['error', {object: true, array: false}],
     'vue/script-indent': [
       'error',
@@ -151,6 +181,22 @@ module.exports = {
         '@typescript-eslint/explicit-module-boundary-types': ['error', {allowArgumentsExplicitlyTypedAsAny: true}],
         'func-names': 0,
         'no-new': 0,
+      },
+    },
+    {
+      files: ['*.js', '*.vue'],
+      excludedFiles: jqueryLegacyFiles,
+      rules: {
+        ...noJqueryRules,
+        'no-restricted-globals': ['error', globalRestriction, ...jqueryGlobals],
+      },
+    },
+    {
+      files: ['*.ts'],
+      excludedFiles: jqueryLegacyFiles,
+      rules: {
+        ...noJqueryRules,
+        'no-restricted-globals': [...airbnbVariables.rules['no-restricted-globals'], ...jqueryGlobals],
       },
     },
   ],
