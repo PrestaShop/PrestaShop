@@ -1,0 +1,89 @@
+name: Code review by CodeRabbit
+on:
+  pull_request_target:
+    types: [ labeled ]
+
+permissions: { }
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+env:
+  TRIGGER_LABEL: Need AI review
+  DONE_LABEL: AI reviewed
+  SCOPE_LABEL: Bug fix
+
+jobs:
+  request-review:
+    name: Request a CodeRabbit review
+    # env is not available here: keep in line with TRIGGER_LABEL
+    if: github.event.label.name == 'Need AI review'
+    runs-on: ubuntu-latest
+
+    # Never check out the pull request code: the job runs with the ps-jarvis token.
+    # The .ai/ contexts reach CodeRabbit through the code guidelines of .coderabbit.yaml.
+    steps:
+      - name: Check that the label was added by a member of prestashop-sa
+        uses: PrestaShop/.github/.github/actions/team-guard@master
+        with:
+          team_slug: prestashop-sa
+          token: ${{ secrets.JARVIS_TOKEN }}
+
+      - name: Ask CodeRabbit for a full review when the required checks are green
+        env:
+          GH_TOKEN: ${{ secrets.JARVIS_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          IS_IN_SCOPE: ${{ contains(github.event.pull_request.labels.*.name, env.SCOPE_LABEL) }}
+        run: |
+          summary() { printf '%s\n' "$@" >> "$GITHUB_STEP_SUMMARY"; }
+
+          if [ "$IS_IN_SCOPE" != "true" ]; then
+            summary "⏭ CodeRabbit not called: the pull request is not labelled \"$SCOPE_LABEL\"."
+            exit 0
+          fi
+
+          # gh exits non-zero when a check failed or is pending: the JSON is read either way
+          checks=$(gh pr checks "$PR" --repo "$REPO" --required --json name,bucket 2>/dev/null || true)
+          if [ -z "$checks" ] || [ "$(jq length <<< "$checks")" -eq 0 ]; then
+            summary "⏳ CodeRabbit not called: no required check is reported yet. Add the \"$TRIGGER_LABEL\" label again once the CI is green."
+            exit 0
+          fi
+          not_green=$(jq -r '.[] | select(.bucket != "pass" and .bucket != "skipping") | "- \(.name): \(.bucket)"' <<< "$checks")
+          if [ -n "$not_green" ]; then
+            summary "⏳ CodeRabbit not called: these required checks are not green. Add the \"$TRIGGER_LABEL\" label again once the CI is green." "" "$not_green"
+            exit 0
+          fi
+
+          since=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          gh pr comment "$PR" --repo "$REPO" --body "@coderabbitai full review"
+
+          # CodeRabbit answers the command within seconds: "Action performed" or "Action not completed"
+          # (rate limit). On a first review it also posts its walkthrough, a few seconds after the
+          # answer: select the answer itself, never the latest comment.
+          answer=""
+          for _ in $(seq 12); do
+            sleep 15
+            answer=$(gh api "repos/$REPO/issues/$PR/comments?since=$since&per_page=100" \
+              --jq "[.[] | select(.user.login == \"coderabbitai[bot]\" and .created_at >= \"$since\" and (.body | test(\"Action (performed|not completed)\")))] | first | .body // \"\"")
+            [ -n "$answer" ] && break
+          done
+          if [ -z "$answer" ]; then
+            summary "✅ CodeRabbit was asked for a full review; it had not answered the command after 3 minutes."
+          else
+            text=$(perl -0pe 's/<!--.*?-->//gs; s/<[^>]+>//g; s/\n{3,}/\n\n/g' <<< "$answer")
+            if grep -qiE 'rate limit|review limit|not completed' <<< "$text"; then
+              summary "⛔ CodeRabbit refused the review. Add the \"$TRIGGER_LABEL\" label again once its limit resets." "" '```' "$text" '```'
+              exit 0
+            fi
+            summary "✅ CodeRabbit was asked for a full review. Its answer:" "" '```' "$text" '```'
+          fi
+          gh api "repos/$REPO/issues/$PR/labels" -f "labels[]=$DONE_LABEL" > /dev/null
+
+      - name: Remove the trigger label so the review can be requested again
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.JARVIS_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+        run: gh api -X DELETE "repos/$REPO/issues/$PR/labels/$(jq -rn --arg l "$TRIGGER_LABEL" '$l | @uri')" > /dev/null || true
