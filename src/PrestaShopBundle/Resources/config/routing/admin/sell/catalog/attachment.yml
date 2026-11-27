@@ -87,3 +87,11 @@ admin_attachments_search:
     _legacy_link: AdminAttachments:search
   options:
     expose: true
+
+admin_attachments_search_by_query:
+  path: /search
+  methods: GET
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\AttachmentController::searchByQueryAction
+  options:
+    expose: true

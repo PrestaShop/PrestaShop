@@ -48,7 +48,7 @@ class ProductAttachmentsType extends TranslatorAwareType
                 'layout' => EntitySearchInputType::TABLE_LAYOUT,
                 'required' => false,
                 'label' => false,
-                'remote_url' => $this->urlGenerator->generate('admin_attachments_search', ['searchPhrase' => '__QUERY__']),
+                'remote_url' => $this->urlGenerator->generate('admin_attachments_search_by_query', ['query' => '__QUERY__']),
                 'placeholder' => $this->trans('Search file', 'Admin.Catalog.Help'),
                 'empty_state' => $this->trans('No files attached', 'Admin.Catalog.Feature'),
                 'identifier_field' => 'attachment_id',
