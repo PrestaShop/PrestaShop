@@ -142,7 +142,9 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
 
         $orderInformation = [
             'id' => $order->id,
-            'placed_date' => (new DateTime($order->date_add))->format($context->language->date_format_full),
+            'placed_date' => Validate::isLoadedObject($order)
+                ? (new DateTime($order->date_add))->format($context->language->date_format_full)
+                : null,
         ];
 
         // Prepare link to share this cart, if it was not ordered yet
@@ -150,7 +152,7 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
         if (!Validate::isLoadedObject($order)) {
             $cartLink = $context->link->getPageLink(
                 'cart',
-                false,
+                null,
                 (int) $cart->getAssociatedLanguage()->getId(),
                 [
                     'recover_cart' => $cart->id,

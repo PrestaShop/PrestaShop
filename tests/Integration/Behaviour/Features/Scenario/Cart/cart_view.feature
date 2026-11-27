@@ -37,3 +37,10 @@ Feature: View a cart in the back office
       | discount_percentage | 10        |
     When I view the current cart in the back office
     Then the current cart should have 0 cart rules
+
+  Scenario: The link to share a cart that was not ordered uses HTTPS when SSL is enabled
+    Given shop configuration for "PS_SSL_ENABLED" is set to 1
+    And I have an empty default cart
+    And I am logged in as "customer1"
+    And I add 1 items of product "product1" in my cart
+    Then the link to share the current cart in the back office should start with "https://"
