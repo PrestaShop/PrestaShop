@@ -36,14 +36,25 @@ class DiscountCheapestProductTest extends KernelTestCase
     private const PRODUCT_LEVEL_DISCOUNT_TYPE_ID = 4;
     private const HOME_CATEGORY_ID = 2;
 
+    /** @var array<string, mixed> */
+    private static array $previousContext = [];
+
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
+        $context = Context::getContext();
+        foreach (['controller', 'container', 'shop', 'language', 'currency', 'country', 'customer', 'cart'] as $property) {
+            self::$previousContext[$property] = $context->{$property} ?? null;
+        }
         static::resetDatabase();
     }
 
     public static function tearDownAfterClass(): void
     {
+        $context = Context::getContext();
+        foreach (self::$previousContext as $property => $value) {
+            $context->{$property} = $value;
+        }
         parent::tearDownAfterClass();
         static::resetDatabase();
     }
