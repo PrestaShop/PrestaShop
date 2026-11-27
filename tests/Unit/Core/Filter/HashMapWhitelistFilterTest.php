@@ -10,10 +10,16 @@ namespace Tests\Unit\Core\Filter;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
+use PrestaShop\PrestaShop\Adapter\Presenter\LazyArrayAttribute;
 use PrestaShop\PrestaShop\Core\Filter\HashMapWhitelistFilter;
 
 class HashMapWhitelistFilterTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        TestLazyArray::$countedPropertyCalls = 0;
+    }
+
     /**
      * @param array $subject
      * @param array $whitelist
@@ -113,6 +119,93 @@ class HashMapWhitelistFilterTest extends TestCase
         );
     }
 
+    public function testFilteringLazyArrayComputesNoWhitelistedValue(): void
+    {
+        $filter = new HashMapWhitelistFilter();
+        $filter->whitelist([
+            'counted_property',
+        ]);
+
+        $filter->filter(new TestLazyArray());
+
+        $this->assertSame(0, TestLazyArray::$countedPropertyCalls);
+    }
+
+    public function testValueComputedOnFilteredLazyArrayIsReusedByTheOriginal(): void
+    {
+        $subject = new TestLazyArray();
+
+        $filter = new HashMapWhitelistFilter();
+        $filter->whitelist([
+            'counted_property',
+        ]);
+
+        $filteredSubject = $filter->filter($subject);
+
+        $this->assertSame(1, $filteredSubject['counted_property']);
+        $this->assertSame(1, $subject['counted_property']);
+        $this->assertSame(1, TestLazyArray::$countedPropertyCalls);
+    }
+
+    public function testValueComputedOnTheOriginalIsReusedByFilteredLazyArray(): void
+    {
+        $subject = new TestLazyArray();
+
+        $filter = new HashMapWhitelistFilter();
+        $filter->whitelist([
+            'counted_property',
+        ]);
+
+        $filteredSubject = $filter->filter($subject);
+
+        $this->assertSame(1, $subject['counted_property']);
+        $this->assertSame(1, $filteredSubject['counted_property']);
+        $this->assertSame(1, TestLazyArray::$countedPropertyCalls);
+    }
+
+    public function testFilteredLazyArrayDoesNotSeeValuesOutsideTheWhitelist(): void
+    {
+        $subject = new TestLazyArray();
+        $this->assertSame(1, $subject['counted_property']);
+
+        $filter = new HashMapWhitelistFilter();
+        $filter->whitelist([
+            'some_property',
+        ]);
+
+        $filteredSubject = $filter->filter($subject);
+
+        $this->assertArrayNotHasKey('counted_property', $filteredSubject);
+        $this->assertSame([], $filteredSubject['counted_property']);
+        $this->assertSame(['some_property' => 'some_property'], json_decode(json_encode($filteredSubject), true));
+    }
+
+    public function testNestedFilteringLazyArrayComputesNestedValuesOnceForBothInstances(): void
+    {
+        $nested = new TestLazyArray();
+        $subject = new TestLazyArray();
+        $subject->nested = $nested;
+
+        $nestedFilter = new HashMapWhitelistFilter();
+        $nestedFilter->whitelist([
+            'counted_property',
+        ]);
+        $filter = new HashMapWhitelistFilter();
+        $filter->whitelist([
+            'nested_property' => $nestedFilter,
+        ]);
+
+        $filteredSubject = $filter->filter($subject);
+
+        $this->assertNotSame($nested, $filteredSubject['nested_property']);
+        $this->assertSame(1, $filteredSubject['nested_property']['counted_property']);
+        $this->assertArrayNotHasKey('some_property', $filteredSubject['nested_property']);
+        $this->assertSame($nested, $subject['nested_property']);
+        $this->assertArrayHasKey('some_property', $nested);
+        $this->assertSame(1, $nested['counted_property']);
+        $this->assertSame(1, TestLazyArray::$countedPropertyCalls);
+    }
+
     public function provideTestCases(): array
     {
         $basicArray = [
@@ -201,17 +294,29 @@ class HashMapWhitelistFilterTest extends TestCase
 
 class TestLazyArray extends AbstractLazyArray
 {
-    /**
-     * @arrayAccess
-     */
+    public static int $countedPropertyCalls = 0;
+
+    public ?TestLazyArray $nested = null;
+
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getCountedProperty(): int
+    {
+        return ++self::$countedPropertyCalls;
+    }
+
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getNestedProperty(): ?TestLazyArray
+    {
+        return $this->nested;
+    }
+
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getSomeProperty()
     {
         return 'some_property';
     }
 
-    /**
-     * @arrayAccess
-     */
+    #[LazyArrayAttribute(arrayAccess: true)]
     public function getSomeOtherProperty()
     {
         return 'some_other_property';
