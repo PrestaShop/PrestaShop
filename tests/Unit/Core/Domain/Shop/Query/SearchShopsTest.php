@@ -24,7 +24,7 @@ class SearchShopsTest extends TestCase
         self::assertSame($searchTerm, $query->getSearchTerm());
     }
 
-    public function validSearchTermProvider(): iterable
+    public static function validSearchTermProvider(): iterable
     {
         yield 'zero' => ['0'];
         yield 'word' => ['Presta'];
@@ -41,7 +41,7 @@ class SearchShopsTest extends TestCase
         new SearchShops($searchTerm);
     }
 
-    public function emptySearchTermProvider(): iterable
+    public static function emptySearchTermProvider(): iterable
     {
         yield 'empty string' => [''];
         yield 'spaces' => ['   '];
