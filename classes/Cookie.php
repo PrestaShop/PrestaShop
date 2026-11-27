@@ -395,7 +395,7 @@ class CookieCore
      * the token no longer matches. GeneralConfiguration::validateSameSite() refuses to *save* that
      * combination for exactly this reason, so it must not be reachable by falling back to it either.
      */
-    protected function getSameSiteAttribute(): string
+    private function getSameSiteAttribute(): string
     {
         $sameSite = in_array((string) $this->_sameSite, CookieOptions::SAMESITE_AVAILABLE_VALUES, true)
             ? (string) $this->_sameSite
