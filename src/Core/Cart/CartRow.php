@@ -118,6 +118,8 @@ class CartRow
      */
     protected $isProcessed = false;
 
+    private ?int $priceRoundMode = null;
+
     /**
      * @param array $rowData array item given by Cart::getProducts()
      * @param PriceCalculator $priceCalculator
@@ -130,6 +132,7 @@ class CartRow
      * @param int $precision
      * @param string $roundType see self::ROUND_MODE_*
      * @param int|null $orderId If order ID is specified the product price is fetched from associated OrderDetail value
+     * @param int|null $priceRoundMode PS_ROUND_* rounding mode of the prices, null uses the shop PS_PRICE_ROUND_MODE
      */
     public function __construct(
         $rowData,
@@ -142,7 +145,8 @@ class CartRow
         $useEcotax,
         $precision,
         $roundType,
-        $orderId = null
+        $orderId = null,
+        ?int $priceRoundMode = null
     ) {
         $this->setRowData($rowData);
         $this->priceCalculator = $priceCalculator;
@@ -155,6 +159,7 @@ class CartRow
         $this->precision = $precision;
         $this->roundType = $roundType;
         $this->orderId = $orderId;
+        $this->priceRoundMode = $priceRoundMode;
     }
 
     /**
@@ -258,8 +263,8 @@ class CartRow
         if ($this->roundType == self::ROUND_MODE_ITEM) {
             $tools = new Tools();
             $this->initialTotalPrice = new AmountImmutable(
-                $tools->round($this->initialUnitPrice->getTaxIncluded(), $this->precision) * $quantity,
-                $tools->round($this->initialUnitPrice->getTaxExcluded(), $this->precision) * $quantity
+                $tools->round($this->initialUnitPrice->getTaxIncluded(), $this->precision, $this->priceRoundMode) * $quantity,
+                $tools->round($this->initialUnitPrice->getTaxExcluded(), $this->precision, $this->priceRoundMode) * $quantity
             );
         } else {
             $this->initialTotalPrice = new AmountImmutable(
@@ -382,8 +387,8 @@ class CartRow
             case self::ROUND_MODE_LINE:
                 // round line result
                 $this->finalTotalPrice = new AmountImmutable(
-                    $tools->round($this->initialUnitPrice->getTaxIncluded() * $quantity, $this->precision),
-                    $tools->round($this->initialUnitPrice->getTaxExcluded() * $quantity, $this->precision)
+                    $tools->round($this->initialUnitPrice->getTaxIncluded() * $quantity, $this->precision, $this->priceRoundMode),
+                    $tools->round($this->initialUnitPrice->getTaxExcluded() * $quantity, $this->precision, $this->priceRoundMode)
                 );
 
                 break;
@@ -392,8 +397,8 @@ class CartRow
             default:
                 // round each item
                 $this->initialUnitPrice = new AmountImmutable(
-                    $tools->round($this->initialUnitPrice->getTaxIncluded(), $this->precision),
-                    $tools->round($this->initialUnitPrice->getTaxExcluded(), $this->precision)
+                    $tools->round($this->initialUnitPrice->getTaxIncluded(), $this->precision, $this->priceRoundMode),
+                    $tools->round($this->initialUnitPrice->getTaxExcluded(), $this->precision, $this->priceRoundMode)
                 );
                 $this->finalTotalPrice = new AmountImmutable(
                     $this->initialUnitPrice->getTaxIncluded() * $quantity,
