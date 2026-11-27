@@ -13,6 +13,10 @@ services:
     arguments:
       $dbPrefix: '%database_prefix%'
 
+  PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerGroupChoiceProvider:
+    arguments:
+      $dbPrefix: '%database_prefix%'
+
   # Todo, place this service into the correct place, one day
   PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ZoneByIdChoiceProvider: ~
 

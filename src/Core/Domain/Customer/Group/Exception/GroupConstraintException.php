@@ -28,4 +28,9 @@ class GroupConstraintException extends GroupException
     public const INVALID_NAME = 60;
 
     public const INVALID_PRICE_DISPLAY_METHOD = 70;
+
+    /**
+     * When a default group is not associated to any shop it is set for
+     */
+    public const GROUP_NOT_ASSOCIATED_TO_SHOP = 80;
 }

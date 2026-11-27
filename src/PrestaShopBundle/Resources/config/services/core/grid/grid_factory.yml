@@ -500,7 +500,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:
       - '@prestashop.core.grid.definition.factory.customer_groups'
-      - '@prestashop.core.grid.data.factory.customer_groups'
+      - '@PrestaShop\PrestaShop\Core\Grid\Data\Factory\CustomerGroupsGridDataFactory'
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
 

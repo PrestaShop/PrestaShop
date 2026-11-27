@@ -592,6 +592,10 @@ services:
 
   PrestaShopBundle\Form\Admin\Improve\International\Locations\CountryOptionsType:
 
+  PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerGroups\DefaultCustomerGroupsType:
+    arguments:
+      $customerGroupChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerGroupChoiceProvider'
+
   PrestaShopBundle\Form\Admin\Sell\CustomerService\OrderReturn\OrderReturnOptionsType:
 
   PrestaShopBundle\Form\Admin\Type\CarrierChoiceType:

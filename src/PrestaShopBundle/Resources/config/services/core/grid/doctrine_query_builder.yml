@@ -502,8 +502,9 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Grid\Query\CustomerGroupsQueryBuilder'
     parent: 'prestashop.core.grid.abstract_query_builder'
     arguments:
-      - '@prestashop.core.query.doctrine_search_criteria_applicator'
-      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+      $searchCriteriaApplicator: '@prestashop.core.query.doctrine_search_criteria_applicator'
+      $languageContext: '@PrestaShop\PrestaShop\Core\Context\LanguageContext'
+      $shopContext: '@PrestaShop\PrestaShop\Core\Context\ShopContext'
     public: false
 
   PrestaShop\PrestaShop\Core\Grid\Query\TaxRuleQueryBuilder:

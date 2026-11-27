@@ -18,6 +18,15 @@ admin_customer_groups_search:
     _legacy_link: AdminGroups:submitFiltergroup
     _legacy_feature_flag: customer_group
 
+admin_customer_groups_save_default_groups:
+  path: /save-default-groups
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\CustomerGroupsController::saveDefaultGroupsAction'
+    _legacy_controller: AdminGroups
+    _legacy_link: AdminGroups:submitOptionsgroup
+    _legacy_feature_flag: customer_group
+
 admin_customer_groups_create:
   path: /new
   methods: [ GET, POST ]
@@ -35,5 +44,42 @@ admin_customer_groups_edit:
     _legacy_controller: AdminGroups
     _legacy_link: AdminGroups:updategroup
     _legacy_feature_flag: customer_group
+    _legacy_parameters:
+      id_group: groupId
   requirements:
     groupId: \d+
+
+admin_customer_groups_view:
+  path: /{groupId}/view
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\CustomerGroupsController::viewAction'
+    _legacy_controller: AdminGroups
+    _legacy_link: AdminGroups:viewgroup
+    _legacy_feature_flag: customer_group
+    _legacy_parameters:
+      id_group: groupId
+  requirements:
+    groupId: \d+
+
+admin_customer_groups_delete:
+  path: /{groupId}/delete
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\CustomerGroupsController::deleteAction'
+    _legacy_controller: AdminGroups
+    _legacy_link: AdminGroups:deletegroup
+    _legacy_feature_flag: customer_group
+    _legacy_parameters:
+      id_group: groupId
+  requirements:
+    groupId: \d+
+
+admin_customer_groups_bulk_delete:
+  path: /bulk-delete
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\CustomerGroupsController::bulkDeleteAction'
+    _legacy_controller: AdminGroups
+    _legacy_link: AdminGroups:submitBulkdeletegroup
+    _legacy_feature_flag: customer_group
