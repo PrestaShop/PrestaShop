@@ -31,17 +31,36 @@ class FileLoggerCore extends AbstractLogger
     /**
      * Check if the specified filename is writable and set the filename.
      *
+     * Stream wrappers such as php://stderr are accepted as is, so logs can go
+     * to the container output when the filesystem is read-only or ephemeral.
+     *
      * @param string $filename
      *
      * @return void
+     *
+     * @throws PrestaShopException when the directory is not writable
      */
     public function setFilename($filename)
     {
-        if (is_writable(dirname($filename))) {
+        if ($this->isStreamWrapper((string) $filename) || is_writable(dirname($filename))) {
             $this->filename = $filename;
-        } else {
-            die('Directory ' . dirname($filename) . ' is not writable');
+
+            return;
         }
+
+        throw new PrestaShopException(sprintf('Directory %s is not writable', dirname($filename)));
+    }
+
+    private function isStreamWrapper(string $filename): bool
+    {
+        if (!preg_match('#^([a-z][a-z0-9+.-]*)://#i', $filename, $matches)) {
+            return false;
+        }
+
+        $scheme = strtolower($matches[1]);
+
+        // file:// still points to the local filesystem, so its directory must be writable
+        return $scheme !== 'file' && in_array($scheme, stream_get_wrappers(), true);
     }
 
     /**
