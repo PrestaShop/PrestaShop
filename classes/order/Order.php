@@ -312,10 +312,19 @@ class OrderCore extends ObjectModel
     public function add($autodate = true, $null_values = true)
     {
         if (parent::add($autodate, $null_values)) {
+            Cache::clean('Order::getIdByCartId_' . (int) $this->id_cart . '_*');
+
             return SpecificPrice::deleteByIdCart($this->id_cart);
         }
 
         return false;
+    }
+
+    public function delete()
+    {
+        Cache::clean('Order::getIdByCartId_' . (int) $this->id_cart . '_*');
+
+        return parent::delete();
     }
 
     public function getTaxCalculationMethod()
@@ -1187,15 +1196,24 @@ class OrderCore extends ObjectModel
             return false;
         }
 
+        $shopRestriction = Shop::addSqlRestriction();
+        $cacheKey = 'Order::getIdByCartId_' . (int) $id_cart . '_' . md5($shopRestriction);
+        if (Cache::isStored($cacheKey)) {
+            return Cache::retrieve($cacheKey);
+        }
+
         $sql = 'SELECT `id_order`
             FROM `' . _DB_PREFIX_ . 'orders`
             WHERE `id_cart` = ' . (int) $id_cart .
-            Shop::addSqlRestriction();
+            $shopRestriction;
 
-        // No cache to avoid getting a wrong result in clustered environments
+        // No query cache, it is shared between servers in clustered environments: the result is
+        // only kept for the request, and flushed by add() and delete().
         $result = Db::getInstance()->getValue($sql, false);
+        $result = !empty($result) ? (int) $result : false;
+        Cache::store($cacheKey, $result);
 
-        return !empty($result) ? (int) $result : false;
+        return $result;
     }
 
     /**
