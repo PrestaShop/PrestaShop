@@ -17,3 +17,7 @@ services:
     autowire: true
 
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\ExtraPropertyDefinitionFormOptionsProvider: ~
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\GridViewFormOptionsProvider:
+    arguments:
+      - '@prestashop.core.query_bus'
