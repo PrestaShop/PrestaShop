@@ -870,7 +870,7 @@ class AdminCartRulesControllerCore extends AdminController
         }
 
         if (null !== $name) {
-            // \n\n is not between double quotes because in js/jquery/plugins/alerts/jquery.alerts.js, \n is replaced by <br>.
+            // \n\n is not between double quotes because confirm_link() in js/admin.js replaces \n with <br>.
             $name = '\n\n' . self::$cache_lang['Name'] . ' ' . $name;
         }
 
