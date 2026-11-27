@@ -188,6 +188,7 @@ export default {
       priceImpactTaxExcluded: '.combination-impact-on-price-tax-excluded',
       priceImpactTaxIncluded: '.combination-impact-on-price-tax-included',
       isDefault: '.combination-is-default-input',
+      isActive: '.combination-active-input',
       ecoTax: '.combination-eco-tax',
       finalPrice: '.combination-final-price',
       finalPricePreview: '.text-preview',

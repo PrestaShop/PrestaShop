@@ -50,6 +50,7 @@ class BulkCombinationFormDataFormatter extends AbstractFormDataFormatter
             '[stock][available_date]' => '[stock][available_date]',
             '[stock][available_now_label]' => '[stock][available_now_label]',
             '[stock][available_later_label]' => '[stock][available_later_label]',
+            '[status][active]' => '[header][active]',
         ];
 
         $formattedData = $this->formatByPath($formData, $pathAssociations);
