@@ -1,0 +1,20 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% set legacyBaseLayout = lightDisplay|default(false) ? 'light_display_layout.tpl' : 'layout.tpl' %}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{#
+ # session_alert consumes the flash bag. Inside the modal nobody reads it, and the list reloading
+ # right after would find nothing left to show, so the alerts are left untouched there.
+ #}
+{% block session_alert %}
+  {% if not lightDisplay|default(false) %}
+    {{ parent() }}
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/status_form.html.twig') }}
+{% endblock %}
