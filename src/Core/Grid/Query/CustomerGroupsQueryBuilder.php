@@ -10,48 +10,29 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 class CustomerGroupsQueryBuilder extends AbstractDoctrineQueryBuilder
 {
-    /**
-     * @var int
-     */
-    private $languageId;
-
-    /**
-     * @var DoctrineSearchCriteriaApplicatorInterface
-     */
-    private $searchCriteriaApplicator;
-
-    /**
-     * @param Connection $connection
-     * @param string $dbPrefix
-     * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
-     * @param int $languageId
-     */
-    public function __construct(Connection $connection, $dbPrefix, DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator, int $languageId)
-    {
+    public function __construct(
+        Connection $connection,
+        string $dbPrefix,
+        private readonly DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
+        private readonly LanguageContext $languageContext,
+        private readonly ShopContext $shopContext,
+    ) {
         parent::__construct($connection, $dbPrefix);
-
-        $this->searchCriteriaApplicator = $searchCriteriaApplicator;
-        $this->languageId = $languageId;
     }
 
-    /**
-     * @param SearchCriteriaInterface $searchCriteria
-     *
-     * @return QueryBuilder
-     */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $builder = $this->getCustomerGroupsQueryBuilder($searchCriteria);
-
-        $builder
-            ->select('g.id_group, gl.name, g.reduction, COUNT(cg.id_customer) as members, g.show_prices')
-            ->leftJoin('g', $this->dbPrefix . 'customer_group', 'cg', 'g.id_group = cg.id_group')
-            ->groupBy('g.id_group')
-        ;
+        $builder->select(sprintf(
+            'g.id_group, gl.name, g.reduction, %s AS members, g.show_prices, g.date_add',
+            $this->getMembersSubQuery($builder)
+        ));
 
         $this->searchCriteriaApplicator
             ->applySorting($searchCriteria, $builder)
@@ -60,29 +41,37 @@ class CustomerGroupsQueryBuilder extends AbstractDoctrineQueryBuilder
         return $builder;
     }
 
-    /**
-     * @param SearchCriteriaInterface $searchCriteria
-     *
-     * @return QueryBuilder
-     */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         return $this->getCustomerGroupsQueryBuilder($searchCriteria)->select('COUNT(g.id_group)');
     }
 
-    /**
-     * @param SearchCriteriaInterface $searchCriteria
-     *
-     * @return QueryBuilder
-     */
     private function getCustomerGroupsQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $builder = $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'group', 'g')
-            ->innerJoin('g', $this->dbPrefix . 'group_lang', 'gl', 'g.id_group = gl.id_group')
-            ->andWhere('gl.`id_lang`= :language')
-            ->setParameter('language', $this->languageId)
+            ->innerJoin(
+                'g',
+                $this->dbPrefix . 'group_lang',
+                'gl',
+                'gl.id_group = g.id_group AND gl.id_lang = :languageId'
+            )
+            ->setParameter('languageId', $this->languageContext->getId())
         ;
+
+        if (!$this->shopContext->isAllShopContext()) {
+            $shopAssociationQuery = $this->connection->createQueryBuilder()
+                ->select('1')
+                ->from($this->dbPrefix . 'group_shop', 'gs')
+                ->where('gs.id_group = g.id_group')
+                ->andWhere('gs.id_shop IN (:contextShopIds)')
+            ;
+
+            $builder
+                ->andWhere('EXISTS (' . $shopAssociationQuery->getSQL() . ')')
+                ->setParameter('contextShopIds', $this->shopContext->getAssociatedShopIds(), Connection::PARAM_INT_ARRAY)
+            ;
+        }
 
         $this->applyFilters($builder, $searchCriteria);
 
@@ -90,26 +79,64 @@ class CustomerGroupsQueryBuilder extends AbstractDoctrineQueryBuilder
     }
 
     /**
-     * @param QueryBuilder $builder
-     * @param SearchCriteriaInterface $searchCriteria
+     * Counts the non deleted customers of the group, restricted like the legacy Shop::SHARE_CUSTOMER restriction.
      */
+    private function getMembersSubQuery(QueryBuilder $builder): string
+    {
+        $membersQuery = $this->connection->createQueryBuilder()
+            ->select('COUNT(cg.id_customer)')
+            ->from($this->dbPrefix . 'customer_group', 'cg')
+            ->innerJoin('cg', $this->dbPrefix . 'customer', 'c', 'c.id_customer = cg.id_customer AND c.deleted = 0')
+            ->where('cg.id_group = g.id_group')
+        ;
+
+        if (!$this->shopContext->isAllShopContext()) {
+            if ($this->shopContext->hasGroupSharingCustomers()) {
+                $membersQuery->andWhere('c.id_shop_group = :membersShopGroupId');
+                $builder->setParameter('membersShopGroupId', $this->shopContext->getShopGroupId());
+            } else {
+                $membersQuery->andWhere('c.id_shop IN (:membersShopIds)');
+                $builder->setParameter('membersShopIds', $this->shopContext->getAssociatedShopIds(), Connection::PARAM_INT_ARRAY);
+            }
+        }
+
+        return '(' . $membersQuery->getSQL() . ')';
+    }
+
     private function applyFilters(QueryBuilder $builder, SearchCriteriaInterface $searchCriteria): void
     {
-        $allowedFiltersMap = [
-            'id_group' => 'g.id_group',
-            'name' => 'gl.name',
-            'reduction' => 'g.reduction',
-            'show_prices' => 'g.show_prices',
-        ];
-
         foreach ($searchCriteria->getFilters() as $filterName => $filterValue) {
-            if (!array_key_exists($filterName, $allowedFiltersMap)) {
-                continue;
+            switch ($filterName) {
+                case 'id_group':
+                case 'reduction':
+                case 'show_prices':
+                    $builder
+                        ->andWhere(sprintf('g.%s = :%s', $filterName, $filterName))
+                        ->setParameter($filterName, $filterValue);
+                    break;
+                case 'members':
+                    $builder
+                        ->andWhere($this->getMembersSubQuery($builder) . ' = :members')
+                        ->setParameter('members', (int) $filterValue);
+                    break;
+                case 'name':
+                    $builder
+                        ->andWhere('gl.name LIKE :name')
+                        ->setParameter('name', '%' . $filterValue . '%');
+                    break;
+                case 'date_add':
+                    if (!empty($filterValue['from'])) {
+                        $builder
+                            ->andWhere('g.date_add >= :dateAddFrom')
+                            ->setParameter('dateAddFrom', sprintf('%s 00:00:00', $filterValue['from']));
+                    }
+                    if (!empty($filterValue['to'])) {
+                        $builder
+                            ->andWhere('g.date_add <= :dateAddTo')
+                            ->setParameter('dateAddTo', sprintf('%s 23:59:59', $filterValue['to']));
+                    }
+                    break;
             }
-
-            $builder
-                ->andWhere($allowedFiltersMap[$filterName] . ' LIKE :' . $filterName)
-                ->setParameter($filterName, '%' . $filterValue . '%');
         }
     }
 }

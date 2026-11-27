@@ -8,20 +8,60 @@ namespace PrestaShop\PrestaShop\Adapter\Customer\Group\Validate;
 
 use Group as CustomerGroup;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
+use PrestaShop\PrestaShop\Adapter\Customer\Group\Repository\DefaultCustomerGroupsRepository;
+use PrestaShop\PrestaShop\Adapter\Customer\Group\Repository\GroupRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\CannotDeleteGroupException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 class CustomerGroupValidator extends AbstractObjectModelValidator
 {
-    /**
-     * @var ShopRepository
-     */
-    private $shopRepository;
+    public function __construct(
+        private readonly ShopRepository $shopRepository,
+        private readonly GroupRepository $groupRepository,
+        private readonly DefaultCustomerGroupsRepository $defaultCustomerGroupsRepository,
+    ) {
+    }
 
-    public function __construct(ShopRepository $shopRepository)
+    /**
+     * @throws CannotDeleteGroupException
+     */
+    public function assertIsNotDefaultGroup(GroupId $groupId): void
     {
-        $this->shopRepository = $shopRepository;
+        if ($this->defaultCustomerGroupsRepository->isUsedAsDefaultGroup($groupId)) {
+            throw new CannotDeleteGroupException(
+                sprintf('Customer group #%d is used as a default group and cannot be deleted', $groupId->getValue()),
+                CannotDeleteGroupException::GROUP_USED_AS_DEFAULT
+            );
+        }
+    }
+
+    /**
+     * Like the legacy page, the group must be associated to at least one shop of the constraint.
+     *
+     * @throws GroupNotFoundException
+     * @throws GroupConstraintException
+     */
+    public function assertCanBeDefaultGroup(GroupId $groupId, ShopConstraint $shopConstraint): void
+    {
+        $this->groupRepository->assertGroupExists($groupId);
+
+        $shopIds = $this->shopRepository->getAssociatedShopIds($shopConstraint);
+        $commonShopIds = array_intersect($shopIds, $this->groupRepository->getAssociatedShopIds($groupId->getValue()));
+        if (empty($commonShopIds)) {
+            throw new GroupConstraintException(
+                sprintf(
+                    'Customer group #%d is not associated to any of the shop(s) %s',
+                    $groupId->getValue(),
+                    implode(', ', $shopIds)
+                ),
+                GroupConstraintException::GROUP_NOT_ASSOCIATED_TO_SHOP
+            );
+        }
     }
 
     /**

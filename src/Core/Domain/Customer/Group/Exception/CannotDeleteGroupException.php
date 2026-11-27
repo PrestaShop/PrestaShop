@@ -10,4 +10,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception;
 
 class CannotDeleteGroupException extends GroupException
 {
+    /**
+     * The group is configured as the visitors, guests or customers default group
+     */
+    public const GROUP_USED_AS_DEFAULT = 10;
 }

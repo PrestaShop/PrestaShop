@@ -5,19 +5,29 @@
 
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
-{% set layoutHeaderToolbarBtn = {
-  add: {
-    href: path('admin_customer_groups_create'),
-    desc: 'Add new group'|trans({}, 'Admin.Shopparameters.Feature'),
-    icon: 'add_circle_outline',
-  },
-}
-%}
-
 {% block content %}
-  {% block groups_list_panel %}
-    {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: customerGroupsGrid}) }}
-  {% endblock %}
+  {% if showDisabledFeatureWarning %}
+    {{ include('@PrestaShop/Admin/Sell/Catalog/Features/Blocks/disabled_feature_warning.html.twig') }}
+  {% else %}
+    {% block default_groups_info %}
+      <div class="alert alert-info" role="alert">
+        <p class="alert-text">{{ 'PrestaShop has three default customer groups:'|trans({}, 'Admin.Shopparameters.Help') }}</p>
+        <ul>
+          <li>{{ '%group_name% - All persons without a customer account or customers that are not logged in.'|trans({'%group_name%': '<strong>' ~ defaultGroupNames.visitors|e ~ '</strong>'}, 'Admin.Shopparameters.Help')|raw_purified }}</li>
+          <li>{{ '%group_name% - All persons who placed an order through Guest Checkout.'|trans({'%group_name%': '<strong>' ~ defaultGroupNames.guests|e ~ '</strong>'}, 'Admin.Shopparameters.Help')|raw_purified }}</li>
+          <li>{{ '%group_name% - All persons who created an account on this site.'|trans({'%group_name%': '<strong>' ~ defaultGroupNames.customers|e ~ '</strong>'}, 'Admin.Shopparameters.Help')|raw_purified }}</li>
+        </ul>
+      </div>
+    {% endblock %}
+
+    {% block groups_list_panel %}
+      {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: customerGroupsGrid}) }}
+    {% endblock %}
+
+    {% block default_groups_options %}
+      {{ include('@PrestaShop/Admin/Configure/ShopParameters/CustomerSettings/Groups/Blocks/default_groups_options.html.twig') }}
+    {% endblock %}
+  {% endif %}
 {% endblock %}
 
 {% block javascripts %}

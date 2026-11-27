@@ -17,6 +17,13 @@ services:
     arguments:
       - '@prestashop.adapter.country.country_options_configuration'
 
+  prestashop.admin.customer_groups.default_groups.form_data_provider:
+    class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerGroups\DefaultCustomerGroupsFormDataProvider'
+    autowire: true
+    arguments:
+      $queryBus: '@prestashop.core.query_bus'
+      $commandBus: '@prestashop.core.command_bus'
+
   prestashop.admin.order.invoices.by_date.data_provider:
     class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoicesByDateDataProvider'
     arguments:

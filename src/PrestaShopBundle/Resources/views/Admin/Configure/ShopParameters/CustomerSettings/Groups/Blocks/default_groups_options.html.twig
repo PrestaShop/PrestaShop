@@ -1,0 +1,28 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% form_theme defaultGroupsForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
+{{ form_start(defaultGroupsForm, {action: path('admin_customer_groups_save_default_groups')}) }}
+<div class="card">
+  <h3 class="card-header">
+    {{ 'Default groups options'|trans({}, 'Admin.Shopparameters.Feature') }}
+  </h3>
+  <div class="card-body">
+    <div class="form-wrapper">
+      {% block default_groups_options_form_widget %}
+        {{ form_widget(defaultGroupsForm) }}
+      {% endblock %}
+    </div>
+  </div>
+  <div class="card-footer">
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-primary" id="form-default-groups-options-save-button">
+        {{ 'Save'|trans({}, 'Admin.Actions') }}
+      </button>
+    </div>
+  </div>
+</div>
+{{ form_end(defaultGroupsForm) }}
