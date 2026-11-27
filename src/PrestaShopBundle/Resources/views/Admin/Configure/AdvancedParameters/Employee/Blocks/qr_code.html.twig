@@ -13,7 +13,7 @@
             <p>
                 {{ 'Scan this QR code with your authenticator app.'|trans({}, 'Admin.Global') }}<br/>
             </p>
-            <img id="employee_two_factor_tot_qr_code" src="{{ qrCodeSrc }}">
+            <img id="employee_two_factor_tot_qr_code" {% if qrCodeSrc %}src="{{ qrCodeSrc }}"{% endif %}>
         {% else %}
             {{ 'Two-factor authentication is already activated for this account.'|trans({}, 'Admin.Global') }}
         {% endif %}

@@ -4,11 +4,14 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use Context;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Types\Types;
 use Employee;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\AddEmployeeCommand;
@@ -25,6 +28,7 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundExcepti
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\EditableEmployee;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\GeneratedEmployeeBackupCodes;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProfileChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TabChoiceProvider;
@@ -289,6 +293,99 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
         } else {
             throw new RuntimeException('Unsupported TOTP secret state: ' . $state);
         }
+    }
+
+    /**
+     * @When I edit 2FA settings for employee :employeeReference and :expected backup codes:
+     */
+    public function editTwoFactorSettingsAndCheckBackupCodes(string $employeeReference, string $expected, TableNode $table): void
+    {
+        $employeeId = $this->referenceToId($employeeReference);
+        $before = $this->getStoredBackupCodes($employeeId);
+        $command = new EditEmployeeCommand($employeeId);
+        foreach ($table->getRowsHash() as $field => $value) {
+            match ($field) {
+                '2FA enabled' => $command->setTwoFactorEnabled(filter_var($value, FILTER_VALIDATE_BOOLEAN)),
+                'TOTP enabled' => $command->setTwoFactorTotpEnabled(filter_var($value, FILTER_VALIDATE_BOOLEAN)),
+                'Email 2FA enabled' => $command->setTwoFactorEmailEnabled(filter_var($value, FILTER_VALIDATE_BOOLEAN)),
+                '2FA required' => $command->setTwoFactorRequired(filter_var($value, FILTER_VALIDATE_BOOLEAN)),
+                'Last name' => $command->setLastName($value),
+                default => throw new RuntimeException('Unsupported field: ' . $field),
+            };
+        }
+        $result = $this->getCommandBus()->handle($command);
+        $after = $this->getStoredBackupCodes($employeeId);
+        if ('generate' === $expected) {
+            Assert::assertInstanceOf(GeneratedEmployeeBackupCodes::class, $result);
+            Assert::assertSame($employeeId, $result->getValue());
+            Assert::assertCount(8, $result->getBackupCodes());
+            Assert::assertCount(8, $after);
+            Assert::assertNotSame($before, $after);
+            $hasher = CommonFeatureContext::getContainer()->get(\Symfony\Component\PasswordHasher\PasswordHasherInterface::class);
+            foreach ($result->getBackupCodes() as $index => $plainCode) {
+                Assert::assertTrue($hasher->verify($after[$index], $plainCode));
+                Assert::assertNotSame($plainCode, $after[$index]);
+            }
+        } elseif ('preserve' === $expected) {
+            Assert::assertNull($result);
+            Assert::assertSame($before, $after);
+        } elseif ('clear' === $expected) {
+            Assert::assertNull($result);
+            Assert::assertNull($after);
+        } else {
+            throw new RuntimeException('Unsupported backup-code state: ' . $expected);
+        }
+    }
+
+    /**
+     * @Given employee :employeeReference has exhausted all backup codes
+     */
+    public function exhaustBackupCodes(string $employeeReference): void
+    {
+        /** @var Connection $connection */
+        $connection = $this->getContainer()->get('doctrine.dbal.default_connection');
+        $connection->createQueryBuilder()
+            ->update(_DB_PREFIX_ . 'employee')
+            ->set('two_factor_backup_codes', ':codes')
+            ->where('id_employee = :id')
+            ->setParameter('codes', [], Types::JSON)
+            ->setParameter('id', $this->referenceToId($employeeReference))
+            ->executeStatement();
+    }
+
+    /**
+     * @Given employee :employeeReference has stale backup codes
+     */
+    public function setStaleBackupCodes(string $employeeReference): void
+    {
+        /** @var Connection $connection */
+        $connection = $this->getContainer()->get('doctrine.dbal.default_connection');
+        $connection->createQueryBuilder()
+            ->update(_DB_PREFIX_ . 'employee')
+            ->set('two_factor_backup_codes', ':codes')
+            ->where('id_employee = :id')
+            ->setParameter('codes', ['stale-hash'], Types::JSON)
+            ->setParameter('id', $this->referenceToId($employeeReference))
+            ->executeStatement();
+    }
+
+    /**
+     * @return string[]|null
+     */
+    private function getStoredBackupCodes(int $employeeId): ?array
+    {
+        /** @var Connection $connection */
+        $connection = $this->getContainer()->get('doctrine.dbal.default_connection');
+        $stored = $connection->createQueryBuilder()
+            ->select('two_factor_backup_codes')
+            ->from(_DB_PREFIX_ . 'employee')
+            ->where('id_employee = :id')
+            ->setParameter('id', $employeeId)
+            ->setMaxResults(1)
+            ->executeQuery()->fetchOne();
+        Assert::assertNotFalse($stored);
+
+        return null === $stored ? null : json_decode($stored, true, 512, JSON_THROW_ON_ERROR);
     }
 
     /**

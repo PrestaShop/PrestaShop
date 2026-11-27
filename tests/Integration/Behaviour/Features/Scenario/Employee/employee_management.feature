@@ -257,6 +257,45 @@ Feature: Employee management
       | TOTP enabled      | true     | true  | true  | true  | preserved |
       | Email 2FA enabled | false    | true  | true  | false | preserved |
 
+  Scenario: Direct CQRS employee updates manage the backup-code lifecycle
+    Given I Add new employee "backup_lifecycle_employee" to shop "shop1" with the following details:
+      | First name         | Ada                              |
+      | Last name          | Byron                            |
+      | Email address      | ada.backupcodes@prestashop.com    |
+      | Password           | secretpassword                   |
+      | Default page       | Products                         |
+      | Language           | English (English)                |
+      | Active             | true                             |
+      | Permission profile | Salesman                         |
+    When I edit 2FA settings for employee "backup_lifecycle_employee" and "generate" backup codes:
+      | 2FA enabled       | true |
+      | Email 2FA enabled | true |
+    And I edit 2FA settings for employee "backup_lifecycle_employee" and "preserve" backup codes:
+      | Last name | Lovelace |
+    And I edit 2FA settings for employee "backup_lifecycle_employee" and "preserve" backup codes:
+      | 2FA required | true |
+    Given employee "backup_lifecycle_employee" has a TOTP secret
+    When I edit 2FA settings for employee "backup_lifecycle_employee" and "preserve" backup codes:
+      | TOTP enabled | true |
+    And I edit 2FA settings for employee "backup_lifecycle_employee" and "preserve" backup codes:
+      | Email 2FA enabled | false |
+    And I edit 2FA settings for employee "backup_lifecycle_employee" and "clear" backup codes:
+      | TOTP enabled | false |
+    And I edit 2FA settings for employee "backup_lifecycle_employee" and "generate" backup codes:
+      | Email 2FA enabled | true |
+    And I edit 2FA settings for employee "backup_lifecycle_employee" and "clear" backup codes:
+      | 2FA enabled | false |
+    Given employee "backup_lifecycle_employee" has stale backup codes
+    When I edit 2FA settings for employee "backup_lifecycle_employee" and "generate" backup codes:
+      | 2FA enabled | true |
+    Given employee "backup_lifecycle_employee" has exhausted all backup codes
+    When I edit 2FA settings for employee "backup_lifecycle_employee" and "preserve" backup codes:
+      | Last name | Byron |
+    And I edit 2FA settings for employee "backup_lifecycle_employee" and "preserve" backup codes:
+      | TOTP enabled | true |
+    When I delete the employee backup_lifecycle_employee
+    Then employee backup_lifecycle_employee does not exist
+
   Scenario: I cannot edit an employee that does not exist
     Given I delete the employee partial_employee
     When I edit employee "partial_employee" with the following details:

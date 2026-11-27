@@ -8,6 +8,21 @@
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
 {% block employee_form %}
+  {% if isRestrictedAccess|default(false) and employeeForm.two_factor_totp_enabled is defined %}
+    <div id="employee-two-factor-setup"
+         data-initialize-url="{{ path('admin_employees_initialize_totp', {employeeId: editableEmployeeId}) }}"
+         data-initialize-token="{{ csrf_token('initialize_totp_' ~ editableEmployeeId) }}"
+         data-initialize-error="{{ 'An error occurred.'|trans({}, 'Admin.Notifications.Error') }}">
+      <div class="alert alert-danger d-none" role="alert"></div>
+      {% if employeeForm.two_factor_tot_verification_code is defined %}
+        <noscript>
+          <button type="submit" form="employee-initialize-totp-form" class="btn btn-outline-primary mb-3">
+            {{ 'Set up authenticator app'|trans({}, 'Admin.Advparameters.Feature') }}
+          </button>
+        </noscript>
+      {% endif %}
+    </div>
+  {% endif %}
   {{ form_start(employeeForm) }}
   <div class="card">
     <h3 class="card-header">
@@ -27,8 +42,8 @@
             {% if hasBackupCodes|default(false) %}
               <button
                 class="btn btn-outline-primary"
-                type="button"
-                onclick="window.location.href='{{ path('admin_employees_confirm_regenerate_backup_codes', {employeeId: editableEmployee.employeeId.value}) }}'"
+                type="submit"
+                form="employee-regenerate-backup-codes-form"
               >
                 {{ 'Regenerate backup codes'|trans({}, 'Admin.Advparameters.Feature') }}
               </button>
@@ -36,17 +51,10 @@
               <button
                 class="btn btn-outline-primary"
                 type="submit"
-                formaction="{{ path('admin_employees_generate_backup_codes', {employeeId: editableEmployee.employeeId.value}) }}"
-                formmethod="post"
-                formnovalidate
+                form="employee-generate-backup-codes-form"
               >
                 {{ 'Generate backup codes'|trans({}, 'Admin.Advparameters.Feature') }}
               </button>
-              <input
-                type="hidden"
-                name="_token_generate_backup_codes"
-                value="{{ csrf_token('generate_backup_codes_' ~ editableEmployee.employeeId.value) }}"
-              >
             {% endif %}
           </div>
         </div>
@@ -74,6 +82,27 @@
     </div>
   </div>
   {{ form_end(employeeForm) }}
+
+  {% if isRestrictedAccess|default(false) and employeeForm.two_factor_tot_verification_code is defined %}
+    <form id="employee-initialize-totp-form" method="post"
+          action="{{ path('admin_employees_initialize_totp', {employeeId: editableEmployeeId}) }}">
+      <input type="hidden" name="_token_initialize_totp" value="{{ csrf_token('initialize_totp_' ~ editableEmployeeId) }}">
+    </form>
+  {% endif %}
+
+  {% if canManageBackupCodes|default(false) %}
+    {% if hasBackupCodes|default(false) %}
+      <form id="employee-regenerate-backup-codes-form" method="post"
+            action="{{ path('admin_employees_prepare_regenerate_backup_codes', {employeeId: editableEmployeeId}) }}">
+        <input type="hidden" name="_token_prepare_backup_codes" value="{{ csrf_token('prepare_backup_codes_' ~ editableEmployeeId) }}">
+      </form>
+    {% else %}
+      <form id="employee-generate-backup-codes-form" method="post"
+            action="{{ path('admin_employees_generate_backup_codes', {employeeId: editableEmployeeId}) }}">
+        <input type="hidden" name="_token_generate_backup_codes" value="{{ csrf_token('generate_backup_codes_' ~ editableEmployeeId) }}">
+      </form>
+    {% endif %}
+  {% endif %}
 
   {% if canResetTwoFactor|default(false) %}
     <form

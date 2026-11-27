@@ -136,6 +136,24 @@ admin_employees_regenerate_backup_codes:
   requirements:
     employeeId: \d+
 
+admin_employees_initialize_totp:
+  path: /{employeeId}/two-factor/totp/initialize
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::initializeTotpSecretAction'
+    _legacy_controller: AdminEmployees
+  requirements:
+    employeeId: \d+
+
+admin_employees_prepare_regenerate_backup_codes:
+  path: /{employeeId}/backup-codes/prepare-regeneration
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::prepareRegenerateBackupCodesAction'
+    _legacy_controller: AdminEmployees
+  requirements:
+    employeeId: \d+
+
 admin_employees_toggle_navigation:
   path: /toggle-navigation
   methods: [ POST ]

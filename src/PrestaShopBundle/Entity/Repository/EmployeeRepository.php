@@ -4,9 +4,16 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Entity\Repository;
 
+use Doctrine\DBAL\Query\QueryBuilder;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityRepository;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeTwoFactorException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
 use PrestaShopBundle\Entity\Employee\Employee;
 
@@ -97,10 +104,134 @@ class EmployeeRepository extends EntityRepository
             ->update($this->getEntityName(), 'e')
             ->set('e.twoFactorBackupCodes', ':null')
             ->where('e.id = :employeeId')
+            ->andWhere('e.twoFactorBackupCodes IS NOT NULL')
+            ->andWhere('(e.twoFactorEnabled = false OR (e.twoFactorTotpEnabled = false AND e.twoFactorEmailEnabled = false))')
             ->setParameter('null', null)
             ->setParameter('employeeId', $employeeId)
             ->getQuery()
             ->execute();
+    }
+
+    public function getForTwoFactor(int $employeeId): Employee
+    {
+        $employee = $this->find($employeeId);
+        if (!$employee instanceof Employee) {
+            throw new EmployeeNotFoundException(new EmployeeId($employeeId), sprintf('Employee %d was not found.', $employeeId));
+        }
+
+        // Legacy updates and targeted DQL writes bypass Doctrine's identity map.
+        $this->getEntityManager()->refresh($employee);
+
+        return $employee;
+    }
+
+    /**
+     * The raw stored value is the comparison token, so JSON whitespace and escaping cannot
+     * turn an unchanged set into a conflict. It contains hashes, never plaintext codes.
+     */
+    public function getBackupCodesSnapshot(int $employeeId): ?string
+    {
+        return $this->getTwoFactorStateSnapshot($employeeId)['two_factor_backup_codes'];
+    }
+
+    /**
+     * Read flags and the comparison token together, independently of ObjectModel/ORM caches.
+     *
+     * @return array{two_factor_enabled: bool, two_factor_totp_enabled: bool, two_factor_email_enabled: bool, two_factor_backup_codes: ?string}
+     */
+    public function getTwoFactorStateSnapshot(int $employeeId): array
+    {
+        $state = $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->select('two_factor_enabled', 'two_factor_totp_enabled', 'two_factor_email_enabled', 'two_factor_backup_codes')
+            ->from($this->getClassMetadata()->getTableName())
+            ->where('id_employee = :employeeId')
+            ->setParameter('employeeId', $employeeId)
+            ->setMaxResults(1)
+            ->executeQuery()->fetchAssociative();
+        if (false === $state) {
+            throw new EmployeeNotFoundException(new EmployeeId($employeeId));
+        }
+
+        return [
+            'two_factor_enabled' => (bool) $state['two_factor_enabled'],
+            'two_factor_totp_enabled' => (bool) $state['two_factor_totp_enabled'],
+            'two_factor_email_enabled' => (bool) $state['two_factor_email_enabled'],
+            'two_factor_backup_codes' => $state['two_factor_backup_codes'],
+        ];
+    }
+
+    /**
+     * @param string[] $backupCodes
+     */
+    public function saveBackupCodes(
+        int $employeeId,
+        array $backupCodes,
+        ?string $expectedBackupCodes,
+        bool $clearEmailCode = false,
+        string $provider = '',
+        ?string $expectedVerificationValue = null,
+    ): void {
+        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->update($this->getClassMetadata()->getTableName())
+            ->set('two_factor_backup_codes', ':codes')
+            ->where('id_employee = :employeeId')
+            ->andWhere('two_factor_enabled = 1')
+            ->andWhere('(two_factor_totp_enabled = 1 OR two_factor_email_enabled = 1)')
+            ->setParameter('codes', $backupCodes, Types::JSON)
+            ->setParameter('employeeId', $employeeId);
+        $this->addExpectedValue($qb, 'two_factor_backup_codes', 'expectedCodes', $expectedBackupCodes);
+
+        if ('email' === $provider) {
+            $qb->andWhere('two_factor_email_enabled = 1');
+            $this->addExpectedValue($qb, 'two_factor_email_auth_code', 'expectedVerification', $expectedVerificationValue);
+        } elseif ('totp' === $provider) {
+            $qb->andWhere('two_factor_totp_enabled = 1');
+            $this->addExpectedValue($qb, 'two_factor_totp_secret', 'expectedVerification', $expectedVerificationValue);
+        }
+        if ($clearEmailCode) {
+            $qb->set('two_factor_email_auth_code', 'NULL');
+        }
+        if (1 !== $qb->executeStatement()) {
+            throw new EmployeeTwoFactorException('Two-factor settings changed during this operation.', EmployeeTwoFactorException::CONCURRENT_UPDATE);
+        }
+    }
+
+    private function addExpectedValue(QueryBuilder $qb, string $column, string $parameter, ?string $expected): void
+    {
+        if (null === $expected) {
+            $qb->andWhere($column . ' IS NULL');
+
+            return;
+        }
+
+        // HEX is available on MySQL/MariaDB and SQLite and avoids case-insensitive text collations.
+        $qb->andWhere('HEX(' . $column . ') = :' . $parameter)
+            ->setParameter($parameter, strtoupper(bin2hex($expected)));
+    }
+
+    public function initializeTotpSecret(int $employeeId, string $encryptedSecret): void
+    {
+        $this->getEntityManager()->createQueryBuilder()
+            ->update($this->getEntityName(), 'e')
+            ->set('e.twoFactorTotpSecretEncrypted', ':secret')
+            ->where('e.id = :employeeId')
+            ->andWhere('(e.twoFactorTotpSecretEncrypted IS NULL OR e.twoFactorTotpSecretEncrypted = :empty)')
+            ->andWhere('e.twoFactorTotpEnabled = false')
+            ->setParameter('empty', '')
+            ->setParameter('secret', $encryptedSecret)
+            ->setParameter('employeeId', $employeeId)
+            ->getQuery()->execute();
+    }
+
+    public function saveEmailAuthCode(int $employeeId, string $code): void
+    {
+        $this->getEntityManager()->createQueryBuilder()
+            ->update($this->getEntityName(), 'e')
+            ->set('e.twoFactorEmailAuthCode', ':code')
+            ->where('e.id = :employeeId')
+            ->setParameter('code', $code)
+            ->setParameter('employeeId', $employeeId)
+            ->getQuery()->execute();
     }
 
     /**

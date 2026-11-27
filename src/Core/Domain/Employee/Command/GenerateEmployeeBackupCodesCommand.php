@@ -10,38 +10,17 @@ namespace PrestaShop\PrestaShop\Core\Domain\Employee\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 
-/**
- * Sets the two-factor authentication secret
- */
-class SetEmployeeTwoFactorSecretCommand
+final class GenerateEmployeeBackupCodesCommand
 {
-    /**
-     * @var EmployeeId
-     */
-    private $employeeId;
+    private readonly EmployeeId $employeeId;
 
-    /**
-     * @param int $employeeId
-     */
     public function __construct(
         int $employeeId,
-        private string $secret,
-        private string $secretPlain,
     ) {
         $this->employeeId = new EmployeeId($employeeId);
     }
 
-    public function getSecret()
-    {
-        return $this->secret;
-    }
-
-    public function getSecretPlain()
-    {
-        return $this->secretPlain;
-    }
-
-    public function getEmployeeId()
+    public function getEmployeeId(): EmployeeId
     {
         return $this->employeeId;
     }

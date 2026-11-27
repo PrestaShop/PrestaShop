@@ -14,12 +14,21 @@
     <p class="mb-3 text-center">{{ 'Select a verification method'|trans({}, 'Admin.Login.Feature') }}</p>
     <div class="d-flex flex-wrap justify-content-center mb-3">
       {% for provider in availableTwoFactorProviders %}
-        <a
-          href="{{ path(providerSwitchRoute, providerSwitchRouteParams|merge({preferProvider: provider})) }}"
-          class="btn mr-2 mb-2 {% if provider == twoFactorProvider|default(null) %}btn-primary{% else %}btn-outline-secondary{% endif %}"
-        >
-          {{ provider == 'email' ? 'Email'|trans({}, 'Admin.Global') : 'Authenticator app'|trans({}, 'Admin.Login.Feature') }}
-        </a>
+        {% if providerSwitchMethod|default('get') == 'post' %}
+          <form method="post" action="{{ path(providerSwitchRoute, providerSwitchRouteParams|merge({preferProvider: provider})) }}">
+            <input type="hidden" name="{{ providerSwitchCsrfParameter }}" value="{{ csrf_token(providerSwitchCsrfTokenId) }}">
+            <button type="submit" class="btn mr-2 mb-2 {% if provider == twoFactorProvider|default(null) %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+              {{ provider == 'email' ? 'Email'|trans({}, 'Admin.Global') : 'Authenticator app'|trans({}, 'Admin.Login.Feature') }}
+            </button>
+          </form>
+        {% else %}
+          <a
+            href="{{ path(providerSwitchRoute, providerSwitchRouteParams|merge({preferProvider: provider})) }}"
+            class="btn mr-2 mb-2 {% if provider == twoFactorProvider|default(null) %}btn-primary{% else %}btn-outline-secondary{% endif %}"
+          >
+            {{ provider == 'email' ? 'Email'|trans({}, 'Admin.Global') : 'Authenticator app'|trans({}, 'Admin.Login.Feature') }}
+          </a>
+        {% endif %}
       {% endfor %}
     </div>
   </div>

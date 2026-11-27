@@ -4,21 +4,22 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Endroid\QrCode\Builder\Builder;
-use Endroid\QrCode\Writer\PngWriter;
 use Exception;
 use ImageManager;
 use PrestaShop\PrestaShop\Adapter\Tab\TabDataProvider;
-use PrestaShop\PrestaShop\Adapter\TotMailer\TwoFactorAuthCodePrestashopMailer;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkDeleteEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkUpdateEmployeeStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\DeleteEmployeeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\GenerateEmployeeBackupCodesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\InitializeEmployeeTotpSecretCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\PrepareEmployeeBackupCodeRegenerationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\RegenerateEmployeeBackupCodesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ResetEmployeeTwoFactorCommand;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Command\SetEmployeeTwoFactorSecretCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ToggleEmployeeStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\AdminEmployeeException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\CannotDeleteEmployeeException;
@@ -27,10 +28,13 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeCannotChangeIts
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeTwoFactorException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidEmployeeIdException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\MissingShopAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeTwoFactorSettings;
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\GeneratedEmployeeBackupCodes;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Employee\Access\EmployeeFormAccessCheckerInterface;
@@ -47,18 +51,13 @@ use PrestaShop\PrestaShop\Core\Security\PasswordGenerator;
 use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShop\PrestaShop\Core\Team\Employee\Configuration\OptionsCheckerInterface;
 use PrestaShop\PrestaShop\Core\Util\HelperCard\DocumentationLinkProviderInterface;
-use PrestaShop\PrestaShop\Core\Util\String\RandomString;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Entity\Repository\EmployeeRepository;
-use PrestaShopBundle\SchebTwoFactor\EmployeeBackupCodeManager;
-use PrestaShopBundle\SchebTwoFactor\TotpSecretEncryptor;
 use PrestaShopBundle\Security\Admin\UserTokenManager;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Totp\TotpAuthenticatorInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -274,12 +273,8 @@ class EmployeeController extends PrestaShopAdminController
         #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.employee_form_handler')]
         FormHandlerInterface $formHandler,
         EmployeeFormAccessCheckerInterface $formAccessChecker,
-        TotpAuthenticatorInterface $totpAuthenticator,
         EmployeeRepository $employeeRepository,
-        TotpSecretEncryptor $totpSecretEncryptor,
         ConfigurationInterface $configuration,
-        EmployeeBackupCodeManager $employeeBackupCodeManager,
-        EntityManagerInterface $entityManager,
     ): Response {
         // If employee is editing his own profile - he doesn't need to have access to the edit form.
         if ($this->getEmployeeContext()->getEmployee()->getId() != $employeeId) {
@@ -310,24 +305,17 @@ class EmployeeController extends PrestaShopAdminController
 
         /** @var Employee|null $employee */
         $employee = $employeeRepository->findOneBy(['id' => $employeeId]);
-        $wasTwoFactorAuthenticationEnabled = null !== $employee
-            && ($employee->isTotpAuthenticationEnabled() || $employee->isEmailAuthEnabled());
-
-        $twoFactorData = $this->buildTwoFactorFormData(
-            $isRestrictedAccess,
-            $configuration,
-            $employeeRepository,
-            $totpAuthenticator,
-            $totpSecretEncryptor,
-        );
+        $twoFactorData = $isRestrictedAccess && $configuration->get('PS_BACKOFFICE_2FA')
+            ? $this->dispatchQuery(new GetEmployeeTwoFactorSettings($employeeId))
+            : null;
 
         try {
             $employeeForm = $formBuilder->getFormFor((int) $employeeId, [], [
                 'is_restricted_access' => $isRestrictedAccess,
                 'is_for_editing' => true,
                 'can_manage_two_factor_requirement' => $this->getEmployeeContext()->isSuperAdmin() && !$isRestrictedAccess,
-                'qr_code_src' => $twoFactorData['qr_code_src'],
-                'two_factor_totp_secret' => $twoFactorData['two_factor_totp_secret'],
+                'qr_code_src' => $twoFactorData?->getQrCodeSrc() ?? '',
+                'two_factor_totp_secret' => $twoFactorData?->getTotpSecret() ?? '',
             ]);
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -340,15 +328,9 @@ class EmployeeController extends PrestaShopAdminController
             $result = $formHandler->handleFor($employeeId, $employeeForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                if (null !== $employee) {
-                    $this->updateBackupCodesAfterTwoFactorChange(
-                        $employeeForm,
-                        $employee,
-                        $isRestrictedAccess,
-                        $wasTwoFactorAuthenticationEnabled,
-                        $employeeBackupCodeManager,
-                        $entityManager,
-                    );
+                $updateResult = $result->getIdentifiableObjectId();
+                if ($isRestrictedAccess && $updateResult instanceof GeneratedEmployeeBackupCodes) {
+                    $this->flashBackupCodes($updateResult);
                 }
 
                 $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
@@ -357,6 +339,13 @@ class EmployeeController extends PrestaShopAdminController
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            if ($isRestrictedAccess && $employeeForm->isSubmitted() && $employeeForm->isValid() && $employeeForm->has('two_factor_enabled')) {
+                $this->addFlash('warning', $this->trans(
+                    'Some changes may already have been saved. Review your two-factor authentication settings and generate or regenerate backup codes if necessary.',
+                    [],
+                    'Admin.Advparameters.Notification'
+                ));
+            }
         }
 
         try {
@@ -394,57 +383,6 @@ class EmployeeController extends PrestaShopAdminController
         return $this->render(
             '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/edit.html.twig',
             $templateVars
-        );
-    }
-
-    private function updateBackupCodesAfterTwoFactorChange(
-        FormInterface $employeeForm,
-        Employee $employee,
-        bool $isRestrictedAccess,
-        bool $wasTwoFactorAuthenticationEnabled,
-        EmployeeBackupCodeManager $employeeBackupCodeManager,
-        EntityManagerInterface $entityManager,
-    ): void {
-        if (
-            !$isRestrictedAccess
-            || !$employeeForm->has('two_factor_enabled')
-            || !$employeeForm->has('two_factor_totp_enabled')
-            || !$employeeForm->has('two_factor_email_enabled')
-        ) {
-            return;
-        }
-
-        $isTwoFactorAuthenticationEnabled = $employeeForm->get('two_factor_enabled')->getData()
-            && ($employeeForm->get('two_factor_totp_enabled')->getData() || $employeeForm->get('two_factor_email_enabled')->getData());
-
-        if (!$isTwoFactorAuthenticationEnabled) {
-            if (null !== $employee->getTwoFactorBackupCodes()) {
-                $employee->setTwoFactorBackupCodes(null);
-                $entityManager->flush();
-            }
-
-            return;
-        }
-
-        if ($wasTwoFactorAuthenticationEnabled) {
-            return;
-        }
-
-        $backupCodeSet = $employeeBackupCodeManager->generateBackupCodeSet();
-        $employee->setTwoFactorBackupCodes($backupCodeSet['hashedBackupCodes']);
-        $entityManager->persist($employee);
-        $entityManager->flush();
-
-        foreach ($backupCodeSet['plainBackupCodes'] as $backupCode) {
-            $this->addFlash('backup_codes', $backupCode);
-        }
-        $this->addFlash(
-            'success',
-            $this->trans(
-                'Backup codes generated successfully. Save them now: they will not be shown again.',
-                [],
-                'Admin.Notifications.Success'
-            )
         );
     }
 
@@ -486,398 +424,171 @@ class EmployeeController extends PrestaShopAdminController
 
     #[DemoRestricted(redirectRoute: 'admin_employees_index')]
     #[AdminSecurity("is_granted('ROLE_EMPLOYEE')", redirectRoute: 'admin_employees_index')]
-    public function generateBackupCodesAction(
-        int $employeeId,
-        Request $request,
-        EmployeeFormAccessCheckerInterface $formAccessChecker,
-        EmployeeRepository $employeeRepository,
-        EmployeeBackupCodeManager $employeeBackupCodeManager,
-        EntityManagerInterface $entityManager,
-        ConfigurationInterface $configuration,
-    ): RedirectResponse {
+    public function initializeTotpSecretAction(int $employeeId, Request $request): Response
+    {
+        if (!$this->isCsrfTokenValid('initialize_totp_' . $employeeId, (string) $request->request->get('_token_initialize_totp'))) {
+            throw $this->createAccessDeniedException();
+        }
+        try {
+            $this->dispatchCommand(new InitializeEmployeeTotpSecretCommand($employeeId));
+            if (!$request->isXmlHttpRequest()) {
+                return $this->redirectToRoute('admin_employees_edit', ['employeeId' => $employeeId]);
+            }
+            $settings = $this->dispatchQuery(new GetEmployeeTwoFactorSettings($employeeId));
+
+            return $this->json([
+                'qrCodeSrc' => $settings->getQrCodeSrc(),
+                'totpSecret' => $settings->getTotpSecret(),
+            ], Response::HTTP_OK, ['Cache-Control' => 'no-store']);
+        } catch (EmployeeException $e) {
+            $message = $this->getErrorMessageForException($e, $this->getErrorMessages($e));
+            if ($request->isXmlHttpRequest()) {
+                return $this->json(['error' => $message], Response::HTTP_BAD_REQUEST, ['Cache-Control' => 'no-store']);
+            }
+            $this->addFlash('error', $message);
+
+            return $this->redirectToRoute('admin_employees_edit', ['employeeId' => $employeeId]);
+        }
+    }
+
+    #[DemoRestricted(redirectRoute: 'admin_employees_index')]
+    #[AdminSecurity("is_granted('ROLE_EMPLOYEE')", redirectRoute: 'admin_employees_index')]
+    public function generateBackupCodesAction(int $employeeId, Request $request): RedirectResponse
+    {
         if (!$this->isCsrfTokenValid('generate_backup_codes_' . $employeeId, (string) $request->request->get('_token_generate_backup_codes'))) {
             throw $this->createAccessDeniedException();
         }
+        try {
+            try {
+                $result = $this->dispatchCommand(new GenerateEmployeeBackupCodesCommand($employeeId));
+            } catch (EmployeeTwoFactorException $e) {
+                if (EmployeeTwoFactorException::CONFIRMATION_REQUIRED !== $e->getCode()) {
+                    throw $e;
+                }
+                $provider = $this->dispatchCommand(new PrepareEmployeeBackupCodeRegenerationCommand($employeeId));
 
-        if ($this->getEmployeeContext()->getEmployee()->getId() !== $employeeId) {
-            return $this->redirectToRoute('admin_employees_index');
+                return $this->redirectToRoute('admin_employees_confirm_regenerate_backup_codes', ['employeeId' => $employeeId, 'preferProvider' => $provider]);
+            }
+            $this->flashBackupCodes($result);
+        } catch (EmployeeException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
-
-        if (!$formAccessChecker->isRestrictedAccess($employeeId)) {
-            $this->addFlash(
-                'error',
-                $this->trans(
-                    'Backup codes can only be generated from the employee self-service profile page.',
-                    [],
-                    'Admin.Advparameters.Notification'
-                )
-            );
-
-            return $this->redirectToRoute('admin_employees_edit', ['employeeId' => $employeeId]);
-        }
-
-        if (!(bool) $configuration->get('PS_BACKOFFICE_2FA')) {
-            $this->addFlash(
-                'error',
-                $this->trans(
-                    'Two-factor authentication must be enabled before generating backup codes.',
-                    [],
-                    'Admin.Advparameters.Notification'
-                )
-            );
-
-            return $this->redirectToRoute('admin_employees_edit', ['employeeId' => $employeeId]);
-        }
-
-        /** @var Employee|null $employee */
-        $employee = $employeeRepository->findOneBy(['id' => $employeeId]);
-
-        if (null === $employee) {
-            $this->addFlash(
-                'error',
-                $this->trans('The object cannot be loaded (or found).', [], 'Admin.Notifications.Error')
-            );
-
-            return $this->redirectToRoute('admin_employees_index');
-        }
-
-        if (
-            !$employee->getTwoFactorEnabled()
-            || (!$employee->isTotpAuthenticationEnabled() && !$employee->getTwoFactorEmailEnabled())
-        ) {
-            $this->addFlash(
-                'error',
-                $this->trans(
-                    'Enable at least one two-factor authentication method before generating backup codes.',
-                    [],
-                    'Admin.Advparameters.Notification'
-                )
-            );
-
-            return $this->redirectToRoute('admin_employees_edit', ['employeeId' => $employeeId]);
-        }
-
-        if (!empty($employee->getTwoFactorBackupCodes())) {
-            return $this->redirectToRoute('admin_employees_confirm_regenerate_backup_codes', ['employeeId' => $employeeId]);
-        }
-
-        $backupCodeSet = $employeeBackupCodeManager->generateBackupCodeSet();
-
-        $employee->setTwoFactorBackupCodes($backupCodeSet['hashedBackupCodes']);
-        $entityManager->persist($employee);
-        $entityManager->flush();
-
-        foreach ($backupCodeSet['plainBackupCodes'] as $backupCode) {
-            $this->addFlash('backup_codes', $backupCode);
-        }
-        $this->addFlash(
-            'success',
-            $this->trans(
-                'Backup codes generated successfully. Save them now: they will not be shown again.',
-                [],
-                'Admin.Notifications.Success'
-            )
-        );
 
         return $this->redirectToRoute('admin_employees_edit', ['employeeId' => $employeeId]);
     }
 
     #[DemoRestricted(redirectRoute: 'admin_employees_index')]
     #[AdminSecurity("is_granted('ROLE_EMPLOYEE')", redirectRoute: 'admin_employees_index')]
-    public function confirmRegenerateBackupCodesAction(
-        int $employeeId,
-        Request $request,
-        EmployeeFormAccessCheckerInterface $formAccessChecker,
-        EmployeeRepository $employeeRepository,
-        ConfigurationInterface $configuration,
-        TwoFactorAuthCodePrestashopMailer $twoFactorAuthCodePrestashopMailer,
-        UserTokenManager $userTokenManager,
-        EntityManagerInterface $entityManager,
-    ): Response {
-        if ($this->getEmployeeContext()->getEmployee()->getId() !== $employeeId) {
-            return $this->redirectToRoute('admin_employees_index');
+    public function prepareRegenerateBackupCodesAction(int $employeeId, Request $request): RedirectResponse
+    {
+        if (!$this->isCsrfTokenValid('prepare_backup_codes_' . $employeeId, (string) $request->request->get('_token_prepare_backup_codes'))) {
+            throw $this->createAccessDeniedException();
         }
-
-        if (!$formAccessChecker->isRestrictedAccess($employeeId)) {
-            $this->addFlash(
-                'error',
-                $this->trans(
-                    'Backup codes can only be managed from the employee self-service profile page.',
-                    [],
-                    'Admin.Advparameters.Notification'
-                )
-            );
-
-            return $this->redirectToRoute('admin_employees_edit', ['employeeId' => $employeeId]);
-        }
-
-        /** @var Employee|null $employee */
-        $employee = $employeeRepository->findOneBy(['id' => $employeeId]);
-
-        if (null === $employee) {
-            $this->addFlash(
-                'error',
-                $this->trans('The object cannot be loaded (or found).', [], 'Admin.Notifications.Error')
-            );
-
-            return $this->redirectToRoute('admin_employees_index');
-        }
-
-        if (
-            !(bool) $configuration->get('PS_BACKOFFICE_2FA')
-            || !$employee->getTwoFactorEnabled()
-            || (!$employee->isTotpAuthenticationEnabled() && !$employee->getTwoFactorEmailEnabled())
-        ) {
-            $this->addFlash(
-                'error',
-                $this->trans(
-                    'Enable at least one two-factor authentication method before regenerating backup codes.',
-                    [],
-                    'Admin.Advparameters.Notification'
-                )
-            );
-
-            return $this->redirectToRoute('admin_employees_edit', ['employeeId' => $employeeId]);
-        }
-
-        if (empty($employee->getTwoFactorBackupCodes())) {
-            return $this->redirectToRoute('admin_employees_edit', ['employeeId' => $employeeId]);
-        }
-
-        $availableTwoFactorProviders = [];
-        if ($employee->isTotpAuthenticationEnabled()) {
-            $availableTwoFactorProviders[] = 'totp';
-        }
-        if ($employee->getTwoFactorEmailEnabled()) {
-            $availableTwoFactorProviders[] = 'email';
-        }
-
-        $preferredProvider = (string) $request->query->get('preferProvider');
-        $twoFactorProvider = in_array($preferredProvider, $availableTwoFactorProviders, true)
-            ? $preferredProvider
-            : $availableTwoFactorProviders[0];
-
-        $adminQueryToken = $userTokenManager->getSymfonyToken();
-        $shouldSendEmailCode = $twoFactorProvider === 'email'
-            && ($request->query->getBoolean('sendCode') || null === $employee->getEmailAuthCode());
-
-        if ($shouldSendEmailCode) {
-            $employee->setEmailAuthCode(RandomString::generateFromCharacters('0123456789', 6));
-            $entityManager->persist($employee);
-            $entityManager->flush();
-            $twoFactorAuthCodePrestashopMailer->sendAuthCode($employee);
-
-            $this->addFlash(
-                'info',
-                $this->trans(
-                    'A verification code has been sent to your email address.',
-                    [],
-                    'Admin.Login.Notification'
-                )
-            );
-
-            if ($request->query->getBoolean('sendCode')) {
-                return $this->redirectToRoute('admin_employees_confirm_regenerate_backup_codes', [
-                    'employeeId' => $employeeId,
-                    'preferProvider' => $twoFactorProvider,
-                    '_token' => $adminQueryToken,
-                ]);
+        try {
+            $provider = $this->dispatchCommand(new PrepareEmployeeBackupCodeRegenerationCommand(
+                $employeeId,
+                (string) $request->query->get('preferProvider'),
+                $request->query->getBoolean('sendCode')
+            ));
+            if ('email' === $provider) {
+                $this->addFlash('info', $this->trans('Use the verification code sent to your email address.', [], 'Admin.Login.Notification'));
             }
+
+            return $this->redirectToRoute('admin_employees_confirm_regenerate_backup_codes', ['employeeId' => $employeeId, 'preferProvider' => $provider]);
+        } catch (EmployeeException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            return $this->redirectToRoute('admin_employees_edit', ['employeeId' => $employeeId]);
         }
+    }
+
+    #[DemoRestricted(redirectRoute: 'admin_employees_index')]
+    #[AdminSecurity("is_granted('ROLE_EMPLOYEE')", redirectRoute: 'admin_employees_index')]
+    public function confirmRegenerateBackupCodesAction(int $employeeId, Request $request, UserTokenManager $userTokenManager): Response
+    {
+        return $this->renderBackupCodeConfirmation($employeeId, $request, $userTokenManager);
+    }
+
+    #[DemoRestricted(redirectRoute: 'admin_employees_index')]
+    #[AdminSecurity("is_granted('ROLE_EMPLOYEE')", redirectRoute: 'admin_employees_index')]
+    public function regenerateBackupCodesAction(int $employeeId, Request $request, UserTokenManager $userTokenManager): Response
+    {
+        if (!$this->isCsrfTokenValid('regenerate_backup_codes_' . $employeeId, (string) $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException();
+        }
+        try {
+            $result = $this->dispatchCommand(new RegenerateEmployeeBackupCodesCommand(
+                $employeeId,
+                (string) $request->query->get('preferProvider'),
+                (string) $request->request->get('_auth_code')
+            ));
+            $this->flashBackupCodes($result, true);
+        } catch (EmployeeTwoFactorException $e) {
+            if (EmployeeTwoFactorException::INVALID_CODE === $e->getCode()) {
+                return $this->renderBackupCodeConfirmation($employeeId, $request, $userTokenManager, 'code_invalid');
+            }
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        } catch (EmployeeException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_employees_edit', ['employeeId' => $employeeId]);
+    }
+
+    private function renderBackupCodeConfirmation(int $employeeId, Request $request, UserTokenManager $userTokenManager, ?string $authenticationError = null): Response
+    {
+        try {
+            $settings = $this->dispatchQuery(new GetEmployeeTwoFactorSettings($employeeId, (string) $request->query->get('preferProvider')));
+        } catch (EmployeeException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            return $this->redirectToRoute('admin_employees_index');
+        }
+        if (!$settings->isEnabled() || !$settings->hasBackupCodes()) {
+            return $this->redirectToRoute('admin_employees_edit', ['employeeId' => $employeeId]);
+        }
+        $adminQueryToken = $userTokenManager->getSymfonyToken();
+        $provider = $settings->getPreferredProvider();
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Employee/confirm_regenerate_backup_codes.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'employeeId' => $employeeId,
-            'authenticationError' => null,
+            'authenticationError' => $authenticationError,
+            'emailCodePreparationRequired' => $settings->isEmailCodePreparationRequired(),
             'authenticationErrorData' => [],
             'checkPathRoute' => 'admin_employees_regenerate_backup_codes',
-            'checkPathUrl' => $this->generateUrl('admin_employees_regenerate_backup_codes', ['employeeId' => $employeeId, 'preferProvider' => $twoFactorProvider, '_token' => $adminQueryToken]),
+            'checkPathUrl' => $this->generateUrl('admin_employees_regenerate_backup_codes', ['employeeId' => $employeeId, 'preferProvider' => $provider, '_token' => $adminQueryToken]),
             'authCodeParameterName' => '_auth_code',
             'displayTrustedOption' => false,
             'isCsrfProtectionEnabled' => true,
             'csrfParameterName' => '_token',
             'csrfTokenId' => 'regenerate_backup_codes_' . $employeeId,
             'submitLabel' => $this->trans('Regenerate backup codes', [], 'Admin.Advparameters.Feature'),
-            'availableTwoFactorProviders' => $availableTwoFactorProviders,
-            'providerSwitchRoute' => 'admin_employees_confirm_regenerate_backup_codes',
+            'availableTwoFactorProviders' => $settings->getAvailableProviders(),
+            'providerSwitchRoute' => 'admin_employees_prepare_regenerate_backup_codes',
             'providerSwitchRouteParams' => ['employeeId' => $employeeId, 'sendCode' => 1, '_token' => $adminQueryToken],
-            'twoFactorProvider' => $twoFactorProvider,
+            'providerSwitchMethod' => 'post',
+            'providerSwitchCsrfTokenId' => 'prepare_backup_codes_' . $employeeId,
+            'providerSwitchCsrfParameter' => '_token_prepare_backup_codes',
+            'twoFactorProvider' => $provider,
             'logoutPath' => null,
             'enableSidebar' => true,
             'layoutTitle' => $this->trans('Regenerate backup codes', [], 'Admin.Advparameters.Feature'),
         ]);
     }
 
-    #[DemoRestricted(redirectRoute: 'admin_employees_index')]
-    #[AdminSecurity("is_granted('ROLE_EMPLOYEE')", redirectRoute: 'admin_employees_index')]
-    public function regenerateBackupCodesAction(
-        int $employeeId,
-        Request $request,
-        EmployeeFormAccessCheckerInterface $formAccessChecker,
-        EmployeeRepository $employeeRepository,
-        EmployeeBackupCodeManager $employeeBackupCodeManager,
-        EntityManagerInterface $entityManager,
-        ConfigurationInterface $configuration,
-        TotpAuthenticatorInterface $totpAuthenticator,
-        TwoFactorAuthCodePrestashopMailer $twoFactorAuthCodePrestashopMailer,
-        UserTokenManager $userTokenManager,
-    ): Response {
-        if (!$this->isCsrfTokenValid('regenerate_backup_codes_' . $employeeId, (string) $request->request->get('_token'))) {
-            throw $this->createAccessDeniedException();
-        }
-
-        if ($this->getEmployeeContext()->getEmployee()->getId() !== $employeeId) {
-            return $this->redirectToRoute('admin_employees_index');
-        }
-
-        if (!$formAccessChecker->isRestrictedAccess($employeeId)) {
-            return $this->redirectToRoute('admin_employees_edit', ['employeeId' => $employeeId]);
-        }
-
-        /** @var Employee|null $employee */
-        $employee = $employeeRepository->findOneBy(['id' => $employeeId]);
-
-        if (
-            null === $employee
-            || !(bool) $configuration->get('PS_BACKOFFICE_2FA')
-            || !$employee->getTwoFactorEnabled()
-            || (!$employee->isTotpAuthenticationEnabled() && !$employee->getTwoFactorEmailEnabled())
-        ) {
-            return $this->redirectToRoute('admin_employees_edit', ['employeeId' => $employeeId]);
-        }
-
-        $authCode = trim((string) $request->request->get('_auth_code'));
-        $adminQueryToken = $userTokenManager->getSymfonyToken();
-        $availableTwoFactorProviders = [];
-        if ($employee->isTotpAuthenticationEnabled()) {
-            $availableTwoFactorProviders[] = 'totp';
-        }
-        if ($employee->getTwoFactorEmailEnabled()) {
-            $availableTwoFactorProviders[] = 'email';
-        }
-
-        $preferredProvider = (string) $request->query->get('preferProvider');
-        $twoFactorProvider = in_array($preferredProvider, $availableTwoFactorProviders, true)
-            ? $preferredProvider
-            : $availableTwoFactorProviders[0];
-
-        if (!$this->isBackupCodeRegenerationVerificationCodeValid($employee, $twoFactorProvider, $authCode, $totpAuthenticator)) {
-            if ($twoFactorProvider === 'email' && null === $employee->getEmailAuthCode()) {
-                $employee->setEmailAuthCode(RandomString::generateFromCharacters('0123456789', 6));
-                $entityManager->persist($employee);
-                $entityManager->flush();
-                $twoFactorAuthCodePrestashopMailer->sendAuthCode($employee);
-            }
-
-            return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Employee/confirm_regenerate_backup_codes.html.twig', [
-                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-                'employeeId' => $employeeId,
-                'authenticationError' => 'code_invalid',
-                'authenticationErrorData' => [],
-                'checkPathRoute' => 'admin_employees_regenerate_backup_codes',
-                'checkPathUrl' => $this->generateUrl('admin_employees_regenerate_backup_codes', ['employeeId' => $employeeId, 'preferProvider' => $twoFactorProvider, '_token' => $adminQueryToken]),
-                'authCodeParameterName' => '_auth_code',
-                'displayTrustedOption' => false,
-                'isCsrfProtectionEnabled' => true,
-                'csrfParameterName' => '_token',
-                'csrfTokenId' => 'regenerate_backup_codes_' . $employeeId,
-                'submitLabel' => $this->trans('Regenerate backup codes', [], 'Admin.Advparameters.Feature'),
-                'availableTwoFactorProviders' => $availableTwoFactorProviders,
-                'providerSwitchRoute' => 'admin_employees_confirm_regenerate_backup_codes',
-                'providerSwitchRouteParams' => ['employeeId' => $employeeId, 'sendCode' => 1, '_token' => $adminQueryToken],
-                'twoFactorProvider' => $twoFactorProvider,
-                'logoutPath' => null,
-                'enableSidebar' => true,
-                'layoutTitle' => $this->trans('Regenerate backup codes', [], 'Admin.Advparameters.Feature'),
-            ]);
-        }
-
-        $backupCodeSet = $employeeBackupCodeManager->generateBackupCodeSet();
-        $employee->setTwoFactorBackupCodes($backupCodeSet['hashedBackupCodes']);
-        $employee->setEmailAuthCode(null);
-        $entityManager->persist($employee);
-        $entityManager->flush();
-
-        foreach ($backupCodeSet['plainBackupCodes'] as $backupCode) {
+    private function flashBackupCodes(GeneratedEmployeeBackupCodes $result, bool $regenerated = false): void
+    {
+        foreach ($result->getBackupCodes() as $backupCode) {
             $this->addFlash('backup_codes', $backupCode);
         }
-        $this->addFlash(
-            'success',
-            $this->trans(
-                'Backup codes regenerated successfully. Save them now: they will not be shown again.',
-                [],
-                'Admin.Notifications.Success'
-            )
-        );
-
-        return $this->redirectToRoute('admin_employees_edit', ['employeeId' => $employeeId]);
-    }
-
-    private function isBackupCodeRegenerationVerificationCodeValid(
-        Employee $employee,
-        string $twoFactorProvider,
-        string $authCode,
-        TotpAuthenticatorInterface $totpAuthenticator,
-    ): bool {
-        if ($authCode === '') {
-            return false;
-        }
-
-        if ($twoFactorProvider === 'totp') {
-            return $totpAuthenticator->checkCode($employee, $authCode);
-        }
-
-        $expectedCode = $employee->getEmailAuthCode();
-
-        return null !== $expectedCode && hash_equals($expectedCode, $authCode);
-    }
-
-    private function buildTwoFactorFormData(
-        bool $isRestrictedAccess,
-        $configuration,
-        EmployeeRepository $employeeRepository,
-        TotpAuthenticatorInterface $totpAuthenticator,
-        $totpSecretEncryptor
-    ): array {
-        if (!$isRestrictedAccess || !$configuration->get('PS_BACKOFFICE_2FA')) {
-            return [
-                'qr_code_src' => '',
-                'two_factor_totp_secret' => '',
-            ];
-        }
-
-        $employeeId = (int) $this->getEmployeeContext()->getEmployee()->getId();
-
-        /** @var Employee $employee */
-        $employee = $employeeRepository->findOneBy(['id' => $employeeId]);
-
-        if ($employee->getTwoFactorSecret()) {
-            $twoFactorTotpSecretPlain = $employee->getTwoFactorTotpSecretPlain();
-        } else {
-            $twoFactorTotpSecretPlain = $totpAuthenticator->generateSecret();
-
-            $this->dispatchCommand(
-                new SetEmployeeTwoFactorSecretCommand(
-                    $employeeId,
-                    $totpSecretEncryptor->encrypt($twoFactorTotpSecretPlain),
-                    $twoFactorTotpSecretPlain
-                )
-            );
-        }
-
-        $qrCodeContent = $totpAuthenticator->getQRContent($employee);
-
-        $result = Builder::create()
-            ->writer(new PngWriter())
-            ->data($qrCodeContent)
-            ->size(220)
-            ->margin(10)
-            ->build();
-
-        return [
-            'qr_code_src' => 'data:image/png;base64,' . base64_encode($result->getString()),
-            'two_factor_totp_secret' => $twoFactorTotpSecretPlain,
-        ];
+        $this->addFlash('success', $this->trans(
+            $regenerated
+                ? 'Backup codes regenerated successfully. Save them now: they will not be shown again.'
+                : 'Backup codes generated successfully. Save them now: they will not be shown again.',
+            [],
+            'Admin.Notifications.Success'
+        ));
     }
 
     public function toggleNavigationMenuAction(
@@ -992,6 +703,13 @@ class EmployeeController extends PrestaShopAdminController
                 ),
                 $e instanceof EmailAlreadyUsedException ? $e->getEmail() : ''
             ),
+            EmployeeTwoFactorException::class => [
+                EmployeeTwoFactorException::NOT_SELF => $this->trans('Backup codes can only be managed from the employee self-service profile page.', [], 'Admin.Advparameters.Notification'),
+                EmployeeTwoFactorException::DISABLED => $this->trans('Two-factor authentication must be enabled before generating backup codes.', [], 'Admin.Advparameters.Notification'),
+                EmployeeTwoFactorException::NOT_CONFIGURED => $this->trans('Enable at least one two-factor authentication method before regenerating backup codes.', [], 'Admin.Advparameters.Notification'),
+                EmployeeTwoFactorException::INVALID_CODE => $this->trans('code_invalid', [], 'Admin.Login.Notification'),
+                EmployeeTwoFactorException::CONCURRENT_UPDATE => $this->trans('Your two-factor authentication settings changed during this operation. Reload your profile and try again.', [], 'Admin.Advparameters.Notification'),
+            ],
             EmployeeConstraintException::class => [
                 EmployeeConstraintException::INCORRECT_PASSWORD => $this->trans(
                     'Your current password is invalid.',

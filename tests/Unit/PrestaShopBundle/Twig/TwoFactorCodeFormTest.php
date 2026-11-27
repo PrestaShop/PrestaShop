@@ -48,6 +48,10 @@ class TwoFactorCodeFormTest extends TestCase
             'isCsrfProtectionEnabled' => true,
             'csrfParameterName' => '_token',
             'csrfTokenId' => 'two-factor',
+            'providerSwitchMethod' => $trustedOption ? 'get' : 'post',
+            'providerSwitchRoute' => $trustedOption ? '2fa_login' : 'admin_employees_prepare_regenerate_backup_codes',
+            'providerSwitchCsrfParameter' => '_token_prepare_backup_codes',
+            'providerSwitchCsrfTokenId' => 'prepare-backup-codes',
         ]);
 
         self::assertStringContainsString('action="/' . $route . '"', $html);
@@ -56,6 +60,8 @@ class TwoFactorCodeFormTest extends TestCase
         self::assertStringContainsString('Translated verify', $html);
         self::assertStringContainsString('name="_token" value="csrf-two-factor"', $html);
         self::assertSame($trustedOption, str_contains($html, 'name="_trusted"'));
+        self::assertSame(!$trustedOption, str_contains($html, 'name="_token_prepare_backup_codes" value="csrf-prepare-backup-codes"'));
+        self::assertSame($trustedOption ? 1 : 3, substr_count($html, '<form method="post"'));
     }
 
     public static function formContexts(): iterable

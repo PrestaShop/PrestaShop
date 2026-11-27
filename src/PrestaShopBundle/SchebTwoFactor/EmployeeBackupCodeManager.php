@@ -8,67 +8,19 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\SchebTwoFactor;
 
-use PrestaShop\PrestaShop\Core\Util\String\RandomString;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShopBundle\Entity\Employee\Employee;
-use Scheb\TwoFactorBundle\Model\PersisterInterface;
+use PrestaShopBundle\Entity\Repository\EmployeeRepository;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeManagerInterface;
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 final class EmployeeBackupCodeManager implements BackupCodeManagerInterface
 {
-    private const DEFAULT_CODE_COUNT = 8;
-    private const DEFAULT_CODE_LENGTH = 10;
-    private const CODE_CHARACTERS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-
     public function __construct(
         private readonly PasswordHasherInterface $passwordHasher,
-        private readonly PersisterInterface $persister,
+        private readonly EmployeeRepository $employeeRepository,
     ) {
-    }
-
-    /**
-     * @return string[]
-     */
-    public function generateBackupCodes(
-        int $codeCount = self::DEFAULT_CODE_COUNT,
-        int $codeLength = self::DEFAULT_CODE_LENGTH
-    ): array {
-        $backupCodes = [];
-
-        while (count($backupCodes) < $codeCount) {
-            $backupCode = RandomString::generateFromCharacters(self::CODE_CHARACTERS, $codeLength);
-            $backupCodes[$backupCode] = $backupCode;
-        }
-
-        return array_values($backupCodes);
-    }
-
-    /**
-     * @param string[] $backupCodes
-     *
-     * @return string[]
-     */
-    public function hashBackupCodes(array $backupCodes): array
-    {
-        return array_map(
-            fn (string $backupCode): string => $this->passwordHasher->hash($backupCode),
-            array_values($backupCodes)
-        );
-    }
-
-    /**
-     * @return array{plainBackupCodes: string[], hashedBackupCodes: string[]}
-     */
-    public function generateBackupCodeSet(
-        int $codeCount = self::DEFAULT_CODE_COUNT,
-        int $codeLength = self::DEFAULT_CODE_LENGTH
-    ): array {
-        $plainBackupCodes = $this->generateBackupCodes($codeCount, $codeLength);
-
-        return [
-            'plainBackupCodes' => $plainBackupCodes,
-            'hashedBackupCodes' => $this->hashBackupCodes($plainBackupCodes),
-        ];
     }
 
     public function isBackupCode(object $user, string $code): bool
@@ -89,27 +41,31 @@ final class EmployeeBackupCodeManager implements BackupCodeManagerInterface
     public function invalidateBackupCode(object $user, string $code): void
     {
         if (!$user instanceof Employee) {
-            return;
+            throw new BadCredentialsException('The backup code is no longer valid.');
         }
 
-        $remainingBackupCodes = [];
-        $hasInvalidatedCode = false;
+        try {
+            $snapshot = $this->employeeRepository->getBackupCodesSnapshot($user->getId());
+            $currentCodes = null === $snapshot ? [] : json_decode($snapshot, true, 512, JSON_THROW_ON_ERROR);
+            $remainingCodes = [];
+            $hasInvalidatedCode = false;
+            foreach ($currentCodes as $hashedCode) {
+                if (!$hasInvalidatedCode && $this->passwordHasher->verify($hashedCode, $code)) {
+                    $hasInvalidatedCode = true;
 
-        foreach ($user->getTwoFactorBackupCodes() ?? [] as $hashedBackupCode) {
-            if (!$hasInvalidatedCode && $this->passwordHasher->verify($hashedBackupCode, $code)) {
-                $hasInvalidatedCode = true;
-
-                continue;
+                    continue;
+                }
+                $remainingCodes[] = $hashedCode;
+            }
+            if (!$hasInvalidatedCode) {
+                throw new BadCredentialsException('The backup code is no longer valid.');
             }
 
-            $remainingBackupCodes[] = $hashedBackupCode;
+            $this->employeeRepository->saveBackupCodes($user->getId(), $remainingCodes, $snapshot);
+            // Do not dirty the managed user: a later ORM flush must not replay an obsolete code set.
+        } catch (EmployeeException $e) {
+            // Scheb grants authentication after this void method returns, so a conflict must fail closed.
+            throw new BadCredentialsException('The backup code is no longer valid.', 0, $e);
         }
-
-        if (!$hasInvalidatedCode) {
-            return;
-        }
-
-        $user->setTwoFactorBackupCodes($remainingBackupCodes);
-        $this->persister->persist($user);
     }
 }

@@ -144,3 +144,29 @@ services:
   PrestaShop\PrestaShop\Adapter\TotMailer\TwoFactorAuthCodePrestashopMailer:
     autowire: true
     autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Employee\TwoFactor\EmployeeTwoFactorManager:
+    autowire: true
+    autoconfigure: true
+    arguments:
+      $mailer: '@PrestaShop\PrestaShop\Adapter\TotMailer\TwoFactorAuthCodePrestashopMailer'
+
+  PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\InitializeEmployeeTotpSecretHandler:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\GenerateEmployeeBackupCodesHandler:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\PrepareEmployeeBackupCodeRegenerationHandler:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\RegenerateEmployeeBackupCodesHandler:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Profile\Employee\QueryHandler\GetEmployeeTwoFactorSettingsHandler:
+    autowire: true
+    autoconfigure: true

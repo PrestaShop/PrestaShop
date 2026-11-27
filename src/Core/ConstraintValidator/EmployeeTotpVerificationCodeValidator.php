@@ -53,6 +53,14 @@ final class EmployeeTotpVerificationCodeValidator extends ConstraintValidator
         $employee = $this->employeeRepository->findOneBy([
             'id' => $this->contextEmployeeProvider->getId(),
         ]);
+        if (!$employee instanceof Employee || !$employee->getTwoFactorTotpSecretPlain()) {
+            $this->context->buildViolation($constraint->message)
+                ->setParameter('{{ string }}', $value)
+                ->addViolation();
+
+            return;
+        }
+
         $isValid = $this->totpAuthenticator->checkCode($employee, $value);
 
         if (!$isValid) {

@@ -24,6 +24,7 @@ final class RequiredTwoFactorSetupListener
 
     private const ALLOWED_ROUTES = [
         'admin_employees_edit',
+        'admin_employees_initialize_totp',
         'admin_employees_change_form_language',
         'admin_employees_toggle_navigation',
         'admin_logout',
@@ -80,7 +81,7 @@ final class RequiredTwoFactorSetupListener
             return false;
         }
 
-        if ('admin_employees_edit' !== $route) {
+        if (!in_array($route, ['admin_employees_edit', 'admin_employees_initialize_totp'], true)) {
             return true;
         }
 

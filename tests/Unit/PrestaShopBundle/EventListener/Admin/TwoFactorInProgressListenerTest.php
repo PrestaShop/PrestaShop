@@ -62,6 +62,8 @@ class TwoFactorInProgressListenerTest extends TestCase
             yield $route => [$route, true, true, 'GET', false, false, false];
         }
         yield 'public homepage is protected during 2FA' => ['admin_homepage', true, true, 'GET', false, true, true];
+        yield 'TOTP preparation is blocked during login challenge' => ['admin_employees_initialize_totp', true, true, 'POST', true, true, false];
+        yield 'backup preparation is blocked during login challenge' => ['admin_employees_prepare_regenerate_backup_codes', true, true, 'POST', false, true, false];
         yield 'protected route' => ['admin_products_index', true, true, 'GET', false, true, true];
         yield 'POST target is not stored' => ['admin_homepage', true, true, 'POST', false, true, false];
         yield 'AJAX target is not stored' => ['admin_homepage', true, true, 'GET', true, true, false];

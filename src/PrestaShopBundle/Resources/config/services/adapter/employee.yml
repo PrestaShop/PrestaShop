@@ -48,6 +48,11 @@ services:
       - '@prestashop.core.employee.profile_access_checker'
       - '@prestashop.adapter.data_provider.employee'
       - '@prestashop.adapter.legacy.context'
+      - '@PrestaShop\PrestaShop\Adapter\Employee\TwoFactor\EmployeeBackupCodeGenerator'
+      - '@PrestaShopBundle\Entity\Repository\EmployeeRepository'
+
+  PrestaShop\PrestaShop\Adapter\Employee\TwoFactor\EmployeeBackupCodeGenerator:
+    autowire: true
 
   prestashop.adapter.employee.avatar_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Employee\AvatarProvider'
@@ -86,10 +91,6 @@ services:
   PrestaShop\PrestaShop\Adapter\Employee\EmployeeContextInitializer:
     arguments:
       - '@prestashop.adapter.legacy.configuration'
-
-  PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\SetEmployeeTwoFactorSecretHandler:
-    autoconfigure: true
-    autowire: true
 
   PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\ResetEmployeeTwoFactorHandler:
     autoconfigure: true

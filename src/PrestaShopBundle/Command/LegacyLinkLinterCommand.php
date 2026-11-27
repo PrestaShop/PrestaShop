@@ -66,6 +66,8 @@ class LegacyLinkLinterCommand extends Command
         'admin_email_body_translation_search',
         'admin_email_body_translation_edit',
         'admin_employees_get_tabs',
+        'admin_employees_initialize_totp',
+        'admin_employees_prepare_regenerate_backup_codes',
         'admin_feature_get_feature_values',
         'admin_import_data_configuration_index',
         'admin_import_process',

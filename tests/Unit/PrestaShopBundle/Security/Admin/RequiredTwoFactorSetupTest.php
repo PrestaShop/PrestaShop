@@ -91,6 +91,9 @@ class RequiredTwoFactorSetupTest extends TestCase
         yield 'required setup' => [true, 'admin_products_index', 0, true];
         yield 'own profile' => [true, 'admin_employees_edit', 42, false];
         yield 'another employee profile' => [true, 'admin_employees_edit', 43, true];
+        yield 'own TOTP initialization' => [true, 'admin_employees_initialize_totp', 42, false];
+        yield 'another employee TOTP initialization' => [true, 'admin_employees_initialize_totp', 43, true];
+        yield 'backup operations remain blocked' => [true, 'admin_employees_prepare_regenerate_backup_codes', 42, true];
         yield 'logout' => [true, 'admin_logout', 0, false];
         yield 'subrequest' => [true, 'admin_products_index', 0, false, false];
     }

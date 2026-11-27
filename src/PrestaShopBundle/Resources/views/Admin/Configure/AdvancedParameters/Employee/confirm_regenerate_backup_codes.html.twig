@@ -24,7 +24,20 @@
         </div>
       {% endif %}
 
+      {% if emailCodePreparationRequired|default(false) %}
+        <form method="post" action="{{ path(providerSwitchRoute, providerSwitchRouteParams|merge({preferProvider: 'email'})) }}">
+          <input type="hidden" name="{{ providerSwitchCsrfParameter }}" value="{{ csrf_token(providerSwitchCsrfTokenId) }}">
+          <button type="submit" class="btn btn-primary">
+            {{ 'Send verification code'|trans({}, 'Admin.Login.Feature') }}
+          </button>
+        </form>
+      {% endif %}
+
       {{ include('@PrestaShop/Admin/TwoFactorAuthentication/Blocks/two_factor_code_form.html.twig', {
+        displayCodeForm: not emailCodePreparationRequired|default(false),
+        providerSwitchMethod: providerSwitchMethod,
+        providerSwitchCsrfTokenId: providerSwitchCsrfTokenId,
+        providerSwitchCsrfParameter: providerSwitchCsrfParameter,
         checkPathRoute: checkPathRoute,
         checkPathUrl: checkPathUrl,
         authCodeParameterName: authCodeParameterName,
