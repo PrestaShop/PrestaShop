@@ -57,6 +57,11 @@ class CssMinifierTest extends TestCase
                 'url("#gooey")',
                 'A fragment points at an SVG inlined in the page, not at a file.',
             ],
+            'single-quoted fragment-only filter is left alone' => [
+                ".h{filter:url('#gooey')}",
+                "url('#gooey')",
+                'The quotes do not make a fragment a path.',
+            ],
             'unquoted fragment-only filter is left alone' => [
                 '.b{filter:url(#svg-blur)}',
                 'url(#svg-blur)',

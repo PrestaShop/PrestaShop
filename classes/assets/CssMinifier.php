@@ -27,13 +27,10 @@ class CssMinifierCore
 
     /**
      * The minifier rewrites every relative url() so that it still resolves from the cache directory the
-     * combined file is written to. It decides what is relative in canImportByPath(), which only excludes
-     * data:, http(s): and root-relative paths — so a fragment-only url(#gooey) is taken for a file name and
-     * becomes url(../css/#gooey), which resolves to nothing.
-     *
-     * Those fragments are how a filter, clip-path or mask points at an SVG that is inlined in the page, and
-     * they are valid CSS. Excluding them here leaves them untouched; url(file.svg#fragment) still carries a
-     * real path and is still rewritten.
+     * combined file is written to, and canImportByPath() decides what is relative. A quoted fragment-only
+     * url("#gooey") reaches it as "#gooey", is taken for a file name and becomes url(../css/"#gooey"),
+     * which is invalid. Fragments are how filter, clip-path and mask point at an SVG inlined in the page,
+     * so they are left untouched; url(file.svg#fragment) carries a real path and is still rewritten.
      *
      * @return CSS
      */
@@ -42,7 +39,10 @@ class CssMinifierCore
         return new class() extends CSS {
             protected function canImportByPath($path)
             {
-                if (isset($path[0]) && '#' === $path[0]) {
+                // The url() pattern makes the quotes optional, so a quoted fragment reaches here with its
+                // opening quote still attached: url("#gooey") arrives as "#gooey".
+                $unquoted = ltrim((string) $path, '"\'');
+                if (isset($unquoted[0]) && '#' === $unquoted[0]) {
                     return false;
                 }
 
