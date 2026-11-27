@@ -344,37 +344,37 @@ describe('BO - Catalog - Products list : Filter & Sort, Pagination, Filter by ca
       {
         identifier: 'sortByPriceTaxExcludedAsc',
         sortBy: 'final_price_tax_excluded',
-        column: 7,
+        column: 8,
         sortDirection: 'asc',
       },
       {
         identifier: 'sortByPriceTaxExcludedDesc',
         sortBy: 'final_price_tax_excluded',
-        column: 7,
+        column: 8,
         sortDirection: 'desc',
       },
       {
         identifier: 'sortByQuantityAsc',
         sortBy: 'quantity',
-        column: 9,
+        column: 10,
         sortDirection: 'asc',
       },
       {
         identifier: 'sortByQuantityDesc',
         sortBy: 'quantity',
-        column: 9,
+        column: 10,
         sortDirection: 'desc',
       },
       {
         identifier: 'sortByStatusAsc',
         sortBy: 'active',
-        column: 10,
+        column: 11,
         sortDirection: 'asc',
       },
       {
         identifier: 'sortByStatusDesc',
         sortBy: 'active',
-        column: 10,
+        column: 11,
         sortDirection: 'desc',
       },
       {

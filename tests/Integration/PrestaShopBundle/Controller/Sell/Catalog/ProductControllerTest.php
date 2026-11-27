@@ -234,6 +234,10 @@ class ProductControllerTest extends FormGridControllerTestCase
                 'product[final_price_tax_excluded][min_field]' => self::TEST_RETAIL_PRICE_TAX_EXCLUDED,
                 'product[final_price_tax_excluded][max_field]' => self::TEST_RETAIL_PRICE_TAX_EXCLUDED,
             ],
+            [
+                'product[name]' => self::TEST_NAME,
+                'product[product_type]' => ProductType::TYPE_STANDARD,
+            ],
         ];
 
         foreach ($gridFilters as $testFilter) {

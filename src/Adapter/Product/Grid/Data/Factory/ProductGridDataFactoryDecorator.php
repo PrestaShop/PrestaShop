@@ -224,6 +224,8 @@ class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
             );
 
             $productType = $products[$i]['product_type'] ?? null;
+            $products[$i]['product_type_label'] = $this->getProductTypeLabel((string) $productType);
+
             // For pack products we dynamically update the quantity in the column so that it reflects its quantity based on
             // its configuration and the quantity of its products. Since it's done in the decorator the dynamic quantity is not
             // consistent with sorting and filtering Including this complexity in the query builder would cost too much in performance
@@ -261,6 +263,20 @@ class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
         }
 
         return $products;
+    }
+
+    /**
+     * Products created before the product type was introduced may have an empty type: no label is displayed for them.
+     */
+    private function getProductTypeLabel(string $productType): string
+    {
+        return match ($productType) {
+            ProductType::TYPE_STANDARD => $this->translator->trans('Standard product', [], 'Admin.Catalog.Feature'),
+            ProductType::TYPE_COMBINATIONS => $this->translator->trans('Product with combinations', [], 'Admin.Catalog.Feature'),
+            ProductType::TYPE_PACK => $this->translator->trans('Pack of products', [], 'Admin.Catalog.Feature'),
+            ProductType::TYPE_VIRTUAL => $this->translator->trans('Virtual product', [], 'Admin.Catalog.Feature'),
+            default => '',
+        };
     }
 
     /**

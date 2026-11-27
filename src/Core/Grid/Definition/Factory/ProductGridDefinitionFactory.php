@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
@@ -44,6 +45,7 @@ use PrestaShopBundle\Form\Admin\Type\NumberMinMaxFilterType;
 use PrestaShopBundle\Form\Admin\Type\ReorderPositionsButtonType;
 use PrestaShopBundle\Form\Admin\Type\ShopSelectorType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
@@ -185,6 +187,14 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Category', [], 'Admin.Catalog.Feature'))
                     ->setOptions([
                         'field' => 'category',
+                    ])
+            )
+            ->add(
+                (new DataColumn('product_type'))
+                    ->setName($this->trans('Type', [], 'Admin.Catalog.Feature'))
+                    ->setOptions([
+                        'field' => 'product_type_label',
+                        'sortable' => false,
                     ])
             )
             ->add(
@@ -562,6 +572,16 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setAssociatedColumn('category')
             )
             ->add(
+                (new Filter('product_type', ChoiceType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'choices' => $this->getProductTypeChoices(),
+                        'placeholder' => $this->trans('All', [], 'Admin.Global'),
+                        'translation_domain' => false,
+                    ])
+                    ->setAssociatedColumn('product_type')
+            )
+            ->add(
                 (new Filter('final_price_tax_excluded', NumberMinMaxFilterType::class))
                     ->setTypeOptions([
                         'required' => false,
@@ -739,6 +759,21 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                 $routeParams
             ))
         ;
+    }
+
+    /**
+     * All types are listed, even when the combinations feature is disabled, since existing products keep their type.
+     *
+     * @return array<string, string>
+     */
+    private function getProductTypeChoices(): array
+    {
+        return [
+            $this->trans('Standard product', [], 'Admin.Catalog.Feature') => ProductType::TYPE_STANDARD,
+            $this->trans('Product with combinations', [], 'Admin.Catalog.Feature') => ProductType::TYPE_COMBINATIONS,
+            $this->trans('Pack of products', [], 'Admin.Catalog.Feature') => ProductType::TYPE_PACK,
+            $this->trans('Virtual product', [], 'Admin.Catalog.Feature') => ProductType::TYPE_VIRTUAL,
+        ];
     }
 
     /**
