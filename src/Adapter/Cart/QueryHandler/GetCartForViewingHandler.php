@@ -145,9 +145,9 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
             'placed_date' => (new DateTime($order->date_add))->format($context->language->date_format_full),
         ];
 
-        // Prepare link to share this cart, if it was not ordered yet
+        // Prepare link to share this cart if it has an associated customer and was not ordered yet
         $cartLink = null;
-        if (!Validate::isLoadedObject($order)) {
+        if (!Validate::isLoadedObject($order) && Validate::isLoadedObject($customer)) {
             $cartLink = $context->link->getPageLink(
                 'cart',
                 false,
