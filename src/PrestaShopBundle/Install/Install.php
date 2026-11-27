@@ -1224,7 +1224,7 @@ class Install extends AbstractInstall
      *
      * @return string|null the folder name, or null when no directory in the root looks like the admin one
      */
-    protected static function findAdminFolderName(string $rootDir): ?string
+    private static function findAdminFolderName(string $rootDir): ?string
     {
         foreach (new DirectoryIterator($rootDir) as $entry) {
             if (!$entry->isDir() || $entry->isDot()) {
@@ -1283,7 +1283,7 @@ class Install extends AbstractInstall
         // is skipped, and the admin-dev default does not exist either. The CLI installer has no folder
         // name to pass in, so look the folder up on disk rather than failing on the assumption.
         if (!is_dir(_PS_ROOT_DIR_ . '/' . trim($adminFolder, '/'))) {
-            $existingAdminFolder = static::findAdminFolderName(_PS_ROOT_DIR_);
+            $existingAdminFolder = self::findAdminFolderName(_PS_ROOT_DIR_);
             if (null !== $existingAdminFolder) {
                 $adminFolder = $existingAdminFolder;
             }
