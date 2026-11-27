@@ -20,6 +20,9 @@ class PrestaShopLoggerCore extends ObjectModel
     public const LOG_SEVERITY_LEVEL_ERROR = 3;
     public const LOG_SEVERITY_LEVEL_MAJOR = 4;
 
+    public const DUPLICATE_CHECK_LIMIT_CONFIGURATION = 'PS_LOGS_DUPLICATE_CHECK_LIMIT';
+    public const DEFAULT_DUPLICATE_CHECK_LIMIT = 1000;
+
     /** @var int Log id */
     public $id_log;
 
@@ -184,17 +187,18 @@ class PrestaShopLoggerCore extends ObjectModel
     public function getHash()
     {
         if (empty($this->hash)) {
-            $this->hash = md5(
-                $this->message .
-                $this->severity .
-                $this->error_code .
-                $this->object_type .
-                $this->object_id .
-                $this->id_shop .
-                $this->id_shop_group .
-                $this->id_lang .
-                $this->in_all_shops
-            );
+            // Serialized so that two different logs cannot share a hash once their fields are joined
+            $this->hash = md5(serialize([
+                (string) $this->message,
+                (int) $this->severity,
+                (int) $this->error_code,
+                (string) $this->object_type,
+                (int) $this->object_id,
+                $this->id_shop === null ? null : (int) $this->id_shop,
+                $this->id_shop_group === null ? null : (int) $this->id_shop_group,
+                $this->id_lang === null ? null : (int) $this->id_lang,
+                (bool) $this->in_all_shops,
+            ]));
         }
 
         return $this->hash;
@@ -202,34 +206,75 @@ class PrestaShopLoggerCore extends ObjectModel
 
     public static function eraseAllLogs()
     {
+        self::$is_present = [];
+
         return Db::getInstance()->execute('TRUNCATE TABLE ' . _DB_PREFIX_ . 'log');
     }
 
     /**
-     * check if this log message already exists in database.
+     * Check if this log already exists among the most recent ones.
+     *
+     * The table has no index to look a log up with, so only the last rows are read, through the primary key.
+     * The answer is kept for the whole PHP process: a long-running one stores a given log once, whatever the range.
      *
      * @return bool true if exists
      */
     protected function isPresent()
     {
-        if (!isset(self::$is_present[md5($this->message)])) {
-            self::$is_present[$this->getHash()] = Db::getInstance()->getValue(
-                (new DbQuery())
-                    ->select('COUNT(*)')
-                    ->from('log', 'l')
-                    ->where('message = "' . pSQL($this->message) . '"')
-                    ->where('severity = ' . (int) $this->severity)
-                    ->where('error_code = ' . (int) $this->error_code)
-                    ->where('object_type = "' . pSQL($this->object_type) . '"')
-                    ->where('object_id = ' . (int) $this->object_id)
-                    ->where('id_shop = ' . (int) $this->id_shop)
-                    ->where('id_shop_group = ' . (int) $this->id_shop_group)
-                    ->where('id_lang = ' . (int) $this->id_lang)
-                    ->where('in_all_shops = ' . (int) $this->in_all_shops)
-            );
+        $hash = $this->getHash();
+        if (!isset(self::$is_present[$hash])) {
+            self::$is_present[$hash] = $this->isPresentInRecentLogs();
         }
 
-        return self::$is_present[$this->getHash()];
+        return self::$is_present[$hash];
+    }
+
+    private function isPresentInRecentLogs(): bool
+    {
+        $limit = self::getDuplicateCheckLimit();
+        if ($limit <= 0) {
+            return false;
+        }
+
+        // Oldest log of the range, read apart so that the lookup gets a plain primary key bound
+        $oldestLog = Db::getInstance()->executeS(
+            (new DbQuery())
+                ->select('l.id_log')
+                ->from('log', 'l')
+                ->orderBy('l.id_log DESC')
+                ->limit(1, $limit - 1),
+            true,
+            false
+        );
+
+        return (bool) Db::getInstance()->getValue(
+            (new DbQuery())
+                ->select('1')
+                ->from('log', 'l')
+                ->where('l.id_log >= ' . (int) ($oldestLog[0]['id_log'] ?? 0))
+                ->where('l.message = "' . pSQL($this->message) . '"')
+                ->where('l.severity = ' . (int) $this->severity)
+                ->where('l.error_code = ' . (int) $this->error_code)
+                ->where('l.object_type = "' . pSQL($this->object_type) . '"')
+                ->where('l.object_id = ' . (int) $this->object_id)
+                ->where('l.id_shop <=> ' . self::formatNullableId($this->id_shop))
+                ->where('l.id_shop_group <=> ' . self::formatNullableId($this->id_shop_group))
+                ->where('l.id_lang <=> ' . self::formatNullableId($this->id_lang))
+                ->where('l.in_all_shops = ' . (int) $this->in_all_shops),
+            false
+        );
+    }
+
+    private static function formatNullableId(?int $id): string
+    {
+        return $id === null ? 'NULL' : (string) $id;
+    }
+
+    private static function getDuplicateCheckLimit(): int
+    {
+        $limit = Configuration::get(self::DUPLICATE_CHECK_LIMIT_CONFIGURATION);
+
+        return is_numeric($limit) ? (int) $limit : self::DEFAULT_DUPLICATE_CHECK_LIMIT;
     }
 
     protected static function getMinimumLevelInDB(): int

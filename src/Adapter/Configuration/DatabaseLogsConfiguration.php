@@ -8,6 +8,7 @@ namespace PrestaShop\PrestaShop\Adapter\Configuration;
 
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShopLogger;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -25,8 +26,13 @@ class DatabaseLogsConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
+        $duplicateCheckLimit = $this->configuration->get(PrestaShopLogger::DUPLICATE_CHECK_LIMIT_CONFIGURATION);
+
         return [
             'database_min_logger_level' => (int) $this->configuration->get('PS_MIN_LOGGER_LEVEL_IN_DB'),
+            'database_duplicate_check_limit' => is_numeric($duplicateCheckLimit)
+                ? (int) $duplicateCheckLimit
+                : PrestaShopLogger::DEFAULT_DUPLICATE_CHECK_LIMIT,
         ];
     }
 
@@ -37,6 +43,13 @@ class DatabaseLogsConfiguration implements DataConfigurationInterface
     {
         if ($this->validateConfiguration($configuration)) {
             $this->configuration->set('PS_MIN_LOGGER_LEVEL_IN_DB', (int) $configuration['database_min_logger_level']);
+
+            if (isset($configuration['database_duplicate_check_limit'])) {
+                $this->configuration->set(
+                    PrestaShopLogger::DUPLICATE_CHECK_LIMIT_CONFIGURATION,
+                    (int) $configuration['database_duplicate_check_limit']
+                );
+            }
         }
 
         return [];
@@ -50,6 +63,7 @@ class DatabaseLogsConfiguration implements DataConfigurationInterface
         $resolver = new OptionsResolver();
         $resolver
             ->setRequired(['database_min_logger_level'])
+            ->setDefined(['database_duplicate_check_limit'])
             ->resolve($configuration);
 
         return true;

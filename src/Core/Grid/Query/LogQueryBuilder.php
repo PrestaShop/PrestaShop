@@ -64,7 +64,8 @@ final class LogQueryBuilder extends AbstractDoctrineQueryBuilder
         $queryBuilder = $this->getQueryBuilder()
             ->select('COUNT(lg.id_log)')
             ->from($this->dbPrefix . 'log', 'lg');
-        $this->applyAssociatedQueries($queryBuilder);
+        // Kept even when unused: modules reach the "e" alias through the grid query builder modifier hook
+        $this->joinEmployee($queryBuilder);
 
         return $this->applyFilters($searchCriteria->getFilters(), $queryBuilder);
     }
@@ -142,10 +143,13 @@ final class LogQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function appendEmployeeQuery(QueryBuilder $queryBuilder): void
     {
-        $queryBuilder
-            ->addSelect($this->getEmployeeField(false) . ' as employee, e.email')
-            ->leftJoin('lg', $this->dbPrefix . 'employee', 'e', 'e.id_employee = lg.id_employee')
-        ;
+        $queryBuilder->addSelect($this->getEmployeeField(false) . ' as employee, e.email');
+        $this->joinEmployee($queryBuilder);
+    }
+
+    private function joinEmployee(QueryBuilder $queryBuilder): void
+    {
+        $queryBuilder->leftJoin('lg', $this->dbPrefix . 'employee', 'e', 'e.id_employee = lg.id_employee');
     }
 
     /**
