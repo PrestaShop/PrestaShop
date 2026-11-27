@@ -51,6 +51,12 @@ class StockManager
                 $stockAvailable->id_shop = 0;
                 $stockAvailable->id_shop_group = (int) $shop_group->id;
             } else {
+                // When the caller omits id_shop, use the current shop context.
+                // Casting null to int yields 0 and creates invalid orphan rows
+                // (id_shop = 0 AND id_shop_group = 0) that collide with product_sqlstock.
+                if ($id_shop === null) {
+                    $id_shop = (int) $shopAdapter->getContextShopID();
+                }
                 $stockAvailable->id_shop = (int) $id_shop;
                 $stockAvailable->id_shop_group = 0;
             }
