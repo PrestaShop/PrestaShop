@@ -8,7 +8,8 @@
 #   bash .ai/bin/generate-ai-index.sh
 #   bash .ai/bin/generate-ai-index.sh --output .ai/generated
 #
-# Design: pure grep/awk/sed — no runtime dependencies beyond bash + coreutils.
+# Design: pure grep/awk/sed — no runtime dependencies beyond bash + coreutils, except the context rules
+# of .claude/rules/ (PHP 8.1+, the path mapping of check-conventions.php).
 
 set -euo pipefail
 
@@ -494,9 +495,9 @@ sync_skill_symlinks() {
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 5b. path-scoped rules — .ai/rules/*.md is the source (description + paths list + body); Claude Code reads it
-#     through a symlink, the other tools get a generated copy with their own frontmatter keys
-#     (see STRUCTURE.md → "Path-scoped rules")
+# 5b. path-scoped rules — .ai/rules/*.md is the source (description + paths list + body); every tool gets a
+#     generated copy with its own frontmatter keys, Claude Code included (.claude/rules/, the source frontmatter
+#     as is) (see STRUCTURE.md → "Path-scoped rules")
 # ─────────────────────────────────────────────────────────────────────────────
 RULE_COPIES_WRITTEN=0
 RULE_COPIES_UNCHANGED=0
@@ -528,11 +529,17 @@ sync_rules() {
     local rules_dir="$REPO_ROOT/.ai/rules"
     [[ -d "$rules_dir" ]] || return 0
 
-    local links=0
+    # A rule written in .claude/rules/ instead of .ai/rules/ is a copy nothing regenerates
+    local misplaced
+    while IFS= read -r misplaced; do
+        echo "  ⚠ rule $(basename "$misplaced"): .claude/rules/ only holds generated copies, move it to .ai/rules/" >&2
+    done < <(grep -L -- "^<!-- Generated from \.ai/" "$REPO_ROOT"/.claude/rules/*.md 2>/dev/null | sort)
+
     while IFS= read -r rule_md; do
-        local rule_name description globs body link
+        local rule_name description frontmatter globs body
         rule_name="$(basename "$rule_md" .md)"
         # frontmatter: `description: "..."` and `paths:` as a YAML list (one `- "glob"` per line)
+        frontmatter=$(awk '/^---$/ {c++; next} c == 1 {print}' "$rule_md")
         description=$(awk '/^---$/ {c++; next} c == 1 && /^description:/ {sub(/^description:[[:space:]]*/, ""); print; exit}' "$rule_md")
         globs=$(awk '
             /^---$/ {c++; next}
@@ -546,25 +553,42 @@ sync_rules() {
             continue
         fi
 
-        # Claude Code reads `paths` natively: a symlink to the source
-        link="$REPO_ROOT/.claude/rules/$rule_name.md"
-        mkdir -p "$(dirname "$link")"
-        if [[ ! -L "$link" ]]; then
-            rm -f "$link"
-            ln -s "../../.ai/rules/$rule_name.md" "$link"
-            links=$((links + 1))
-        fi
-
-        # Cursor (`globs`, unquoted comma-separated), Windsurf (`trigger: glob` + `globs`), Copilot (`applyTo`)
+        # Claude Code (`paths` read natively), Cursor (`globs`, unquoted comma-separated),
+        # Windsurf (`trigger: glob` + `globs`), Copilot (`applyTo`)
+        write_rule_copy "$REPO_ROOT/.claude/rules/$rule_name.md" "$frontmatter" "$rule_name" "$body"
         write_rule_copy "$REPO_ROOT/.cursor/rules/$rule_name.mdc" \
             "description: $description"$'\n'"globs: $globs"$'\n'"alwaysApply: false" "$rule_name" "$body"
         write_rule_copy "$REPO_ROOT/.windsurf/rules/$rule_name.md" \
             "trigger: glob"$'\n'"globs: $globs"$'\n'"description: $description" "$rule_name" "$body"
         write_rule_copy "$REPO_ROOT/.github/instructions/$rule_name.instructions.md" \
             "applyTo: \"$globs\"" "$rule_name" "$body"
-    done < <(find "$rules_dir" -maxdepth 1 -name "*.md" | sort)
+    done < <(find "$rules_dir" -maxdepth 1 -type f -name "*.md" | sort)
 
-    echo "  ✓ rules          ($links Claude symlink(s) created, $RULE_COPIES_WRITTEN tool copies written, $RULE_COPIES_UNCHANGED unchanged)"
+    # A copy whose source left .ai/rules/ would keep applying: remove it
+    local copy source removed=0
+    while IFS= read -r copy; do
+        source=$(sed -n 's/^<!-- Generated from \(\.ai\/rules\/[^ ]*\.md\) by .*/\1/p' "$copy" | head -1)
+        if [[ -n "$source" && ! -f "$REPO_ROOT/$source" ]]; then
+            rm -f "$copy"
+            removed=$((removed + 1))
+        fi
+    done < <(grep -l -- "^<!-- Generated from \.ai/rules/" \
+        "$REPO_ROOT"/.claude/rules/*.md "$REPO_ROOT"/.cursor/rules/*.mdc \
+        "$REPO_ROOT"/.windsurf/rules/*.md "$REPO_ROOT"/.github/instructions/*.instructions.md 2>/dev/null | sort)
+
+    echo "  ✓ rules          ($RULE_COPIES_WRITTEN tool copies written, $RULE_COPIES_UNCHANGED unchanged, $removed removed)"
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 5c. context rules — one path-scoped rule per Domain / Component context in .claude/rules/{domain,component}/
+#     (see STRUCTURE.md → "Generated context rules")
+# ─────────────────────────────────────────────────────────────────────────────
+sync_context_rules() {
+    if ! command -v php > /dev/null 2>&1; then
+        echo "  ⚠ context rules  (php not found, .claude/rules/{domain,component}/ not regenerated)" >&2
+        return 0
+    fi
+    php "$REPO_ROOT/.ai/bin/generate-context-rules.php"
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -620,6 +644,7 @@ generate_api_resources
 discover_module_skills
 sync_skill_symlinks
 sync_rules
+sync_context_rules
 
 echo ""
 echo "Done. Files written to $OUTPUT_DIR/"

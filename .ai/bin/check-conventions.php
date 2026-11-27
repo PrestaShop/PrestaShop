@@ -24,7 +24,8 @@ declare(strict_types=1);
  * Three sections:
  *   1. the .ai/ files to read: the root CONTEXT.md, then each Domain or Component
  *      CONTEXT.md whose "## Layers" table declares a changed path or that a path-scoped
- *      rule of .ai/rules/ names for it (its `paths` frontmatter), the .ai/ files of a module
+ *      rule of .ai/rules/ names for it (its `paths` frontmatter), mapped by context-index.php
+ *      with the same globs as the generated rules of .claude/rules/, the .ai/ files of a module
  *      such a rule names (modules/ps_apiresources/.ai/CONTEXT.md...), and the cross-cutting
  *      guides the diff calls for. The .ai/ folder is read from the base ref.
  *   2. PR hygiene (root CONTEXT.md, "PR hygiene"), on the diff.
@@ -36,28 +37,9 @@ declare(strict_types=1);
  * Needs PHP 8.1+ and git only.
  */
 
+require __DIR__ . '/context-index.php';
+
 const REPO_ROOT = __DIR__ . '/../..';
-const ROOTS = ['src/', 'classes/', 'controllers/', 'admin-dev/', 'themes/', 'tests/', 'app/',
-    'config/', 'install-dev/', 'modules/', 'js/', 'translations/', 'bin/', '.github/',
-    'tools/', 'var/', 'img/', 'mails/', 'pdf/', 'webservice/'];
-const FILE_EXT = '#\.(php|ya?ml|ts|js|vue|twig|tpl|xml|json|scss|sql|feature|md|sh)$#';
-
-// Path rules for what the Layers tables do not say on their own.
-const EXTRA_RULES = [
-    '#^tests/UI/#' => 'Component/Playwright',
-    '#^tests/Integration/Behaviour/#' => 'Component/Behat',
-    '#\.twig$#' => 'Component/Twig',
-    '#\.tpl$#' => 'Component/Smarty',
-    '#^src/PrestaShopBundle/Form/|/Form/.*Type\.php$#' => 'Component/Forms',
-    '#^admin-dev/themes/new-theme/js/#' => 'Component/Javascript',
-    '#(^|/)Controller/Admin/#' => 'Component/Controller',
-    '#^src/Core/Grid/|/Grid/#' => 'Component/Grid',
-];
-
-// Files many areas share: a context naming one of them does not own it.
-const SHARED_FILES = ['install-dev/data/db_structure.sql', 'install-dev/data/xml/configuration.xml',
-    'composer.json', 'composer.lock', 'app/config/config.yml', 'package.json', 'package-lock.json'];
-
 const LOCKS = ['composer.lock' => 'composer.json', 'package-lock.json' => 'package.json'];
 const IDE_FILES = '#(^|/)(\.idea|\.vscode|\.fleet|\.DS_Store|Thumbs\.db|.*\.swp)(/|$)#';
 const BUILD_LEFTOVERS = '#(^|/)buildLock$|\.orig$|\.rej$#';
@@ -128,6 +110,8 @@ function parseDiff(string $diff): array
     // File headers (mode, ---, +++) only come between "diff --git" and the first "@@":
     // inside a hunk, an added "++$i;" or a removed "-- comment" is content.
     $inHeader = false;
+    // The content of a symlink is its target, with no end-of-line
+    $symlink = false;
     foreach (explode("\n", $diff) as $raw) {
         if (str_starts_with($raw, 'diff --git ')) {
             if ($current !== null) {
@@ -137,6 +121,7 @@ function parseDiff(string $diff): array
             $current = ['path' => $path, 'status' => 'modified', 'added' => [], 'missingEofNewline' => false];
             $lastSide = null;
             $inHeader = true;
+            $symlink = false;
             continue;
         }
         if ($current === null) {
@@ -152,8 +137,11 @@ function parseDiff(string $diff): array
             } elseif (str_starts_with($raw, 'deleted file mode')) {
                 $current['status'] = 'deleted';
             }
+            if (preg_match('#^(new file |new )?mode 120000$#', $raw)) {
+                $symlink = true;
+            }
         } elseif (str_starts_with($raw, '\\')) {
-            if ($lastSide === '+') {
+            if ($lastSide === '+' && !$symlink) {
                 $current['missingEofNewline'] = true;
             }
         } elseif (str_starts_with($raw, '+')) {
@@ -175,206 +163,23 @@ function parseDiff(string $diff): array
 }
 
 /**
- * a/{x,y}/b becomes [a/x/b, a/y/b]; a single word placeholder like {Domain} is kept.
- *
- * @return string[]
- */
-function expandBraces(string $pattern): array
-{
-    if (!preg_match('#\{([^{}]*,[^{}]*)\}#', $pattern, $match, PREG_OFFSET_CAPTURE)) {
-        return [$pattern];
-    }
-    $out = [];
-    foreach (explode(',', $match[1][0]) as $option) {
-        $expanded = substr($pattern, 0, $match[0][1]) . $option . substr($pattern, $match[0][1] + strlen($match[0][0]));
-        $out = array_merge($out, expandBraces($expanded));
-    }
-
-    return $out;
-}
-
-/**
- * Turns a declared path into an anchored regex. Directories match as prefixes.
- */
-function toRegex(string $pattern): string
-{
-    $anywhere = false;
-    foreach (['…/', '.../'] as $lead) {
-        if (str_starts_with($pattern, $lead)) {
-            $pattern = substr($pattern, strlen($lead));
-            $anywhere = true;
-        }
-    }
-    $regex = '';
-    foreach (preg_split('#(\{[A-Za-z_]+\}|\*)#', $pattern, -1, PREG_SPLIT_DELIM_CAPTURE) as $chunk) {
-        if ($chunk === '*') {
-            $regex .= '[^/]*';
-        } elseif (preg_match('#^\{[A-Za-z_]+\}$#', $chunk)) {
-            $regex .= '[^/]+';
-        } else {
-            $regex .= preg_quote($chunk, '#');
-        }
-    }
-    if (!str_ends_with($pattern, '/') && !preg_match(FILE_EXT, $pattern)) {
-        $regex .= '(/|$)'; // a directory named without its trailing slash
-    }
-
-    return '#' . ($anywhere ? '(^|/)' : '^') . $regex . '#';
-}
-
-function keepToken(string $token): ?string
-{
-    $token = rtrim(explode(' ', trim($token))[0], ',;');
-    if (in_array($token, SHARED_FILES, true) || !str_contains($token, '/')) {
-        return null;
-    }
-    $rooted = false;
-    foreach (array_merge(ROOTS, ['…/', '.../']) as $root) {
-        $rooted = $rooted || str_starts_with($token, $root);
-    }
-    if (!$rooted) {
-        return null;
-    }
-    $segments = array_filter(explode('/', $token), fn (string $s): bool => $s !== '' && $s !== '…' && $s !== '...');
-    if (count($segments) < 3 && !preg_match(FILE_EXT, $token)) {
-        return null; // src/PrestaShopBundle/ and the like would match half the repository
-    }
-
-    return $token;
-}
-
-/**
  * The .ai/ folder at a git ref.
  *
- * @return array<string, string> path => content, markdown files only
+ * @return array<string, string> path => content, markdown files only, symlinks (skills of a module) left out
  */
 function readAiFolder(string $ref): array
 {
     $docs = [];
-    foreach (preg_split('/\s+/', trim((string) git(['ls-tree', '-r', '--name-only', $ref, '.ai']))) as $path) {
-        if (str_ends_with($path, '.md')) {
-            $docs[$path] = (string) git(['show', $ref . ':' . $path]);
+    foreach (explode("\n", trim((string) git(['ls-tree', '-r', $ref, '.ai']))) as $line) {
+        // <mode> <type> <object>\t<path>
+        [$meta, $path] = array_pad(explode("\t", $line, 2), 2, '');
+        if (str_starts_with($meta, '120000') || !str_ends_with($path, '.md')) {
+            continue;
         }
+        $docs[$path] = (string) git(['show', $ref . ':' . $path]);
     }
 
     return $docs;
-}
-
-/**
- * Context name => [regexes, owned roots], from the Layers table of every CONTEXT.md.
- *
- * @param array<string, string> $docs
- *
- * @return array<string, array{0: string[], 1: string[]}>
- */
-function buildIndex(array $docs): array
-{
-    $index = [];
-    foreach ($docs as $path => $text) {
-        if (!preg_match('#^\.ai/((?:Component|Domain)/[^/]+)/CONTEXT\.md$#', $path, $match)) {
-            continue;
-        }
-        $context = $match[1];
-        $isDomain = str_starts_with($context, 'Domain/');
-        $name = explode('/', $context)[1];
-        // Only the Layers table maps paths: a context without one is reached through EXTRA_RULES,
-        // the rules of .ai/rules/ or the "possibly related" names, never through its whole text.
-        $body = preg_match('#^\#\# Layers\s*\n(.*?)(?=^\#\# )#sm', $text, $layers) ? $layers[1] : '';
-        $patterns = [];
-        preg_match_all('#`([^`]+)`#', $body, $tokens);
-        foreach ($tokens[1] as $token) {
-            $token = keepToken($token);
-            if ($token === null) {
-                continue;
-            }
-            foreach (expandBraces($token) as $pattern) {
-                // A domain naming a shared folder does not own it: keep the folders carrying its name.
-                if ($isDomain && str_ends_with($pattern, '/') && stripos($pattern, $name) === false) {
-                    continue;
-                }
-                $patterns[$pattern] = true;
-            }
-        }
-        // A domain owns its Core and Adapter namespaces even when its table names a few files only.
-        if ($isDomain) {
-            $patterns['src/Core/Domain/' . $name . '/'] = true;
-            $patterns['src/Adapter/' . $name . '/'] = true;
-        }
-        $patterns = array_keys($patterns);
-        sort($patterns);
-        // Fallback for files nothing matched: a component owns the namespace its folders sit in,
-        // a domain only the folders it declares.
-        $owned = [];
-        foreach ($patterns as $pattern) {
-            if (str_ends_with($pattern, '/') && !str_contains($pattern, '{') && !str_contains($pattern, '*')
-                && (str_starts_with($pattern, 'src/Core/') || str_starts_with($pattern, 'src/Adapter/'))
-                && substr_count($pattern, '/') >= 3) {
-                $owned[$isDomain ? $pattern : implode('/', array_slice(explode('/', $pattern), 0, 3)) . '/'] = true;
-            }
-        }
-        $index[$context] = [array_map('toRegex', $patterns), array_keys($owned)];
-    }
-
-    return $index;
-}
-
-/**
- * Turns a glob of a rule's `paths` into an anchored regex: ** spans folders, * stays in one.
- */
-function globToRegex(string $glob): string
-{
-    $regex = '';
-    foreach (preg_split('#(\*\*/|\*\*|\*|\?)#', $glob, -1, PREG_SPLIT_DELIM_CAPTURE) as $chunk) {
-        $regex .= match ($chunk) {
-            '**/' => '(.*/)?',
-            '**' => '.*',
-            '*' => '[^/]*',
-            '?' => '[^/]',
-            default => preg_quote($chunk, '#'),
-        };
-    }
-
-    return '#^' . $regex . '$#';
-}
-
-/**
- * Rule => [regexes, targets, external], from the `paths` frontmatter of every .ai/rules/*.md. A
- * target is a context the rule's body names (Component/X, Domain/X) or a root guide (MULTISTORE.md...).
- * External files are the `.ai/` files of another root the body names, such as
- * `modules/ps_apiresources/.ai/CONTEXT.md`: listed as they are, since they live outside the core
- * history (a composer-installed module, often a symlink to a separate clone).
- *
- * @param array<string, string> $docs
- *
- * @return array<string, array{0: string[], 1: string[], 2: string[]}>
- */
-function pathRules(array $docs): array
-{
-    $rules = [];
-    foreach ($docs as $path => $text) {
-        if (!preg_match('#^\.ai/rules/[^/]+\.md$#', $path) || !preg_match('#^---\s*\n(.*?)\n---\s*\n(.*)$#s', $text, $parts)) {
-            continue;
-        }
-        if (!preg_match('#^paths:\s*\n((?:\s+-\s+.*\n?)+)#m', $parts[1], $list)) {
-            continue;
-        }
-        preg_match_all('#^\s+-\s+["\']?([^"\'\n]+?)["\']?\s*$#m', $list[1], $globs);
-        $targets = [];
-        preg_match_all('#((?:Component|Domain)/[A-Za-z]+)/CONTEXT\.md#', $parts[2], $contexts);
-        foreach ($contexts[1] as $context) {
-            $targets[$context] = true;
-        }
-        preg_match_all('#\b([A-Z][A-Z_-]*\.md)\b#', $parts[2], $guides);
-        foreach ($guides[1] as $guide) {
-            if (!in_array($guide, ['CONTEXT.md', 'STRUCTURE.md'], true) && isset($docs['.ai/' . $guide])) {
-                $targets[$guide] = true;
-            }
-        }
-        preg_match_all('#`([A-Za-z0-9_][A-Za-z0-9_./-]*/\.ai/[A-Za-z0-9_./-]+\.md)`#', $parts[2], $external);
-        $rules[$path] = [array_map('globToRegex', $globs[1]), array_keys($targets), array_values(array_unique($external[1]))];
-    }
-
-    return $rules;
 }
 
 /**
@@ -386,53 +191,29 @@ function pathRules(array $docs): array
  */
 function contextsToRead(array $files, array $docs, array $allAiFiles): array
 {
-    $index = buildIndex($docs);
+    // The same globs as the rules of .claude/rules/ generated from the contexts
+    $index = array_map(fn (array $globs): array => array_map('globToRegex', $globs), contextGlobs($docs));
     $rules = pathRules($docs);
     $paths = array_column(array_filter($files, fn (array $f): bool => $f['status'] !== 'deleted'), 'path');
     $hits = [];
     $unmatched = [];
     $ruleGuides = [];
     foreach ($paths as $path) {
-        // A test is judged by the context of the code it covers: tests/Unit/Core/Grid/X.php -> src/Core/Grid/X.php
-        $candidates = [$path];
-        if (preg_match('#^tests/(?:Unit|Integration)/(Core|Adapter|PrestaShopBundle)/(.*)$#', $path, $mirror)) {
-            $candidates[] = 'src/' . $mirror[1] . '/' . $mirror[2];
-        }
         $matched = [];
-        foreach ($index as $context => [$regexes]) {
+        foreach ($index as $context => $regexes) {
             foreach ($regexes as $regex) {
-                foreach ($candidates as $candidate) {
-                    if (preg_match($regex, $candidate)) {
-                        $matched[$context] = true;
-                    }
+                if (preg_match($regex, $path)) {
+                    $matched[$context] = true;
                 }
             }
         }
-        if (!$matched) {
-            foreach ($index as $context => [, $roots]) {
-                foreach ($roots as $root) {
-                    foreach ($candidates as $candidate) {
-                        if (str_starts_with($candidate, $root)) {
-                            $matched[$context] = true;
-                        }
-                    }
-                }
-            }
-        }
-        foreach (EXTRA_RULES as $regex => $context) {
-            if (isset($index[$context]) && preg_match($regex, $path)) {
-                $matched[$context] = true;
-            }
-        }
-        // The path-scoped rules of .ai/rules/ declare their own paths, beyond the Layers tables.
-        foreach ($rules as $rule => [$regexes, $targets, $external]) {
-            if (!array_filter($regexes, fn (string $regex): bool => (bool) preg_match($regex, $path))) {
+        // The hand-written rules of .ai/rules/ also name guides and the .ai/ files of a module.
+        foreach ($rules as $rule => [$globs, $targets, $external]) {
+            if (!array_filter($globs, fn (string $glob): bool => (bool) preg_match(globToRegex($glob), $path))) {
                 continue;
             }
             foreach ($targets as $target) {
-                if (isset($index[$target])) {
-                    $matched[$target] = true;
-                } else {
+                if (!isset($index[$target])) {
                     $ruleGuides['.ai/' . $target] ??= basename($rule) . ' matches ' . $path;
                 }
             }
@@ -444,7 +225,8 @@ function contextsToRead(array $files, array $docs, array $allAiFiles): array
         foreach (array_keys($matched) as $context) {
             $hits[$context][] = $path;
         }
-        if (!$matched && !str_starts_with($path, '.ai/')) {
+        // The .ai/ files and the rules of .claude/rules/ generated from them describe the code, no context covers them
+        if (!$matched && !str_starts_with($path, '.ai/') && !str_starts_with($path, '.claude/rules/')) {
             $unmatched[] = $path;
         }
     }
@@ -467,7 +249,7 @@ function contextsToRead(array $files, array $docs, array $allAiFiles): array
     // Code only: the .ai/ files describe these keywords without using them
     $added = '';
     foreach ($files as $file) {
-        if (str_starts_with($file['path'], '.ai/')) {
+        if (str_starts_with($file['path'], '.ai/') || str_starts_with($file['path'], '.claude/rules/')) {
             continue;
         }
         foreach ($file['added'] as [, $text]) {
