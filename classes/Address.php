@@ -540,15 +540,23 @@ class AddressCore extends ObjectModel
         $cache_id = 'Address::initialize_' . $context_hash;
 
         if (!Cache::isStored($cache_id)) {
-            /*
-             * Case 1 - Specific address ID is provided. We just load it.
-             */
-            if ($id_address) {
-                $address = new Address((int) $id_address);
+            $requestedAddress = $id_address ? new Address((int) $id_address) : null;
+            if (null !== $requestedAddress && !Validate::isLoadedObject($requestedAddress)) {
+                PrestaShopLogger::addLog(
+                    sprintf('Address::initialize - Address with ID "%s" could not be loaded, using the contextual address.', (int) $id_address),
+                    PrestaShopLogger::LOG_SEVERITY_LEVEL_WARNING,
+                    null,
+                    'Address',
+                    (int) $id_address
+                );
+            }
 
-                if (!Validate::isLoadedObject($address)) {
-                    throw new PrestaShopException('Invalid address #' . (int) $id_address);
-                }
+            /*
+             * Case 1 - Specific address ID is provided and the address still exists. We just load it.
+             * A missing address falls back to the contextual address below.
+             */
+            if (null !== $requestedAddress && Validate::isLoadedObject($requestedAddress)) {
+                $address = $requestedAddress;
             /*
              * Case 2 - We try to use geolocation information if allowed. However, geoloc_id_country
              * is not set to the customer anywhere in the current codebase. Most geolocation logic either
