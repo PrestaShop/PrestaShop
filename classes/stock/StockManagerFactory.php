@@ -46,6 +46,9 @@ class StockManagerFactoryCore
 
         foreach ($modules_infos as $module_infos) {
             $module_instance = Module::getInstanceByName($module_infos['name']);
+            if (!$module_instance || !Module::isEnabled($module_instance->name)) {
+                continue;
+            }
 
             if (is_callable([$module_instance, 'hookStockManager'])) {
                 $stock_manager = $module_instance->hookStockManager();
