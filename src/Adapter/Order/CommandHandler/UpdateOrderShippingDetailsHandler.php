@@ -20,6 +20,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCo
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\UpdateOrderShippingDetailsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\TransistEmailSendingException;
+use Psr\Log\LoggerInterface;
+use Shop;
 use Validate;
 
 /**
@@ -38,12 +40,21 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
     private $contextStateManager;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @param OrderAmountUpdater $orderAmountUpdater
      */
-    public function __construct(OrderAmountUpdater $orderAmountUpdater, ContextStateManager $contextStateManager)
-    {
+    public function __construct(
+        OrderAmountUpdater $orderAmountUpdater,
+        ContextStateManager $contextStateManager,
+        LoggerInterface $logger
+    ) {
         $this->orderAmountUpdater = $orderAmountUpdater;
         $this->contextStateManager = $contextStateManager;
+        $this->logger = $logger;
     }
 
     /**
@@ -58,6 +69,7 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
         $oldTrackingNumber = $order->getShippingNumber();
 
         $this->contextStateManager
+            ->setShop(new Shop((int) $order->id_shop))
             ->setLanguage(new Language($order->id_lang));
 
         try {
@@ -85,6 +97,8 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
 
                 $order->id_carrier = $carrierId;
                 $this->orderAmountUpdater->update($order, $cart);
+
+                $this->logCarrierChange((int) $order->id, $oldCarrierId, $carrierId);
             }
 
             // load fresh order carrier because updated just before
@@ -115,5 +129,26 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
         } finally {
             $this->contextStateManager->restorePreviousContext();
         }
+    }
+
+    private function logCarrierChange(int $orderId, int $oldCarrierId, int $newCarrierId): void
+    {
+        $oldCarrier = new Carrier($oldCarrierId);
+        $newCarrier = new Carrier($newCarrierId);
+
+        $this->logger->info(
+            sprintf(
+                'Order carrier updated: from "%s" (#%d) to "%s" (#%d)',
+                $oldCarrier->name,
+                $oldCarrierId,
+                $newCarrier->name,
+                $newCarrierId
+            ),
+            [
+                'object_type' => 'Order',
+                'object_id' => $orderId,
+                'allow_duplicate' => true,
+            ]
+        );
     }
 }
