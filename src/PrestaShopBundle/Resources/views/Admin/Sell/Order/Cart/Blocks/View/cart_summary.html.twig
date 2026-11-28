@@ -60,7 +60,7 @@
                         <strong>{{ 'Text #'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
                       {% endif %}
                     </div>
-                    <div class="col-6">
+                    <div class="col-6 text-break">
                       {% if customizationField.type == 'customizable_file' %}
                         <img src="{{ customizationField.image }}">
                       {% elseif customizationField.allow_html|default(false) %}
