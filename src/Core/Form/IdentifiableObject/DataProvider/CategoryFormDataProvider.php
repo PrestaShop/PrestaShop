@@ -70,6 +70,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
         return [
             'name' => $editableCategory->getName(),
             'active' => $editableCategory->isActive(),
+            'indexation' => $editableCategory->getIndexation(),
             'id_parent' => $editableCategory->getParentId(),
             'description' => $editableCategory->getDescription(),
             'additional_description' => $editableCategory->getAdditionalDescription(),
@@ -97,6 +98,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
             'group_association' => $allGroupIds,
             'shop_association' => $this->shopContext->getAssociatedShopIds(),
             'active' => true,
+            'indexation' => true,
             'seo_preview' => $this->categoryProvider->getUrl(0, '{friendly-url}'),
         ];
     }

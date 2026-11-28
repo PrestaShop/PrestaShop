@@ -42,6 +42,11 @@ class ProductSeoOptions
     private $redirectTarget;
 
     /**
+     * @var bool
+     */
+    private $indexation;
+
+    /**
      * @param string[] $localizedMetaTitles
      * @param string[] $localizedMetaDescriptions
      * @param string[] $localizedLinkRewrites
@@ -53,13 +58,23 @@ class ProductSeoOptions
         array $localizedMetaDescriptions,
         array $localizedLinkRewrites,
         string $redirectType,
-        ?RedirectTargetInformation $redirectTarget
+        ?RedirectTargetInformation $redirectTarget,
+        bool $indexation = true
     ) {
         $this->localizedMetaTitles = $localizedMetaTitles;
         $this->localizedMetaDescriptions = $localizedMetaDescriptions;
         $this->localizedLinkRewrites = $localizedLinkRewrites;
         $this->redirectType = $redirectType;
         $this->redirectTarget = $redirectTarget;
+        $this->indexation = $indexation;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIndexation(): bool
+    {
+        return $this->indexation;
     }
 
     /**
