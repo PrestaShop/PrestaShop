@@ -208,12 +208,8 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
             return;
         }
 
-        $customerByEmail = new Customer();
-
-        // Now check if a registered customer with the same email exists, ignoring guests.
-        $customerByEmail->getByEmail($command->getEmail()->getValue());
-
-        if ($customerByEmail->id) {
+        // Preserve getByEmail's exclusion of soft-deleted customers.
+        if ($customer->hasDuplicateEmail($command->getEmail()->getValue(), true)) {
             throw new DuplicateCustomerEmailException(
                 $command->getEmail(), sprintf('Registered customer with email "%s" already exists', $command->getEmail()->getValue()),
                 DuplicateCustomerEmailException::EDIT
