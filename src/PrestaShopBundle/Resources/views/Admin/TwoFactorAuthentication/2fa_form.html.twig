@@ -1,0 +1,79 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% extends '@PrestaShop/Admin/Layout/login_layout.html.twig' %}
+
+{% block head_tag %}{{ component('TwoFactorHeadTag') }}{% endblock %}
+
+{% block content %}
+
+  {% set hasMultipleProviders = availableTwoFactorProviders|length > 1 %}
+
+  {# Rely on the explicit query choice, not the bundle preselected provider. #}
+  {% set selectedProvider = app.request.query.get('preferProvider') %}
+  {% set activeProvider = selectedProvider ?: twoFactorProvider %}
+
+  {# With multiple providers, wait for an explicit user choice before displaying the verification form. #}
+  {% set shouldDisplayVerificationForm = not hasMultipleProviders or selectedProvider is not empty %}
+
+  {% set providerLabels = {
+    email: 'Email'|trans({}, 'Admin.Global'),
+    totp: 'Authenticator app'|trans({}, 'Admin.Login.Feature'),
+  } %}
+
+  <div class="text-center mb-4">
+    <h1 class="h3 mt-3">{{ shopName }}</h1>
+  </div>
+
+  {% if shouldDisplayVerificationForm and activeProvider == 'email' %}
+    {% if emailPreparationStatus|default('') == 'throttled' %}
+      <div class="alert alert-warning" role="alert">
+        {{ 'Too many requests for an authentication code. Please try again later.'|trans({}, 'Admin.Login.Notification') }}
+        {% if emailRetryAt|default(null) %}
+          {{ 'You can request another code after %time%.'|trans({'%time%': emailRetryAt|date('H:i:s')}, 'Admin.Login.Notification') }}
+        {% endif %}
+      </div>
+    {% elseif emailPreparationStatus|default('') == 'failed' %}
+      <div class="alert alert-danger" role="alert">
+        {{ 'The authentication email could not be sent. Please try again later.'|trans({}, 'Admin.Login.Notification') }}
+      </div>
+    {% elseif emailChallengeAvailable is defined and not emailChallengeAvailable %}
+      <div class="alert alert-warning" role="alert">
+        {{ 'No valid authentication code is available. Please request a code.'|trans({}, 'Admin.Login.Notification') }}
+      </div>
+    {% endif %}
+  {% endif %}
+
+  {% if authenticationError %}
+    <div class="alert alert-danger" role="alert">
+      <div class="alert-text">
+        {% if authenticationError == 'code_invalid' %}
+          <p>{{ 'The verification code is not valid.'|trans({}, 'Admin.Login.Notification') }}</p>
+        {% else %}
+          <p>{{ authenticationError|trans(authenticationErrorData, 'Admin.Login.Notification') }}</p>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+
+  {{ include('@PrestaShop/Admin/TwoFactorAuthentication/Blocks/two_factor_code_form.html.twig', {
+    displayProviderSelector: hasMultipleProviders,
+    displayCodeForm: shouldDisplayVerificationForm,
+    providerSwitchRoute: '2fa_login',
+    providerSwitchRouteParams: {},
+    twoFactorProvider: activeProvider,
+  }) }}
+
+  {% if shouldDisplayVerificationForm %}
+    {% if activeProvider == 'email' %}
+      <form method="post" action="{{ path('2fa_resend') }}" class="text-center mt-3">
+        <input type="hidden" name="_token" value="{{ csrf_token('2fa_resend') }}">
+        <button class="btn btn-outline-secondary btn-block" type="submit">
+          {{ 'Resend code'|trans({}, 'Admin.Login.Feature') }}
+        </button>
+      </form>
+    {% endif %}
+  {% endif %}
+{% endblock %}

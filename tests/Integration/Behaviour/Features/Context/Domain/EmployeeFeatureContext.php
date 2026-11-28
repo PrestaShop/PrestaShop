@@ -4,10 +4,14 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use Context;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Types\Types;
 use Employee;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\AddEmployeeCommand;
@@ -16,6 +20,7 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkUpdateEmployeeStatusC
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\DeleteEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\EditEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ResetEmployeePasswordCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ResetEmployeeTwoFactorCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\SendEmployeePasswordResetEmailCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ToggleEmployeeStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeConstraintException;
@@ -24,10 +29,12 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundExcepti
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\EditableEmployee;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\GeneratedEmployeeBackupCodes;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProfileChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TabChoiceProvider;
 use PrestaShopBundle\Entity\Repository\EmployeeRepository;
+use PrestaShopBundle\SchebTwoFactor\TotpSecretEncryptor;
 use RuntimeException;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
@@ -42,6 +49,46 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
     private const MIN_PASSWORD_SCORE = 1;
 
     private ?Employee $contextEmployee = null;
+
+    /**
+     * @When I edit employee :employeeReference and :effect trusted devices:
+     */
+    public function editEmployeeAndCheckTrustedDevices(string $employeeReference, string $effect, TableNode $table): void
+    {
+        Assert::assertContains($effect, ['revoke', 'preserve']);
+        $employeeId = $this->referenceToId($employeeReference);
+        /** @var EmployeeRepository $repository */
+        $repository = $this->getContainer()->get(EmployeeRepository::class);
+        $before = $repository->getTrustedDeviceVersion($employeeId);
+        $command = new EditEmployeeCommand($employeeId);
+        foreach ($table->getRowsHash() as $field => $value) {
+            match ($field) {
+                '2FA enabled' => $command->setTwoFactorEnabled(filter_var($value, FILTER_VALIDATE_BOOLEAN)),
+                'TOTP enabled' => $command->setTwoFactorTotpEnabled(filter_var($value, FILTER_VALIDATE_BOOLEAN)),
+                'Email 2FA enabled' => $command->setTwoFactorEmailEnabled(filter_var($value, FILTER_VALIDATE_BOOLEAN)),
+                '2FA required' => $command->setTwoFactorRequired(filter_var($value, FILTER_VALIDATE_BOOLEAN)),
+                'Last name' => $command->setLastName($value),
+                'Email address' => $command->setEmail($value),
+                'Password' => $command->setPlainPassword($value, self::MIN_PASSWORD_LENGTH, self::MAX_PASSWORD_LENGTH, self::MIN_PASSWORD_SCORE),
+                default => throw new RuntimeException('Unsupported field: ' . $field),
+            };
+        }
+        $this->getCommandBus()->handle($command);
+        Assert::assertSame($before + ('revoke' === $effect ? 1 : 0), $repository->getTrustedDeviceVersion($employeeId));
+    }
+
+    /**
+     * @When I reset 2FA for employee :employeeReference and revoke trusted devices
+     */
+    public function resetTwoFactorAndCheckTrustedDevices(string $employeeReference): void
+    {
+        $employeeId = $this->referenceToId($employeeReference);
+        /** @var EmployeeRepository $repository */
+        $repository = $this->getContainer()->get(EmployeeRepository::class);
+        $before = $repository->getTrustedDeviceVersion($employeeId);
+        $this->getCommandBus()->handle(new ResetEmployeeTwoFactorCommand($employeeId));
+        Assert::assertSame($before + 1, $repository->getTrustedDeviceVersion($employeeId));
+    }
 
     /**
      * @Given I Add new employee :employeeReference to shop :shopReference with the following details:
@@ -124,6 +171,21 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['active'])) {
             $command->setActive($data['active']);
         }
+        if (isset($data['hasEnabledGravatar'])) {
+            $command->setHasEnabledGravatar($data['hasEnabledGravatar']);
+        }
+        if (isset($data['twoFactorEnabled'])) {
+            $command->setTwoFactorEnabled($data['twoFactorEnabled']);
+        }
+        if (isset($data['twoFactorRequired'])) {
+            $command->setTwoFactorRequired($data['twoFactorRequired']);
+        }
+        if (isset($data['twoFactorTotpEnabled'])) {
+            $command->setTwoFactorTotpEnabled($data['twoFactorTotpEnabled']);
+        }
+        if (isset($data['twoFactorEmailEnabled'])) {
+            $command->setTwoFactorEmailEnabled($data['twoFactorEmailEnabled']);
+        }
 
         try {
             $this->getCommandBus()->handle($command);
@@ -202,6 +264,21 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['active'])) {
             Assert::assertEquals($data['active'], $employeeDetails->isActive());
         }
+        if (isset($data['hasEnabledGravatar'])) {
+            Assert::assertSame($data['hasEnabledGravatar'], $employeeDetails->hasEnabledGravatar());
+        }
+        if (isset($data['twoFactorEnabled'])) {
+            Assert::assertSame($data['twoFactorEnabled'], $employeeDetails->getTwoFactorEnabled());
+        }
+        if (isset($data['twoFactorRequired'])) {
+            Assert::assertSame($data['twoFactorRequired'], $employeeDetails->isTwoFactorRequired());
+        }
+        if (isset($data['twoFactorTotpEnabled'])) {
+            Assert::assertSame($data['twoFactorTotpEnabled'], $employeeDetails->getTwoFactorTotpEnabled());
+        }
+        if (isset($data['twoFactorEmailEnabled'])) {
+            Assert::assertSame($data['twoFactorEmailEnabled'], $employeeDetails->getTwoFactorEmailEnabled());
+        }
         if (isset($data['languageId'])) {
             Assert::assertEquals($data['languageId'], $employeeDetails->getLanguageId());
         }
@@ -211,6 +288,145 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['password'])) {
             $this->checkPassword($data['password'], $employeeReference);
         }
+    }
+
+    /**
+     * @Given employee :employeeReference has a TOTP secret
+     */
+    public function setEmployeeTotpSecret(string $employeeReference): void
+    {
+        $encryptor = new TotpSecretEncryptor($this->getContainer()->getParameter('new_cookie_key'));
+        $secret = $encryptor->encrypt('JBSWY3DPEHPK3PXP');
+        /** @var Connection $connection */
+        $connection = $this->getContainer()->get('doctrine.dbal.default_connection');
+        $connection->createQueryBuilder()
+            ->update(_DB_PREFIX_ . 'employee')
+            ->set('two_factor_totp_secret', ':secret')
+            ->where('id_employee = :employeeId')
+            ->setParameter('secret', $secret)
+            ->setParameter('employeeId', $this->referenceToId($employeeReference))
+            ->executeStatement();
+
+        $this->getSharedStorage()->set('employee_totp_secret_' . $employeeReference, $secret);
+    }
+
+    /**
+     * @Then employee :employeeReference should have a :state TOTP secret
+     */
+    public function assertEmployeeTotpSecret(string $employeeReference, string $state): void
+    {
+        /** @var Connection $connection */
+        $connection = $this->getContainer()->get('doctrine.dbal.default_connection');
+        $secret = $connection->createQueryBuilder()
+            ->select('two_factor_totp_secret')
+            ->from(_DB_PREFIX_ . 'employee')
+            ->where('id_employee = :employeeId')
+            ->setParameter('employeeId', $this->referenceToId($employeeReference))
+            ->setMaxResults(1)
+            ->executeQuery()
+            ->fetchOne();
+        Assert::assertNotFalse($secret, 'Employee must exist when checking the stored TOTP secret.');
+
+        if ('preserved' === $state) {
+            Assert::assertSame($this->getSharedStorage()->get('employee_totp_secret_' . $employeeReference), $secret);
+        } elseif ('cleared' === $state) {
+            Assert::assertEmpty($secret);
+        } else {
+            throw new RuntimeException('Unsupported TOTP secret state: ' . $state);
+        }
+    }
+
+    /**
+     * @When I edit 2FA settings for employee :employeeReference and :expected backup codes:
+     */
+    public function editTwoFactorSettingsAndCheckBackupCodes(string $employeeReference, string $expected, TableNode $table): void
+    {
+        $employeeId = $this->referenceToId($employeeReference);
+        $before = $this->getStoredBackupCodes($employeeId);
+        $command = new EditEmployeeCommand($employeeId);
+        foreach ($table->getRowsHash() as $field => $value) {
+            match ($field) {
+                '2FA enabled' => $command->setTwoFactorEnabled(filter_var($value, FILTER_VALIDATE_BOOLEAN)),
+                'TOTP enabled' => $command->setTwoFactorTotpEnabled(filter_var($value, FILTER_VALIDATE_BOOLEAN)),
+                'Email 2FA enabled' => $command->setTwoFactorEmailEnabled(filter_var($value, FILTER_VALIDATE_BOOLEAN)),
+                '2FA required' => $command->setTwoFactorRequired(filter_var($value, FILTER_VALIDATE_BOOLEAN)),
+                'Last name' => $command->setLastName($value),
+                default => throw new RuntimeException('Unsupported field: ' . $field),
+            };
+        }
+        $result = $this->getCommandBus()->handle($command);
+        $after = $this->getStoredBackupCodes($employeeId);
+        if ('generate' === $expected) {
+            Assert::assertInstanceOf(GeneratedEmployeeBackupCodes::class, $result);
+            Assert::assertSame($employeeId, $result->getValue());
+            Assert::assertCount(8, $result->getBackupCodes());
+            Assert::assertCount(8, $after);
+            Assert::assertNotSame($before, $after);
+            $hasher = CommonFeatureContext::getContainer()->get(\Symfony\Component\PasswordHasher\PasswordHasherInterface::class);
+            foreach ($result->getBackupCodes() as $index => $plainCode) {
+                Assert::assertTrue($hasher->verify($after[$index], $plainCode));
+                Assert::assertNotSame($plainCode, $after[$index]);
+            }
+        } elseif ('preserve' === $expected) {
+            Assert::assertNull($result);
+            Assert::assertSame($before, $after);
+        } elseif ('clear' === $expected) {
+            Assert::assertNull($result);
+            Assert::assertNull($after);
+        } else {
+            throw new RuntimeException('Unsupported backup-code state: ' . $expected);
+        }
+    }
+
+    /**
+     * @Given employee :employeeReference has exhausted all backup codes
+     */
+    public function exhaustBackupCodes(string $employeeReference): void
+    {
+        /** @var Connection $connection */
+        $connection = $this->getContainer()->get('doctrine.dbal.default_connection');
+        $connection->createQueryBuilder()
+            ->update(_DB_PREFIX_ . 'employee')
+            ->set('two_factor_backup_codes', ':codes')
+            ->where('id_employee = :id')
+            ->setParameter('codes', [], Types::JSON)
+            ->setParameter('id', $this->referenceToId($employeeReference))
+            ->executeStatement();
+    }
+
+    /**
+     * @Given employee :employeeReference has stale backup codes
+     */
+    public function setStaleBackupCodes(string $employeeReference): void
+    {
+        /** @var Connection $connection */
+        $connection = $this->getContainer()->get('doctrine.dbal.default_connection');
+        $connection->createQueryBuilder()
+            ->update(_DB_PREFIX_ . 'employee')
+            ->set('two_factor_backup_codes', ':codes')
+            ->where('id_employee = :id')
+            ->setParameter('codes', ['stale-hash'], Types::JSON)
+            ->setParameter('id', $this->referenceToId($employeeReference))
+            ->executeStatement();
+    }
+
+    /**
+     * @return string[]|null
+     */
+    private function getStoredBackupCodes(int $employeeId): ?array
+    {
+        /** @var Connection $connection */
+        $connection = $this->getContainer()->get('doctrine.dbal.default_connection');
+        $stored = $connection->createQueryBuilder()
+            ->select('two_factor_backup_codes')
+            ->from(_DB_PREFIX_ . 'employee')
+            ->where('id_employee = :id')
+            ->setParameter('id', $employeeId)
+            ->setMaxResults(1)
+            ->executeQuery()->fetchOne();
+        Assert::assertNotFalse($stored);
+
+        return null === $stored ? null : json_decode($stored, true, 512, JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -371,6 +587,22 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
 
         if (isset($testCaseData['Active'])) {
             $data['active'] = PrimitiveUtils::castStringBooleanIntoBoolean($testCaseData['Active']);
+        }
+
+        if (isset($testCaseData['Gravatar enabled'])) {
+            $data['hasEnabledGravatar'] = PrimitiveUtils::castStringBooleanIntoBoolean($testCaseData['Gravatar enabled']);
+        }
+        if (isset($testCaseData['2FA enabled'])) {
+            $data['twoFactorEnabled'] = PrimitiveUtils::castStringBooleanIntoBoolean($testCaseData['2FA enabled']);
+        }
+        if (isset($testCaseData['2FA required'])) {
+            $data['twoFactorRequired'] = PrimitiveUtils::castStringBooleanIntoBoolean($testCaseData['2FA required']);
+        }
+        if (isset($testCaseData['TOTP enabled'])) {
+            $data['twoFactorTotpEnabled'] = PrimitiveUtils::castStringBooleanIntoBoolean($testCaseData['TOTP enabled']);
+        }
+        if (isset($testCaseData['Email 2FA enabled'])) {
+            $data['twoFactorEmailEnabled'] = PrimitiveUtils::castStringBooleanIntoBoolean($testCaseData['Email 2FA enabled']);
         }
 
         return $data;

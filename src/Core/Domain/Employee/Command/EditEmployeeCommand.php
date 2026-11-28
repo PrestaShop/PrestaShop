@@ -73,6 +73,26 @@ class EditEmployeeCommand
     private $hasEnabledGravatar;
 
     /**
+     * @var bool|null
+     */
+    private $twoFactorEnabled;
+
+    /**
+     * @var bool|null
+     */
+    private $twoFactorRequired;
+
+    /**
+     * @var bool|null
+     */
+    private $twoFactorTotpEnabled;
+
+    /**
+     * @var bool|null
+     */
+    private $twoFactorEmailEnabled;
+
+    /**
      * @param int $employeeId
      */
     public function __construct($employeeId)
@@ -299,6 +319,63 @@ class EditEmployeeCommand
     public function setHasEnabledGravatar(bool $hasEnabledGravatar)
     {
         $this->hasEnabledGravatar = $hasEnabledGravatar;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null Null when the setting is not changed
+     */
+    public function getTwoFactorEnabled(): ?bool
+    {
+        return $this->twoFactorEnabled;
+    }
+
+    public function setTwoFactorEnabled(bool $twoFactorEnabled): self
+    {
+        $this->twoFactorEnabled = $twoFactorEnabled;
+
+        return $this;
+    }
+
+    public function getTwoFactorRequired(): ?bool
+    {
+        return $this->twoFactorRequired;
+    }
+
+    public function setTwoFactorRequired(bool $twoFactorRequired): self
+    {
+        $this->twoFactorRequired = $twoFactorRequired;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null Null when the setting is not changed
+     */
+    public function getTwoFactorTotpEnabled(): ?bool
+    {
+        return $this->twoFactorTotpEnabled;
+    }
+
+    public function setTwoFactorTotpEnabled(bool $twoFactorTotpEnabled): self
+    {
+        $this->twoFactorTotpEnabled = $twoFactorTotpEnabled;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null Null when the setting is not changed
+     */
+    public function getTwoFactorEmailEnabled(): ?bool
+    {
+        return $this->twoFactorEmailEnabled;
+    }
+
+    public function setTwoFactorEmailEnabled(bool $twoFactorEmailEnabled): self
+    {
+        $this->twoFactorEmailEnabled = $twoFactorEmailEnabled;
 
         return $this;
     }

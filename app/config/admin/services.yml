@@ -6,12 +6,60 @@ services:
     autoconfigure: true
 
   # SECURITY
+  PrestaShopBundle\SchebTwoFactor\TrustedDeviceTokenFactory:
+    arguments:
+      $inner: '@scheb_two_factor.default_token_factory'
+
+  PrestaShopBundle\SchebTwoFactor\EmployeeTrustedDeviceManager:
+    arguments:
+      $inner: '@scheb_two_factor.default_trusted_device_manager'
+
   PrestaShopBundle\EventListener\Admin\TokenizedUrlsListener:
     autowire: true
     arguments:
       $map: '@security.access_map'
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+  PrestaShopBundle\EventListener\Admin\TwoFactorInProgressListener:
+    autowire: true
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 7 }
+
+  PrestaShopBundle\EventListener\Admin\TwoFactorCheckRateLimitListener: ~
+
+  PrestaShop\PrestaShop\Adapter\Employee\TwoFactor\EmployeeTwoFactorRateLimiter:
+    arguments:
+      $lockFactory: '@lock.factory'
+      $checkLimiter: '@limiter.two_factor_check'
+      $sendLimiter: '@limiter.two_factor_resend'
+
+  PrestaShop\PrestaShop\Adapter\Employee\TwoFactor\EmployeeEmailOtpManager:
+    arguments:
+      $clock: '@clock'
+      $mailer: '@PrestaShop\PrestaShop\Adapter\TotMailer\TwoFactorAuthCodePrestashopMailer'
+
+  PrestaShopBundle\SchebTwoFactor\EmployeeEmailCodeGenerator: ~
+
+  PrestaShopBundle\SchebTwoFactor\EmployeeEmailFormRenderer:
+    arguments:
+      $inner: '@scheb_two_factor.security.email.default_form_renderer'
+      $preparationRecorder: '@scheb_two_factor.provider_preparation_recorder'
+
+  PrestaShopBundle\SchebTwoFactor\EmployeeEmailTwoFactorProvider:
+    decorates: 'scheb_two_factor.security.email.provider'
+    arguments:
+      $inner: '@PrestaShopBundle\SchebTwoFactor\EmployeeEmailTwoFactorProvider.inner'
+      $formRenderer: '@PrestaShopBundle\SchebTwoFactor\EmployeeEmailFormRenderer'
+
+  PrestaShopBundle\Controller\Admin\TwoFactorResendController:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShopBundle\EventListener\Admin\RequiredTwoFactorSetupListener:
+    autowire: true
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 6 }
 
   PrestaShopBundle\EventListener\Admin\EmployeeSessionSubscriber:
     autowire: true
@@ -101,3 +149,51 @@ services:
     arguments:
       # Same $locales expression as the form types bind in services/bundle/form/form_type.yml.
       $locales: "@=service('prestashop.adapter.legacy.context').getLanguages(false)"
+
+  PrestaShopBundle\Twig\TwoFactorGlobalsExtension:
+    autowire: true
+    autoconfigure: true
+    public: false
+    tags: [ 'twig.extension' ]
+
+  PrestaShopBundle\SchebTwoFactor\EmployeeTotpSecretSubscriber:
+    autowire: true
+    autoconfigure: true
+    tags: [ 'doctrine.event_subscriber' ]
+
+  PrestaShopBundle\SchebTwoFactor\TotpSecretEncryptor:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShopBundle\SchebTwoFactor\EmailPreparationRecorder:
+    decorates: 'scheb_two_factor.provider_preparation_recorder'
+    arguments:
+      $inner: '@PrestaShopBundle\SchebTwoFactor\EmailPreparationRecorder.inner'
+
+  PrestaShop\PrestaShop\Adapter\TotMailer\TwoFactorAuthCodePrestashopMailer:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Employee\TwoFactor\EmployeeTwoFactorManager:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\InitializeEmployeeTotpSecretHandler:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\GenerateEmployeeBackupCodesHandler:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\PrepareEmployeeBackupCodeRegenerationHandler:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\RegenerateEmployeeBackupCodesHandler:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Profile\Employee\QueryHandler\GetEmployeeTwoFactorSettingsHandler:
+    autowire: true
+    autoconfigure: true

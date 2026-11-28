@@ -10,6 +10,7 @@ use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
 use PrestaShopBundle\Security\Admin\RequestAttributes;
 use PrestaShopBundle\Security\Admin\UserTokenManager;
+use Scheb\TwoFactorBundle\Security\Authorization\Voter\TwoFactorInProgressVoter;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -66,7 +67,21 @@ class TokenizedUrlsListener
         }
 
         [$attributes] = $this->map->getPatterns($request);
+        if (!$attributes) {
+            return false;
+        }
 
-        return $attributes && [AuthenticatedVoter::PUBLIC_ACCESS] === $attributes;
+        // Skip token validation for public routes
+        if ([AuthenticatedVoter::PUBLIC_ACCESS] === $attributes) {
+            return true;
+        }
+
+        // Skip token validation for 2FA routes - they use their own CSRF protection
+        // and the user is in a transitional authentication state
+        if ([TwoFactorInProgressVoter::IS_AUTHENTICATED_2FA_IN_PROGRESS] === $attributes) {
+            return true;
+        }
+
+        return false;
     }
 }

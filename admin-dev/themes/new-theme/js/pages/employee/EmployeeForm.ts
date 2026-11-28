@@ -21,6 +21,10 @@ export default class EmployeeForm {
 
   tabsDropdownSelector: string;
 
+  private totpSetupPending = false;
+
+  private totpSetupFailed = false;
+
   constructor() {
     this.shopChoiceTreeSelector = employeeFormMap.shopChoiceTree;
     this.shopChoiceTree = new window.prestashop.component.ChoiceTree(this.shopChoiceTreeSelector);
@@ -53,6 +57,7 @@ export default class EmployeeForm {
 
     this.initEvents();
     this.toggleShopTree();
+    this.toggleTwoFactorFields();
   }
 
   /**
@@ -66,6 +71,14 @@ export default class EmployeeForm {
 
     $(document).on('change', this.employeeProfileSelector, () => this.toggleShopTree(),
     );
+
+    $(employeeFormMap.twoFactorEnabledWrapper).closest('form').on('submit', (event) => {
+      if (this.totpSetupPending || (this.totpSetupFailed
+        && this.isPsSwitchEnabledByName(employeeFormMap.twoFactorEnabledName)
+        && this.isPsSwitchEnabledByName(employeeFormMap.twoFactorTotpEnabledName))) {
+        event.preventDefault();
+      }
+    });
 
     // Reload tabs dropdown when employee profile is changed.
     $(document).on('change', this.employeeProfileSelector, (event) => {
@@ -82,6 +95,18 @@ export default class EmployeeForm {
         },
         'json',
       );
+    });
+
+    $(document).on('change', `input[name="${employeeFormMap.twoFactorEnabledName}"]`, () => {
+      this.toggleTwoFactorFields();
+    });
+
+    $(document).on('change', `input[name="${employeeFormMap.twoFactorTotpEnabledName}"]`, () => {
+      this.toggleTwoFactorFields();
+    });
+
+    $(document).on('change', `input[name="${employeeFormMap.twoFactorEmailEnabledName}"]`, () => {
+      this.toggleTwoFactorFields();
     });
   }
 
@@ -168,5 +193,114 @@ export default class EmployeeForm {
    */
   private createOption(name: string, value: string): JQuery {
     return $(`<option value="${value}">${name}</option>`);
+  }
+
+  /**
+   * Returns true if the ps-switch radio "Yes" is selected.
+   */
+  private isPsSwitchEnabledByName(inputName: string): boolean {
+    return $(`input[name="${inputName}"]:checked`).val() === '1';
+  }
+
+  /**
+   * Hide/show the whole .form-group row that contains the given wrapper selector.
+   * Your markup contains <span class="ps-switch" id="employee_two_factor_enabled">...</span>
+   */
+  private toggleSwitchFormGroup(wrapperSelector: string, show: boolean): void {
+    const $wrapper = $(wrapperSelector);
+
+    if ($wrapper.length === 0) {
+      return;
+    }
+
+    $wrapper.closest('.form-group.row').toggleClass('d-none', !show);
+  }
+
+  private toggleInputFormGroup(inputSelector: string, show: boolean): void {
+    const $input = $(inputSelector);
+
+    if ($input.length === 0) {
+      return;
+    }
+
+    $input.closest('.form-group.row').toggleClass('d-none', !show);
+  }
+
+  /**
+   * Toggle 2FA fields according to current selection.
+   * - If 2FA disabled => hide TOTP & Email provider switches
+   * - If 2FA enabled => show provider switches
+   */
+  private toggleTwoFactorFields(): void {
+    if ($(employeeFormMap.twoFactorEnabledWrapper).length === 0) {
+      return;
+    }
+
+    const is2faEnabled = this.isPsSwitchEnabledByName(employeeFormMap.twoFactorEnabledName);
+
+    this.toggleSwitchFormGroup(employeeFormMap.twoFactorTotpEnabledWrapper, is2faEnabled);
+    this.toggleSwitchFormGroup(employeeFormMap.twoFactorEmailEnabledWrapper, is2faEnabled);
+    this.toggleInputFormGroup(employeeFormMap.backupCodesWrapper, is2faEnabled);
+
+    if (!is2faEnabled) {
+      this.updateTotpSetup(false);
+      this.toggleInputFormGroup(employeeFormMap.twoFactorProvisioningUriInput, false);
+      this.toggleInputFormGroup(employeeFormMap.twoFactorTotQrCode, false);
+      this.toggleInputFormGroup(employeeFormMap.twoFactorTotCode, false);
+      return;
+    }
+
+    const isTotpEnabled = this.isPsSwitchEnabledByName(employeeFormMap.twoFactorTotpEnabledName);
+
+    this.toggleInputFormGroup(employeeFormMap.twoFactorProvisioningUriInput, isTotpEnabled);
+    this.toggleInputFormGroup(employeeFormMap.twoFactorTotQrCode, isTotpEnabled);
+    this.toggleInputFormGroup(employeeFormMap.twoFactorTotCode, isTotpEnabled);
+    this.updateTotpSetup(isTotpEnabled);
+  }
+
+  private updateTotpSetup(enabled: boolean): void {
+    const $setup = $('#employee-two-factor-setup');
+    const $qrCode = $('#employee_two_factor_tot_qr_code');
+    const $error = $setup.find('[role="alert"]');
+
+    if (!enabled) {
+      this.totpSetupFailed = false;
+      $error.addClass('d-none');
+      $('#save-button').prop('disabled', this.totpSetupPending);
+      return;
+    }
+
+    if (!$setup.length || !$(employeeFormMap.twoFactorTotCode).length
+      || $qrCode.attr('src') || this.totpSetupPending) {
+      return;
+    }
+
+    this.totpSetupPending = true;
+    this.totpSetupFailed = false;
+    $error.addClass('d-none');
+    $('#save-button').prop('disabled', true);
+    $.ajax({
+      url: $setup.data('initialize-url'),
+      type: 'POST',
+      dataType: 'json',
+      data: {_token_initialize_totp: $setup.data('initialize-token')},
+    }).done((data: {qrCodeSrc: string; totpSecret: string}) => {
+      if (!data?.qrCodeSrc || !data?.totpSecret) {
+        this.totpSetupFailed = true;
+        $error.text($setup.data('initialize-error')).removeClass('d-none');
+        return;
+      }
+
+      $qrCode.attr('src', data.qrCodeSrc);
+      $(employeeFormMap.twoFactorProvisioningUriInput).val(data.totpSecret);
+    }).fail(() => {
+      this.totpSetupFailed = true;
+      $error.text($setup.data('initialize-error')).removeClass('d-none');
+    }).always(() => {
+      this.totpSetupPending = false;
+      $('#save-button').prop('disabled', this.totpSetupFailed
+        && this.isPsSwitchEnabledByName(employeeFormMap.twoFactorEnabledName)
+        && this.isPsSwitchEnabledByName(employeeFormMap.twoFactorTotpEnabledName));
+    });
   }
 }

@@ -28,6 +28,9 @@ services:
   PrestaShopBundle\Security\Admin\EmployeeHomepageProvider:
     autowire: true
 
+  PrestaShopBundle\Security\Admin\TwoFactorSetupRequirementChecker:
+    autowire: true
+
   PrestaShopBundle\Security\Admin\AdminAuthenticationSuccessHandler:
     autowire: true
 
@@ -63,3 +66,6 @@ services:
     factory: [ '@prestashop.security.password_hasher.factory', 'getPasswordHasher' ]
     arguments:
       - 'common'
+
+  PrestaShopBundle\SchebTwoFactor\EmployeeBackupCodeManager:
+    autowire: true

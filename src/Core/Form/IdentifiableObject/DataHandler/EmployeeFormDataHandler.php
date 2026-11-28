@@ -4,6 +4,8 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use Cookie;
@@ -168,6 +170,19 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
             ->setHasEnabledGravatar((bool) $data['has_enabled_gravatar'])
         ;
 
+        if (array_key_exists('two_factor_enabled', $data)) {
+            $command->setTwoFactorEnabled((bool) $data['two_factor_enabled']);
+        }
+        if (array_key_exists('two_factor_totp_enabled', $data)) {
+            $command->setTwoFactorTotpEnabled((bool) $data['two_factor_totp_enabled']);
+        }
+        if (array_key_exists('two_factor_email_enabled', $data)) {
+            $command->setTwoFactorEmailEnabled((bool) $data['two_factor_email_enabled']);
+        }
+        if (array_key_exists('two_factor_required', $data)) {
+            $command->setTwoFactorRequired((bool) $data['two_factor_required']);
+        }
+
         if ($this->employeeFormAccessChecker->isRestrictedAccess((int) $id)) {
             if ($this->shouldChangePassword($data)) {
                 $this->assertPasswordIsSameAsOldPassword(
@@ -188,7 +203,7 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
             );
         }
 
-        $this->bus->handle($command);
+        $result = $this->bus->handle($command);
 
         // When the employee updates themselves we need to update the token storage to avoid being disconnected on the next request
         if ($this->employeeContext->getEmployee()?->getId() === $command->getEmployeeId()->getValue()) {
@@ -219,6 +234,8 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
         if ($uploadedAvatar instanceof UploadedFile) {
             $this->imageUploader->upload($id, $uploadedAvatar);
         }
+
+        return $result;
     }
 
     /**

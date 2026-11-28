@@ -10,7 +10,7 @@
 <html lang="{{ ps.isoUser }}">
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  {{ component('LoginHeadTag') }}
+  {% block head_tag %}{{ component('LoginHeadTag') }}{% endblock %}
   {% block javascrips %}{% endblock %}
   {% block stylesheets %}{% endblock %}
 </head>

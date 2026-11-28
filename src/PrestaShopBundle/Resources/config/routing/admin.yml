@@ -30,5 +30,8 @@ _admin_login:
   resource: "admin/_login.yml"
   prefix: /
 
+_admin_2fa:
+  resource: "admin/_2fa.yml"
+
 _legacy:
   resource: "admin/_legacy.yml"

@@ -2,6 +2,10 @@ services:
   _defaults:
     public: true
 
+  PrestaShopBundle\EventListener\EmployeeTrustedDeviceVersionListener:
+    tags:
+      - { name: doctrine.orm.entity_listener, event: preUpdate, entity: PrestaShopBundle\Entity\Employee\Employee, lazy: true }
+
   prestashop.dispatcher.legacy_hooks.subscriber:
     class: 'PrestaShopBundle\EventListener\ActionDispatcherLegacyHooksSubscriber'
     arguments: [ '@prestashop.core.hook.dispatcher' ]

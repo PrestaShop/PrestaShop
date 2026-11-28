@@ -12,11 +12,13 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/LoginLayout/head_tag.html.twig')]
 class LoginHeadTag extends HeadTag
 {
+    protected const SET_MEDIA_HOOK = 'actionAdminLoginControllerSetMedia';
+
     public function mount(string $metaTitle = ''): void
     {
         $this->metaTitle = $metaTitle;
         $this->hookDispatcher->dispatchWithParameters(
-            'actionAdminLoginControllerSetMedia',
+            static::SET_MEDIA_HOOK,
             [
                 'controller' => $this->legacyControllerContext,
             ]

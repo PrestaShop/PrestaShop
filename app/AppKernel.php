@@ -52,6 +52,7 @@ abstract class AppKernel extends Kernel
             new Symfony\UX\TwigComponent\TwigComponentBundle(),
             new Twig\Extra\TwigExtraBundle\TwigExtraBundle(),
             new Symfony\UX\Icons\UXIconsBundle(),
+            new Scheb\TwoFactorBundle\SchebTwoFactorBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

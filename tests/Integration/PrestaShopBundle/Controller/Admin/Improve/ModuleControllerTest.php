@@ -17,6 +17,7 @@ use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Translation\Translator;
 use Tests\Integration\Utility\LoginTrait;
 use Tests\Unit\Core\Configuration\MockConfigurationTrait;
@@ -68,6 +69,7 @@ class ModuleControllerTest extends WebTestCase
             'PS_SSL_ENABLED' => '0',
             'PS_CURRENCY_DEFAULT' => '1',
             'PS_COUNTRY_DEFAULT' => '1',
+            'PS_BACKOFFICE_2FA' => false,
         ], null, Configuration::class);
 
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
@@ -90,9 +92,12 @@ class ModuleControllerTest extends WebTestCase
         $this->client->request('POST', $installModuleRoute);
 
         $response = $this->client->getResponse();
+        $this->assertResponseIsSuccessful();
+        $this->assertInstanceOf(JsonResponse::class, $response);
         $responseContent = $response->getContent();
 
         $decodedContent = json_decode($responseContent, true);
+        $this->assertIsArray($decodedContent);
 
         $this->assertArrayHasKey($moduleName, $decodedContent);
 
@@ -110,9 +115,12 @@ class ModuleControllerTest extends WebTestCase
         $this->client->request('POST', $importModuleRoute);
 
         $response = $this->client->getResponse();
+        $this->assertResponseIsSuccessful();
+        $this->assertInstanceOf(JsonResponse::class, $response);
         $responseContent = $response->getContent();
 
         $decodedContent = json_decode($responseContent, true);
+        $this->assertIsArray($decodedContent);
 
         $this->assertArrayHasKey('msg', $decodedContent);
         $this->assertEquals('This functionality has been disabled.', $decodedContent['msg']);
