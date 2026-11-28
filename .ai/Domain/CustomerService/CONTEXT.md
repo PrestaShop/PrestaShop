@@ -8,8 +8,8 @@ Manages customer service threads (conversations between customers and the back-o
 
 | Layer | Path |
 |-------|------|
-| Core CQRS | `src/Core/Domain/CustomerService/` — Commands, Queries, QueryResults, ValueObjects, Exceptions, `Status/`, `Repository/` (interface) |
-| Adapter | `src/Adapter/CustomerService/` — not present; handlers are wired directly via the legacy `CustomerThread` ObjectModel |
+| Core CQRS | `src/Core/Domain/CustomerService/` — Commands, Queries, QueryResults, ValueObjects, Exceptions, handler interfaces, `Status/` |
+| Adapter | `src/Adapter/CustomerService/` — command/query handlers and `Repository/CustomerThreadRepository` (DBAL queries + ObjectModel access) |
 | Legacy ObjectModel | `classes/CustomerThread.php` (274 lines) — do not add logic here |
 | Back-office UI | `src/PrestaShopBundle/Controller/Admin/Sell/CustomerService/CustomerThreadController.php`, `src/Core/Grid/Definition/Factory/CustomerThreadGridDefinitionFactory.php` |
 
@@ -17,12 +17,14 @@ Manages customer service threads (conversations between customers and the back-o
 
 - The domain entity is called `CustomerThread` in the legacy layer and in most infrastructure code, but the domain itself is named `CustomerService`. Value objects such as `CustomerThreadId` and `CustomerThreadStatus` reflect the legacy naming.
 - `Status/CustomerThreadStatusColor.php` maps thread status identifiers to their display colours — this is a presentation concern kept inside the domain.
-- `CustomerThreadRepository` is defined at the Core domain level (not only in the adapter), meaning the interface lives in `src/Core/Domain/CustomerService/Repository/`.
+- The concrete classes still under `src/Core/Domain/CustomerService/CommandHandler/` and `Repository/` are deprecated BC copies kept until the next major: use the `src/Adapter/` ones.
+- The Symfony page sits behind the `customer_threads` feature flag (beta, off by default). With the flag off, `AdminCustomerThreadsController` and its `message.tpl` still handle the page, including forwarding; the CQRS handlers only run behind the flag.
+- The forward email body is rendered by `Adapter/CustomerService/ForwardedMessageRenderer` from a Twig block, not by the legacy `message.tpl`.
 - The controller namespace also contains `MerchandiseReturnController` and `OrderMessageController` — related UI lives in the same bundle directory but belongs to different domains.
 
 ## Canonical examples
 
-- `src/Core/Domain/CustomerService/Command/ReplyToCustomerThreadCommand.php` + `src/Core/Domain/CustomerService/CommandHandler/ReplyToCustomerThreadHandler.php`
+- `src/Core/Domain/CustomerService/Command/ReplyToCustomerThreadCommand.php` + `src/Adapter/CustomerService/CommandHandler/ReplyToCustomerThreadHandler.php`
 - `src/Core/Domain/CustomerService/Query/GetCustomerThreadForViewing.php`
 
 ## Related

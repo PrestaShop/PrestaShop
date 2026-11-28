@@ -4,7 +4,7 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\CustomerService\CommandHandler;
 
 use Contact;
 use Context;
@@ -15,6 +15,7 @@ use Language;
 use Mail;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ReplyToCustomerThreadCommand;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler\ReplyToCustomerThreadHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
 use ShopUrl;
@@ -26,7 +27,7 @@ use Validate;
  * @internal
  */
 #[AsCommandHandler]
-class ReplyToCustomerThreadHandler implements ReplyToCustomerThreadHandlerInterface
+final class ReplyToCustomerThreadHandler implements ReplyToCustomerThreadHandlerInterface
 {
     /**
      * @var Context
