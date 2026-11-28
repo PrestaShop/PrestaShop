@@ -94,15 +94,38 @@ export const saveTranslations = async ({commit}: {commit: Commit}, payload: Reco
   const {translations} = payload;
 
   try {
-    await fetch(url, {
+    const response = await fetch(url, {
       method: 'POST',
       body: JSON.stringify({translations}),
     });
 
-    payload.store.dispatch('refreshCounts', {
-      successfullySaved: translations.length,
-      store: payload.store,
-    });
+    // fetch() resolves on an error status
+    if (!response.ok) {
+      const body = await response.json().catch(() => ({}));
+      showGrowl('error', body.error || response.statusText);
+      return;
+    }
+
+    const savedByKey: Record<string, boolean> = await response.json();
+    const savedKeys = Object.keys(savedByKey).filter((key) => savedByKey[key]);
+    const failedCount = Object.keys(savedByKey).length - savedKeys.length;
+    const savedCount = translations.length - failedCount;
+
+    if (savedCount > 0) {
+      payload.store.dispatch('refreshCounts', {
+        successfullySaved: savedCount,
+        store: payload.store,
+      });
+    }
+
+    if (failedCount > 0) {
+      commit(types.REMOVE_SAVED_MODIFIED_TRANSLATIONS, savedKeys);
+      const label = payload.store.state?.translations?.notification_partially_saved
+        ?? 'Some translations could not be saved (%failed%/%total%).';
+      showGrowl('error', label.replace('%failed%', String(failedCount)).replace('%total%', String(translations.length)));
+      return;
+    }
+
     commit(types.RESET_MODIFIED_TRANSLATIONS);
     showGrowl('success', 'Translations successfully updated');
   } catch (error: any) {
