@@ -6,9 +6,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
+use PrestaShop\PrestaShop\Adapter\Contact\Repository\ContactRepository;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceFormatter;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-use PrestaShop\PrestaShop\Core\Support\ContactRepositoryInterface;
 
 /**
  * Class ContactByIdChoiceProvider is responsible for providing shop contact choices.
@@ -16,7 +16,7 @@ use PrestaShop\PrestaShop\Core\Support\ContactRepositoryInterface;
 final class ContactByIdChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @var ContactRepositoryInterface
+     * @var ContactRepository
      */
     private $contactRepository;
 
@@ -26,11 +26,11 @@ final class ContactByIdChoiceProvider implements FormChoiceProviderInterface
     private $langId;
 
     /**
-     * @param ContactRepositoryInterface $contactRepository
+     * @param ContactRepository $contactRepository
      * @param int $langId
      */
     public function __construct(
-        ContactRepositoryInterface $contactRepository,
+        ContactRepository $contactRepository,
         $langId
     ) {
         $this->contactRepository = $contactRepository;
