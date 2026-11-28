@@ -8,7 +8,6 @@ $(() => {
   const psDocsDomain = 'https://help.prestashop-project.org';
 
   if (typeof (getStorageAvailable) !== 'undefined') {
-    // eslint-disable-next-line
     storage = getStorageAvailable();
   }
 
@@ -22,14 +21,12 @@ $(() => {
       $('#main').after('<div id="help-container"></div>');
     }
     // init help (it use a global javascript variable to get actual controller)
-    // eslint-disable-next-line
     pushContent(help_class_name);
     $('#help-container').on('click', '.popup', (e) => {
       e.preventDefault();
       if (storage) storage.setItem('helpOpen', false);
       $('.toolbarBox a.btn-help').trigger('click');
       window.open(
-        // eslint-disable-next-line
         `index.php?controller=${help_class_name}?token=${token}&ajax=1&action=OpenHelp`,
         'helpWindow',
         'width=450, height=650, scrollbars=yes',
@@ -46,7 +43,6 @@ $(() => {
       window.initHelp();
     } else if (!$('#main').hasClass('helpOpen') && document.body.clientWidth < 1200) {
       window.open(
-        // eslint-disable-next-line
         `index.php?controller=${help_class_name}?token=${token}&ajax=1&action=OpenHelp`,
         'helpWindow',
         'width=450, height=650, scrollbars=yes',
@@ -66,7 +62,6 @@ $(() => {
 
   // get content
   function getHelp(pageController) {
-    // eslint-disable-next-line
     const request = encodeURIComponent(`getHelp=${pageController}&version=${_PS_VERSION_}&language=${iso_user}`);
     const d = new $.Deferred();
     $.ajax({
