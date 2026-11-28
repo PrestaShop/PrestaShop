@@ -10,6 +10,7 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Export\Data\ExportableDataInterface;
 use PrestaShop\PrestaShop\Core\Export\Exception\FileWritingException;
 use PrestaShop\PrestaShop\Core\Export\ExportDirectory;
+use PrestaShop\PrestaShop\Core\Util\File\Utf8Bom;
 use SplFileInfo;
 use SplFileObject;
 
@@ -46,6 +47,8 @@ final class ExportCsvFileWriter implements FileWriterInterface
             );
         }
 
+        // Spreadsheets have no other way to know the file is UTF-8, see Utf8Bom.
+        $exportFile->fwrite(Utf8Bom::SEQUENCE);
         $exportFile->fputcsv($data->getTitles(), $separator, '"', '');
 
         foreach ($data->getRows() as $row) {
