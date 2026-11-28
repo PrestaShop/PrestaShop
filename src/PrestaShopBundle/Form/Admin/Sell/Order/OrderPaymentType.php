@@ -102,6 +102,7 @@ class OrderPaymentType extends AbstractType
                 ],
                 'currencies' => $this->currencySymbolByIdChoiceProvider->getChoices([
                     'id_shop' => $this->contextShopId,
+                    'id_order' => $options['id_order'],
                 ]),
             ])
             ->add('id_invoice', ChoiceType::class, [
