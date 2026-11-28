@@ -8,7 +8,9 @@ namespace PrestaShop\PrestaShop\Adapter\Email;
 
 use PrestaShop\PrestaShop\Adapter\Entity\Mail;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Email\EmailConfigurationInheritance;
 use PrestaShop\PrestaShop\Core\Email\EmailConfigurationTesterInterface;
 use PrestaShop\PrestaShop\Core\Email\MailOption;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -21,7 +23,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 final class EmailConfigurationTester implements EmailConfigurationTesterInterface
 {
     /**
-     * @var ConfigurationInterface
+     * @var ShopConfigurationInterface
      */
     private $configuration;
 
@@ -31,18 +33,22 @@ final class EmailConfigurationTester implements EmailConfigurationTesterInterfac
     private $translator;
 
     /**
-     * @param ConfigurationInterface $configuration
+     * @param ShopConfigurationInterface $configuration
      * @param TranslatorInterface $translator
+     * @param ShopContext $shopContext
      */
     public function __construct(
-        ConfigurationInterface $configuration,
-        TranslatorInterface $translator
+        ShopConfigurationInterface $configuration,
+        TranslatorInterface $translator,
+        private readonly ShopContext $shopContext,
     ) {
         $this->configuration = $configuration;
         $this->translator = $translator;
     }
 
     /**
+     * Multistore flags use '0' for inheritance, '1' for overrides, and '' when no checkbox is present.
+     *
      * @param array $config
      *
      * @return array<int, string>
@@ -56,11 +62,42 @@ final class EmailConfigurationTester implements EmailConfigurationTesterInterfac
         );
         $subject = $this->translator->trans('Test message -- Prestashop', [], 'Admin.Advparameters.Feature');
 
-        $smtpChecked = MailOption::METHOD_SMTP === (int) $config['mail_method'];
+        $shopConstraint = $this->shopContext->getShopConstraint();
+        $isScoped = $this->shopContext->isMultiShopUsed() && !$this->shopContext->isAllShopContext();
+        $passwordIsInherited = $isScoped && '0' === ($config['multistore_smtp_password'] ?? '');
 
-        $password = !empty($config['smtp_password']) ?
-            urldecode($config['smtp_password']) :
-            $this->configuration->get('PS_MAIL_PASSWD');
+        // Unchecked overrides must use inherited values even before saving; the DOM may still hold local values.
+        if ($isScoped) {
+            $parentConstraint = EmailConfigurationInheritance::getParentShopConstraint($this->shopContext);
+            foreach ([
+                'mail_method' => 'PS_MAIL_METHOD',
+                'smtp_server' => 'PS_MAIL_SERVER',
+                'smtp_username' => 'PS_MAIL_USER',
+                'smtp_password' => 'PS_MAIL_PASSWD',
+                'smtp_port' => 'PS_MAIL_SMTP_PORT',
+                'smtp_encryption' => 'PS_MAIL_SMTP_ENCRYPTION',
+                'dkim_enable' => 'PS_MAIL_DKIM_ENABLE',
+                'dkim_key' => 'PS_MAIL_DKIM_KEY',
+                'dkim_domain' => 'PS_MAIL_DKIM_DOMAIN',
+                'dkim_selector' => 'PS_MAIL_DKIM_SELECTOR',
+            ] as $field => $configurationKey) {
+                if ('0' === ($config['multistore_' . $field] ?? '')) {
+                    $config[$field] = $this->configuration->get($configurationKey, null, $parentConstraint);
+                }
+            }
+        }
+
+        $password = (string) ($config['smtp_password'] ?? '');
+        // A blank existing override keeps its password; a new override may intentionally use an empty password.
+        if (!$passwordIsInherited && '' === $password
+            && (!$isScoped
+                || '1' !== ($config['multistore_smtp_password'] ?? '')
+                || $this->configuration->has('PS_MAIL_PASSWD', $shopConstraint->clone(true)))
+        ) {
+            $password = (string) $this->configuration->get('PS_MAIL_PASSWD', '', $shopConstraint);
+        }
+
+        $smtpChecked = MailOption::METHOD_SMTP === (int) $config['mail_method'];
         $password = str_replace(
             ['&lt;', '&gt;', '&quot;', '&amp;'],
             ['<', '>', '"', '&'],
@@ -74,7 +111,7 @@ final class EmailConfigurationTester implements EmailConfigurationTesterInterfac
             Tools::htmlentitiesDecodeUTF8($subject),
             Tools::htmlentitiesUTF8('text/html'),
             (string) $config['send_email_to'],
-            (string) $this->configuration->get('PS_SHOP_EMAIL'),
+            (string) $this->configuration->get('PS_SHOP_EMAIL', '', $shopConstraint),
             Tools::htmlentitiesUTF8($config['smtp_username']),
             $password,
             Tools::htmlentitiesUTF8($config['smtp_port']),

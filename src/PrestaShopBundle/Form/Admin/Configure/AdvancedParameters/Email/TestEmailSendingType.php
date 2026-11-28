@@ -34,6 +34,46 @@ class TestEmailSendingType extends TranslatorAwareType
             ->add('dkim_enable', HiddenType::class)
             ->add('dkim_key', HiddenType::class)
             ->add('dkim_domain', HiddenType::class)
-            ->add('dkim_selector', HiddenType::class);
+            ->add('dkim_selector', HiddenType::class)
+            ->add('multistore_mail_method', HiddenType::class, [
+                'required' => false,
+                'empty_data' => '',
+            ])
+            ->add('multistore_smtp_server', HiddenType::class, [
+                'required' => false,
+                'empty_data' => '',
+            ])
+            ->add('multistore_smtp_username', HiddenType::class, [
+                'required' => false,
+                'empty_data' => '',
+            ])
+            ->add('multistore_smtp_password', HiddenType::class, [
+                'required' => false,
+                'empty_data' => '',
+            ])
+            ->add('multistore_smtp_port', HiddenType::class, [
+                'required' => false,
+                'empty_data' => '',
+            ])
+            ->add('multistore_smtp_encryption', HiddenType::class, [
+                'required' => false,
+                'empty_data' => '',
+            ])
+            ->add('multistore_dkim_enable', HiddenType::class, [
+                'required' => false,
+                'empty_data' => '',
+            ])
+            ->add('multistore_dkim_key', HiddenType::class, [
+                'required' => false,
+                'empty_data' => '',
+            ])
+            ->add('multistore_dkim_domain', HiddenType::class, [
+                'required' => false,
+                'empty_data' => '',
+            ])
+            ->add('multistore_dkim_selector', HiddenType::class, [
+                'required' => false,
+                'empty_data' => '',
+            ]);
     }
 }

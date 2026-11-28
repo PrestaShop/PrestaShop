@@ -26,7 +26,7 @@ admin_emails_save_options_get:
 
 admin_emails_save_options:
   path: /options
-  methods: [ POST ]
+  methods: [ PATCH, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmailController::saveOptionsAction'
     _legacy_controller: AdminEmails

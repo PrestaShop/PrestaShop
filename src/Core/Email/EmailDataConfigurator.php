@@ -6,51 +6,42 @@
 
 namespace PrestaShop\PrestaShop\Core\Email;
 
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class EmailDataConfigurator is responsible for configuring email data.
  */
-final class EmailDataConfigurator implements DataConfigurationInterface
+final class EmailDataConfigurator extends AbstractMultistoreConfiguration
 {
-    /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
-    /**
-     * @param ConfigurationInterface $configuration
-     */
-    public function __construct(ConfigurationInterface $configuration)
-    {
-        $this->configuration = $configuration;
-    }
-
     /**
      * {@inheritdoc}
      */
     public function getConfiguration()
     {
+        $shopConstraint = $this->getShopConstraint();
+
         return [
-            'send_emails_to' => $this->configuration->get('PS_MAIL_EMAIL_MESSAGE'),
-            'mail_method' => (int) $this->configuration->get('PS_MAIL_METHOD'),
-            'subject_prefix' => (bool) $this->configuration->get('PS_MAIL_SUBJECT_PREFIX'),
-            'mail_type' => (int) $this->configuration->get('PS_MAIL_TYPE'),
-            'log_emails' => (bool) $this->configuration->get('PS_LOG_EMAILS'),
+            'send_emails_to' => $this->configuration->get('PS_MAIL_EMAIL_MESSAGE', false, $shopConstraint),
+            'mail_method' => (int) $this->configuration->get('PS_MAIL_METHOD', false, $shopConstraint),
+            'subject_prefix' => (bool) $this->configuration->get('PS_MAIL_SUBJECT_PREFIX', false, $shopConstraint),
+            'mail_type' => (int) $this->configuration->get('PS_MAIL_TYPE', false, $shopConstraint),
+            'log_emails' => (bool) $this->configuration->get('PS_LOG_EMAILS', false, $shopConstraint),
             'smtp_config' => [
-                'domain' => $this->configuration->get('PS_MAIL_DOMAIN'),
-                'server' => $this->configuration->get('PS_MAIL_SERVER'),
-                'username' => $this->configuration->get('PS_MAIL_USER'),
-                'password' => $this->configuration->get('PS_MAIL_PASSWD'),
-                'encryption' => $this->configuration->get('PS_MAIL_SMTP_ENCRYPTION'),
-                'port' => $this->configuration->get('PS_MAIL_SMTP_PORT'),
+                'domain' => (string) $this->configuration->get('PS_MAIL_DOMAIN', false, $shopConstraint),
+                'server' => (string) $this->configuration->get('PS_MAIL_SERVER', false, $shopConstraint),
+                'username' => (string) $this->configuration->get('PS_MAIL_USER', false, $shopConstraint),
+                'password' => (string) $this->configuration->get('PS_MAIL_PASSWD', false, $shopConstraint),
+                'encryption' => (string) $this->configuration->get('PS_MAIL_SMTP_ENCRYPTION', false, $shopConstraint),
+                'port' => (string) $this->configuration->get('PS_MAIL_SMTP_PORT', false, $shopConstraint),
             ],
-            'dkim_enable' => (bool) $this->configuration->get('PS_MAIL_DKIM_ENABLE'),
+            'dkim_enable' => (bool) $this->configuration->get('PS_MAIL_DKIM_ENABLE', false, $shopConstraint),
             'dkim_config' => [
-                'domain' => (string) $this->configuration->get('PS_MAIL_DKIM_DOMAIN'),
-                'selector' => (string) $this->configuration->get('PS_MAIL_DKIM_SELECTOR'),
-                'key' => (string) $this->configuration->get('PS_MAIL_DKIM_KEY'),
+                'domain' => (string) $this->configuration->get('PS_MAIL_DKIM_DOMAIN', false, $shopConstraint),
+                'selector' => (string) $this->configuration->get('PS_MAIL_DKIM_SELECTOR', false, $shopConstraint),
+                'key' => (string) $this->configuration->get('PS_MAIL_DKIM_KEY', false, $shopConstraint),
             ],
         ];
     }
@@ -61,25 +52,31 @@ final class EmailDataConfigurator implements DataConfigurationInterface
     public function updateConfiguration(array $config)
     {
         if ($this->validateConfiguration($config)) {
-            $this->configuration->set('PS_MAIL_EMAIL_MESSAGE', $config['send_emails_to']);
-            $this->configuration->set('PS_MAIL_METHOD', $config['mail_method']);
-            $this->configuration->set('PS_MAIL_SUBJECT_PREFIX', $config['subject_prefix']);
-            $this->configuration->set('PS_MAIL_TYPE', $config['mail_type']);
-            $this->configuration->set('PS_LOG_EMAILS', $config['log_emails']);
-            $this->configuration->set('PS_MAIL_DKIM_ENABLE', $config['dkim_enable']);
-            $this->configuration->set('PS_MAIL_DKIM_DOMAIN', $config['dkim_config']['domain']);
-            $this->configuration->set('PS_MAIL_DKIM_SELECTOR', $config['dkim_config']['selector']);
-            $this->configuration->set('PS_MAIL_DKIM_KEY', $config['dkim_config']['key']);
-            $this->configuration->set('PS_MAIL_DOMAIN', $config['smtp_config']['domain']);
-            $this->configuration->set('PS_MAIL_SERVER', $config['smtp_config']['server']);
-            $this->configuration->set('PS_MAIL_USER', $config['smtp_config']['username']);
-            $this->configuration->set('PS_MAIL_SMTP_ENCRYPTION', $config['smtp_config']['encryption']);
-            $this->configuration->set('PS_MAIL_SMTP_PORT', $config['smtp_config']['port']);
-            $smtpPassword = (string) $config['smtp_config']['password'];
+            $shopConstraint = $this->getShopConstraint();
+            $config = $this->normalizeMultistoreFlags($config);
+            $smtpConfig = $this->normalizeMultistoreFlags($config['smtp_config'] ?? []);
+            $dkimConfig = $this->normalizeMultistoreFlags($config['dkim_config'] ?? []);
+            $isScoped = $this->multistoreFeature->isUsed() && !$this->shopContext->isAllShopContext();
 
-            if ('' !== $smtpPassword || !$this->configuration->get('PS_MAIL_PASSWD')) {
-                $this->configuration->set('PS_MAIL_PASSWD', $smtpPassword);
+            if ($this->shouldPreserveExistingPassword($smtpConfig, $isScoped, $shopConstraint)) {
+                unset($smtpConfig['password']);
             }
+
+            $this->updateConfigurationValue('PS_MAIL_EMAIL_MESSAGE', 'send_emails_to', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_METHOD', 'mail_method', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_SUBJECT_PREFIX', 'subject_prefix', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_TYPE', 'mail_type', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_LOG_EMAILS', 'log_emails', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_DKIM_ENABLE', 'dkim_enable', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_DKIM_DOMAIN', 'domain', $dkimConfig, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_DKIM_SELECTOR', 'selector', $dkimConfig, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_DKIM_KEY', 'key', $dkimConfig, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_DOMAIN', 'domain', $smtpConfig, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_SERVER', 'server', $smtpConfig, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_USER', 'username', $smtpConfig, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_SMTP_ENCRYPTION', 'encryption', $smtpConfig, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_SMTP_PORT', 'port', $smtpConfig, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_PASSWD', 'password', $smtpConfig, $shopConstraint);
         }
 
         return [];
@@ -88,24 +85,101 @@ final class EmailDataConfigurator implements DataConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function validateConfiguration(array $config)
+    public function validateConfiguration(array $config): bool
     {
-        return isset(
-            $config['send_emails_to'],
-            $config['mail_method'],
-            $config['subject_prefix'],
-            $config['mail_type'],
-            $config['log_emails'],
-            $config['dkim_enable'],
-            $config['dkim_config']['domain'],
-            $config['dkim_config']['selector'],
-            $config['dkim_config']['key'],
-            $config['smtp_config']['domain'],
-            $config['smtp_config']['server'],
-            $config['smtp_config']['username'],
-            $config['smtp_config']['encryption'],
-            $config['smtp_config']['port'],
-            $config['smtp_config']['password']
-        );
+        parent::validateConfiguration($config);
+
+        $flagResolver = new OptionsResolver();
+        $flags = [];
+        foreach ($config as $field => $value) {
+            if (str_starts_with($field, MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX)) {
+                $flagResolver->setDefined($field)->setAllowedTypes($field, ['bool', 'null']);
+                $flags[$field] = $value;
+            }
+        }
+        $flagResolver->resolve($flags);
+
+        if (isset($config['smtp_config'])) {
+            $this->buildNestedResolver([
+                'domain' => 'string',
+                'server' => ['string', 'null'],
+                'username' => 'string',
+                'password' => 'string',
+                'encryption' => 'string',
+                'port' => ['string', 'int', 'null'],
+            ])->resolve($config['smtp_config']);
+        }
+
+        if (isset($config['dkim_config'])) {
+            $this->buildNestedResolver([
+                'domain' => 'string',
+                'selector' => 'string',
+                'key' => 'string',
+            ])->resolve($config['dkim_config']);
+        }
+
+        return true;
+    }
+
+    protected function buildResolver(): OptionsResolver
+    {
+        return (new OptionsResolver())
+            ->setDefined(['send_emails_to', 'mail_method', 'subject_prefix', 'mail_type', 'log_emails', 'dkim_enable', 'smtp_config', 'dkim_config'])
+            ->setAllowedTypes('send_emails_to', ['string', 'int', 'bool'])
+            ->setAllowedTypes('mail_method', 'int')
+            ->setAllowedTypes('subject_prefix', 'bool')
+            ->setAllowedTypes('mail_type', 'int')
+            ->setAllowedTypes('log_emails', 'bool')
+            ->setAllowedTypes('dkim_enable', 'bool')
+            ->setAllowedTypes('smtp_config', 'array')
+            ->setAllowedTypes('dkim_config', 'array');
+    }
+
+    private function shouldPreserveExistingPassword(array $smtpConfig, bool $isScoped, ?ShopConstraint $shopConstraint): bool
+    {
+        if (!array_key_exists('password', $smtpConfig) || '' !== $smtpConfig['password']) {
+            return false;
+        }
+
+        if ($isScoped) {
+            // Preserve only an active existing override; unchecked and new overrides must reach the writer.
+            $passwordOverride = MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . 'password';
+
+            return isset($smtpConfig[$passwordOverride])
+                && $this->configuration->has('PS_MAIL_PASSWD', $shopConstraint->clone(true));
+        }
+
+        return '' !== (string) $this->configuration->get('PS_MAIL_PASSWD', false, $shopConstraint);
+    }
+
+    /**
+     * @param array<string, string|string[]> $fieldTypes Allowed types for fields within one subform
+     */
+    private function buildNestedResolver(array $fieldTypes): OptionsResolver
+    {
+        $resolver = new OptionsResolver();
+        foreach ($fieldTypes as $field => $types) {
+            $resolver->setDefined($field)->setAllowedTypes($field, $types);
+
+            if ($this->multistoreFeature->isUsed() && !$this->shopContext->isAllShopContext()) {
+                $flag = MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . $field;
+                $resolver->setDefined($flag)->setAllowedTypes($flag, ['bool', 'null']);
+            } else {
+                $resolver->setRequired($field);
+            }
+        }
+
+        return $resolver;
+    }
+
+    private function normalizeMultistoreFlags(array $config): array
+    {
+        foreach ($config as $field => $value) {
+            if (str_starts_with($field, MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX) && false === $value) {
+                unset($config[$field]);
+            }
+        }
+
+        return $config;
     }
 }

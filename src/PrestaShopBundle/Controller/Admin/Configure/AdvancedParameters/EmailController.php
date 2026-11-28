@@ -84,6 +84,14 @@ class EmailController extends PrestaShopAdminController
         $emailConfigurationForm->handleRequest($request);
 
         if ($emailConfigurationForm->isSubmitted()) {
+            if (!$emailConfigurationForm->isValid()) {
+                foreach ($emailConfigurationForm->getErrors(true) as $error) {
+                    $this->addFlash('error', $error->getMessage());
+                }
+
+                return $this->redirectToRoute('admin_emails_index');
+            }
+
             $errors = $emailConfigurationFormHandler->save($emailConfigurationForm->getData());
 
             if (!empty($errors)) {
@@ -194,7 +202,14 @@ class EmailController extends PrestaShopAdminController
         $result = [];
 
         if ($testEmailSendingForm->isSubmitted()) {
-            $result['errors'] = $emailConfigurationTester->testConfiguration($testEmailSendingForm->getData());
+            if ($testEmailSendingForm->isValid()) {
+                $result['errors'] = $emailConfigurationTester->testConfiguration($testEmailSendingForm->getData());
+            } else {
+                $result['errors'] = [];
+                foreach ($testEmailSendingForm->getErrors(true) as $error) {
+                    $result['errors'][] = $error->getMessage();
+                }
+            }
         }
 
         return $this->json($result);
