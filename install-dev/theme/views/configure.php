@@ -115,7 +115,7 @@
 	<?php if ($this->displayError('admin_password')) { ?>
 	  <?php echo $this->displayError('admin_password'); ?>
 	<?php } else { ?>
-	  <p class="userInfos aligned"><?php echo $this->translator->trans('Must be at least 8 characters', [], 'Install'); ?></p>
+	  <p class="userInfos aligned"><?php echo $this->translator->trans('Must be at least 8 characters and strong enough', [], 'Install'); ?></p>
 	<?php } ?>
 	<span class="result aligned errorTxt js-password-client-error" style="display:none;"></span>
   </div>
