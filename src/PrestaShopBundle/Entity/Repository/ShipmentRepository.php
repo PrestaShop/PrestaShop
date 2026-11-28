@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Entity\Repository;
 
+use Doctrine\DBAL\ArrayParameterType;
+use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\ORM\EntityRepository;
 use PrestaShopBundle\Entity\Shipment;
 
@@ -157,6 +159,46 @@ class ShipmentRepository extends EntityRepository
             ->groupBy('s.id_shipment');
 
         return $qb->executeQuery()->fetchAllAssociative();
+    }
+
+    /**
+     * Narrows a list of shipment ids down to the ones a delivery slip may actually be produced for:
+     * the shipment belongs to an order of one of the given shops, it is packed and tracked, and its
+     * order is paid. These are the very conditions DeliverySlipShipmentRowAction enforces per row,
+     * applied here so a bulk request cannot reach shipments the caller was never shown.
+     *
+     * @param int[] $shipmentIds
+     * @param int[] $shopIds
+     *
+     * @return int[] the ids that passed, in ascending order
+     *
+     * @throws DBALException if the query fails
+     */
+    public function findPrintableIds(array $shipmentIds, array $shopIds): array
+    {
+        if (empty($shipmentIds) || empty($shopIds)) {
+            return [];
+        }
+
+        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
+        $qb
+            ->select('s.`id_shipment`')
+            ->from($this->tablePrefix . 'shipment', 's')
+            ->innerJoin('s', $this->tablePrefix . 'orders', 'o', 's.`id_order` = o.`id_order`')
+            ->leftJoin('o', $this->tablePrefix . 'order_state', 'os', 'o.`current_state` = os.`id_order_state`')
+            ->where('s.`id_shipment` IN (:shipment_ids)')
+            ->andWhere('o.`id_shop` IN (:shop_ids)')
+            ->andWhere('s.`deleted` = 0')
+            ->andWhere('s.`packed_at` IS NOT NULL')
+            ->andWhere('s.`tracking_number` IS NOT NULL')
+            ->andWhere("s.`tracking_number` != ''")
+            ->andWhere('os.`paid` = 1')
+            ->orderBy('s.`id_shipment`', 'ASC')
+            ->setParameter('shipment_ids', $shipmentIds, ArrayParameterType::INTEGER)
+            ->setParameter('shop_ids', $shopIds, ArrayParameterType::INTEGER)
+        ;
+
+        return array_map('intval', $qb->executeQuery()->fetchFirstColumn());
     }
 
     public function deleteShipmentProductByOrderAndOrderDetail(
