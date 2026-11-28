@@ -92,3 +92,33 @@ Feature: Create shipment with shipping cost calculation
     Then order "bo_order1" should have the following shipping totals:
       | total_shipping_tax_excl | 22.0  |
       | total_shipping_tax_incl | 23.32 |
+
+  Scenario: The carrier range is selected from the tax included total, as in the cart
+    Given shop configuration for "PS_ORDER_RECALCULATE_SHIPPING" is set to 1
+    When I create carrier "carrier_ranges" with specified properties:
+      | name             | Carrier with ranges |
+      | active           | true                |
+      | shippingMethod   | price               |
+      | zones            | north_america       |
+      | shippingHandling | false               |
+    Then I set ranges for carrier "carrier_ranges" with specified properties for all shops:
+      | id_zone       | range_from | range_to | range_price |
+      | north_america | 0          | 25       | 5           |
+      | north_america | 25         | 10000    | 9           |
+    # 2 mugs: 23.80 tax excluded, 25.23 tax included, on either side of the 25 boundary
+    And I create an empty cart "range_cart" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "range_cart"
+    And I add 2 products "Mug The best is yet to come" to the cart "range_cart"
+    And I select carrier "carrier_ranges" for cart "range_cart"
+    And I add order "range_order" with the following details:
+      | cart                | range_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting bank wire payment |
+    Then order "range_order" should have the following shipping totals:
+      | total_shipping_tax_excl | 9.0 |
+      | total_shipping_tax_incl | 9.0 |
+    When I create a shipment for order "range_order" with carrier "carrier_ranges" and product "Mug The best is yet to come" with quantity 1
+    Then order "range_order" should have the following shipping totals:
+      | total_shipping_tax_excl | 18.0 |
+      | total_shipping_tax_incl | 18.0 |
