@@ -776,6 +776,11 @@ class CartRuleCore extends ObjectModel
         }
         // @phpstan-ignore-next-line
         if ($isValidatedByModules === true) {
+            $promoCodeLimit = $cart->checkPromoCodeLimit($this, $alreadyInCart, $display_error, $useOrderPrices);
+            if ($promoCodeLimit !== true) {
+                return $promoCodeLimit;
+            }
+
             return (!$display_error) ? true : null;
         }
 
@@ -1007,6 +1012,11 @@ class CartRuleCore extends ObjectModel
             if ($cartTotal < $minimum_amount) {
                 return (!$display_error) ? false : $this->trans('The minimum amount to benefit from this promo code is %s.', [Tools::getContextLocale($context)->formatPrice($minimum_amount, $context->currency->iso_code)], 'Shop.Notifications.Error');
             }
+        }
+
+        $promoCodeLimit = $cart->checkPromoCodeLimit($this, $alreadyInCart, $display_error, $useOrderPrices);
+        if ($promoCodeLimit !== true) {
+            return $promoCodeLimit;
         }
 
         /* This loop checks:

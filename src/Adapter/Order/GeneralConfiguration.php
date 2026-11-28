@@ -20,6 +20,7 @@ class GeneralConfiguration extends AbstractMultistoreConfiguration
     private const CONFIGURATION_FIELDS = [
         'enable_final_summary',
         'enable_guest_checkout',
+        'allow_multiple_promo_codes',
         'disable_reordering_option',
         'purchase_minimum_value',
         'recalculate_shipping_cost',
@@ -39,6 +40,12 @@ class GeneralConfiguration extends AbstractMultistoreConfiguration
         return [
             'enable_final_summary' => (bool) $this->configuration->get('PS_FINAL_SUMMARY_ENABLED', false, $shopConstraint),
             'enable_guest_checkout' => (bool) $this->configuration->get('PS_GUEST_CHECKOUT_ENABLED', false, $shopConstraint),
+            // Keep the previous behavior for upgraded shops that do not have this setting yet.
+            'allow_multiple_promo_codes' => (bool) $this->configuration->get(
+                'PS_CART_RULE_ALLOW_MULTIPLE_CODES',
+                true,
+                $shopConstraint
+            ),
             'disable_reordering_option' => (bool) $this->configuration->get('PS_DISALLOW_HISTORY_REORDERING', false, $shopConstraint),
             'purchase_minimum_value' => (float) $this->configuration->get('PS_PURCHASE_MINIMUM', 0, $shopConstraint),
             'recalculate_shipping_cost' => (bool) $this->configuration->get('PS_ORDER_RECALCULATE_SHIPPING', false, $shopConstraint),
@@ -59,6 +66,7 @@ class GeneralConfiguration extends AbstractMultistoreConfiguration
 
             $this->updateConfigurationValue('PS_FINAL_SUMMARY_ENABLED', 'enable_final_summary', $configuration, $shopConstraint);
             $this->updateConfigurationValue('PS_GUEST_CHECKOUT_ENABLED', 'enable_guest_checkout', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_CART_RULE_ALLOW_MULTIPLE_CODES', 'allow_multiple_promo_codes', $configuration, $shopConstraint);
             $this->updateConfigurationValue('PS_DISALLOW_HISTORY_REORDERING', 'disable_reordering_option', $configuration, $shopConstraint);
             $this->updateConfigurationValue('PS_PURCHASE_MINIMUM', 'purchase_minimum_value', $configuration, $shopConstraint);
             $this->updateConfigurationValue('PS_ORDER_RECALCULATE_SHIPPING', 'recalculate_shipping_cost', $configuration, $shopConstraint);
@@ -80,6 +88,7 @@ class GeneralConfiguration extends AbstractMultistoreConfiguration
             ->setDefined(self::CONFIGURATION_FIELDS)
             ->setAllowedTypes('enable_final_summary', 'bool')
             ->setAllowedTypes('enable_guest_checkout', 'bool')
+            ->setAllowedTypes('allow_multiple_promo_codes', 'bool')
             ->setAllowedTypes('disable_reordering_option', 'bool')
             ->setAllowedTypes('purchase_minimum_value', 'float')
             ->setAllowedTypes('recalculate_shipping_cost', 'bool')
