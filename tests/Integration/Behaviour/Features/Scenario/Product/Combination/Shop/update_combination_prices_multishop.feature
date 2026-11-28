@@ -65,6 +65,58 @@ Feature: Update product combination prices in Back Office (BO) in multi shop con
     And combinations "product1SWhite,product1SBlack,product1SBlue,product1MWhite,product1MBlack,product1MBlue" are associated to shop "shop1"
     And combinations "product1SWhite,product1SBlack,product1SBlue,product1MWhite,product1MBlack,product1MBlue" are associated to shop "shop2"
 
+  Scenario Outline: Combination prices use shop tax settings instead of global settings
+    Given shop configuration for "PS_TAX" is set to <global_tax>
+    And shop configuration for "PS_USE_ECOTAX" is set to 1
+    And shop configuration for "PS_ECOTAX_TAX_RULES_GROUP_ID" is set to none
+    And configuration "PS_TAX" for shop "<taxed_shop>" is set to "1"
+    And configuration "PS_TAX" for shop "<untaxed_shop>" is set to "0"
+    And configuration "PS_ECOTAX_TAX_RULES_GROUP_ID" for shop "shop1" is set to "us-al-tax-rate"
+    And configuration "PS_ECOTAX_TAX_RULES_GROUP_ID" for shop "shop2" is set to "us-ks-tax-rate"
+    And I update product "product1" for all shops with following values:
+      | price           | 100             |
+      | ecotax          | 2               |
+      | tax rules group | US-AL Rate (4%) |
+    When I update combination "product1SWhite" with following values for all shops:
+      | impact on price      | 10 |
+      | impact on unit price | 5  |
+      | eco tax              | 3  |
+      | wholesale price      | 20 |
+    # Keep the legacy tax manager enabled while querying both shop constraints.
+    And single shop "<taxed_shop>" context is loaded
+    Then combination "product1SWhite" should have following prices for shops "<taxed_shop>":
+      | combination price detail        | value       |
+      | impact on price                 | 10          |
+      | impact on price with taxes      | 10.4        |
+      | impact on unit price            | 5           |
+      | impact on unit price with taxes | 5.2         |
+      | eco tax                         | 3           |
+      | eco tax with taxes              | <eco_gross> |
+      | wholesale price                 | 20          |
+      | product tax rate                | 4           |
+      | product price                   | 100         |
+      | product ecotax                  | 2           |
+    And combination "product1SWhite" should have following prices for shops "<untaxed_shop>":
+      | combination price detail        | value |
+      | impact on price                 | 10    |
+      | impact on price with taxes      | 10    |
+      | impact on unit price            | 5     |
+      | impact on unit price with taxes | 5     |
+      | eco tax                         | 3     |
+      | eco tax with taxes              | 3     |
+      | wholesale price                 | 20    |
+      | product tax rate                | 0     |
+      | product price                   | 100   |
+      | product ecotax                  | 2     |
+    And single shop context is loaded
+
+    Examples:
+      | global_tax | taxed_shop | untaxed_shop | eco_gross |
+      | 0          | shop1      | shop2        | 3.12      |
+      | 1          | shop1      | shop2        | 3.12      |
+      | 0          | shop2      | shop1        | 3.159     |
+      | 1          | shop2      | shop1        | 3.159     |
+
   Scenario: I update combination prices for specific shop:
     Given I update product "product1" for shop "shop1" with following values:
       | price           | 51.49           |

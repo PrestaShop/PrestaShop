@@ -99,7 +99,7 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
     private $taxComputer;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $countryId;
 
@@ -142,7 +142,7 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
      * @param ProductImageRepository $productImageRepository
      * @param AttachmentRepository $attachmentRepository
      * @param TaxComputer $taxComputer
-     * @param int $countryId
+     * @param int|null $countryId Country override, or null to use the query shop's default country
      * @param RedirectTargetProvider $targetProvider
      * @param ProductImagePathFactory $productImageUrlFactory
      * @param SpecificPriceRepository $specificPriceRepository
@@ -158,7 +158,7 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
         ProductImageRepository $productImageRepository,
         AttachmentRepository $attachmentRepository,
         TaxComputer $taxComputer,
-        int $countryId,
+        ?int $countryId,
         RedirectTargetProvider $targetProvider,
         ProductImagePathFactory $productImageUrlFactory,
         SpecificPriceRepository $specificPriceRepository,
@@ -307,20 +307,21 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
         $ecotaxTaxExcluded = $this->numberExtractor->extract($product, 'ecotax');
 
         if ($taxEnabled) {
+            $countryId = new CountryId($this->countryId ?? (int) $this->configuration->get('PS_COUNTRY_DEFAULT', null, $shopConstraint));
             $priceTaxIncluded = $this->taxComputer->computePriceWithTaxes(
                 $priceTaxExcluded,
                 new TaxRulesGroupId((int) $product->id_tax_rules_group),
-                new CountryId($this->countryId)
+                $countryId
             );
             $unitPriceTaxIncluded = $this->taxComputer->computePriceWithTaxes(
                 $unitPriceTaxExcluded,
                 new TaxRulesGroupId((int) $product->id_tax_rules_group),
-                new CountryId($this->countryId)
+                $countryId
             );
             $ecotaxTaxIncluded = $this->taxComputer->computePriceWithTaxes(
                 $ecotaxTaxExcluded,
                 new TaxRulesGroupId($ecoTaxGroupId),
-                new CountryId($this->countryId)
+                $countryId
             );
         } else {
             $priceTaxIncluded = $priceTaxExcluded;
