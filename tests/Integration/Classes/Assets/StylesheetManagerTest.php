@@ -60,4 +60,71 @@ class StylesheetManagerTest extends TestCase
         yield ['theme-ok-4', true, 'css/custom.css'];
         yield ['theme-fail-4', false, false];
     }
+
+    public function testAutoCacheBustingForLocalAssets(): void
+    {
+        $testsPath = '/tests/Resources/assets_manager/';
+        $configuration = new Configuration();
+
+        $stylesheetManager = new StylesheetManager(
+            [$testsPath],
+            $configuration
+        );
+
+        $stylesheetManager->register('cache-bust-test', '/theme.css', 'all', 10, false);
+
+        $list = $stylesheetManager->getList();
+        $asset = $list['external']['cache-bust-test'];
+
+        // URI should contain a query string with the file modification timestamp
+        $this->assertStringContainsString('?', $asset['uri']);
+
+        // Extract the version from URI
+        $uriParts = explode('?', $asset['uri']);
+        $version = $uriParts[1] ?? '';
+
+        // Version should be a valid timestamp (numeric)
+        $this->assertMatchesRegularExpression('/^\d+$/', $version);
+
+        // Version should match the file's modification time
+        $physicalPath = $configuration->get('_PS_ROOT_DIR_') . $testsPath . 'theme.css';
+        $expectedVersion = (string) filemtime($physicalPath);
+        $this->assertSame($expectedVersion, $version);
+    }
+
+    public function testManualVersionOverridesAutoCacheBusting(): void
+    {
+        $testsPath = '/tests/Resources/assets_manager/';
+
+        $stylesheetManager = new StylesheetManager(
+            [$testsPath],
+            new Configuration()
+        );
+
+        $manualVersion = 'v1.2.3';
+        $stylesheetManager->register('manual-version-test', '/theme.css', 'all', 10, false, 'local', true, $manualVersion);
+
+        $list = $stylesheetManager->getList();
+        $asset = $list['external']['manual-version-test'];
+
+        // URI should contain the manual version, not auto-generated timestamp
+        $this->assertStringContainsString('?' . $manualVersion, $asset['uri']);
+    }
+
+    public function testRemoteAssetsDoNotGetAutoCacheBusting(): void
+    {
+        $stylesheetManager = new StylesheetManager(
+            [],
+            new Configuration()
+        );
+
+        $remoteUrl = 'https://cdn.example.com/styles.css';
+        $stylesheetManager->register('remote-test', $remoteUrl, 'all', 10, false, 'remote');
+
+        $list = $stylesheetManager->getList();
+        $asset = $list['external']['remote-test'];
+
+        // Remote URI should not have a query string added
+        $this->assertSame($remoteUrl, $asset['uri']);
+    }
 }
