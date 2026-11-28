@@ -8,8 +8,11 @@ import CombinationFormMapping from '@pages/product/combination/form/combination-
 import {EventEmitter} from 'events';
 import BigNumber from '@node_modules/bignumber.js';
 import {NumberFormatter} from '@app/cldr';
+import UpdateOriginTracker from '@components/form/update-origin-tracker';
 
 export default class CombinationFormModel {
+  private updateOrigin: UpdateOriginTracker = new UpdateOriginTracker();
+
   private eventEmitter: EventEmitter;
 
   private mapper: ObjectFormMapper;
@@ -78,17 +81,21 @@ export default class CombinationFormModel {
       return;
     }
 
+    this.updateOrigin.run(event.modelKey, () => this.applyPriceConversions(event, taxRatio));
+  }
+
+  private applyPriceConversions(event: FormUpdateEvent, taxRatio: BigNumber): void {
     // eslint-disable-next-line default-case
     switch (event.modelKey) {
       // Regular retail price
       case 'impact.priceTaxIncluded': {
         const priceTaxIncluded = this.mapper.getBigNumber('impact.priceTaxIncluded') ?? new BigNumber(0);
-        this.mapper.set('impact.priceTaxExcluded', priceTaxIncluded.dividedBy(taxRatio).toFixed(this.precision));
+        this.setDerivedPrice('impact.priceTaxExcluded', priceTaxIncluded.dividedBy(taxRatio).toFixed(this.precision));
         break;
       }
       case 'impact.priceTaxExcluded': {
         const priceTaxExcluded = this.mapper.getBigNumber('impact.priceTaxExcluded') ?? new BigNumber(0);
-        this.mapper.set('impact.priceTaxIncluded', priceTaxExcluded.times(taxRatio).toFixed(this.precision));
+        this.setDerivedPrice('impact.priceTaxIncluded', priceTaxExcluded.times(taxRatio).toFixed(this.precision));
         break;
       }
 
@@ -97,7 +104,10 @@ export default class CombinationFormModel {
         // Only this update is needed here, the rest will be updated via the trigger for price.ecotaxTaxExcluded
         const ecoTaxRatio = this.getEcoTaxRatio();
         const combinationEcotaxTaxIncluded = this.mapper.getBigNumber('price.ecotaxTaxIncluded') ?? new BigNumber(0);
-        this.mapper.set('price.ecotaxTaxExcluded', combinationEcotaxTaxIncluded.dividedBy(ecoTaxRatio).toFixed(this.precision));
+        this.setDerivedPrice(
+          'price.ecotaxTaxExcluded',
+          combinationEcotaxTaxIncluded.dividedBy(ecoTaxRatio).toFixed(this.precision),
+        );
 
         break;
       }
@@ -114,7 +124,7 @@ export default class CombinationFormModel {
         this.updateImpactForEcotax(ecotaxTaxIncluded);
 
         // Finally, we can update the price.ecotaxTaxIncluded
-        this.mapper.set('price.ecotaxTaxIncluded', combinationEcotaxTaxIncluded.toFixed(this.precision));
+        this.setDerivedPrice('price.ecotaxTaxIncluded', combinationEcotaxTaxIncluded.toFixed(this.precision));
 
         break;
       }
@@ -122,17 +132,30 @@ export default class CombinationFormModel {
       // Unit price
       case 'impact.unitPriceTaxIncluded': {
         const unitPriceTaxIncluded = this.mapper.getBigNumber('impact.unitPriceTaxIncluded') ?? new BigNumber(0);
-        this.mapper.set('impact.unitPriceTaxExcluded', unitPriceTaxIncluded.dividedBy(taxRatio).toFixed(this.precision));
+        this.setDerivedPrice('impact.unitPriceTaxExcluded', unitPriceTaxIncluded.dividedBy(taxRatio).toFixed(this.precision));
         break;
       }
       case 'impact.unitPriceTaxExcluded': {
         const unitPriceTaxExcluded = this.mapper.getBigNumber('impact.unitPriceTaxExcluded') ?? new BigNumber(0);
-        this.mapper.set('impact.unitPriceTaxIncluded', unitPriceTaxExcluded.times(taxRatio).toFixed(this.precision));
+        this.setDerivedPrice('impact.unitPriceTaxIncluded', unitPriceTaxExcluded.times(taxRatio).toFixed(this.precision));
         break;
       }
     }
 
     this.updateFinalPrices();
+  }
+
+  /**
+   * Assigns a price computed from another field. The field the update started from is left alone:
+   * a tax included price converted to tax excluded and back does not return the value that was
+   * typed, so echoing it would replace the merchant's own input.
+   */
+  private setDerivedPrice(modelKey: string, value: string): void {
+    if (this.updateOrigin.isOrigin(modelKey)) {
+      return;
+    }
+
+    this.mapper.set(modelKey, value);
   }
 
   /**
@@ -149,7 +172,7 @@ export default class CombinationFormModel {
       .minus(productPriceTaxIncluded);
 
     // Finally update the impact on price (without taxes)
-    this.mapper.set('impact.priceTaxExcluded', impactPriceTaxIncluded.dividedBy(taxRatio).toFixed(this.precision));
+    this.setDerivedPrice('impact.priceTaxExcluded', impactPriceTaxIncluded.dividedBy(taxRatio).toFixed(this.precision));
   }
 
   private updateFinalPrices(): void {
