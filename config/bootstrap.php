@@ -87,6 +87,7 @@ if ($lastParametersModificationTime) {
     define('_DB_PREFIX_',  $config['parameters']['database_prefix']);
     define('_MYSQL_ENGINE_',  $config['parameters']['database_engine']);
     define('_PS_CACHING_SYSTEM_',  $config['parameters']['ps_caching']);
+    define('_PS_CACHE_LIFETIME_', (int) ($config['parameters']['ps_cache_lifetime'] ?? 0));
 
     if (!defined('PS_IN_UPGRADE') && !defined('_PS_IN_TEST_')) {
         define('_PS_CACHE_ENABLED_', $config['parameters']['ps_cache_enable']);
