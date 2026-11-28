@@ -19,6 +19,7 @@ class ProductResetter
             'product',
             'product_attachment',
             'product_attribute',
+            'product_attribute_carrier',
             'product_attribute_combination',
             'product_attribute_image',
             'product_attribute_lang',
