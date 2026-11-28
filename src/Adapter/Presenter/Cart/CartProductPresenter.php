@@ -34,7 +34,8 @@ class CartProductPresenter extends ProductPresenter
             $this->link,
             $this->priceFormatter,
             $this->productColorsRetriever,
-            $this->translator
+            $this->translator,
+            presentationContext: $this->presentationContext,
         );
 
         /*
