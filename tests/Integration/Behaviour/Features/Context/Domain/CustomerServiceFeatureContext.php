@@ -7,16 +7,21 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use Context;
 use CustomerThread;
+use Db;
+use Employee;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Adapter\Entity\CustomerMessage;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ReplyToCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateCustomerThreadStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerThreadNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
@@ -24,6 +29,8 @@ use Tools;
 
 class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
 {
+    private ?Employee $contextEmployee = null;
+
     /**
      * @When I add new customer thread :threadReference with following properties:
      *
@@ -76,6 +83,103 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
         $this->getCommandBus()->handle(
             new ReplyToCustomerThreadCommand((int) $customerThread->id, $data['reply_message'])
         );
+    }
+
+    /**
+     * @Given the legacy context has no employee
+     */
+    public function removeContextEmployee(): void
+    {
+        // Like the Admin API and the CLI, restored after the scenario
+        $this->contextEmployee = Context::getContext()->employee;
+        Context::getContext()->employee = null;
+    }
+
+    /**
+     * @AfterScenario
+     */
+    public function restoreContextEmployee(): void
+    {
+        if (null !== $this->contextEmployee) {
+            Context::getContext()->employee = $this->contextEmployee;
+            $this->contextEmployee = null;
+        }
+    }
+
+    /**
+     * @Given the employee of the context is referenced as :employeeReference
+     */
+    public function referenceContextEmployee(string $employeeReference): void
+    {
+        SharedStorage::getStorage()->set($employeeReference, (int) Context::getContext()->employee->id);
+    }
+
+    /**
+     * @When /^I try to respond to customer thread "([^"]+)" as employee "([^"]+)" with following properties:$/
+     * @When /^I try to respond to customer thread "([^"]+)" with following properties:$/
+     */
+    public function tryToRespondToCustomerThread(string $threadReference, $employeeReferenceOrTable, ?TableNode $table = null): void
+    {
+        if ($employeeReferenceOrTable instanceof TableNode) {
+            $table = $employeeReferenceOrTable;
+            $employeeId = null;
+        } else {
+            $employeeId = SharedStorage::getStorage()->exists($employeeReferenceOrTable)
+                ? (int) SharedStorage::getStorage()->get($employeeReferenceOrTable)
+                : 999999;
+        }
+        $data = $table->getRowsHash();
+        $customerThreadId = SharedStorage::getStorage()->exists($threadReference)
+            ? (int) SharedStorage::getStorage()->get($threadReference)->id
+            : 999999;
+
+        // it executes to fast and the update date is the same as the original message so we can't find which message is the new one
+        sleep(1);
+        try {
+            $this->getCommandBus()->handle(
+                new ReplyToCustomerThreadCommand($customerThreadId, $data['reply_message'], $employeeId)
+            );
+        } catch (CustomerServiceException|EmployeeNotFoundException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then the latest message of customer thread :threadReference should be from employee :employeeReference
+     */
+    public function assertLatestMessageEmployee(string $threadReference, string $employeeReference): void
+    {
+        $employeeId = (int) SharedStorage::getStorage()->get($employeeReference);
+        $customerThread = SharedStorage::getStorage()->get($threadReference);
+        $lastEmployeeId = (int) Db::getInstance()->getValue(
+            'SELECT id_employee FROM `' . _DB_PREFIX_ . 'customer_message` WHERE id_customer_thread = ' . (int) $customerThread->id
+            . ' ORDER BY id_customer_message DESC'
+        );
+        Assert::assertSame($employeeId, $lastEmployeeId);
+    }
+
+    /**
+     * @Then I should get an error that the reply needs an employee
+     */
+    public function assertLastErrorIsMissingEmployee(): void
+    {
+        $this->assertLastErrorIs(CustomerServiceException::class, CustomerServiceException::FAILED_TO_ADD_CUSTOMER_MESSAGE);
+    }
+
+    /**
+     * @Then I should get an error that the employee was not found
+     */
+    public function assertLastErrorIsEmployeeNotFound(): void
+    {
+        $this->assertLastErrorIs(EmployeeNotFoundException::class);
+    }
+
+    /**
+     * @Then I should get an error that the customer thread was not found
+     */
+    public function assertLastErrorIsThreadNotFound(): void
+    {
+        $this->assertLastErrorIs(CustomerThreadNotFoundException::class);
     }
 
     /**

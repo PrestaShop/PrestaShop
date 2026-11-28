@@ -13,10 +13,13 @@ use CustomerMessage;
 use CustomerThread;
 use Language;
 use Mail;
+use PrestaShop\PrestaShop\Adapter\Employee\EmployeeRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ReplyToCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerThreadNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
 use ShopUrl;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
@@ -41,14 +44,20 @@ class ReplyToCustomerThreadHandler implements ReplyToCustomerThreadHandlerInterf
     /**
      * @param Context $context
      */
-    public function __construct(Context $context)
-    {
+    public function __construct(
+        Context $context,
+        private readonly EmployeeRepository $employeeRepository
+    ) {
         $this->context = $context;
         $this->translator = $context->getTranslator();
     }
 
     /**
      * @param ReplyToCustomerThreadCommand $command
+     *
+     * @throws CustomerServiceException
+     * @throws CustomerThreadNotFoundException
+     * @throws EmployeeNotFoundException
      */
     public function handle(ReplyToCustomerThreadCommand $command)
     {
@@ -56,11 +65,18 @@ class ReplyToCustomerThreadHandler implements ReplyToCustomerThreadHandlerInterf
             $command->getCustomerThreadId()->getValue()
         );
 
+        if ((int) $customerThread->id !== $command->getCustomerThreadId()->getValue()) {
+            throw new CustomerThreadNotFoundException(sprintf('Customer thread with id "%d" was not found.', $command->getCustomerThreadId()->getValue()));
+        }
+
+        $employeeId = $this->getReplyingEmployeeId($command);
+
         ShopUrl::cacheMainDomainForShop((int) $customerThread->id_shop);
 
         $customerMessage = $this->createCustomerMessage(
             $customerThread,
-            $command->getReplyMessage()
+            $command->getReplyMessage(),
+            $employeeId
         );
 
         $replyWasSent = $this->sendReplyEmail($customerThread, $customerMessage);
@@ -72,15 +88,38 @@ class ReplyToCustomerThreadHandler implements ReplyToCustomerThreadHandlerInterf
     }
 
     /**
+     * The employee given in the command, or the one of the context. There is none in the Admin API or the CLI,
+     * and a message without employee would read as a message from the customer.
+     *
+     * @throws CustomerServiceException
+     * @throws EmployeeNotFoundException
+     */
+    private function getReplyingEmployeeId(ReplyToCustomerThreadCommand $command): int
+    {
+        $employeeId = $command->getEmployeeId() ?? (int) $this->context->employee?->id;
+
+        if ($employeeId <= 0) {
+            throw new CustomerServiceException('A reply needs an employee to be attributed to.', CustomerServiceException::FAILED_TO_ADD_CUSTOMER_MESSAGE);
+        }
+
+        // An unknown employee would show the reply as an employee message without name
+        if (null !== $command->getEmployeeId()) {
+            $this->employeeRepository->get($employeeId);
+        }
+
+        return $employeeId;
+    }
+
+    /**
      * @param CustomerThread $customerThread
      * @param string $replyMessage
      *
      * @return CustomerMessage
      */
-    private function createCustomerMessage(CustomerThread $customerThread, $replyMessage)
+    private function createCustomerMessage(CustomerThread $customerThread, $replyMessage, int $employeeId)
     {
         $customerMessage = new CustomerMessage();
-        $customerMessage->id_employee = (int) $this->context->employee->id;
+        $customerMessage->id_employee = $employeeId;
         $customerMessage->id_customer_thread = $customerThread->id;
         $customerMessage->ip_address = (string) (int) ip2long(Tools::getRemoteAddr());
         $customerMessage->message = $replyMessage;
