@@ -25,6 +25,11 @@ class InstallControllerHttp
     protected static $instances = [];
 
     /**
+     * @var bool whether an AJAX step has already written its JSON answer
+     */
+    private static $answerSent = false;
+
+    /**
      * @var string Current step
      */
     public $step;
@@ -361,14 +366,99 @@ class InstallControllerHttp
     public function ajaxJsonAnswer(bool $success, $message = '', $warning = ''): void
     {
         if (!$success && empty($message)) {
-            $message = print_r(@error_get_last(), true);
+            $message = self::getLastFatalError();
         }
+        if (!$success && empty($message)) {
+            $message = $this->translator->trans(
+                'The installation step failed without reporting a reason. Check your server error log for details.',
+                [],
+                'Install'
+            );
+        }
+
+        self::$answerSent = true;
 
         die(json_encode([
             'success' => (bool) $success,
             'message' => $message,
             'warning' => $warning,
         ]));
+    }
+
+    /**
+     * A step that dies fatally - the container build running out of memory is the usual one - never
+     * reaches ajaxJsonAnswer(), so the browser receives an empty body with status 200 and reports
+     * "HTTP 200 - parsererror -", which says nothing about what happened. Emit the answer the step
+     * would have emitted, so the reason reaches the screen.
+     */
+    public static function registerFatalErrorHandler(): void
+    {
+        register_shutdown_function(static function (): void {
+            // The fatal being reported is often the memory limit itself, and the handler has to be able
+            // to allocate to report it. Raising the limit here costs nothing: the request is over.
+            @ini_set('memory_limit', '-1');
+
+            $answer = self::buildFatalErrorAnswer();
+
+            if (null === $answer) {
+                return;
+            }
+
+            if (!headers_sent()) {
+                header('Content-Type: application/json');
+            }
+
+            echo $answer;
+        });
+    }
+
+    /**
+     * @return string|null the JSON body to emit, or null when there is nothing to report
+     */
+    public static function buildFatalErrorAnswer(?array $error = null): ?string
+    {
+        if (self::$answerSent || !self::isXmlHttpRequest()) {
+            return null;
+        }
+
+        $message = self::getLastFatalError($error);
+
+        if ('' === $message) {
+            return null;
+        }
+
+        return json_encode([
+            'success' => false,
+            'message' => $message,
+            'warning' => '',
+        ]);
+    }
+
+    private static function isXmlHttpRequest(): bool
+    {
+        return !empty($_SERVER['HTTP_X_REQUESTED_WITH'])
+            && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+    }
+
+    /**
+     * The last PHP error, but only when it is one that can actually have aborted a step.
+     *
+     * error_get_last() also returns notices, warnings and deprecations, and the container build
+     * that every install triggers emits plenty of those, so using it unfiltered reports whichever
+     * deprecation happened to come last instead of the failure.
+     *
+     * @param array|null $error defaults to the last error raised
+     */
+    public static function getLastFatalError(?array $error = null): string
+    {
+        $error ??= @error_get_last();
+        $fatalTypes = [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR, E_RECOVERABLE_ERROR];
+
+        if (null === $error || !isset($error['type']) || !in_array($error['type'], $fatalTypes, true)) {
+            return '';
+        }
+
+        return print_r($error, true);
     }
 
     /**
