@@ -415,6 +415,22 @@ class CategoryRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * @return int[]
+     */
+    public function getShopCategoryIds(ShopId $shopId): array
+    {
+        return array_map('intval', $this->connection->createQueryBuilder()
+            ->select('cs.id_category')
+            ->from($this->dbPrefix . 'category_shop', 'cs')
+            ->where('cs.id_shop = :shopId')
+            ->orderBy('cs.id_category', 'ASC')
+            ->setParameter('shopId', $shopId->getValue())
+            ->executeQuery()
+            ->fetchFirstColumn()
+        );
+    }
+
+    /**
      * Returns defined product default category for the specified shop, but only if it is associated.
      *
      * @param ProductId $productId

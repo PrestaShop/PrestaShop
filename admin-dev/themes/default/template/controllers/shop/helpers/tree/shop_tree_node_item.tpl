@@ -14,7 +14,7 @@
 			<li class="tree-item">
 				<label class="tree-item-name">
 					<i class="tree-dot"></i>
-					<a href="{$url_shop_url|escape:'html':'UTF-8'}&amp;id_shop_url={$url['id_shop_url']}">{$url['name']|escape:'html':'UTF-8'}</a>
+					<a href="{$url['edit_url']|escape:'html':'UTF-8'}">{$url['name']|escape:'html':'UTF-8'}</a>
 				</label>
 			</li>
 			{/foreach}
