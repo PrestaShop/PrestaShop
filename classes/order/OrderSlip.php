@@ -205,6 +205,37 @@ class OrderSlipCore extends ObjectModel
             WHERE osd.`id_order_detail` = ' . (int) $id_order_detail);
     }
 
+    /**
+     * Get the formatted number of the credit slip.
+     *
+     * Mirrors OrderInvoice::getInvoiceNumberFormatted(): a module may return its own format through
+     * the actionCreditSlipNumberFormatted hook, and a non-empty return wins over the default one.
+     *
+     * @param int $id_lang for the credit slip prefix
+     * @param int|null $id_shop
+     *
+     * @return string
+     */
+    public function getCreditSlipNumberFormatted($id_lang, $id_shop = null)
+    {
+        $creditSlipFormattedNumber = Hook::exec('actionCreditSlipNumberFormatted', [
+            get_class($this) => $this,
+            'id_lang' => (int) $id_lang,
+            'id_shop' => (int) $id_shop,
+            'number' => (int) $this->id,
+        ]);
+
+        if (!empty($creditSlipFormattedNumber)) {
+            return $creditSlipFormattedNumber;
+        }
+
+        return sprintf(
+            '%1$s%2$06d',
+            Configuration::get('PS_CREDIT_SLIP_PREFIX', (int) $id_lang, null, (int) $id_shop),
+            $this->id
+        );
+    }
+
     public function getProducts()
     {
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
