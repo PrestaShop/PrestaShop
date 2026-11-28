@@ -16,6 +16,7 @@ use Exception;
 use Mail;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\StockQuantityUpdater;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Mutation\MutationTracker;
@@ -42,6 +43,8 @@ class StockManager
     /**
      * This will update a Pack quantity and will decrease the quantity of containing Products if needed.
      *
+     * @deprecated Since 9.3.0 and will be removed in 10.0.0, use StockQuantityUpdater::increaseQuantity() or decreaseQuantity() instead.
+     *
      * @param Product $product A product pack object to update its quantity
      * @param StockAvailable $stock_available the stock of the product to fix with correct quantity
      * @param int $delta_quantity The movement of the stock (negative for a decrease)
@@ -49,46 +52,19 @@ class StockManager
      */
     public function updatePackQuantity($product, $stock_available, $delta_quantity, $id_shop = null)
     {
-        /** @TODO We should call the needed classes with the Symfony dependency injection instead of the Homemade Service Locator */
-        $serviceLocator = new ServiceLocator();
-        $configuration = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
-
-        if ($product->pack_stock_type == Pack::STOCK_TYPE_PRODUCTS_ONLY
-            || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
-            || ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
-                && $configuration->get('PS_PACK_STOCK_TYPE') > 0)
-        ) {
-            $packItemsManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager');
-            $stockManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
-            $cacheManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\CacheManager');
-
-            $products_pack = $packItemsManager->getPackItems($product);
-            foreach ($products_pack as $product_pack) {
-                $productStockAvailable = $stockManager->getStockAvailableByProduct($product_pack, $product_pack->id_pack_product_attribute, $id_shop);
-                $productStockAvailable->quantity = $productStockAvailable->quantity + ($delta_quantity * $product_pack->pack_quantity);
-                $productStockAvailable->update();
-
-                $cacheManager->clean('StockAvailable::getQuantityAvailableByProduct_' . (int) $product_pack->id . '*');
-            }
-        }
-
-        $stock_available->quantity = $stock_available->quantity + $delta_quantity;
-
-        if ($product->pack_stock_type == Pack::STOCK_TYPE_PACK_ONLY
-            || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
-            || (
-                $product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
-                && ($configuration->get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_ONLY
-                    || $configuration->get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)
-            )
-        ) {
-            $stock_available->update();
-        }
+        $this->getQuantityUpdater()->applyDeltaToPack(
+            $product,
+            $stock_available,
+            (int) $delta_quantity,
+            null === $id_shop ? null : (int) $id_shop
+        );
     }
 
     /**
      * This will decrease (if needed) Packs containing this product
      * (with the right combination) if there is not enough product in stocks.
+     *
+     * @deprecated Since 9.3.0 and will be removed in 10.0.0, use StockQuantityUpdater::increaseQuantity() or decreaseQuantity() instead.
      *
      * @param Product $product A product object to update its quantity
      * @param int $id_product_attribute The product attribute to update
@@ -97,43 +73,19 @@ class StockManager
      */
     public function updatePacksQuantityContainingProduct($product, $id_product_attribute, $stock_available, $id_shop = null)
     {
-        /** @TODO We should call the needed classes with the Symfony dependency injection instead of the Homemade Service Locator */
-        $serviceLocator = new ServiceLocator();
-
-        $configuration = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
-        $packItemsManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager');
-        $stockManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
-        $cacheManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\CacheManager');
-
-        $packs = $packItemsManager->getPacksContainingItem($product, $id_product_attribute);
-        foreach ($packs as $pack) {
-            // Decrease stocks of the pack only if pack is in linked stock mode (option called 'Decrement both')
-            if (!((int) $pack->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH)
-                && !((int) $pack->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
-                    && $configuration->get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)
-            ) {
-                continue;
-            }
-
-            // Decrease stocks of the pack only if there is not enough items to make the actual pack stocks.
-
-            // How many packs can be made with the remaining product stocks
-            $quantity_by_pack = $pack->pack_item_quantity;
-            $max_pack_quantity = max([0, floor($stock_available->quantity / $quantity_by_pack)]);
-
-            $stock_available_pack = $stockManager->getStockAvailableByProduct($pack, null, $id_shop);
-            if ($stock_available_pack->quantity > $max_pack_quantity) {
-                $stock_available_pack->quantity = $max_pack_quantity;
-                $stock_available_pack->update();
-
-                $cacheManager->clean('StockAvailable::getQuantityAvailableByProduct_' . (int) $pack->id . '*');
-            }
-        }
+        $this->getQuantityUpdater()->capPacksContaining(
+            $product,
+            null === $id_product_attribute ? null : (int) $id_product_attribute,
+            $stock_available,
+            null === $id_shop ? null : (int) $id_shop
+        );
     }
 
     /**
      * Will update Product available stock int he given combination. If product is a Pack, could decrease the sub products.
      * If Product is contained in a Pack, Pack could be decreased or not (only if sub product stocks become not sufficient).
+     *
+     * @deprecated Since 9.3.0 and will be removed in 10.0.0, use StockQuantityUpdater::increaseQuantity() or decreaseQuantity() instead.
      *
      * @param Product $product The product to update its stockAvailable
      * @param int|null $id_product_attribute The combination to update (null if not)
@@ -144,54 +96,33 @@ class StockManager
      */
     public function updateQuantity($product, $id_product_attribute, $delta_quantity, $id_shop = null, $add_movement = false, $params = [])
     {
-        /** @TODO We should call the needed classes with the Symfony dependency injection instead of the Homemade Service Locator */
-        $serviceLocator = new ServiceLocator();
-        $stockManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
-        $packItemsManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager');
-        $cacheManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\CacheManager');
-        $hookManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\HookManager');
-
-        $stockAvailable = $stockManager->getStockAvailableByProduct($product, $id_product_attribute, $id_shop);
-
-        // Update quantity of the pack products
-        if ($packItemsManager->isPack($product)) {
-            // The product is a pack
-            $this->updatePackQuantity($product, $stockAvailable, $delta_quantity, $id_shop);
-        } else {
-            // The product is not a pack
-            $stockAvailable->quantity = $stockAvailable->quantity + $delta_quantity;
-            $stockAvailable->update();
-
-            // Decrease case only: the stock of linked packs should be decreased too.
-            if ($delta_quantity < 0) {
-                // The product is not a pack, but the product combination is part of a pack (use of isPacked, not isPack)
-                if ($packItemsManager->isPacked($product, $id_product_attribute)) {
-                    $this->updatePacksQuantityContainingProduct($product, $id_product_attribute, $stockAvailable, $id_shop);
-                }
-            }
-        }
-
-        // Prepare movement and save it
-        if (true === $add_movement && 0 != $delta_quantity) {
-            $this->saveMovement($product->id, $id_product_attribute, $delta_quantity, $params);
-        }
-
-        $hookManager->exec(
-            'actionUpdateQuantity',
-            [
-                'id_product' => $product->id,
-                'id_product_attribute' => $id_product_attribute,
-                'quantity' => $stockAvailable->quantity,
-                'delta_quantity' => $delta_quantity,
-                'id_shop' => $id_shop,
-            ]
+        $this->getQuantityUpdater()->applyDeltaToProduct(
+            $product,
+            null === $id_product_attribute ? null : (int) $id_product_attribute,
+            (int) $delta_quantity,
+            null === $id_shop ? null : (int) $id_shop,
+            true === $add_movement,
+            $params
         );
+    }
 
-        if ($this->checkIfMustSendLowStockAlert($product, $id_product_attribute, $stockAvailable->quantity)) {
-            $this->sendLowStockAlert($product, $id_product_attribute, $stockAvailable->quantity);
+    /**
+     * @internal
+     *
+     * @param Product $product
+     * @param int|null $id_product_attribute
+     * @param int $newQuantity
+     */
+    public function sendLowStockAlertIfNeeded($product, $id_product_attribute, $newQuantity): void
+    {
+        if ($this->checkIfMustSendLowStockAlert($product, $id_product_attribute, $newQuantity)) {
+            $this->sendLowStockAlert($product, $id_product_attribute, $newQuantity);
         }
+    }
 
-        $cacheManager->clean('StockAvailable::getQuantityAvailableByProduct_' . (int) $product->id . '*');
+    private function getQuantityUpdater(): StockQuantityUpdater
+    {
+        return ServiceLocator::get(StockQuantityUpdater::class);
     }
 
     /**

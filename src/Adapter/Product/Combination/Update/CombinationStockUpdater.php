@@ -12,16 +12,16 @@ use Combination;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\StockQuantityUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\ValueObject\OrderStateId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotUpdateStockAvailableException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use PrestaShop\PrestaShop\Core\Stock\StockManager;
 use StockAvailable;
 
 /**
@@ -40,39 +40,20 @@ class CombinationStockUpdater
     private $combinationRepository;
 
     /**
-     * @var MovementReasonRepository
-     */
-    private $movementReasonRepository;
-
-    /**
-     * @var StockManager
-     */
-    private $stockManager;
-
-    /**
      * @var ShopConfigurationInterface
      */
     private $configuration;
 
-    /**
-     * @var HookDispatcherInterface
-     */
-    private $hookDispatcher;
-
     public function __construct(
         StockAvailableRepository $stockAvailableRepository,
         CombinationRepository $combinationRepository,
-        MovementReasonRepository $movementReasonRepository,
-        StockManager $stockManager,
+        private readonly MovementReasonRepository $movementReasonRepository,
         ShopConfigurationInterface $configuration,
-        HookDispatcherInterface $hookDispatcher
+        private readonly StockQuantityUpdater $stockQuantityUpdater,
     ) {
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->combinationRepository = $combinationRepository;
-        $this->stockManager = $stockManager;
         $this->configuration = $configuration;
-        $this->movementReasonRepository = $movementReasonRepository;
-        $this->hookDispatcher = $hookDispatcher;
     }
 
     /**
@@ -105,24 +86,18 @@ class CombinationStockUpdater
             return;
         }
 
-        if ($stockModification) {
-            $previousQuantity = (int) $stockAvailable->quantity;
-            if (null !== $stockModification->getDeltaQuantity()) {
-                $stockAvailable->quantity += $stockModification->getDeltaQuantity();
-            } else {
-                $stockAvailable->quantity = $stockModification->getFixedQuantity();
-            }
-        }
+        $fallbackShopId = $this->stockAvailableRepository->getFallbackShopId($stockAvailable);
 
+        $updatedProperties = [];
         if ($updateLocation) {
             $stockAvailable->location = $properties->getLocation();
+            $updatedProperties[] = 'location';
         }
 
-        $fallbackShopId = $this->stockAvailableRepository->getFallbackShopId($stockAvailable);
-        $this->stockAvailableRepository->update($stockAvailable, $fallbackShopId);
-        // save movement only after stockAvailable has been updated
-        if ($stockModification) {
-            $this->saveMovement($stockAvailable, $stockModification, $previousQuantity, $fallbackShopId->getValue());
+        if (!$stockModification) {
+            $this->stockAvailableRepository->updateProperties($stockAvailable, $updatedProperties, $fallbackShopId);
+        } else {
+            $this->editQuantity($stockAvailable, $stockModification, $fallbackShopId->getValue(), $updatedProperties);
 
             // Update reserved and physical quantity for this stock
             $shopConstraint = ShopConstraint::shop($fallbackShopId->getValue());
@@ -134,34 +109,31 @@ class CombinationStockUpdater
         }
     }
 
-    private function saveMovement(StockAvailable $stockAvailable, StockModification $stockModification, int $previousQuantity, int $affectedShopId): void
-    {
-        if (null !== $stockModification->getDeltaQuantity()) {
-            $deltaQuantity = $stockModification->getDeltaQuantity();
-        } else {
-            $deltaQuantity = $stockModification->getFixedQuantity() - $previousQuantity;
-        }
-
+    /**
+     * @param string[] $otherProperties properties already set on the stock, stored with the quantity
+     */
+    private function editQuantity(
+        StockAvailable $stockAvailable,
+        StockModification $stockModification,
+        int $shopId,
+        array $otherProperties,
+    ): void {
+        $previousQuantity = (int) $stockAvailable->quantity;
+        $deltaQuantity = $stockModification->getDeltaQuantity() ?? $stockModification->getFixedQuantity() - $previousQuantity;
+        $this->stockAvailableRepository->validateQuantity($stockAvailable, $previousQuantity + $deltaQuantity);
         $movementReasonId = $this->movementReasonRepository->getEmployeeEditionReasonId($deltaQuantity > $previousQuantity);
 
-        $this->stockManager->saveMovement(
-            $stockAvailable->id_product,
-            $stockAvailable->id_product_attribute,
-            $deltaQuantity,
-            [
-                'id_stock_mvt_reason' => $movementReasonId->getValue(),
-                'id_shop' => (int) $affectedShopId,
-            ]
+        $isUpdated = $this->stockQuantityUpdater->editStock(
+            $stockAvailable,
+            $stockModification,
+            $shopId,
+            $movementReasonId->getValue(),
+            $otherProperties,
+            (int) $stockAvailable->id_shop
         );
-
-        $this->hookDispatcher->dispatchWithParameters('actionUpdateQuantity',
-            [
-                'id_product' => $stockAvailable->id_product,
-                'id_product_attribute' => $stockAvailable->id_product_attribute,
-                'quantity' => $stockAvailable->quantity,
-                'delta_quantity' => $deltaQuantity,
-                'id_shop' => $stockAvailable->id_shop,
-            ]);
+        if (!$isUpdated) {
+            throw new CannotUpdateStockAvailableException(sprintf('Failed to update quantity of stock #%d', $stockAvailable->id));
+        }
     }
 
     private function updateStockByShopConstraint(

@@ -65,6 +65,34 @@ class StockAvailableRepository extends AbstractMultiShopObjectModelRepository
     }
 
     /**
+     * @throws CoreException
+     */
+    public function validateQuantity(StockAvailable $stockAvailable, int $quantity): void
+    {
+        $expectedStock = clone $stockAvailable;
+        $expectedStock->quantity = $quantity;
+        $this->stockAvailableValidator->validate($expectedStock);
+    }
+
+    /**
+     * The quantity is not one of them: StockQuantityUpdater writes it.
+     *
+     * @param string[] $propertiesToUpdate
+     *
+     * @throws CoreException
+     */
+    public function updateProperties(StockAvailable $stockAvailable, array $propertiesToUpdate, ShopId $shopId): void
+    {
+        $this->stockAvailableValidator->validate($stockAvailable);
+        $this->partiallyUpdateObjectModelForShops(
+            $stockAvailable,
+            $propertiesToUpdate,
+            [$shopId],
+            CannotUpdateStockAvailableException::class
+        );
+    }
+
+    /**
      * @param StockAvailable $stockAvailable
      *
      * @throws CoreException

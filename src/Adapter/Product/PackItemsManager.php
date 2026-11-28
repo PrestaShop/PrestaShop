@@ -18,7 +18,7 @@ class PackItemsManager
     /**
      * Get the Products contained in the given Pack.
      *
-     * @param Pack $pack
+     * @param Product $pack
      * @param bool|int $id_lang Optional
      *
      * @return Product[] The products contained in this Pack, with special dynamic attributes [pack_quantity, id_pack_product_attribute]

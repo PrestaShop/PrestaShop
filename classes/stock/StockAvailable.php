@@ -3,6 +3,7 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\StockQuantityUpdater;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\StockSettings;
 
@@ -85,11 +86,37 @@ class StockAvailableCore extends ObjectModel
     ];
 
     /**
+     * Quantity read from the database, to know whether a webservice request changes it.
+     */
+    private ?int $loadedQuantity = null;
+
+    public function __construct($id = null, $id_lang = null, $id_shop = null, $translator = null)
+    {
+        parent::__construct($id, $id_lang, $id_shop, $translator);
+        if ($this->id) {
+            $this->loadedQuantity = (int) $this->quantity;
+        }
+    }
+
+    /**
+     * The quantity is only written when the request changes it:
+     * updating the other fields cannot overwrite an order placed in the meantime.
+     *
      * @return bool
      */
     public function updateWs()
     {
-        return $this->update();
+        if ((int) $this->quantity !== $this->loadedQuantity) {
+            return $this->update();
+        }
+
+        $otherFields = array_fill_keys(array_keys(static::$definition['fields']), true);
+        unset($otherFields['quantity']);
+        $this->setFieldsToUpdate($otherFields);
+        $isUpdated = $this->update();
+        $this->setFieldsToUpdate(null);
+
+        return $isUpdated;
     }
 
     public static function getStockAvailableIdByProductId($id_product, $id_product_attribute = null, $id_shop = null)
@@ -287,6 +314,29 @@ class StockAvailableCore extends ObjectModel
     }
 
     /**
+     * Relative change the next update() lets the database apply to the quantity.
+     */
+    private ?int $quantityDelta = null;
+
+    /**
+     * @internal for StockAvailableQuantityUpdater
+     */
+    public function setQuantityDelta(?int $quantityDelta): void
+    {
+        $this->quantityDelta = $quantityDelta;
+    }
+
+    public function getFields()
+    {
+        $fields = parent::getFields();
+        if (null !== $this->quantityDelta) {
+            $fields['quantity'] = ['type' => 'sql', 'value' => '`quantity` + (' . $this->quantityDelta . ')'];
+        }
+
+        return $fields;
+    }
+
+    /**
      * Upgrades total_quantity_available after having update.
      *
      * @see ObjectModel::update()
@@ -350,6 +400,8 @@ class StockAvailableCore extends ObjectModel
      * @param int $id_shop Optional
      * @param bool $add_movement Optional
      * @param array $params Optional
+     *
+     * @deprecated Since 9.3.0 and will be removed in 10.0.0, use StockQuantityUpdater::increaseQuantity() or decreaseQuantity() instead.
      */
     public static function updateQuantity($id_product, $id_product_attribute, $delta_quantity, $id_shop = null, $add_movement = false, $params = [])
     {
@@ -377,71 +429,22 @@ class StockAvailableCore extends ObjectModel
      * @param bool $add_movement
      *
      * @return bool|void
+     *
+     * @deprecated Since 9.3.0 and will be removed in 10.0.0, use StockQuantityUpdater::setQuantity() instead.
      */
     public static function setQuantity($id_product, $id_product_attribute, $quantity, $id_shop = null, $add_movement = true)
     {
         if (!Validate::isUnsignedId($id_product)) {
             return false;
         }
-        $context = Context::getContext();
-        // if there is no $id_shop, gets the context one
-        if ($id_shop === null && Shop::getContext() != Shop::CONTEXT_GROUP) {
-            $id_shop = (int) $context->shop->id;
-        }
 
-        // Try to set available quantity if product does not depend on physical stock
-        $stockManager = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Stock\\StockManager');
-
-        $id_stock_available = (int) StockAvailable::getStockAvailableIdByProductId($id_product, $id_product_attribute, $id_shop);
-        if ($id_stock_available) {
-            $stock_available = new StockAvailable($id_stock_available);
-
-            $deltaQuantity = (int) $quantity - (int) $stock_available->quantity;
-
-            $stock_available->quantity = (int) $quantity;
-            $stock_available->update();
-
-            if (true === $add_movement && 0 != $deltaQuantity) {
-                $stockManager->saveMovement($id_product, $id_product_attribute, $deltaQuantity);
-            }
-        } else {
-            $out_of_stock = StockAvailable::outOfStock($id_product, $id_shop);
-            $stock_available = new StockAvailable();
-            $stock_available->out_of_stock = (int) $out_of_stock;
-            $stock_available->id_product = (int) $id_product;
-            $stock_available->id_product_attribute = (int) $id_product_attribute;
-            $stock_available->quantity = (int) $quantity;
-            if ($id_shop === null) {
-                $shop_group = Shop::getContextShopGroup();
-            } else {
-                $shop_group = new ShopGroup((int) Shop::getGroupFromShop((int) $id_shop));
-            }
-            // if quantities are shared between shops of the group
-            if ($shop_group->share_stock) {
-                $stock_available->id_shop = 0;
-                $stock_available->id_shop_group = (int) $shop_group->id;
-            } else {
-                $stock_available->id_shop = (int) $id_shop;
-                $stock_available->id_shop_group = 0;
-            }
-            $stock_available->add();
-
-            if (true === $add_movement && 0 != $quantity) {
-                $stockManager->saveMovement($id_product, $id_product_attribute, (int) $quantity);
-            }
-        }
-
-        Hook::exec(
-            'actionUpdateQuantity',
-            [
-                'id_product' => $id_product,
-                'id_product_attribute' => $id_product_attribute,
-                'quantity' => $stock_available->quantity,
-                'delta_quantity' => $deltaQuantity ?? null,
-                'id_shop' => $id_shop,
-            ]
+        ServiceLocator::get(StockQuantityUpdater::class)->setQuantity(
+            (int) $id_product,
+            (int) $id_product_attribute,
+            (int) $quantity,
+            null === $id_shop ? null : (int) $id_shop,
+            true === $add_movement
         );
-        Cache::clean('StockAvailable::getQuantityAvailableByProduct_' . (int) $id_product . '*');
     }
 
     /**
