@@ -72,6 +72,11 @@ class UpdateCombinationCommand
     /**
      * @var DecimalNumber|null
      */
+    private $impactOnShippingCost;
+
+    /**
+     * @var DecimalNumber|null
+     */
     private $impactOnPrice;
 
     /**
@@ -298,6 +303,26 @@ class UpdateCombinationCommand
     public function setImpactOnWeight(string $impactOnWeight): self
     {
         $this->impactOnWeight = new DecimalNumber($impactOnWeight);
+
+        return $this;
+    }
+
+    /**
+     * @return DecimalNumber|null
+     */
+    public function getImpactOnShippingCost(): ?DecimalNumber
+    {
+        return $this->impactOnShippingCost;
+    }
+
+    /**
+     * @param string $impactOnShippingCost
+     *
+     * @return $this
+     */
+    public function setImpactOnShippingCost(string $impactOnShippingCost): self
+    {
+        $this->impactOnShippingCost = new DecimalNumber($impactOnShippingCost);
 
         return $this;
     }
