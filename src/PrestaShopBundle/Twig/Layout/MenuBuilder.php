@@ -120,7 +120,7 @@ class MenuBuilder
     private function convertTabToMenuLink(Tab $tab): MenuLink
     {
         return new MenuLink(
-            name: $this->getBreadcrumbLabel($tab),
+            name: $this->getTabLabel($tab),
             href: $this->getLinkFromTab($tab),
             icon: $tab->getIcon() ?? '',
         );
@@ -142,9 +142,8 @@ class MenuBuilder
 
         /* @var $currentLevelTab Tab */
         foreach ($currentLevelTabs as $currentLevelTab) {
-            $tabLang = $currentLevelTab->getTabLangByLanguageId($this->getContextLanguageId());
             $menuLink = new MenuLink(
-                name: $tabLang ? $tabLang->getName() : $currentLevelTab->getWording(),
+                name: $this->getTabLabel($currentLevelTab),
                 href: $this->getLinkFromTab($currentLevelTab),
                 attributes: [
                     'id_tab' => $currentLevelTab->getId(),
@@ -159,7 +158,7 @@ class MenuBuilder
         return $navigationTabs;
     }
 
-    private function getBreadcrumbLabel(Tab $tab): string
+    private function getTabLabel(Tab $tab): string
     {
         if (null !== $tab->getWording() && null !== $tab->getWordingDomain()) {
             return $this->translator->trans($tab->getWording(), [], $tab->getWordingDomain());
