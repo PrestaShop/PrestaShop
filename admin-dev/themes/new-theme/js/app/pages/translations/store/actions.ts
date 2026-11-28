@@ -94,17 +94,31 @@ export const saveTranslations = async ({commit}: {commit: Commit}, payload: Reco
   const {translations} = payload;
 
   try {
-    await fetch(url, {
+    const response = await fetch(url, {
       method: 'POST',
       body: JSON.stringify({translations}),
     });
+    // The response maps each translation key to the result of its save
+    const results: Record<string, boolean> = await response.json();
+    const failedTranslations = translations.filter(
+      (translation: Record<string, any>) => results[translation.default] === false,
+    );
 
     payload.store.dispatch('refreshCounts', {
-      successfullySaved: translations.length,
+      successfullySaved: translations.length - failedTranslations.length,
       store: payload.store,
     });
     commit(types.RESET_MODIFIED_TRANSLATIONS);
-    showGrowl('success', 'Translations successfully updated');
+
+    if (failedTranslations.length > 0) {
+      showGrowl(
+        'error',
+        `${failedTranslations.length} of ${translations.length} translations could not be saved`,
+        4000,
+      );
+    } else {
+      showGrowl('success', 'Translations successfully updated');
+    }
   } catch (error: any) {
     showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
   }
