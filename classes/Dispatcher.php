@@ -1216,42 +1216,61 @@ class DispatcherCore
                 list($uri) = explode('?', $this->request_uri);
 
                 if (isset($this->routes[$id_shop][Context::getContext()->language->id])) {
+                    $matchedRoute = null;
+                    $matchedParams = [];
+                    $longestStaticPrefix = -1;
+
                     foreach ($this->routes[$id_shop][Context::getContext()->language->id] as $routeDefinition) {
-                        if (preg_match($routeDefinition['regexp'], $uri, $m)) {
-                            // Route found ! Now fill $_GET with parameters of uri
-                            foreach ($m as $k => $v) {
-                                if (!is_numeric($k)) {
-                                    $_GET[$k] = $v;
-                                }
-                            }
+                        if (!preg_match($routeDefinition['regexp'], $uri, $matches)) {
+                            continue;
+                        }
 
-                            // Resolve the controller from the route or request, falling back to the not-found controller.
-                            if (!empty($routeDefinition['controller'])) {
-                                $controller = $routeDefinition['controller'];
-                            } elseif (!empty($_GET['controller'])) {
-                                $controller = $_GET['controller'];
-                            } else {
-                                $controller = $this->controller_not_found;
-                            }
+                        // Prefer matching routes with a longer literal prefix before the first placeholder.
+                        // Keep registration order when prefixes have equal length.
+                        $placeholderPosition = strpos($routeDefinition['rule'], '{');
+                        $staticPrefixLength = $placeholderPosition === false
+                            ? strlen($routeDefinition['rule'])
+                            : $placeholderPosition;
 
-                            if (!empty($routeDefinition['params'])) {
-                                foreach ($routeDefinition['params'] as $k => $v) {
-                                    $_GET[$k] = $v;
-                                }
-                            }
+                        if ($staticPrefixLength > $longestStaticPrefix) {
+                            $matchedRoute = $routeDefinition;
+                            $matchedParams = $matches;
+                            $longestStaticPrefix = $staticPrefixLength;
+                        }
+                    }
 
-                            // A patch for module friendly urls
-                            if (preg_match('#module-([a-z0-9_-]+)-([a-z0-9_]+)$#i', $controller, $m)) {
-                                $_GET['module'] = $m[1];
-                                $_GET['fc'] = 'module';
-                                $controller = $m[2];
+                    if ($matchedRoute !== null) {
+                        // Route found! Now fill $_GET with parameters of uri.
+                        foreach ($matchedParams as $k => $v) {
+                            if (!is_numeric($k)) {
+                                $_GET[$k] = $v;
                             }
+                        }
 
-                            if (isset($_GET['fc']) && $_GET['fc'] == 'module') {
-                                $this->front_controller = self::FC_MODULE;
+                        // Resolve the controller from the route or request, falling back to the not-found controller.
+                        if (!empty($matchedRoute['controller'])) {
+                            $controller = $matchedRoute['controller'];
+                        } elseif (!empty($_GET['controller'])) {
+                            $controller = $_GET['controller'];
+                        } else {
+                            $controller = $this->controller_not_found;
+                        }
+
+                        if (!empty($matchedRoute['params'])) {
+                            foreach ($matchedRoute['params'] as $k => $v) {
+                                $_GET[$k] = $v;
                             }
+                        }
 
-                            break;
+                        // A patch for module friendly urls
+                        if (preg_match('#module-([a-z0-9_-]+)-([a-z0-9_]+)$#i', $controller, $m)) {
+                            $_GET['module'] = $m[1];
+                            $_GET['fc'] = 'module';
+                            $controller = $m[2];
+                        }
+
+                        if (isset($_GET['fc']) && $_GET['fc'] == 'module') {
+                            $this->front_controller = self::FC_MODULE;
                         }
                     }
                 }
