@@ -6,6 +6,12 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
+    {# Cart rules created before the discount types were introduced: displayed until their type is saved, also when the submitted form is invalid #}
+    {% for legacyTypeWarning in form.vars.value.legacy_type_warnings|default([]) %}
+      <div class="alert alert-warning" role="alert">
+        <p class="alert-text">{{ legacyTypeWarning }}</p>
+      </div>
+    {% endfor %}
     {{ include('@PrestaShop/Admin/Sell/Catalog/Discount/form.html.twig', {discountForm: form}) }}
 {% endblock %}
 

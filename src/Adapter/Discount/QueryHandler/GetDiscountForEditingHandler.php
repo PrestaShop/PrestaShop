@@ -9,6 +9,7 @@ namespace PrestaShop\PrestaShop\Adapter\Discount\QueryHandler;
 use DateTimeImmutable;
 use Exception;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Discount\LegacyDiscountTypeResolver;
 use PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountRepository;
 use PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountTypeRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
@@ -24,6 +25,7 @@ class GetDiscountForEditingHandler implements GetDiscountForEditingHandlerInterf
     public function __construct(
         protected readonly DiscountRepository $discountRepository,
         protected readonly DiscountTypeRepository $discountTypeRepository,
+        protected readonly LegacyDiscountTypeResolver $legacyDiscountTypeResolver,
     ) {
     }
 
@@ -39,6 +41,15 @@ class GetDiscountForEditingHandler implements GetDiscountForEditingHandlerInterf
         $customerGroupIds = $this->discountRepository->getCustomerGroupsIds($query->getDiscountId());
         $compatibleDiscountTypeIds = $this->discountTypeRepository->getCompatibleTypesIdsForDiscount($query->getDiscountId()->getValue());
         $quantityUsedInOrders = $this->discountRepository->getQuantityUsedInOrders($query->getDiscountId());
+
+        // Cart rules created before the discount types were introduced have no type, so we deduce it from their settings
+        $discountType = $cartRule->getType();
+        $typeDeduced = null === $discountType;
+        $unsupportedLegacySettings = [];
+        if ($typeDeduced) {
+            $discountType = $this->legacyDiscountTypeResolver->resolveType($cartRule);
+            $unsupportedLegacySettings = $this->legacyDiscountTypeResolver->getUnsupportedSettings($cartRule, $discountType);
+        }
 
         return new DiscountForEditing(
             $query->getDiscountId()->getValue(),
@@ -56,7 +67,7 @@ class GetDiscountForEditingHandler implements GetDiscountForEditingHandlerInterf
             $cartRule->id_customer ?: null,
             $cartRule->highlight,
             $cartRule->partial_use,
-            $cartRule->getType(),
+            $discountType,
             (float) $cartRule->reduction_percent > 0.00 ? new DecimalNumber($cartRule->reduction_percent) : null,
             (float) $cartRule->reduction_amount > 0.00 ? new DecimalNumber($cartRule->reduction_amount) : null,
             $cartRule->reduction_currency,
@@ -75,6 +86,8 @@ class GetDiscountForEditingHandler implements GetDiscountForEditingHandlerInterf
             $countryIds,
             $customerGroupIds,
             $compatibleDiscountTypeIds,
+            $typeDeduced,
+            $unsupportedLegacySettings,
         );
     }
 }

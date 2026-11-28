@@ -18,6 +18,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\NoCustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\DiscountConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Discount\ProductRuleGroup;
 use PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\DiscountId;
+use PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\DiscountType;
 use PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\MinimumAmount;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
@@ -31,6 +32,7 @@ class UpdateDiscountCommand
     use DirtyTrait;
 
     private DiscountId $discountId;
+    private ?DiscountType $discountType = null;
     private ?array $localizedNames = null;
     private ?int $priority = null;
     private ?bool $active = null;
@@ -84,6 +86,23 @@ class UpdateDiscountCommand
     public function getDiscountId(): DiscountId
     {
         return $this->discountId;
+    }
+
+    public function getDiscountType(): ?DiscountType
+    {
+        return $this->discountType;
+    }
+
+    /**
+     * The type of a discount cannot be changed: it is only saved for a cart rule that has none yet (created before
+     * the discount types were introduced), otherwise it must match the current type.
+     */
+    public function setDiscountType(string $discountType): self
+    {
+        $this->discountType = new DiscountType($discountType);
+        $this->markDirty('discountType');
+
+        return $this;
     }
 
     /**
