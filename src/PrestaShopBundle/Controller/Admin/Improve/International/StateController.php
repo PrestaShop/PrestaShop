@@ -60,6 +60,7 @@ class StateController extends PrestaShopAdminController
             $countryId = (int) $request->query->get('id_country');
             $states = $statesProvider->getChoices([
                 'id_country' => $countryId,
+                'kept_state_id' => (int) $request->query->get('id_state'),
             ]);
 
             return $this->json([
@@ -89,8 +90,10 @@ class StateController extends PrestaShopAdminController
     ): Response {
         try {
             $countryId = (int) $request->query->get('id_country');
+            $queryStateId = (int) $request->query->get('id_state');
             $states = $statesProvider->getChoices([
                 'id_country' => $countryId,
+                'kept_state_id' => $queryStateId,
             ]);
 
             if (!empty($states)) {
@@ -100,7 +103,6 @@ class StateController extends PrestaShopAdminController
                     $htmlResponse = '<option value="0">' . htmlentities($emptyValue, ENT_QUOTES, 'utf-8') . '</option>' . "\n";
                 }
 
-                $queryStateId = (int) $request->query->get('id_state');
                 foreach ($states as $stateName => $stateId) {
                     $htmlResponse .= '<option value="' . $stateId . '"' . ($queryStateId == $stateId ? ' selected="selected"' : '') . '>' . $stateName . '</option>' . "\n";
                 }
