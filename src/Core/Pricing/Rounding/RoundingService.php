@@ -20,20 +20,26 @@ class RoundingService implements RoundingServiceInterface
     /**
      * Maps PrestaShop PS_PRICE_ROUND_MODE config values to DecimalNumber rounding modes.
      *
-     * 0 = Round up away from zero when half way
-     * 1 = Round down towards zero when half way
-     * 2 = Round towards the next even value
-     * 3 = Round up to the nearest value
-     * 4 = Round down to the nearest value
-     * 5 = Truncate
+     * The keys are the PS_ROUND_* constants from config/defines.inc.php, which is also what the
+     * Shop Parameters form stores:
+     *
+     * PS_ROUND_UP        = 0
+     * PS_ROUND_DOWN      = 1
+     * PS_ROUND_HALF_UP   = 2
+     * PS_ROUND_HALF_DOWN = 3
+     * PS_ROUND_HALF_EVEN = 4
+     * PS_ROUND_HALF_ODD  = 5 - deliberately absent, see below
+     *
+     * PS_ROUND_HALF_ODD has no equivalent in the Decimal library, so it falls through to the
+     * default in the constructor. Tools::ps_round() does implement it, so a shop using that mode
+     * still rounds differently here; that mismatch is tracked in issue #30441.
      */
     protected const ROUNDING_MODE_MAP = [
-        0 => Rounding::ROUND_HALF_UP,
-        1 => Rounding::ROUND_HALF_DOWN,
-        2 => Rounding::ROUND_HALF_EVEN,
-        3 => Rounding::ROUND_CEIL,
-        4 => Rounding::ROUND_FLOOR,
-        5 => Rounding::ROUND_TRUNCATE,
+        PS_ROUND_UP => Rounding::ROUND_CEIL,
+        PS_ROUND_DOWN => Rounding::ROUND_FLOOR,
+        PS_ROUND_HALF_UP => Rounding::ROUND_HALF_UP,
+        PS_ROUND_HALF_DOWN => Rounding::ROUND_HALF_DOWN,
+        PS_ROUND_HALF_EVEN => Rounding::ROUND_HALF_EVEN,
     ];
 
     protected readonly string $roundingMode;
