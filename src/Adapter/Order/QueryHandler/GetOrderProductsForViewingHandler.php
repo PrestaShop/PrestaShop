@@ -12,8 +12,6 @@ use Image;
 use ImageManager;
 use Order;
 use OrderInvoice;
-use OrderReturn;
-use OrderSlip;
 use Pack;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleHtmlAuthorizationChecker;
@@ -64,11 +62,6 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                 $name = 'product_mini_' . (int) $product['product_id'] . (isset($product['product_attribute_id']) ? '_' . (int) $product['product_attribute_id'] : '') . '.jpg';
                 // generate image cache, only for back office
                 $product['image_tag'] = ImageManager::thumbnail(_PS_IMG_DIR_ . 'p/' . $product['image']->getExistingImgPath() . '.jpg', $name, 45, 'jpg');
-                if (file_exists(_PS_TMP_IMG_DIR_ . $name)) {
-                    $product['image_size'] = getimagesize(_PS_TMP_IMG_DIR_ . $name);
-                } else {
-                    $product['image_size'] = false;
-                }
             }
 
             // Get total customized quantity for current product
@@ -102,8 +95,6 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
             $product['displayed_max_refundable'] = $taxCalculationMethod === PS_TAX_EXC ? $product['amount_refundable'] : $product['amount_refundable_tax_incl'];
             $resumeAmountKey = $taxCalculationMethod === PS_TAX_EXC ? 'total_refunded_tax_excl' : 'total_refunded_tax_incl';
             $product['amount_refunded'] = $product[$resumeAmountKey] ?? 0;
-            $product['refund_history'] = OrderSlip::getProductSlipDetail($product['id_order_detail']);
-            $product['return_history'] = OrderReturn::getProductReturnDetail($product['id_order_detail']);
 
             $pack_items = $product['cache_is_pack'] ? Pack::getItemTable($product['id_product'], $this->contextLanguageId, true) : [];
             foreach ($pack_items as &$pack_item) {
@@ -113,11 +104,6 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                     $name = 'product_mini_' . (int) $pack_item['id_product'] . (isset($pack_item['id_product_attribute']) ? '_' . (int) $pack_item['id_product_attribute'] : '') . '.jpg';
                     // generate image cache, only for back office
                     $pack_item['image_tag'] = ImageManager::thumbnail(_PS_IMG_DIR_ . 'p/' . $pack_item['image']->getExistingImgPath() . '.jpg', $name, 45, 'jpg');
-                    if (file_exists(_PS_TMP_IMG_DIR_ . $name)) {
-                        $pack_item['image_size'] = getimagesize(_PS_TMP_IMG_DIR_ . $name);
-                    } else {
-                        $pack_item['image_size'] = false;
-                    }
                 }
             }
 
@@ -138,6 +124,13 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
         );
 
         $productsForViewing = [];
+
+        $shipmentIdsByOrderDetail = [];
+        foreach ($this->shipmentRepository->findByOrderId($order->id) as $shipment) {
+            foreach ($shipment->getProducts() as $shipmentProduct) {
+                $shipmentIdsByOrderDetail[$shipmentProduct->getOrderDetailId()][] = $shipment->getId();
+            }
+        }
 
         $isOrderTaxExcluded = ($taxCalculationMethod == PS_TAX_EXC);
         foreach ($products as $product) {
@@ -166,19 +159,7 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                 OrderProductForViewing::TYPE_PRODUCT_WITHOUT_COMBINATIONS;
 
             $orderInvoice = new OrderInvoice($product['id_order_invoice']);
-            $shipments = $this->shipmentRepository->findByOrderId($order->id);
-            $shipmentIds = [];
-
-            if ($shipments) {
-                foreach ($shipments as $shipment) {
-                    $shipmentProducts = $shipment->getProducts();
-                    foreach ($shipmentProducts as $shipmentProduct) {
-                        if ($shipmentProduct->getOrderDetailId() == $product['id_order_detail']) {
-                            $shipmentIds[] = $shipment->getId();
-                        }
-                    }
-                }
-            }
+            $shipmentIds = $shipmentIdsByOrderDetail[(int) $product['id_order_detail']] ?? [];
 
             $packItems = [];
             foreach ($product['pack_items'] as $pack_item) {
@@ -284,6 +265,5 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
         }
 
         $pack_item['image'] = $id_image ? new Image((int) $id_image) : null;
-        $pack_item['image_size'] = null;
     }
 }

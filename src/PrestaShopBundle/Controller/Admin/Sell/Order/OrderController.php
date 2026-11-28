@@ -85,6 +85,7 @@ use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CancelProductFormDataProvider;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\GridFactory;
@@ -494,6 +495,7 @@ class OrderController extends PrestaShopAdminController
         int $orderId,
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilderInterface $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.data_provider.cancel_product_form_data_provider')] CancelProductFormDataProvider $cancelProductFormDataProvider,
         #[Autowire(service: 'prestashop.adapter.order.order_sibling_provider')] OrderSiblingProviderInterface $orderSiblingProvider,
         CurrencyDataProvider $currencyDataProvider,
         FeatureFlagStateCheckerInterface $featureFlagStateChecker,
@@ -591,6 +593,7 @@ class OrderController extends PrestaShopAdminController
                 ]
             );
 
+            $cancelProductFormDataProvider->preloadOrderForViewing($orderForViewing);
             $cancelProductForm = $formBuilder->getFormFor($orderId);
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -1117,6 +1120,7 @@ class OrderController extends PrestaShopAdminController
         int $orderId,
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilderInterface $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.data_provider.cancel_product_form_data_provider')] CancelProductFormDataProvider $cancelProductFormDataProvider,
         CurrencyDataProvider $currencyDataProvider,
         FeatureFlagStateCheckerInterface $featureFlagStateChecker,
     ): Response {
@@ -1190,6 +1194,7 @@ class OrderController extends PrestaShopAdminController
 
         $newProducts = array_diff_key($updatedProducts, $previousProducts);
 
+        $cancelProductFormDataProvider->preloadOrderForViewing($orderForViewing);
         $cancelProductForm = $formBuilder->getFormFor($orderId);
 
         $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
@@ -1425,6 +1430,7 @@ class OrderController extends PrestaShopAdminController
         int $orderDetailId,
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.cancel_product_form_builder')] FormBuilderInterface $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.data_provider.cancel_product_form_data_provider')] CancelProductFormDataProvider $cancelProductFormDataProvider,
         CurrencyDataProvider $currencyDataProvider,
         FeatureFlagStateCheckerInterface $featureFlagStateChecker,
     ): Response {
@@ -1462,6 +1468,7 @@ class OrderController extends PrestaShopAdminController
             return new Response('');
         }
 
+        $cancelProductFormDataProvider->preloadOrderForViewing($orderForViewing);
         $cancelProductForm = $formBuilder->getFormFor($orderId);
 
         $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());

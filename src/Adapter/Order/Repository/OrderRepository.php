@@ -88,4 +88,34 @@ class OrderRepository extends AbstractObjectModelRepository
 
         throw new OrderNotFoundException(message: sprintf('Order for cart #%d was not found', $cartId->getValue()));
     }
+
+    /**
+     * Prices are displayed tax included or excluded according to the default group of the order customer.
+     *
+     * @return array{currency_id: int, is_tax_included: bool}
+     *
+     * @throws OrderNotFoundException
+     */
+    public function getPriceDisplaySettings(OrderId $orderId): array
+    {
+        $row = $this->connection->createQueryBuilder()
+            ->select('o.id_currency', 'g.price_display_method')
+            ->from($this->dbPrefix . 'orders', 'o')
+            ->leftJoin('o', $this->dbPrefix . 'customer', 'c', 'c.id_customer = o.id_customer')
+            ->leftJoin('c', '`' . $this->dbPrefix . 'group`', 'g', 'g.id_group = c.id_default_group')
+            ->where('o.id_order = :orderId')
+            ->setParameter('orderId', $orderId->getValue())
+            ->setMaxResults(1)
+            ->executeQuery()
+            ->fetchAssociative();
+
+        if (false === $row) {
+            throw new OrderNotFoundException($orderId, sprintf('Order #%d was not found', $orderId->getValue()));
+        }
+
+        return [
+            'currency_id' => (int) $row['id_currency'],
+            'is_tax_included' => (int) $row['price_display_method'] === PS_TAX_INC,
+        ];
+    }
 }

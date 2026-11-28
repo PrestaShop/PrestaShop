@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Carrier\TrackingUrlFormatter;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Adapter\Order\OrderTaxMethodProvider;
 use PrestaShop\PrestaShop\Core\Address\AddressFormatterInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
@@ -147,6 +148,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         GetOrderProductsForViewingHandlerInterface $getOrderProductsForViewingHandler,
         Configuration $configuration,
         ShipmentRepository $shipmentRepository,
+        private readonly OrderTaxMethodProvider $orderTaxMethodProvider,
         ?AddressFormatterInterface $addressFormatter = null
     ) {
         $this->translator = $translator;
@@ -172,9 +174,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
 
         $isTaxIncluded = ($taxCalculationMethod == PS_TAX_INC);
 
-        $taxMethod = $isTaxIncluded ?
-            $this->translator->trans('Tax included', [], 'Admin.Global') :
-            $this->translator->trans('Tax excluded', [], 'Admin.Global');
+        $taxMethod = $this->orderTaxMethodProvider->getTaxMethod($isTaxIncluded);
 
         $invoiceManagementIsEnabled = (bool) $this->configuration->get(
             'PS_INVOICE',

@@ -178,6 +178,7 @@ services:
       - '@prestashop.adapter.order.query_handler.get_order_products_for_viewing_handler'
       - '@prestashop.adapter.legacy.configuration'
       - '@PrestaShopBundle\Entity\Repository\ShipmentRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Order\OrderTaxMethodProvider'
       - '@prestashop.adapter.address.formatter'
 
   prestashop.adapter.order.query_handler.get_order_products_for_viewing_handler:
@@ -219,6 +220,10 @@ services:
 
   prestashop.adapter.order.order_sibling_provider:
     class: PrestaShop\PrestaShop\Adapter\Order\OrderSiblingProvider
+
+  PrestaShop\PrestaShop\Adapter\Order\OrderTaxMethodProvider:
+    arguments:
+      - '@translator'
 
   prestashop.adapter.order.amount.updater:
     class: PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater
