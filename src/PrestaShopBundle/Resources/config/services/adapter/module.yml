@@ -67,7 +67,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Module\Tab\ModuleTabRegister
     arguments:
       - '@PrestaShopBundle\Entity\Repository\TabRepository'
-      - "@prestashop.core.admin.lang.repository"
+      - '@PrestaShopBundle\Entity\Repository\LangRepository'
       - "@logger"
       - "@translator"
       - "@filesystem"
@@ -78,7 +78,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Module\Tab\ModuleTabUnregister
     arguments:
       - '@PrestaShopBundle\Entity\Repository\TabRepository'
-      - "@prestashop.core.admin.lang.repository"
+      - '@PrestaShopBundle\Entity\Repository\LangRepository'
       - "@logger"
       - "@translator"
 
@@ -103,7 +103,7 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Presenter\Module\PaymentModulesPresenter:
     arguments:
-      - '@prestashop.adapter.presenter.module'
+      - '@PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter'
       - '@prestashop.adapter.module.payment_module_provider'
 
   prestashop.adapter.presenter.module.payment:

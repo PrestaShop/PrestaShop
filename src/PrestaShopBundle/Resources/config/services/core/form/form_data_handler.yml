@@ -31,7 +31,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CurrencyFormDataHandler'
     arguments:
       - '@prestashop.core.command_bus'
-      - - '@prestashop.adapter.cache.clearer.symfony_cache_clearer'
+      - - '@PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer'
         - '@prestashop.adapter.cache.clearer.smarty_cache_clearer'
 
   prestashop.core.form.identifiable_object.data_handler.webservice_key_form_data_handler:

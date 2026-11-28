@@ -362,7 +362,7 @@ class LocalizationPackCore
         }
 
         /** @var LocaleRepository $localeRepoCLDR */
-        $localeRepoCLDR = $container->get('prestashop.core.localization.cldr.locale_repository');
+        $localeRepoCLDR = $container->get(LocaleRepository::class);
 
         return $localeRepoCLDR;
     }

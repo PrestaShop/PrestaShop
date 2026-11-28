@@ -58,7 +58,7 @@ class PositionsController extends PrestaShopAdminController
         Request $request,
         #[Autowire(service: 'prestashop.adapter.legacy.module')]
         Module $moduleAdapter,
-        #[Autowire(service: 'prestashop.adapter.legacy.hook')]
+        #[Autowire(service: HookInformationProvider::class)]
         HookInformationProvider $hookProvider,
         LegacyContext $legacyContextService
     ): Response {

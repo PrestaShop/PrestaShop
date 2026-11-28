@@ -79,6 +79,7 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\QuerySorting;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
+use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
@@ -245,7 +246,7 @@ class OrderController extends PrestaShopAdminController
     public function createAction(
         Request $request,
         LanguageByIdChoiceProvider $languageChoiceProvider,
-        #[Autowire(service: 'prestashop.core.form.choice_provider.currency_by_id')] FormChoiceProviderInterface $currencyChoiceProvider,
+        #[Autowire(service: CurrencyByIdChoiceProvider::class)] FormChoiceProviderInterface $currencyChoiceProvider,
     ) {
         $isSingleShopContext = $this->getShopContext()->getShopConstraint()->isSingleShopContext();
         if (!$isSingleShopContext) {

@@ -13,7 +13,7 @@ services:
   PrestaShopBundle\Command\ExportThemeCommand:
     arguments:
       - '@prestashop.core.addon.theme.repository'
-      - '@prestashop.core.addon.theme.exporter'
+      - '@PrestaShop\PrestaShop\Core\Addon\Theme\ThemeExporter'
       - '@translator'
     tags:
       - 'console.command'
