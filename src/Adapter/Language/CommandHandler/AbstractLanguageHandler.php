@@ -21,7 +21,8 @@ use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageImageUploadingE
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
+use PrestaShop\PrestaShop\Core\Image\Deleter\NoPictureThumbnailDeleter;
+use PrestaShop\PrestaShop\Core\Image\Exception\ImageException;
 
 /**
  * Encapsulates common legacy behavior for adding/editing language
@@ -84,18 +85,10 @@ abstract class AbstractLanguageHandler extends AbstractObjectModelHandler
 
     private function removeNoPictureThumbnails(IsoCode $isoCode, string $directory, int $errorCode): void
     {
-        // Invalidate disabled formats too, so they cannot become stale when enabled again.
-        foreach (array_diff(ImageFormatConfiguration::SUPPORTED_FORMATS, ['jpg', 'png']) as $format) {
-            $thumbnails = glob($directory . $isoCode->getValue() . '-default-*.' . $format);
-            if (false === $thumbnails) {
-                throw new CopyingNoPictureException(sprintf('Cannot list "No Picture" thumbnails in "%s"', $directory), $errorCode);
-            }
-
-            foreach ($thumbnails as $thumbnail) {
-                if (!@unlink($thumbnail)) {
-                    throw new CopyingNoPictureException(sprintf('Cannot remove "No Picture" thumbnail "%s"', $thumbnail), $errorCode);
-                }
-            }
+        try {
+            (new NoPictureThumbnailDeleter())->delete($isoCode->getValue(), $directory);
+        } catch (ImageException $e) {
+            throw new CopyingNoPictureException($e->getMessage(), $errorCode, $e);
         }
     }
 
