@@ -20,6 +20,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnProducts;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\OrderReturnProductForEditing;
 use PrestaShopDatabaseException;
 use PrestaShopException;
+use Product;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
@@ -107,6 +108,27 @@ class OrderReturnFeatureContext extends AbstractDomainFeatureContext
             $quantity,
             $orderReturnReference
         ));
+    }
+
+    /**
+     * @Then the queried product with reference :reference of order return :orderReturnReference should be customized with text :text
+     */
+    public function assertQueriedProductIsCustomizedWithText(string $reference, string $orderReturnReference, string $text): void
+    {
+        foreach ($this->getStoredProducts($orderReturnReference) as $product) {
+            if ($product->getReference() !== $reference) {
+                continue;
+            }
+            $fields = $product->getCustomizationFields();
+            if (!$product->isCustomization() || $product->getCustomizationId() === 0 || count($fields) !== 1
+                || $fields[0]->getType() !== Product::CUSTOMIZE_TEXTFIELD || $fields[0]->getValue() !== $text) {
+                throw new RuntimeException(sprintf('Product row "%s" of order return "%s" is not customized with text "%s".', $reference, $orderReturnReference, $text));
+            }
+
+            return;
+        }
+
+        throw new RuntimeException(sprintf('No product row with reference "%s" found for order return "%s".', $reference, $orderReturnReference));
     }
 
     /**
