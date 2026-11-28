@@ -32,6 +32,9 @@ class OrderCartRuleCore extends ObjectModel
     /** @var bool value : deleted from order */
     public $deleted = false;
 
+    /** @var Order * */
+    protected $order;
+
     /**
      * @see ObjectModel::$definition
      */
@@ -55,4 +58,13 @@ class OrderCartRuleCore extends ObjectModel
             'id_order' => ['xlink_resource' => 'orders'],
         ],
     ];
+
+    public function getOrder()
+    {
+        if (!$this->order) {
+            $this->order = new Order($this->id_order);
+        }
+
+        return $this->order;
+    }
 }
