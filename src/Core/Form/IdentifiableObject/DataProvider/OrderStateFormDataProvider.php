@@ -45,6 +45,7 @@ final class OrderStateFormDataProvider implements FormDataProviderInterface
             'pdf_invoice' => $editableOrderState->isPdfInvoice(),
             'pdf_delivery' => $editableOrderState->isPdfDelivery(),
             'shipped' => $editableOrderState->isShipped(),
+            'reserve_products' => $editableOrderState->reservesProducts(),
             'paid' => $editableOrderState->isPaid(),
             'delivery' => $editableOrderState->isDelivery(),
             'template' => $editableOrderState->getLocalizedTemplates(),
@@ -58,6 +59,9 @@ final class OrderStateFormDataProvider implements FormDataProviderInterface
     {
         return [
             'color' => '#ffffff',
+            // A new status holds its orders' products in reserve unless the merchant says otherwise,
+            // which is what every non-shipping status did before the flag existed.
+            'reserve_products' => true,
         ];
     }
 }

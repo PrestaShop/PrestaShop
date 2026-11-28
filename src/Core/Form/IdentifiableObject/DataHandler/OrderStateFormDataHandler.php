@@ -69,7 +69,8 @@ final class OrderStateFormDataHandler implements FormDataHandlerInterface
             $data['shipped'],
             $data['paid'],
             $data['delivery'],
-            $data['template']
+            $data['template'],
+            $data['reserve_products']
         );
 
         if (isset($data['icon'])) {
@@ -106,6 +107,7 @@ final class OrderStateFormDataHandler implements FormDataHandlerInterface
             ->setShipped($data['shipped'])
             ->setPaid($data['paid'])
             ->setDelivery($data['delivery'])
+            ->setReserveProducts($data['reserve_products'])
             ->setTemplate($data['template'])
         ;
 
