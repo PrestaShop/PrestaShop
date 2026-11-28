@@ -187,7 +187,7 @@ class CartCore extends ObjectModel
     public const ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING = 8;
     public const ONLY_PRODUCTS_WITHOUT_GIFTS = 9;
 
-    private const DEFAULT_ATTRIBUTES_KEYS = ['attributes' => '', 'attributes_small' => ''];
+    private const DEFAULT_ATTRIBUTES_KEYS = ['attributes' => '', 'attributes_small' => '', 'attributes_array' => []];
 
     /**
      * CartCore constructor.
@@ -1320,6 +1320,8 @@ class CartCore extends ObjectModel
             $key = $row['id_product_attribute'] . '-' . $id_lang;
             self::$_attributesLists[$key]['attributes'] .= $row['public_group_name'] . $colon . $row['attribute_name'] . $separator . ' ';
             self::$_attributesLists[$key]['attributes_small'] .= $row['attribute_name'] . $separator . ' ';
+            // The text above cannot be parsed back when a name contains the colon or the separator
+            self::$_attributesLists[$key]['attributes_array'][$row['public_group_name']] = $row['attribute_name'];
         }
 
         foreach ($pa_implode as $id_product_attribute) {
