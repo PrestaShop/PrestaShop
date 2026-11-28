@@ -60,10 +60,6 @@ admin_order_returns_pdf:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\OrderReturnController::downloadPdfAction
     _legacy_controller: AdminReturn
-    _legacy_link: AdminPdf:generateOrderReturn
-    _legacy_parameters:
-      id_order_return: orderReturnId
-    _legacy_feature_flag: merchandise_return
   requirements:
     orderReturnId: \d+
 

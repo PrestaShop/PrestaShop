@@ -163,7 +163,7 @@ class AdminSearchControllerCore extends AdminController
                 if ($invoice = OrderInvoice::getInvoiceByNumber($this->query)) {
                     Tools::redirectAdmin(
                         $this->context->link->getAdminLink(
-                            'AdminPdf',
+                            'AdminOrders',
                             true,
                             [
                                 'route' => 'admin_orders_generate_invoice_pdf',
