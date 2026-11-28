@@ -34,7 +34,10 @@
         id="attributes-list-selector"
         class="attributes-list-overflow"
       >
-        <div class="attributes-content">
+        <div
+          class="attributes-content"
+          ref="attributesContent"
+        >
           <div
             class="attribute-group"
             v-for="attributeGroup of attributeGroups"
@@ -140,6 +143,7 @@
         dataSetConfig: {},
         searchSource: {},
         scrollbar: null,
+        resizeObserver: null,
         hasGeneratedCombinations: false,
         checkboxList: [],
       };
@@ -147,8 +151,22 @@
     mounted() {
       this.initDataSetConfig();
       this.scrollbar = new PerfectScrollbar(CombinationsMap.scrollBar);
+      // PerfectScrollbar only measures the container when asked to, but the list changes height after mount
+      // (attribute groups are expanded/collapsed, values are selected), so its geometry must be refreshed
+      const listContent = this.$refs.attributesContent as HTMLElement | undefined;
+
+      if (listContent) {
+        this.resizeObserver = new ResizeObserver(() => this.scrollbar?.update());
+        this.resizeObserver.observe(listContent);
+      }
       const $searchInput = $(CombinationsMap.searchInput);
       new AutoCompleteSearch($searchInput, <Partial<AutoCompleteSearchConfig>> this.dataSetConfig);
+    },
+    beforeUnmount() {
+      this.resizeObserver?.disconnect();
+      this.resizeObserver = null;
+      this.scrollbar?.destroy();
+      this.scrollbar = null;
     },
     watch: {
       selectedAttributeGroups(value: any): void {
@@ -313,6 +331,8 @@
     }
 
     #attributes-list-selector {
+      // PerfectScrollbar positions its rails relatively to the scrolled container
+      position: relative;
       max-height: 50vh;
 
       .attribute-group {
