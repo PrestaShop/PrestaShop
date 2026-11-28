@@ -179,21 +179,21 @@ class CombinationPriceImpactType extends TranslatorAwareType
         }
 
         $builder
-            ->add('final_price_tax_excluded', TextPreviewType::class, [
+            ->add('final_price_tax_excluded', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Final retail price (tax excl.)', 'Admin.Catalog.Feature'),
-                'preview_class' => 'final-price-preview',
                 'attr' => [
                     'class' => 'final-retail-price final-retail-price-tax-excluded',
                 ],
+                'currency' => $this->defaultCurrency->iso_code,
             ])
-            ->add('final_price_tax_included', TextPreviewType::class, [
+            ->add('final_price_tax_included', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Final retail price (tax incl.)', 'Admin.Catalog.Feature'),
-                'preview_class' => 'final-price-preview',
                 'attr' => [
                     'class' => 'final-retail-price final-retail-price-tax-included',
                 ],
+                'currency' => $this->defaultCurrency->iso_code,
                 'column_breaker' => true,
             ])
             ->add('unit_price_tax_excluded', MoneyType::class, [
