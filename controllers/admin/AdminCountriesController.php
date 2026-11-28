@@ -420,11 +420,15 @@ class AdminCountriesControllerCore extends AdminController
         $country = parent::processSave();
 
         if (!count($this->errors)) {
-            if (null === $tmp_addr_format->id_country) {
-                $tmp_addr_format->id_country = $country->id;
+            if (null === $tmp_addr_format->id) {
+                $tmp_addr_format->id = $country->id;
+                $tmp_addr_format->force_id = true;
+                $result = $tmp_addr_format->add();
+            } else {
+                $result = $tmp_addr_format->save();
             }
 
-            if (!$tmp_addr_format->save()) {
+            if (!$result) {
                 $this->errors[] = $this->trans('Invalid address layout %s', [Db::getInstance()->getMsgError()], 'Admin.International.Notification');
             }
         }
