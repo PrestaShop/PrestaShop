@@ -4,6 +4,25 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\Stock\Validate\StockAvailableValidator: ~
 
+  PrestaShop\PrestaShop\Adapter\CacheManager:
+    public: false
+
+  PrestaShop\PrestaShop\Adapter\Product\PackItemsManager:
+    public: false
+
+  PrestaShop\PrestaShop\Adapter\Product\Stock\Update\StockAvailableQuantityUpdater:
+    public: false
+
+  PrestaShop\PrestaShop\Adapter\Product\Stock\Update\StockQuantityUpdater:
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Update\StockAvailableQuantityUpdater'
+      - '@prestashop.adapter.stock_manager'
+      - '@PrestaShop\PrestaShop\Adapter\Product\PackItemsManager'
+      - '@PrestaShop\PrestaShop\Adapter\CacheManager'
+      - '@PrestaShop\PrestaShop\Adapter\HookManager'
+      - '@PrestaShop\PrestaShop\Core\ConfigurationInterface'
+      - '@PrestaShop\PrestaShop\Core\Stock\StockManager'
+
   PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository:
     autowire: true
     public: false

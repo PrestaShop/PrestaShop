@@ -10,7 +10,9 @@ namespace Tests\Integration\Core\Stock;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Adapter\Product\PackItemsManager;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\StockAvailableQuantityUpdater;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Adapter\StockManager as StockProvider;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
@@ -50,7 +52,16 @@ class StockManagerTest extends KernelTestCase
             '\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface',
             $this->configuration
         );
+        $this->testContainer->bind(ConfigurationInterface::class, $this->configuration);
+        $this->testContainer->bind(StockAvailableQuantityUpdater::class, new FakeQuantityUpdater4759());
+        $this->testContainer->bind(StockManager::class, new StockManager());
         ServiceLocator::setServiceContainerInstance($this->testContainer);
+    }
+
+    private function bindPackItemsManager(FakePackItemsManager4759 $packItemsManager): void
+    {
+        $this->testContainer->bind(PackItemsManager::class, $packItemsManager);
+        $this->testContainer->bind(StockProvider::class, new FakeStockProvider4759($packItemsManager));
     }
 
     protected function tearDown(): void
@@ -74,8 +85,7 @@ class StockManagerTest extends KernelTestCase
         foreach ($products as $product) {
             $packItemsManager->addProduct($pack, $product[0], $product[1], $product[2]);
         }
-        $this->testContainer->bind('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager', $packItemsManager);
-        $this->testContainer->bind('\\PrestaShop\\PrestaShop\\Adapter\\StockManager', $packItemsManager);
+        $this->bindPackItemsManager($packItemsManager);
 
         $stockManager = new StockManager();
         $stockManager->updatePackQuantity($pack, $pack->stock_available, $delta);
@@ -167,8 +177,7 @@ class StockManagerTest extends KernelTestCase
         foreach ($products as $product) {
             $this->packItemsManager->addProduct($pack, $product[0], $product[1], $product[2]);
         }
-        $this->testContainer->bind('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager', $this->packItemsManager);
-        $this->testContainer->bind('\\PrestaShop\\PrestaShop\\Adapter\\StockManager', $this->packItemsManager);
+        $this->bindPackItemsManager($this->packItemsManager);
 
         $stockManager = new StockManager();
         // we will update first product quantity only, others will remain inchanged (excepting pack on needed cases)
@@ -265,8 +274,7 @@ class StockManagerTest extends KernelTestCase
         foreach ($products as $product) {
             $this->packItemsManager->addProduct($pack, $product[0], $product[1], $product[2]);
         }
-        $this->testContainer->bind('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager', $this->packItemsManager);
-        $this->testContainer->bind('\\PrestaShop\\PrestaShop\\Adapter\\StockManager', $this->packItemsManager);
+        $this->bindPackItemsManager($this->packItemsManager);
 
         $productToUpdate = ($product_to_update === 0) ? $pack : $products[$product_to_update - 1][0];
         $productAttributeToUpdate = ($product_to_update === 0) ? null : $products[$product_to_update - 1][1];
@@ -438,6 +446,35 @@ class FakePackItemsManager4759 extends PackItemsManager
     public function isPacked($product, $id_product_attribute = false)
     {
         return isset($this->items[$product->id][$id_product_attribute]);
+    }
+}
+
+class FakeStockProvider4759 extends StockProvider
+{
+    public function __construct(private readonly FakePackItemsManager4759 $packItemsManager)
+    {
+    }
+
+    public function getStockAvailableByProduct($product, $id_product_attribute = null, $id_shop = null)
+    {
+        return $this->packItemsManager->getStockAvailableByProduct($product, $id_product_attribute, $id_shop);
+    }
+}
+
+class FakeQuantityUpdater4759 extends StockAvailableQuantityUpdater
+{
+    public function applyDelta(StockAvailable $stockAvailable, int $deltaQuantity, array $otherProperties = []): bool
+    {
+        $stockAvailable->quantity += $deltaQuantity;
+
+        return true;
+    }
+
+    public function setQuantity(StockAvailable $stockAvailable, int $quantity, array $otherProperties = []): bool
+    {
+        $stockAvailable->quantity = $quantity;
+
+        return true;
     }
 }
 

@@ -49,9 +49,8 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository'
-      - '@PrestaShop\PrestaShop\Core\Stock\StockManager'
       - '@PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface'
-      - '@prestashop.core.hook.dispatcher'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Update\StockQuantityUpdater'
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\Create\CombinationCreator:
     autowire: true
