@@ -198,6 +198,7 @@ default:
         - Tests\Integration\Behaviour\Features\Context\Domain\Product\StockAssertionFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCustomizationFieldsFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateShippingFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStockFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\ProductFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\TaxFeatureContext
