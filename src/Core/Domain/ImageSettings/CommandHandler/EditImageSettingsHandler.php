@@ -33,6 +33,7 @@ final class EditImageSettingsHandler extends AbstractObjectModelHandler implemen
             'formats' => $command->getFormats(),
             'base-format' => $command->getBaseFormat(),
             'avif-quality' => $command->getAvifQuality(),
+            'avif-speed' => $command->getAvifSpeed(),
             'jpeg-quality' => $command->getJpegQuality(),
             'png-quality' => $command->getPngQuality(),
             'webp-quality' => $command->getWebpQuality(),

@@ -9,9 +9,11 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Command;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\ImageThumbnailsRegenerator;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\ImageSettings\Command\RegenerateThumbnailsCommand as RegenerateThumbnailsCommandBus;
 use PrestaShop\PrestaShop\Core\Domain\ImageSettings\Exception\ImageTypeException;
+use PrestaShop\PrestaShop\Core\Domain\ImageSettings\Exception\RegenerateThumbnailsTimeoutException;
 use PrestaShop\PrestaShop\Core\Domain\ImageSettings\ImageDomain;
 use PrestaShop\PrestaShop\Core\Domain\ImageSettings\ValueObject\ImageTypeId;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -47,7 +49,9 @@ class RegenerateThumbnailsCommand extends Command
                 sprintf('Allowed images (%s)', implode(', ', ImageDomain::getAllowedValues()))
             )
             ->addArgument('image-type', InputArgument::OPTIONAL, 'Image format ID (0 for all)', null)
-            ->addOption('delete', 'd', InputOption::VALUE_NONE, 'Erase previous images before regenerating');
+            ->addOption('delete', 'd', InputOption::VALUE_NONE, 'Erase previous images before regenerating')
+            ->addOption('workers', 'w', InputOption::VALUE_REQUIRED, 'Number of parallel processes regenerating product thumbnails, each one using up to the PHP memory_limit', '1')
+            ->addOption('worker', null, InputOption::VALUE_REQUIRED, 'Internal: only regenerate the product thumbnails of worker "index/count"');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -56,6 +60,8 @@ class RegenerateThumbnailsCommand extends Command
         $image = $input->getArgument('image');
         $imageTypeId = $input->getArgument('image-type');
         $erase = (bool) $input->getOption('delete');
+        $workers = (int) $input->getOption('workers');
+        $worker = $input->getOption('worker');
 
         try {
             $image = ImageDomain::from($image);
@@ -96,9 +102,29 @@ class RegenerateThumbnailsCommand extends Command
             }
         }
 
+        $workerCount = 1;
+        $workerIndex = null;
+        if (null !== $worker) {
+            if (!preg_match('/^(\d+)\/(\d+)$/', $worker, $matches) || (int) $matches[2] < 2 || (int) $matches[1] >= (int) $matches[2]) {
+                $io->error(sprintf('Worker "%s" is invalid. It must be "index/count", with index lower than count.', $worker));
+
+                return self::FAILURE;
+            }
+            $workerIndex = (int) $matches[1];
+            $workerCount = (int) $matches[2];
+        } elseif ($workers > 1 && !function_exists('proc_open')) {
+            $io->note('proc_open() is disabled, thumbnails are regenerated sequentially.');
+        } elseif ($workers > 1) {
+            $workerCount = $workers;
+        }
+
         try {
-            $this->commandBus->handle(new RegenerateThumbnailsCommandBus($image->value, $imageTypeValue, $erase));
+            $this->commandBus->handle(new RegenerateThumbnailsCommandBus($image->value, $imageTypeValue, $erase, $workerCount, $workerIndex));
             $io->info('The thumbnails were successfully regenerated.');
+        } catch (RegenerateThumbnailsTimeoutException $e) {
+            $io->error('Unable to regenerate thumbnails : ' . $e->getMessage());
+
+            return null !== $worker ? ImageThumbnailsRegenerator::WORKER_TIMEOUT_EXIT_CODE : self::FAILURE;
         } catch (Exception $e) {
             $io->error('Unable to regenerate thumbnails : ' . $e->getMessage());
 

@@ -37,6 +37,7 @@ final class ImageSettingsFormDataProvider implements FormDataProviderInterface
             'formats' => $settings->getFormats(),
             'base-format' => $settings->getBaseFormat(),
             'avif-quality' => $settings->getAvifQuality(),
+            'avif-speed' => $settings->getAvifSpeed(),
             'jpeg-quality' => $settings->getJpegQuality(),
             'png-quality' => $settings->getPngQuality(),
             'webp-quality' => $settings->getWebpQuality(),
@@ -53,6 +54,7 @@ final class ImageSettingsFormDataProvider implements FormDataProviderInterface
         $command->setFormats($data['formats']);
         $command->setBaseFormat($data['base-format']);
         $command->setAvifQuality($data['avif-quality']);
+        $command->setAvifSpeed($data['avif-speed']);
         $command->setJpegQuality($data['jpeg-quality']);
         $command->setPngQuality($data['png-quality']);
         $command->setWebpQuality($data['webp-quality']);

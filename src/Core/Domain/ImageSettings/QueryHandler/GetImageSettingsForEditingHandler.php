@@ -43,7 +43,8 @@ final class GetImageSettingsForEditingHandler implements GetImageSettingsForEdit
             $config['generation-method'],
             $config['picture-max-size'],
             $config['picture-max-width'],
-            $config['picture-max-height']
+            $config['picture-max-height'],
+            $config['avif-speed']
         );
     }
 }

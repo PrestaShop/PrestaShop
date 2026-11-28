@@ -246,6 +246,7 @@ class ImageRetriever
                 'sources' => $sources,
             ];
         }
+        ImageManager::clearDecodedSource();
 
         // Sort thumbnails by size
         uasort($urls, function (array $a, array $b) {
