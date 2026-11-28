@@ -104,7 +104,7 @@ class ContextCore
     /** @var Translator */
     protected $translator = null;
 
-    /** @var int */
+    /** @var int|null */
     protected $priceComputingPrecision = null;
 
     /** Mobile device of the customer. */
@@ -551,5 +551,14 @@ class ContextCore
         }
 
         return $this->priceComputingPrecision;
+    }
+
+    /**
+     * Clears the cached computing precision, so it is computed again from the current
+     * currency on the next call to getComputingPrecision().
+     */
+    public function resetComputingPrecision(): void
+    {
+        $this->priceComputingPrecision = null;
     }
 }

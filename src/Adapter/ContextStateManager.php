@@ -130,6 +130,7 @@ class ContextStateManager
     {
         $this->saveContextField('currency');
         $this->getContext()->currency = $currency;
+        $this->updateComputingPrecision();
 
         return $this;
     }
@@ -339,6 +340,9 @@ class ContextStateManager
             } else {
                 $this->getContext()->$fieldName = $this->contextFieldsStack[$currentStashIndex][$fieldName];
             }
+            if ('currency' === $fieldName) {
+                $this->updateComputingPrecision();
+            }
             unset($this->contextFieldsStack[$currentStashIndex][$fieldName]);
         }
     }
@@ -356,6 +360,22 @@ class ContextStateManager
         }
 
         return array_key_last($this->contextFieldsStack);
+    }
+
+    /**
+     * The computing precision depends on the context currency, so it is computed again as soon as a currency
+     * is set or restored. When the context has no currency (for example when it is restored to its state before
+     * the back office context was built), or a currency without precision, the precision cannot be computed,
+     * so the last computed value is kept.
+     */
+    private function updateComputingPrecision(): void
+    {
+        $context = $this->getContext();
+        // A currency without precision (e.g. not found in database) cannot be used either, the last computed value is kept
+        if ($context->currency instanceof Currency && null !== $context->currency->precision) {
+            $context->resetComputingPrecision();
+            $context->getComputingPrecision();
+        }
     }
 
     /**
