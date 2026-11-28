@@ -7,10 +7,14 @@
 namespace Tests\Integration\Classes\module;
 
 use Cache;
+use Context;
+use Db;
+use FrontController;
 use Module;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use ReflectionMethod;
+use Shop;
 use Tests\Integration\Utility\ContextMockerTrait;
 
 /**
@@ -107,6 +111,178 @@ class ModuleTest extends TestCase
         $this->assertEquals('paymentOptions', $possibleHooksList[2]['name']);
 
         Module::getInstanceByName('bankwire')->uninstall();
+    }
+
+    public function testLookupsFollowModuleLifecycle(): void
+    {
+        if (Module::isInstalled('bankwire')) {
+            Module::getInstanceByName('bankwire')->uninstall();
+        }
+
+        $this->assertGreaterThan(0, Module::getModuleIdByName('ps_featuredproducts'));
+        $this->assertSame(0, Module::getModuleIdByName('bankwire'));
+        $this->assertFalse(Module::isInstalled('bankwire'));
+        $this->assertFalse(Module::isEnabled('bankwire'));
+        $this->assertSame(0, Module::getModuleIdByName('not_a_module'));
+
+        $this->assertTrue(ModuleManagerBuilder::getInstance()->build()->install('bankwire'));
+        $module = Module::getInstanceByName('bankwire');
+        $this->assertSame((int) $module->id, Module::getModuleIdByName('bankwire'));
+        $this->assertSame((int) $module->id, Module::getModuleIdByName('BankWire'));
+        $this->assertTrue(Module::isInstalled('bankwire'));
+        $this->assertTrue(Module::isEnabled('bankwire'));
+
+        $this->assertTrue($module->disable());
+        $this->assertTrue(Module::isInstalled('bankwire'));
+        $this->assertFalse(Module::isEnabled('bankwire'));
+
+        $this->assertTrue($module->enable());
+        $this->assertTrue(Module::isEnabled('bankwire'));
+
+        // Another process removes the shop association, the lookups are only reset by clearing the cache
+        Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_shop` WHERE `id_module` = ' . (int) $module->id);
+        Cache::clear();
+        $this->assertTrue(Module::isInstalled('bankwire'));
+        $this->assertFalse(Module::isEnabled('bankwire'));
+
+        $this->assertTrue($module->enable());
+        $this->assertTrue(Module::isEnabled('bankwire'));
+
+        $this->assertTrue($module->uninstall());
+        $this->assertSame(0, Module::getModuleIdByName('bankwire'));
+        $this->assertFalse(Module::isInstalled('bankwire'));
+        $this->assertFalse(Module::isEnabled('bankwire'));
+    }
+
+    public function testIsEnabledFollowsContextShop(): void
+    {
+        if (Module::isInstalled('bankwire')) {
+            Module::getInstanceByName('bankwire')->uninstall();
+        }
+        $this->assertTrue(ModuleManagerBuilder::getInstance()->build()->install('bankwire'));
+        $module = Module::getInstanceByName('bankwire');
+        $context = Context::getContext();
+        $contextShop = $context->shop;
+
+        try {
+            // Enabled in shop 1 only
+            Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_shop` WHERE `id_module` = ' . (int) $module->id . ' AND `id_shop` <> 1');
+            Cache::clear();
+            $this->assertSame(1, (int) $contextShop->id);
+            $this->assertTrue(Module::isEnabled('bankwire'));
+
+            $otherShop = new Shop();
+            $otherShop->id = 2;
+            $context->shop = $otherShop;
+            $this->assertFalse(Module::isEnabled('bankwire'));
+            $this->assertTrue(Module::isInstalled('bankwire'));
+        } finally {
+            $context->shop = $contextShop;
+            $module->uninstall();
+        }
+    }
+
+    /**
+     * @dataProvider providerControllers
+     */
+    public function testConstructorsRunTheModuleListQueryOnce(?string $controllerClass): void
+    {
+        $context = Context::getContext();
+        $previousController = $context->controller;
+        $context->controller = $controllerClass === null ? null : $this->createMock($controllerClass);
+
+        try {
+            Module::resetStaticCache();
+            $moduleIds = array_column(Db::getInstance()->executeS('SELECT `id_module`, `name` FROM `' . _DB_PREFIX_ . 'module` ORDER BY `id_module` LIMIT 20'), 'id_module', 'name');
+            $this->assertGreaterThan(1, count($moduleIds));
+
+            $selectsBefore = $this->countSelectQueries();
+            foreach ($moduleIds as $name => $moduleId) {
+                $this->assertSame((int) $moduleId, (int) $this->constructModule($name)->id);
+            }
+            $name = array_key_first($moduleIds);
+            $this->assertTrue(Module::isInstalled($name));
+            $this->assertSame((int) $moduleIds[$name], Module::getModuleIdByName($name));
+            Module::isEnabled($name);
+
+            $this->assertSame(1, $this->countSelectQueries() - $selectsBefore);
+        } finally {
+            $context->controller = $previousController;
+        }
+    }
+
+    public function providerControllers(): array
+    {
+        return [
+            'front controller' => [FrontController::class],
+            'no legacy controller' => [null],
+        ];
+    }
+
+    public function testConstructorReadsModuleIdAndStatusPerShop(): void
+    {
+        if (Module::isInstalled('bankwire')) {
+            Module::getInstanceByName('bankwire')->uninstall();
+        }
+        $this->assertSame(0, (int) $this->constructModule('bankwire')->id);
+        $this->assertFalse((bool) $this->constructModule('bankwire')->active);
+
+        $this->assertTrue(ModuleManagerBuilder::getInstance()->build()->install('bankwire'));
+        $module = Module::getInstanceByName('bankwire');
+        $moduleId = (int) Db::getInstance()->getValue('SELECT `id_module` FROM `' . _DB_PREFIX_ . 'module` WHERE `name` = "bankwire"');
+        $context = Context::getContext();
+        $contextShop = $context->shop;
+
+        try {
+            $this->assertGreaterThan(0, $moduleId);
+            $this->assertSame($moduleId, (int) $this->constructModule('bankwire')->id);
+            $this->assertTrue((bool) $this->constructModule('bankwire')->active);
+
+            $this->assertTrue($module->disable());
+            $this->assertSame($moduleId, (int) $this->constructModule('bankwire')->id);
+            $this->assertFalse((bool) $this->constructModule('bankwire')->active);
+
+            $this->assertTrue($module->enable());
+            $this->assertTrue((bool) $this->constructModule('bankwire')->active);
+
+            // Enabled in shop 1 only
+            Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_shop` WHERE `id_module` = ' . $moduleId . ' AND `id_shop` <> 1');
+            Cache::clear();
+            $this->assertSame(1, (int) $contextShop->id);
+            $this->assertTrue((bool) $this->constructModule('bankwire')->active);
+
+            $otherShop = new Shop();
+            $otherShop->id = 2;
+            $context->shop = $otherShop;
+            $otherShopModule = $this->constructModule('bankwire');
+            $this->assertSame($moduleId, (int) $otherShopModule->id);
+            $this->assertFalse((bool) $otherShopModule->active);
+        } finally {
+            $context->shop = $contextShop;
+            $module->uninstall();
+        }
+
+        $uninstalled = $this->constructModule('bankwire');
+        $this->assertSame(0, (int) $uninstalled->id);
+        $this->assertFalse((bool) $uninstalled->active);
+    }
+
+    private function constructModule(string $name): Module
+    {
+        return new class($name) extends Module {
+            public function __construct(string $moduleName)
+            {
+                $this->name = $moduleName;
+                parent::__construct();
+            }
+        };
+    }
+
+    private function countSelectQueries(): int
+    {
+        $status = Db::getInstance()->executeS("SHOW SESSION STATUS LIKE 'Com_select'", true, false);
+
+        return (int) $status[0]['Value'];
     }
 }
 

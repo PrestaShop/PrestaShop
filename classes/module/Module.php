@@ -166,7 +166,7 @@ abstract class ModuleCore implements ModuleInterface
     /** @var string Identifier of the main table */
     protected $identifier = 'id_module';
 
-    /** @var array|null Array cache filled with modules informations */
+    /** @var array|null Array cache filled with the upgrade state of modules */
     protected static $modules_cache;
 
     /** @var array Array cache filled with modules instances */
@@ -317,40 +317,19 @@ abstract class ModuleCore implements ModuleInterface
             $this->name = $this->id;
         }
 
-        // If the module has the name we load the corresponding data from the cache
+        // If the module has the name we load its id and status from the installed modules list
         if ($this->name != null) {
-            // If cache is not generated, we generate it
-            if (static::$modules_cache == null && !is_array(static::$modules_cache)) {
-                $id_shop = (Validate::isLoadedObject($this->context->shop) ? $this->context->shop->id : Configuration::get('PS_SHOP_DEFAULT'));
+            $id_shop = (Validate::isLoadedObject($this->context->shop) ? $this->context->shop->id : Configuration::get('PS_SHOP_DEFAULT'));
 
-                static::$modules_cache = [];
-                // Join clause is done to check if the module is activated in current shop context
-                $result = Db::getInstance()->executeS('
-                SELECT m.`id_module`, m.`name`, ms.`id_module`as `mshop`
-                FROM `' . _DB_PREFIX_ . 'module` m
-                LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms
-                ON m.`id_module` = ms.`id_module`
-                AND ms.`id_shop` = ' . (int) $id_shop);
-                foreach ($result as $row) {
-                    static::$modules_cache[$row['name']] = $row;
-                    static::$modules_cache[$row['name']]['active'] = ($row['mshop'] > 0) ? 1 : 0;
-                }
-            }
-
-            // We load configuration from the cache
-            if (isset(static::$modules_cache[$this->name])) {
-                if (isset(static::$modules_cache[$this->name]['id_module'])) {
-                    $this->id = static::$modules_cache[$this->name]['id_module'];
-                }
-                foreach (static::$modules_cache[$this->name] as $key => $value) {
-                    if (array_key_exists($key, get_object_vars($this))) {
-                        $this->{$key} = $value;
-                    }
-                }
+            // The module is enabled when it is associated with the current shop context
+            $installedModule = self::getInstalledModule((string) $this->name, (int) $id_shop);
+            if ($installedModule !== null) {
+                $this->id = $installedModule['id_module'];
+                $this->active = $installedModule['enabled'];
                 $this->_path = __PS_BASE_URI__ . 'modules/' . $this->name . '/';
             }
 
-            // In Symfony BO, context controller is not a legacy Controller (proxy/context), keep modules cache to preserve module id.
+            // In Symfony BO, context controller is not a legacy Controller (proxy/context), reset the upgrade state kept in the modules cache.
             if (!$this->context->controller instanceof Controller && !$this->context->controller instanceof LegacyControllerContext) {
                 static::$modules_cache = null;
             }
@@ -459,8 +438,7 @@ abstract class ModuleCore implements ModuleInterface
         }
         $this->id = Db::getInstance()->Insert_ID();
 
-        Cache::clean('Module::isInstalled' . $this->name);
-        Cache::clean('Module::getModuleIdByName_' . pSQL($this->name));
+        Cache::clean('Module::isEnabled*');
 
         // Enable the module for current shops in context
         if (!$this->enable()) {
@@ -958,8 +936,7 @@ abstract class ModuleCore implements ModuleInterface
 
         // Uninstall the module
         if (Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module` WHERE `id_module` = ' . (int) $this->id)) {
-            Cache::clean('Module::isInstalled' . $this->name);
-            Cache::clean('Module::getModuleIdByName_' . pSQL($this->name));
+            Cache::clean('Module::isEnabled*');
             PrestaShopLogger::addLog(
                 Context::getContext()->getTranslator()->trans(
                     'Module uninstalled successfully: %s v%s',
@@ -1072,6 +1049,7 @@ abstract class ModuleCore implements ModuleInterface
 
         // set active to 1 in the module table
         Db::getInstance()->update('module', ['active' => 1], 'id_module = ' . (int) $this->id);
+        Cache::clean('Module::isEnabled*');
 
         if ($moduleActivated) {
             $this->loadBuiltInTranslations();
@@ -1134,6 +1112,7 @@ abstract class ModuleCore implements ModuleInterface
             $sql = 'DELETE `' . _DB_PREFIX_ . 'module_shop` FROM `' . _DB_PREFIX_ . 'module_shop` JOIN `' . _DB_PREFIX_ . 'module` USING (id_module) WHERE `name` = "' . pSQL($n) . '"';
             $res &= Db::getInstance()->execute($sql);
         }
+        Cache::clean('Module::isEnabled*');
 
         return $res;
     }
@@ -1185,6 +1164,7 @@ abstract class ModuleCore implements ModuleInterface
         // Disable module for all shops or contextual shops
         $whereIdShop = $force_all ? '' : ' AND `id_shop` IN(' . implode(', ', Shop::getContextListShopID()) . ')';
         $result &= Db::getInstance()->delete('module_shop', '`id_module` = ' . (int) $this->id . $whereIdShop);
+        Cache::clean('Module::isEnabled*');
 
         // if module has no more shop associations, set module.active = 0
         if (!$this->hasShopAssociations()) {
@@ -2309,14 +2289,7 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function isInstalled($module_name)
     {
-        if (!Cache::isStored('Module::isInstalled' . $module_name)) {
-            $id_module = Module::getModuleIdByName($module_name);
-            Cache::store('Module::isInstalled' . $module_name, (bool) $id_module);
-
-            return (bool) $id_module;
-        }
-
-        return Cache::retrieve('Module::isInstalled' . $module_name);
+        return (bool) Module::getModuleIdByName($module_name);
     }
 
     public function isEnabledForShopContext()
@@ -2340,18 +2313,9 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function isEnabled($module_name)
     {
-        if (!Cache::isStored('Module::isEnabled' . $module_name)) {
-            $active = false;
-            $id_module = Module::getModuleIdByName($module_name);
-            if (Db::getInstance()->getValue('SELECT `id_module` FROM `' . _DB_PREFIX_ . 'module_shop` WHERE `id_module` = ' . (int) $id_module . ' AND `id_shop` = ' . (int) Context::getContext()->shop->id)) {
-                $active = true;
-            }
-            Cache::store('Module::isEnabled' . $module_name, (bool) $active);
+        $module = self::getInstalledModule((string) $module_name, (int) Context::getContext()->shop->id);
 
-            return (bool) $active;
-        }
-
-        return Cache::retrieve('Module::isEnabled' . $module_name);
+        return $module !== null && $module['enabled'];
     }
 
     /**
@@ -2852,15 +2816,38 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function getModuleIdByName($name)
     {
-        $cache_id = 'Module::getModuleIdByName_' . pSQL($name);
-        if (!Cache::isStored($cache_id)) {
-            $result = (int) Db::getInstance()->getValue('SELECT `id_module` FROM `' . _DB_PREFIX_ . 'module` WHERE `name` = "' . pSQL($name) . '"');
-            Cache::store($cache_id, $result);
+        $shop = Context::getContext()->shop;
+        $module = self::getInstalledModule((string) $name, isset($shop->id) ? (int) $shop->id : 0);
 
-            return $result;
+        return $module['id_module'] ?? 0;
+    }
+
+    /**
+     * Loads every installed module with one query on the first lookup.
+     *
+     * @return array{id_module: int, enabled: bool}|null
+     */
+    private static function getInstalledModule(string $moduleName, int $shopId): ?array
+    {
+        // Stored under the Module::isEnabled prefix so that Cache::clean('Module::isEnabled*') and Cache::clear() reset it
+        $cacheId = 'Module::isEnabled_shop_' . $shopId;
+        if (!Cache::isStored($cacheId)) {
+            $query = new DbQuery();
+            $query->select('m.`id_module`, m.`name`, ms.`id_module` IS NOT NULL AS `enabled`');
+            $query->from('module', 'm');
+            $query->leftJoin('module_shop', 'ms', 'ms.`id_module` = m.`id_module` AND ms.`id_shop` = ' . $shopId);
+
+            $modules = [];
+            foreach (Db::getInstance()->executeS($query) ?: [] as $row) {
+                $modules[strtolower($row['name'])] = [
+                    'id_module' => (int) $row['id_module'],
+                    'enabled' => (bool) $row['enabled'],
+                ];
+            }
+            Cache::store($cacheId, $modules);
         }
 
-        return Cache::retrieve($cache_id);
+        return Cache::retrieve($cacheId)[strtolower($moduleName)] ?? null;
     }
 
     /**
