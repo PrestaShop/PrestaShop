@@ -8,8 +8,10 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Classes;
 
+use Cookie;
 use Customer;
 use CustomerSession;
+use Db;
 use PHPUnit\Framework\TestCase;
 use Tests\Resources\classes\TestCookie;
 use Tools;
@@ -60,6 +62,68 @@ class CookieTest extends TestCase
         $this->assertSame($session, $cookie->getSession($cookie->session_id));
 
         $cookie->deleteSession();
+    }
+
+    public function testSessionDateUpdIsNotRefreshedWithinThrottleInterval(): void
+    {
+        $customer = $this->createDummyCustomer();
+
+        $cookie = new TestCookie();
+        $cookie->id_customer = (int) $customer->id;
+        $cookie->registerSession(new CustomerSession());
+
+        $sessionId = (int) $cookie->session_id;
+        $staleDate = date('Y-m-d H:i:s', time() - 60);
+        Db::getInstance()->update(
+            'customer_session',
+            ['date_upd' => $staleDate],
+            'id_customer_session = ' . $sessionId
+        );
+
+        $freshCookie = new TestCookie();
+        $freshCookie->id_customer = (int) $customer->id;
+        $freshCookie->session_id = $sessionId;
+        $freshCookie->session_token = $cookie->session_token;
+
+        $session = $freshCookie->getSession($sessionId);
+        $this->assertInstanceOf(CustomerSession::class, $session);
+
+        $reloaded = new CustomerSession($sessionId);
+        $this->assertSame($staleDate, $reloaded->date_upd);
+
+        $freshCookie->deleteSession();
+    }
+
+    public function testSessionDateUpdIsRefreshedAfterThrottleInterval(): void
+    {
+        $customer = $this->createDummyCustomer();
+
+        $cookie = new TestCookie();
+        $cookie->id_customer = (int) $customer->id;
+        $cookie->registerSession(new CustomerSession());
+
+        $sessionId = (int) $cookie->session_id;
+        $expiredThrottleDate = date('Y-m-d H:i:s', time() - Cookie::SESSION_REFRESH_INTERVAL - 60);
+        Db::getInstance()->update(
+            'customer_session',
+            ['date_upd' => $expiredThrottleDate],
+            'id_customer_session = ' . $sessionId
+        );
+
+        $freshCookie = new TestCookie();
+        $freshCookie->id_customer = (int) $customer->id;
+        $freshCookie->session_id = $sessionId;
+        $freshCookie->session_token = $cookie->session_token;
+
+        $beforeCall = time();
+        $session = $freshCookie->getSession($sessionId);
+        $this->assertInstanceOf(CustomerSession::class, $session);
+
+        $reloaded = new CustomerSession($sessionId);
+        $this->assertNotSame($expiredThrottleDate, $reloaded->date_upd);
+        $this->assertGreaterThanOrEqual($beforeCall, strtotime((string) $reloaded->date_upd));
+
+        $freshCookie->deleteSession();
     }
 
     private function createDummyCustomer(): Customer
