@@ -360,6 +360,10 @@ class StockAvailableCore extends ObjectModel
         if (!Validate::isLoadedObject($product)) {
             return false;
         }
+        // A deleted combination has no stock row left, one created here would be added to the product's total
+        if ($id_product_attribute && !Combination::existsInDatabase((int) $id_product_attribute)) {
+            return false;
+        }
 
         $stockManager = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Stock\\StockManager');
         $stockManager->updateQuantity($product, $id_product_attribute, $delta_quantity, $id_shop, $add_movement, $params);
