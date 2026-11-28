@@ -1016,14 +1016,12 @@ class LinkCore
                 }
             }
 
-            $theme = ((Shop::isFeatureActive() && file_exists(_PS_PRODUCT_IMG_DIR_ . Image::getImgFolderStatic($idImage) . $idImage . $type . '-' . (int) Context::getContext()->shop->theme_name . '.jpg')) ? '-' . Context::getContext()->shop->theme_name : '');
-
             // If friendly URLs are enabled
             if ($this->allow) {
-                $uriPath = __PS_BASE_URI__ . $idImage . $type . $theme . '/' . $name . '.' . $extension;
+                $uriPath = __PS_BASE_URI__ . $idImage . $type . '/' . $name . '.' . $extension;
             // If friendly URLs are disabled
             } else {
-                $uriPath = _THEME_PROD_DIR_ . Image::getImgFolderStatic($idImage) . $idImage . $type . $theme . '.' . $extension;
+                $uriPath = _THEME_PROD_DIR_ . Image::getImgFolderStatic($idImage) . $idImage . $type . '.' . $extension;
             }
         }
 
