@@ -12,6 +12,7 @@ use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
+use PrestaShop\PrestaShop\Core\Seo\NoIndexUrlParametersMatcher;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\IpUtils;
@@ -1815,6 +1816,12 @@ class FrontControllerCore extends Controller
         return $image ? $psImageUrl . $image : '';
     }
 
+    protected function isNoIndexedByUrlParameters(): bool
+    {
+        return (new NoIndexUrlParametersMatcher((string) Configuration::get('PS_NOINDEX_URL_PARAMETERS_LIST')))
+            ->matchesUrl($_SERVER['REQUEST_URI'] ?? '');
+    }
+
     /**
      * Initializes a set of commonly used variables related to the current page, available for use
      * in the template. @see FrontController::assignGeneralPurposeVariables for more information.
@@ -1860,7 +1867,7 @@ class FrontControllerCore extends Controller
             'meta' => [
                 'title' => $meta_tags['meta_title'],
                 'description' => $meta_tags['meta_description'],
-                'robots' => 'index',
+                'robots' => $this->isNoIndexedByUrlParameters() ? 'noindex' : 'index',
             ],
             'page_name' => $page_name,
             'body_classes' => $body_classes,
