@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\RequestSqlFilters;
 use PrestaShop\PrestaShop\Core\SqlManager\Exporter\SqlRequestExporter;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
+use PrestaShopBundle\Controller\Attribute\AllShopContext;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -44,6 +45,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 /**
  * Responsible of "Configure > Advanced Parameters > Database -> SQL Manager" page.
  */
+#[AllShopContext]
 class SqlManagerController extends PrestaShopAdminController
 {
     /**
@@ -82,6 +84,12 @@ class SqlManagerController extends PrestaShopAdminController
             'layoutTitle' => $this->trans('SQL manager', [], 'Admin.Navigation.Menu'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'multistoreInfoTip' => $this->trans(
+                'Note that this page is available in all shops context only, this is why your context has just switched.',
+                [],
+                'Admin.Notifications.Info'
+            ),
+            'multistoreIsUsed' => $this->getShopContext()->isMultiShopUsed() && $this->getShopContext()->getShopConstraint()->getShopId() !== null,
             'requestSqlSettingsForm' => $settingsForm->createView(),
             'requestSqlGrid' => $this->presentGrid($grid),
         ]);
@@ -158,7 +166,7 @@ class SqlManagerController extends PrestaShopAdminController
                 [],
                 'Admin.Notifications.Info'
             ),
-            'multistoreIsUsed' => $this->getShopContext()->isMultiShopUsed(),
+            'multistoreIsUsed' => $this->getShopContext()->isMultiShopUsed() && $this->getShopContext()->getShopConstraint()->getShopId() !== null,
         ]);
     }
 
@@ -205,6 +213,12 @@ class SqlManagerController extends PrestaShopAdminController
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/edit.html.twig', [
             'layoutTitle' => $this->trans('Editing SQL query %query%', ['%query%' => $sqlRequestForm->getData()['name']], 'Admin.Navigation.Menu'),
             'enableSidebar' => true,
+            'multistoreInfoTip' => $this->trans(
+                'Note that this page is available in all shops context only, this is why your context has just switched.',
+                [],
+                'Admin.Notifications.Info'
+            ),
+            'multistoreIsUsed' => $this->getShopContext()->isMultiShopUsed() && $this->getShopContext()->getShopConstraint()->getShopId() !== null,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'requestSqlForm' => $sqlRequestForm->createView(),
             'dbTableNames' => $this->getDatabaseTables(),
