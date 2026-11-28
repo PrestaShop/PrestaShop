@@ -407,6 +407,14 @@ class ImageCore extends ObjectModel
     public static function duplicateProductImages($idProductOld, $idProductNew, $combinationImages)
     {
         $imagesTypes = ImageType::getImagesTypes('products');
+        $productNewShops = array_map('intval', array_column(
+            Db::getInstance()->executeS(
+                'SELECT `id_shop`
+                FROM `' . _DB_PREFIX_ . 'product_shop`
+                WHERE `id_product` = ' . (int) $idProductNew
+            ) ?: [],
+            'id_shop'
+        ));
         $result = Db::getInstance()->executeS('
 		SELECT `id_image`
 		FROM `' . _DB_PREFIX_ . 'image`
@@ -420,17 +428,24 @@ class ImageCore extends ObjectModel
             // A new id is generated for the cloned image when calling add()
             if ($imageNew->add()) {
                 $newPath = $imageNew->getPathForCreation();
+                $watermarkHash = Configuration::get('WATERMARK_HASH');
                 foreach ($imagesTypes as $imageType) {
-                    if (file_exists(_PS_PRODUCT_IMG_DIR_ . $imageOld->getExistingImgPath() . '-' . $imageType['name'] . '.jpg')) {
-                        $imageNew->createImgFolder();
-                        copy(
-                            _PS_PRODUCT_IMG_DIR_ . $imageOld->getExistingImgPath() . '-' . $imageType['name'] . '.jpg',
-                            $newPath . '-' . $imageType['name'] . '.jpg'
-                        );
-                        if (Configuration::get('WATERMARK_HASH')) {
-                            $oldImagePath = _PS_PRODUCT_IMG_DIR_ . $imageOld->getExistingImgPath() . '-' . $imageType['name'] . '-' . Configuration::get('WATERMARK_HASH') . '.jpg';
-                            if (file_exists($oldImagePath)) {
-                                copy($oldImagePath, $newPath . '-' . $imageType['name'] . '-' . Configuration::get('WATERMARK_HASH') . '.jpg');
+                    foreach (ImageFormatConfiguration::SUPPORTED_FORMATS as $format) {
+                        $srcFile = _PS_PRODUCT_IMG_DIR_ . $imageOld->getExistingImgPath() . '-' . $imageType['name'] . '.' . $format;
+                        if (file_exists($srcFile)) {
+                            $imageNew->createImgFolder();
+                            copy(
+                                $srcFile,
+                                $newPath . '-' . $imageType['name'] . '.' . $format
+                            );
+                            if ($watermarkHash) {
+                                $oldWatermarkPath = _PS_PRODUCT_IMG_DIR_ . $imageOld->getExistingImgPath() . '-' . $imageType['name'] . '-' . $watermarkHash . '.' . $format;
+                                if (file_exists($oldWatermarkPath)) {
+                                    copy(
+                                        $oldWatermarkPath,
+                                        $newPath . '-' . $imageType['name'] . '-' . $watermarkHash . '.' . $format
+                                    );
+                                }
                             }
                         }
                     }
@@ -442,8 +457,15 @@ class ImageCore extends ObjectModel
 
                 Image::replaceAttributeImageAssociationId($combinationImages, (int) $imageOld->id, (int) $imageNew->id);
 
-                // Duplicate shop associations for images
-                $imageNew->duplicateShops($idProductOld);
+                // Duplicate shop associations from the source image (not $idProductOld),
+                // restricted to shops where the destination product exists.
+                $oldImageShops = $imageOld->getAssociatedShops();
+                $targetShops = !empty($productNewShops)
+                    ? array_values(array_intersect($oldImageShops, $productNewShops))
+                    : $oldImageShops;
+                if (!empty($targetShops)) {
+                    $imageNew->associateTo($targetShops);
+                }
             } else {
                 return false;
             }
