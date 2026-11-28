@@ -142,4 +142,28 @@ class CustomerNameValidatorTest extends ConstraintValidatorTestCase
     {
         return new CustomerNameValidator();
     }
+
+    /**
+     * The help text shown next to these fields names hyphens and apostrophes, so the validator has
+     * to keep accepting them.
+     *
+     * @dataProvider provideNamesTheHelpTextPromises
+     */
+    public function testItAcceptsTheCharactersTheHelpTextNames(string $name)
+    {
+        $this->validator->validate($name, new CustomerName());
+
+        $this->assertNoViolation();
+    }
+
+    public function provideNamesTheHelpTextPromises(): array
+    {
+        return [
+            ['Jean-Luc'],
+            ["D'Angelo"],
+            ["Jean-Luc D'Angelo"],
+            ['Anne Marie'],
+            ['O. Brien'],
+        ];
+    }
 }
