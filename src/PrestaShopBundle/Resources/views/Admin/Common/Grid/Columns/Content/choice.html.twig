@@ -37,9 +37,23 @@
       class="dropdown-menu js-choice-options"
       data-url="{{ url(column.options.route, routeParams) }}"
     >
+      {% if column.options.searchable|default(false) %}
+        <div class="px-2 pb-2">
+          <input
+            type="search"
+            class="form-control form-control-sm js-choice-search"
+            placeholder="{{ 'Search'|trans({}, 'Admin.Actions') }}"
+            aria-label="{{ 'Search'|trans({}, 'Admin.Actions') }}"
+            autocomplete="off"
+          >
+        </div>
+      {% endif %}
       {% for name, value in choices|filter(value => value != selectedChoice) %}
         <button class="js-dropdown-item dropdown-item" data-value="{{ value }}">{{ name }}</button>
       {% endfor %}
+      {% if column.options.searchable|default(false) %}
+        <span class="dropdown-item-text text-muted d-none js-choice-no-results">{{ 'No records found'|trans({}, 'Admin.Global') }}</span>
+      {% endif %}
     </div>
   </div>
 {% endif %}

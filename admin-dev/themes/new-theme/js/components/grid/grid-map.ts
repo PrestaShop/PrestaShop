@@ -63,6 +63,8 @@ export default {
   selectPosition: 'js-position',
   togglableRow: '.ps-togglable-row',
   dropdownItem: '.js-dropdown-item',
+  choiceSearch: '.js-choice-search',
+  choiceNoResults: '.js-choice-no-results',
   table: 'table.table',
   headerToolbar: '.header-toolbar',
   breadcrumbItem: '.breadcrumb-item',
