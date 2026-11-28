@@ -375,10 +375,11 @@ class StockAvailableCore extends ObjectModel
      * @param int $quantity
      * @param int|null $id_shop
      * @param bool $add_movement
+     * @param array $params Optional parameters for the stock movement, e.g. `id_stock_mvt_reason`
      *
      * @return bool|void
      */
-    public static function setQuantity($id_product, $id_product_attribute, $quantity, $id_shop = null, $add_movement = true)
+    public static function setQuantity($id_product, $id_product_attribute, $quantity, $id_shop = null, $add_movement = true, $params = [])
     {
         if (!Validate::isUnsignedId($id_product)) {
             return false;
@@ -402,7 +403,7 @@ class StockAvailableCore extends ObjectModel
             $stock_available->update();
 
             if (true === $add_movement && 0 != $deltaQuantity) {
-                $stockManager->saveMovement($id_product, $id_product_attribute, $deltaQuantity);
+                $stockManager->saveMovement($id_product, $id_product_attribute, $deltaQuantity, $params);
             }
         } else {
             $out_of_stock = StockAvailable::outOfStock($id_product, $id_shop);
@@ -427,7 +428,7 @@ class StockAvailableCore extends ObjectModel
             $stock_available->add();
 
             if (true === $add_movement && 0 != $quantity) {
-                $stockManager->saveMovement($id_product, $id_product_attribute, (int) $quantity);
+                $stockManager->saveMovement($id_product, $id_product_attribute, (int) $quantity, $params);
             }
         }
 
