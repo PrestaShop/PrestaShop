@@ -12,6 +12,8 @@ import ChoiceTree from '@js/components/form/choice-tree';
 import ColorPicker from '@js/app/utils/colorpicker';
 import CountryDniRequiredToggler from '@components/country-dni-required-toggler';
 import CountryStateSelectionToggler from '@components/country-state-selection-toggler';
+import DashboardChart from '@js/components/dashboard/dashboard-chart';
+import DashboardDateRange from '@js/components/dashboard/dashboard-date-range';
 import DateRange from '@js/components/form/date-range';
 import DeltaQuantityInput from '@components/form/delta-quantity-input';
 import DisablingSwitch from '@components/form/disabling-switch';
@@ -125,6 +127,8 @@ const initPrestashopComponents = (): void => {
     ColorPicker,
     CountryDniRequiredToggler,
     CountryStateSelectionToggler,
+    DashboardChart,
+    DashboardDateRange,
     DeltaQuantityInput,
     DisablingSwitch,
     EventEmitter,
