@@ -1,12 +1,10 @@
 /*!
- * jQuery UI Resizable 1.10.3
- * http://jqueryui.com
+ * jQuery UI Resizable 1.13.3
+ * https://jqueryui.com
  *
- * Copyright 2013 jQuery Foundation and other contributors
+ * Copyright OpenJS Foundation and other contributors
  * Released under the MIT license.
- * http://jquery.org/license
- *
- * http://docs.jquery.com/UI/Resizable#theming
+ * https://jquery.org/license
  */
 .ui-resizable {
 	position: relative;
@@ -15,6 +13,8 @@
 	position: absolute;
 	font-size: 0.1px;
 	display: block;
+	-ms-touch-action: none;
+	touch-action: none;
 }
 .ui-resizable-disabled .ui-resizable-handle,
 .ui-resizable-autohide .ui-resizable-handle {
