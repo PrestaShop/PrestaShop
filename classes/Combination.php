@@ -379,13 +379,27 @@ class CombinationCore extends ObjectModel
      */
     public function setImages($idsImage)
     {
+        // The association has no shop of its own: it belongs to the shops holding the image
+        $shopIds = Shop::getContextListShopID();
+        $shopRestriction = empty($shopIds)
+            ? ''
+            : ' AND ims.`id_shop` IN (' . implode(',', array_map('intval', $shopIds)) . ')';
+
         if (Db::getInstance()->execute('
-			DELETE FROM `' . _DB_PREFIX_ . 'product_attribute_image`
-			WHERE `id_product_attribute` = ' . (int) $this->id) === false) {
+			DELETE pai FROM `' . _DB_PREFIX_ . 'product_attribute_image` pai
+			INNER JOIN `' . _DB_PREFIX_ . 'image_shop` ims ON ims.`id_image` = pai.`id_image`' . $shopRestriction . '
+			WHERE pai.`id_product_attribute` = ' . (int) $this->id) === false) {
             return false;
         }
 
         if (is_array($idsImage) && count($idsImage)) {
+            // An image the context shops do not hold survives the delete above
+            Db::getInstance()->execute(
+                'DELETE FROM `' . _DB_PREFIX_ . 'product_attribute_image`
+                WHERE `id_product_attribute` = ' . (int) $this->id . '
+                AND `id_image` IN (' . implode(',', array_map('intval', $idsImage)) . ')'
+            );
+
             $sqlValues = [];
 
             foreach ($idsImage as $value) {

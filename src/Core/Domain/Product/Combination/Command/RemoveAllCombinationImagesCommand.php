@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class RemoveAllCombinationImagesCommand
 {
@@ -18,11 +19,26 @@ class RemoveAllCombinationImagesCommand
     private $combinationId;
 
     /**
-     * @param int $combinationId
+     * @var ShopConstraint|null
      */
-    public function __construct(int $combinationId)
+    private $shopConstraint;
+
+    /**
+     * @param int $combinationId
+     * @param ShopConstraint|null $shopConstraint
+     */
+    public function __construct(int $combinationId, ?ShopConstraint $shopConstraint = null)
     {
         $this->combinationId = new CombinationId($combinationId);
+        $this->shopConstraint = $shopConstraint;
+    }
+
+    /**
+     * @return ShopConstraint|null
+     */
+    public function getShopConstraint(): ?ShopConstraint
+    {
+        return $this->shopConstraint;
     }
 
     /**

@@ -11,6 +11,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Image\Repository;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Generator;
 use Image;
 use ImageType;
@@ -161,43 +162,10 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
         ;
 
         if (!$shopConstraint->forAllShops()) {
-            $qb
-                ->innerJoin(
-                    'i',
-                    $this->dbPrefix . 'image_shop',
-                    'img_shop',
-                    'img_shop.id_image = i.id_image'
-                )
-                ->addGroupBy('i.id_image')
-            ;
-
-            if ($shopConstraint->getShopGroupId()) {
-                $qb
-                    ->innerJoin(
-                        'img_shop',
-                        $this->dbPrefix . 'shop',
-                        's',
-                        's.id_shop = img_shop.id_shop AND s.id_shop_group = :shopGroupId'
-                    )
-                    ->setParameter('shopGroupId', $shopConstraint->getShopGroupId()->getValue())
-                ;
-            } elseif ($shopConstraint instanceof ShopCollection && $shopConstraint->hasShopIds()) {
-                $qb
-                    ->andWhere('img_shop.id_shop IN (:shopIds)')
-                    ->setParameter(
-                        'shopIds',
-                        array_map(fn (ShopId $shopId) => $shopId->getValue(), $shopConstraint->getShopIds()),
-                        ArrayParameterType::INTEGER
-                    )
-                ;
-            } elseif ($shopConstraint->getShopId()) {
+            if ($shopConstraint->getShopId()) {
                 $this->productRepository->assertProductIsAssociatedToShop($productId, $shopConstraint->getShopId());
-                $qb->andWhere('img_shop.id_shop = :shopId')
-                    ->setParameter('shopId', $shopConstraint->getShopId()->getValue())
-                ;
-            } else {
-                throw new InvalidShopConstraintException('Cannot handle this kind of ShopConstraint');
             }
+            self::filterByImageShops($qb, $this->dbPrefix, 'i.id_image', $shopConstraint);
         }
 
         return array_map(static function (string $id): ImageId {
@@ -252,10 +220,11 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
      * Retrieves a list of image ids ordered by position for each provided combination id
      *
      * @param CombinationId[] $combinationIds
+     * @param ShopConstraint|null $shopConstraint null returns the associations of every shop
      *
      * @return array<int, ImageId[]> [(int) id_combination => [ImageId]]
      */
-    public function getImageIdsForCombinations(array $combinationIds): array
+    public function getImageIdsForCombinations(array $combinationIds, ?ShopConstraint $shopConstraint = null): array
     {
         if (empty($combinationIds)) {
             return [];
@@ -278,6 +247,10 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
             ->setParameter('combinationIds', $combinationIds, Connection::PARAM_INT_ARRAY)
             ->orderBy('i.position', 'asc')
         ;
+
+        if (null !== $shopConstraint && !$shopConstraint->forAllShops()) {
+            self::filterByImageShops($qb, $this->dbPrefix, 'pai.id_image', $shopConstraint);
+        }
 
         $results = $qb->executeQuery()->fetchAllAssociative();
 
@@ -761,5 +734,34 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
         }
 
         return null;
+    }
+
+    /**
+     * Keeps the rows whose image is held by one of the constrained shops (images are scoped by image_shop).
+     */
+    public static function filterByImageShops(QueryBuilder $qb, string $dbPrefix, string $imageIdColumn, ShopConstraint $shopConstraint): void
+    {
+        $subQuery = 'SELECT 1 FROM ' . $dbPrefix . 'image_shop img_shop';
+
+        if ($shopConstraint->getShopGroupId()) {
+            $subQuery .= ' INNER JOIN ' . $dbPrefix . 'shop img_s ON img_s.id_shop = img_shop.id_shop'
+                . ' AND img_s.id_shop_group = :imageShopGroupId'
+                . ' WHERE img_shop.id_image = ' . $imageIdColumn;
+            $qb->setParameter('imageShopGroupId', $shopConstraint->getShopGroupId()->getValue());
+        } elseif ($shopConstraint instanceof ShopCollection && $shopConstraint->hasShopIds()) {
+            $subQuery .= ' WHERE img_shop.id_image = ' . $imageIdColumn . ' AND img_shop.id_shop IN (:imageShopIds)';
+            $qb->setParameter(
+                'imageShopIds',
+                array_map(fn (ShopId $shopId) => $shopId->getValue(), $shopConstraint->getShopIds()),
+                ArrayParameterType::INTEGER
+            );
+        } elseif ($shopConstraint->getShopId()) {
+            $subQuery .= ' WHERE img_shop.id_image = ' . $imageIdColumn . ' AND img_shop.id_shop = :imageShopId';
+            $qb->setParameter('imageShopId', $shopConstraint->getShopId()->getValue());
+        } else {
+            throw new InvalidShopConstraintException('Cannot handle this kind of ShopConstraint');
+        }
+
+        $qb->andWhere('EXISTS (' . $subQuery . ')');
     }
 }
