@@ -254,6 +254,22 @@ class CartCore extends ObjectModel
         }
         $this->_products = null;
         $this->_products_with_separated_gifts = null;
+        unset(self::$_isVirtualCart[$cacheKey]);
+        static::$cacheNbPackages = self::withoutCartEntries(static::$cacheNbPackages, $cacheKey);
+        static::$cachePackageList = self::withoutCartEntries(static::$cachePackageList, $cacheKey);
+        static::$cacheDeliveryOptionList = self::withoutCartEntries(static::$cacheDeliveryOptionList, $cacheKey);
+        // Keyed by products but not by quantities
+        Cache::clean('getPackageShippingCost_' . $cacheKey . '_*');
+    }
+
+    /**
+     * Removes the entries of a cart from a static cache keyed by "{id_cart}_{id_address_delivery}".
+     */
+    private static function withoutCartEntries(array $cache, int $cartId): array
+    {
+        $prefix = $cartId . '_';
+
+        return array_filter($cache, static fn ($key) => !str_starts_with((string) $key, $prefix), ARRAY_FILTER_USE_KEY);
     }
 
     /**
