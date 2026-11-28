@@ -123,19 +123,27 @@ class ModuleDataProvider
         $select = 'SELECT m.`id_module` as id, m.`name`, m.`version`, 1 as installed';
         $from = ' FROM `' . _DB_PREFIX_ . 'module` m';
 
+        $groupBy = '';
+
         $id_shops = (new Context())->getContextListShopID();
         if (count($id_shops) > 0) {
+            // A module counts as active when it is attached to at least one shop of the context, which
+            // is what the join below answers. Reading it here rather than per module is what keeps this
+            // to a single query: a shop with 67 modules used to run 68.
+            $select .= ', MAX(ms.`id_module` IS NOT NULL) as active';
             $from .= ' LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms ON ms.`id_module` = m.`id_module`';
             $from .= ' AND ms.`id_shop` IN (' . implode(',', array_map('intval', $id_shops)) . ')';
+            $groupBy = ' GROUP BY m.`id_module`, m.`name`, m.`version`';
         }
 
-        $results = Db::getInstance()->executeS($select . $from);
+        $results = Db::getInstance()->executeS($select . $from . $groupBy);
         $modules = [];
 
         /** @var array{id: int, name:string, version: string, installed: int}|array{id: int, name:string, version: string, installed: int, active:int} $module */
         foreach ($results as $module) {
             $module['installed'] = (bool) $module['installed'];
-            $module['active'] = $this->isModuleActive($module['id'], $id_shops);
+            // no shop in the context means no module can be attached to one
+            $module['active'] = (bool) ($module['active'] ?? false);
             $modules[$module['name']] = $module;
         }
 
@@ -318,19 +326,5 @@ class ModuleDataProvider
         $path = _PS_MODULE_DIR_ . $name . '/' . $name . '.php';
 
         return file_exists($path);
-    }
-
-    /**
-     * Checks if the module is active on at least one shop of the context.
-     */
-    private function isModuleActive(int $id, array $id_shops): bool
-    {
-        $result = Db::getInstance()->getRow('SELECT m.`active`, ms.`id_module` as `shop_active`
-            FROM `' . _DB_PREFIX_ . 'module` m
-            LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms ON m.`id_module` = ms.`id_module`
-            WHERE m.`id_module` = ' . $id . '
-            AND ms.`id_shop` IN (' . implode(',', $id_shops) . ')');
-
-        return !empty($result);
     }
 }
