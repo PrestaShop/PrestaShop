@@ -9,7 +9,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Security;
 
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Responsible for saving configuration options for security
@@ -38,14 +39,14 @@ class PasswordPolicyConfiguration implements DataConfigurationInterface
     public const CONFIGURATION_MINIMUM_SCORE = 'PS_SECURITY_PASSWORD_POLICY_MINIMUM_SCORE';
 
     /**
-     * @var ConfigurationInterface
+     * @var ShopConfigurationInterface
      */
     private $configuration;
 
     /**
-     * @param ConfigurationInterface $configuration
+     * @param ShopConfigurationInterface $configuration
      */
-    public function __construct(ConfigurationInterface $configuration)
+    public function __construct(ShopConfigurationInterface $configuration)
     {
         $this->configuration = $configuration;
     }
@@ -55,10 +56,13 @@ class PasswordPolicyConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
+        // The password policy is not multistore-scoped
+        $shopConstraint = ShopConstraint::allShops();
+
         return [
-            'minimum_length' => $this->configuration->get(static::CONFIGURATION_MINIMUM_LENGTH),
-            'maximum_length' => $this->configuration->get(static::CONFIGURATION_MAXIMUM_LENGTH),
-            'minimum_score' => $this->configuration->get(static::CONFIGURATION_MINIMUM_SCORE),
+            'minimum_length' => $this->configuration->get(static::CONFIGURATION_MINIMUM_LENGTH, null, $shopConstraint),
+            'maximum_length' => $this->configuration->get(static::CONFIGURATION_MAXIMUM_LENGTH, null, $shopConstraint),
+            'minimum_score' => $this->configuration->get(static::CONFIGURATION_MINIMUM_SCORE, null, $shopConstraint),
         ];
     }
 
@@ -68,12 +72,16 @@ class PasswordPolicyConfiguration implements DataConfigurationInterface
     public function updateConfiguration(array $configuration)
     {
         if ($this->validateConfiguration($configuration)) {
-            $this->configuration->set(static::CONFIGURATION_MINIMUM_SCORE, $configuration['minimum_score']);
-            $minimumLength = min($configuration['minimum_length'], $configuration['maximum_length']);
-            $maximumLength = max($configuration['minimum_length'], $configuration['maximum_length']);
-
-            $this->configuration->set(static::CONFIGURATION_MINIMUM_LENGTH, $minimumLength);
-            $this->configuration->set(static::CONFIGURATION_MAXIMUM_LENGTH, $maximumLength);
+            $values = [
+                static::CONFIGURATION_MINIMUM_SCORE => $configuration['minimum_score'],
+                static::CONFIGURATION_MINIMUM_LENGTH => min($configuration['minimum_length'], $configuration['maximum_length']),
+                static::CONFIGURATION_MAXIMUM_LENGTH => max($configuration['minimum_length'], $configuration['maximum_length']),
+            ];
+            foreach ($values as $key => $value) {
+                // The password policy is not multistore-scoped: shop and group overrides are dropped
+                $this->configuration->remove($key);
+                $this->configuration->set($key, $value, ShopConstraint::allShops());
+            }
         }
 
         return [];
