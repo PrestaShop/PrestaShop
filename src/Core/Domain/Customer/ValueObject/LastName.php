@@ -28,6 +28,11 @@ class LastName
      */
     public function __construct($lastName)
     {
+        if (is_string($lastName)) {
+            // Unicode spaces too, as StringUtil::trim() does; plain trim() for invalid UTF-8
+            $lastName = preg_replace('/^[\pZ\p{Cc}\p{Cf}]+|[\pZ\p{Cc}\p{Cf}]+$/u', '', $lastName) ?? trim($lastName);
+        }
+
         $this->assertLastNameDoesNotExceedAllowedLength($lastName);
         $this->assertLastNameIsValid($lastName);
 
