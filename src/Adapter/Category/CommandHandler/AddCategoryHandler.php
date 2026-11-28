@@ -36,6 +36,8 @@ final class AddCategoryHandler extends AbstractEditCategoryHandler implements Ad
 
         $categoryId = new CategoryId((int) $category->id);
 
+        $this->categoryDisplayNameCacheInvalidator->invalidate();
+
         $this->categoryImageUploader->uploadImages(
             $categoryId,
             $command->getCoverImage(),
