@@ -27,3 +27,13 @@ services:
     autoconfigure: true
     arguments:
       $legacyCacheDir: '%prestashop.legacy_cache_dir%'
+
+  PrestaShopBundle\DependencyInjection\CacheAdapterFactory: ~
+
+  # framework.cache.default_memcached_provider, so the cache pool uses the servers set on the Performance page
+  prestashop.cache.memcached_connection:
+    class: Memcached
+    public: false
+    factory: [ '@PrestaShopBundle\DependencyInjection\CacheAdapterFactory', createMemcachedConnection ]
+    arguments:
+      - '@prestashop.adapter.memcache_server.manager'
