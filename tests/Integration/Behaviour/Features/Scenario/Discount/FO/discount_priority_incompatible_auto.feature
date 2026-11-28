@@ -60,3 +60,59 @@ Feature: Discount priority - Incompatible auto discounts
       | total_discount | -$15.00 |
       | total          | $92.00  |
 
+
+  Scenario: An automatic free gift and an incompatible automatic cart level discount settle on a single discount
+    Given there is a product in the catalog named "giftProduct" with a price of 25.0 and 1000 items in stock
+    And there is a product "gift_product_ref" with name "giftProduct"
+    When I create a "free_gift" discount "auto_free_gift" with following properties:
+      | name[en-US]  | Auto Free Gift      |
+      | active       | true                |
+      | valid_from   | 2025-01-01 10:00:00 |
+      | valid_to     | 2026-12-31 23:59:59 |
+      | gift_product | gift_product_ref    |
+    And I create a "cart_level" discount "auto_cart_percent" with following properties:
+      | name[en-US]       | Auto Cart Percent   |
+      | active            | true                |
+      | valid_from        | 2025-01-01 10:00:00 |
+      | valid_to          | 2026-12-31 23:59:59 |
+      | reduction_percent | 10.0                |
+    And I create an empty cart "cart_gift_incompat" for customer "testCustomer"
+    When I add 1 product "product1" to the cart "cart_gift_incompat"
+    Then cart "cart_gift_incompat" should have 1 cart rules applied
+    And discount "auto_cart_percent" is applied to my cart
+    And my cart "cart_gift_incompat" should have the following details:
+      | total_products | $100.00 |
+      | shipping       | $7.00   |
+      | total_discount | -$10.00 |
+      | total          | $97.00  |
+
+  Scenario: A free gift voucher replacing an automatic free gift of the same product keeps a single gifted unit
+    # The automatic discounts of the previous scenarios would compete with the one of this scenario
+    Given I bulk disable discounts "auto_incompat_amount_prio5,auto_incompat_percent_prio3,auto_cart_percent"
+    Given there is a product in the catalog named "sharedGiftProduct" with a price of 25.0 and 1000 items in stock
+    And there is a product "shared_gift_product_ref" with name "sharedGiftProduct"
+    When I create a "free_gift" discount "auto_shared_gift" with following properties:
+      | name[en-US]  | Auto Shared Gift        |
+      | active       | true                    |
+      | priority     | 5                       |
+      | valid_from   | 2025-01-01 10:00:00     |
+      | valid_to     | 2099-12-31 23:59:59     |
+      | gift_product | shared_gift_product_ref |
+    And I create a "free_gift" discount "code_shared_gift" with following properties:
+      | name[en-US]  | Code Shared Gift        |
+      | active       | true                    |
+      | priority     | 1                       |
+      | valid_from   | 2025-01-01 10:00:00     |
+      | valid_to     | 2099-12-31 23:59:59     |
+      | code         | SHARED_GIFT             |
+      | gift_product | shared_gift_product_ref |
+    And I create an empty cart "cart_gift_replaced" for customer "testCustomer"
+    When I add 1 product "product1" to the cart "cart_gift_replaced"
+    Then discount "auto_shared_gift" is applied to my cart
+    When I use a voucher "code_shared_gift" on the cart "cart_gift_replaced"
+    Then cart "cart_gift_replaced" should have 1 cart rules applied
+    And discount "code_shared_gift" is applied to my cart
+    And gifted product "sharedGiftProduct" quantity in cart "cart_gift_replaced" should be 1
+    # No unit of the gift product is charged: product1 and shipping only
+    And my cart "cart_gift_replaced" should have the following details:
+      | total | $107.00 |
