@@ -353,4 +353,103 @@ class Profiler
             'files' => get_included_files(),
         ];
     }
+
+    /**
+     * Build a Markdown report from the collected profiling data.
+     *
+     * @return string
+     */
+    public function getMarkdownReport(): string
+    {
+        $vars = $this->getSmartyVariables();
+        $sanitizeRow = function ($value) {
+            return str_replace(['|', "\r", "\n"], [' ', ' ', ' '], (string) $value);
+        };
+
+        $md = "# PrestaShop Profiling Report\n\n";
+        $md .= '_Generated: ' . date('Y-m-d H:i:s') . "_\n\n";
+        $md .= "_This report comes from a separate request triggered by the download link, so its timings and query count will not match the panel on the page you downloaded it from._\n\n";
+
+        $md .= "## Summary\n\n";
+        $md .= '- Load Time: ' . round((float) $vars['summary']['loadTime'], 4) . " s\n";
+        $md .= '- Querying Time: ' . $vars['summary']['queryTime'] . " ms\n";
+        $md .= '- Queries: ' . $vars['summary']['nbQueries'] . "\n";
+        $md .= '- Peak Memory Usage: ' . $vars['summary']['peakMemoryUsage'] . " bytes\n";
+        $md .= '- Included Files: ' . $vars['summary']['includedFiles'] . ' (' . $vars['summary']['totalFileSize'] . " bytes)\n";
+        $md .= '- PrestaShop Cache: ' . $vars['summary']['totalCacheSize'] . " bytes\n";
+        $md .= '- Global vars: ' . $vars['summary']['totalGlobalVarSize'] . " bytes\n";
+        foreach ($vars['summary']['globalVarSize'] as $global => $size) {
+            $md .= '  - $' . $global . ': ' . $size . " Kb\n";
+        }
+        $md .= "\n";
+
+        $md .= "## Configuration\n\n";
+        foreach ($vars['configuration'] as $key => $value) {
+            $md .= '- ' . $key . ': ' . $value . "\n";
+        }
+        $md .= "\n";
+
+        $md .= "## Hooks\n\n";
+        foreach ($vars['hooks']['perfs'] as $hookName => $perf) {
+            $md .= '### ' . $sanitizeRow($hookName) . ' — ' . round($perf['time'] * 1000, 2) . ' ms, ' . $perf['memory'] . " bytes\n\n";
+            $md .= "| Module | Time (ms) | Memory (bytes) |\n|---|---|---|\n";
+            foreach ($perf['modules'] as $moduleCall) {
+                $md .= '| ' . $sanitizeRow($moduleCall['module']) . ' | ' . round($moduleCall['time'] * 1000, 2) . ' | ' . $moduleCall['memory'] . " |\n";
+            }
+            $md .= "\n";
+        }
+
+        $md .= "## Modules\n\n";
+        foreach ($vars['modules']['perfs'] as $moduleName => $perf) {
+            $md .= '### ' . $sanitizeRow($moduleName) . ' — ' . round($perf['total_time'] * 1000, 2) . ' ms, ' . $perf['total_memory'] . " bytes\n\n";
+            $md .= "| Method | Time (ms) | Memory (bytes) |\n|---|---|---|\n";
+            foreach ($perf['details'] as $call) {
+                $md .= '| ' . $sanitizeRow($call['method']) . ' | ' . round($call['time'] * 1000, 2) . ' | ' . $call['memory'] . " |\n";
+            }
+            $md .= "\n";
+        }
+
+        $md .= "## Stopwatch queries\n\n";
+        foreach ($vars['stopwatchQueries'] as $query) {
+            $md .= '### #' . $query['id'] . ' — ' . round($query['time'] * 1000, 2) . ' ms — ' . $sanitizeRow($query['location']) . "\n\n";
+            $md .= '```sql' . "\n" . trim($query['query']) . "\n" . '```' . "\n\n";
+            $md .= '- Rows: ' . $query['rows'] . "\n";
+            $md .= '- Filesort: ' . ($query['filesort'] ? 'yes' : 'no') . "\n";
+            $md .= '- Group by: ' . ($query['group_by'] ? 'yes' : 'no') . "\n";
+            if (!empty($query['stack'])) {
+                $md .= "- Stack:\n";
+                foreach ($query['stack'] as $frame) {
+                    $md .= '  - ' . $sanitizeRow($frame) . "\n";
+                }
+            }
+            $md .= "\n";
+        }
+
+        $md .= "## Duplicate queries\n\n";
+        foreach ($vars['doublesQueries'] as $query => $count) {
+            if ($count > 1) {
+                $md .= '- (' . $count . 'x) `' . $sanitizeRow($query) . "`\n";
+            }
+        }
+        $md .= "\n";
+
+        $md .= "## Table stress\n\n| Table | Queries |\n|---|---|\n";
+        foreach ($vars['tableStress'] as $table => $count) {
+            $md .= '| ' . $sanitizeRow($table) . ' | ' . $count . " |\n";
+        }
+        $md .= "\n";
+
+        $md .= "## ObjectModel instances\n\n| Class | Instances |\n|---|---|\n";
+        foreach ($vars['objectmodel'] as $class => $instances) {
+            $md .= '| ' . $sanitizeRow($class) . ' | ' . count($instances) . " |\n";
+        }
+        $md .= "\n";
+
+        $md .= '## Included files (' . count($vars['files']) . ")\n\n";
+        foreach ($vars['files'] as $file) {
+            $md .= '- ' . str_replace('\\', '/', substr($file, strlen(_PS_ROOT_DIR_))) . "\n";
+        }
+
+        return $md;
+    }
 }
