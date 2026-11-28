@@ -50,7 +50,17 @@ class StateController extends PrestaShopAdminController
      *
      * @return JsonResponse
      */
-    #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', request.get('AdminCustomers')) || is_granted('update', request.get('AdminCustomers')) || is_granted('create', request.get('AdminManufacturers')) || is_granted('update', request.get('AdminManufacturers')) || is_granted('create', request.get('AdminSuppliers')) || is_granted('update', request.get('AdminSuppliers'))")]
+    #[AdminSecurity(
+        "is_granted('read', request.get('_legacy_controller')) ||
+        is_granted('create', 'AdminAddresses') ||
+        is_granted('update', 'AdminAddresses') ||
+        is_granted('create', 'AdminCustomers') ||
+        is_granted('update', 'AdminCustomers') ||
+        is_granted('create', 'AdminManufacturers') ||
+        is_granted('update', 'AdminManufacturers') ||
+        is_granted('create', 'AdminSuppliers') ||
+        is_granted('update', 'AdminSuppliers')"
+    )]
     public function getStatesAction(
         Request $request,
         #[Autowire(service: 'prestashop.adapter.form.choice_provider.country_state_by_id')]
@@ -66,9 +76,10 @@ class StateController extends PrestaShopAdminController
                 'states' => $states,
             ]);
         } catch (Exception $e) {
-            return $this->json([
-                'message' => $this->getErrorMessageForException($e, []),
-            ],
+            return $this->json(
+                [
+                    'message' => $this->getErrorMessageForException($e, []),
+                ],
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
@@ -81,7 +92,7 @@ class StateController extends PrestaShopAdminController
      *
      * @return Response
      */
-    #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', request.get('AdminTaxRulesGroup')) || is_granted('update', request.get('AdminTaxRulesGroup')) || is_granted('create', request.get('AdminStores')) || is_granted('update', request.get('AdminStores'))")]
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminTaxRulesGroup') || is_granted('update', 'AdminTaxRulesGroup') || is_granted('create', 'AdminStores') || is_granted('update', 'AdminStores')")]
     public function getLegacyStatesOptionsAction(
         Request $request,
         #[Autowire(service: 'prestashop.adapter.form.choice_provider.country_state_by_id')]
