@@ -1,0 +1,17 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{{ 'We have logged your return request.'|trans({}, 'Shop.Pdf') }}<br />
+{{ 'Your package must be returned to us within'|trans({}, 'Shop.Pdf') }} {{ return_nb_days }} {{ 'days of receiving your order.'|trans({}, 'Shop.Pdf') }}<br /><br />
+
+<table id="summary-tab" width="100%">
+    <tr>
+        <th class="header small" valign="middle">{{ 'Return Number'|trans({}, 'Shop.Pdf') }}</th>
+        <th class="header small" valign="middle">{{ 'Date'|trans({}, 'Shop.Pdf') }}</th>
+    </tr>
+    <tr>
+        <td class="center small white">{{ order_return_number_formatted }}</td>
+        <td class="center small white">{{ order_return_date_formatted }}</td>
+    </tr>
+</table>

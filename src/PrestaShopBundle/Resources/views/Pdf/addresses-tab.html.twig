@@ -1,0 +1,18 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+<table id="addresses-tab" cellspacing="0" cellpadding="0">
+    <tr>
+        <td width="50%">
+            {% if delivery_address %}
+                <span class="bold">{{ 'Delivery address'|trans({}, 'Shop.Pdf') }}</span><br/><br/>
+                {{ delivery_address|raw }}
+            {% endif %}
+        </td>
+        <td width="50%">
+            <span class="bold">{{ 'Billing address'|trans({}, 'Shop.Pdf') }}</span><br/><br/>
+            {{ invoice_address|raw }}
+        </td>
+    </tr>
+</table>

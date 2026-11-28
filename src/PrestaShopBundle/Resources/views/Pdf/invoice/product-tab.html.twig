@@ -1,0 +1,146 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% set width_col_product = is_tax_enabled ? layout.product.width : layout.product.width + layout.tax_code.width %}
+<table class="product" width="100%" cellpadding="4" cellspacing="0">
+    <thead>
+    <tr>
+        <th class="product header small" width="{{ layout.reference.width }}%">{{ 'Reference'|trans({}, 'Shop.Pdf') }}</th>
+        <th class="product header small" width="{{ width_col_product }}%">{{ 'Product'|trans({}, 'Shop.Pdf') }}</th>
+        {% if is_tax_enabled %}
+            <th class="product header small" width="{{ layout.tax_code.width }}%">{{ 'Tax Rate'|trans({}, 'Shop.Pdf') }}</th>
+        {% endif %}
+        {% if layout.before_discount is defined %}
+            <th class="product header small" width="{{ layout.unit_price_tax_excl.width }}%">
+                {{ 'Base price'|trans({}, 'Shop.Pdf') }}{% if is_tax_enabled %}<br /> {{ '(Tax excl.)'|trans({}, 'Shop.Pdf') }}{% endif %}
+            </th>
+        {% endif %}
+
+        <th class="product header-right small" width="{{ layout.unit_price_tax_excl.width }}%">
+            {{ 'Unit Price'|trans({}, 'Shop.Pdf') }}{% if is_tax_enabled %}<br /> {{ '(Tax excl.)'|trans({}, 'Shop.Pdf') }}{% endif %}
+        </th>
+        <th class="product header small" width="{{ layout.quantity.width }}%">{{ 'Qty'|trans({}, 'Shop.Pdf') }}</th>
+        <th class="product header-right small" width="{{ layout.total_tax_excl.width }}%">
+            {{ 'Total'|trans({}, 'Shop.Pdf') }}{% if is_tax_enabled %}<br /> {{ '(Tax excl.)'|trans({}, 'Shop.Pdf') }}{% endif %}
+        </th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+    {# PRODUCTS #}
+    {% for order_detail in order_details %}
+        {% set bgcolor_class = cycle(['color_line_even', 'color_line_odd'], loop.index0) %}
+        <tr class="product {{ bgcolor_class }}">
+            <td class="product center">
+                {{ order_detail.product_reference }}
+            </td>
+            <td class="product left">
+                {% if display_product_images %}
+                    <table width="100%">
+                        <tr>
+                            <td width="15%">
+                                {% if order_detail.image_tag is defined and order_detail.image_tag %}
+                                    {{ order_detail.image_tag|raw }}
+                                {% endif %}
+                            </td>
+                            <td width="5%">&nbsp;</td>
+                            <td width="80%">
+                                {{ order_detail.product_name }}
+                            </td>
+                        </tr>
+                    </table>
+                {% else %}
+                    {{ order_detail.product_name }}
+                {% endif %}
+            </td>
+            {% if is_tax_enabled %}
+                <td class="product center">
+                    {{ order_detail.order_detail_tax_label }}
+                </td>
+            {% endif %}
+
+            {% if layout.before_discount is defined %}
+                <td class="product center">
+                    {% if order_detail.unit_price_tax_excl_before_specific_price is defined %}
+                        {{ order_detail.unit_price_tax_excl_before_specific_price|price_format(currency_iso_code) }}
+                    {% else %}
+                        --
+                    {% endif %}
+                </td>
+            {% endif %}
+
+            <td class="product right">
+                {{ order_detail.unit_price_tax_excl_including_ecotax|price_format(currency_iso_code) }}
+                {% if order_detail.ecotax_tax_excl > 0 %}
+                    <br>
+                    <small>{{ 'ecotax: %s'|trans({'%s': order_detail.ecotax_tax_excl|price_format(currency_iso_code)}, 'Shop.Pdf') }}</small>
+                {% endif %}
+            </td>
+            <td class="product center">
+                {{ order_detail.product_quantity }}
+            </td>
+            <td class="product right">
+                {{ order_detail.total_price_tax_excl_including_ecotax|price_format(currency_iso_code) }}
+            </td>
+        </tr>
+
+        {% for text_customization in order_detail.text_customizations %}
+            <tr class="customization_data {{ bgcolor_class }}">
+                <td class="center">&nbsp;</td>
+                <td>
+                    <table style="width: 100%;">
+                        <tr>
+                            <td>{{ '%s:'|trans({'%s': text_customization.name}, 'Shop.Pdf') }} {% if text_customization.is_module %}{{ text_customization.value|raw }}{% else %}{{ text_customization.value }}{% endif %}</td>
+                        </tr>
+                    </table>
+                </td>
+                <td class="center"></td>
+                {% for i in 0..(layout._colCount - 3) %}
+                    <td class="center"></td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+
+        {% if order_detail.file_customizations_count %}
+            <tr class="customization_data {{ bgcolor_class }}">
+                <td class="center">&nbsp;</td>
+                <td>
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="width: 70%;">{{ 'image(s):'|trans({}, 'Shop.Pdf') }}</td>
+                            <td>{{ order_detail.file_customizations_count }}</td>
+                        </tr>
+                    </table>
+                </td>
+                <td class="center"></td>
+                {% for i in 0..(layout._colCount - 3) %}
+                    <td class="center"></td>
+                {% endfor %}
+            </tr>
+        {% endif %}
+    {% endfor %}
+    {# END PRODUCTS #}
+
+    {# CART RULES #}
+    {% for cart_rule in cart_rules %}
+        {% if loop.first %}
+            <tr class="discount">
+                <th class="header" colspan="{{ layout._colCount }}">
+                    {{ 'Discounts'|trans({}, 'Shop.Pdf') }}
+                </th>
+            </tr>
+        {% endif %}
+        <tr class="discount">
+            <td class="white right" colspan="{{ layout._colCount - 1 }}">
+                {{ cart_rule.name }}
+            </td>
+            <td class="right white">
+                - {{ cart_rule.value_tax_excl|price_format(currency_iso_code) }}
+            </td>
+        </tr>
+    {% endfor %}
+
+    </tbody>
+</table>
