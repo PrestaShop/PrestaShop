@@ -218,7 +218,7 @@ class OrderInvoiceCore extends ObjectModel
             $row['ecotax_tax_incl'] = $ecotax * (100 + $ecotaxRate) / 100;
             $row['ecotax_tax'] = $row['ecotax_tax_incl'] - $row['ecotax_tax_excl'];
 
-            if ($round_mode == Order::ROUND_ITEM) {
+            if ($order->round_type == Order::ROUND_ITEM) {
                 $row['ecotax_tax_incl'] = Tools::ps_round($row['ecotax_tax_incl'], Context::getContext()->getComputingPrecision(), $round_mode);
             }
 
