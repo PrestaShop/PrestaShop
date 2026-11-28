@@ -27,6 +27,7 @@ final class BulkDeleteEmployeeHandler extends AbstractEmployeeHandler implements
             $employee = new Employee($employeeId->getValue());
 
             $this->assertEmployeeWasFoundById($employeeId, $employee);
+            $this->assertContextEmployeeCanManage($employee);
             $this->assertLoggedInEmployeeIsNotTheSameAsBeingUpdatedEmployee($employee);
             $this->assertEmployeeIsNotTheOnlyAdminInShop($employee);
 
