@@ -1,0 +1,15 @@
+services:
+  _defaults:
+    public: true
+    autowire: true
+
+  PrestaShop\PrestaShop\Adapter\Employee\StatsDateRangeSetter: ~
+
+  PrestaShop\PrestaShop\Core\Employee\StatsDateRangeSetterInterface:
+    alias: PrestaShop\PrestaShop\Adapter\Employee\StatsDateRangeSetter
+
+  PrestaShop\PrestaShop\Adapter\Stats\StatsModuleGraphRenderer: ~
+
+  PrestaShop\PrestaShop\Adapter\Stats\StatsModuleGridRenderer: ~
+
+  PrestaShop\PrestaShop\Adapter\Stats\StatsModuleMenuProvider: ~
