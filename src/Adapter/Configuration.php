@@ -262,6 +262,14 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function setTemporary(string $key, $value): void
+    {
+        ConfigurationLegacy::set($key, $value);
+    }
+
+    /**
      * Unset configuration value.
      *
      * @param string $key
