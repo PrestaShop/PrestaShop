@@ -5,7 +5,7 @@
  */
 
 use PrestaShop\PrestaShop\Core\Util\CacheClearLocker;
-use Symfony\Component\Dotenv\Dotenv;
+use PrestaShop\PrestaShop\Core\Util\DotEnvLoader;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -42,13 +42,8 @@ if (_PS_MODE_DEV_) {
 }
 require_once __DIR__ . '/../autoload.php';
 
-// Loads .env file from the root of project
-$dotEnvFile = dirname(__FILE__, 2) . '/.env';
-(new Dotenv())
-    // DO NOT use putEnv
-    ->usePutenv(false)
-    ->loadEnv($dotEnvFile)
-;
+// Loads the .env files from the root of project if present
+DotEnvLoader::load(dirname(__FILE__, 2) . '/.env');
 
 // Block the process until the cache clear is in progress, this must be done before the kernel is created so it doesn't
 // try to use the old container
