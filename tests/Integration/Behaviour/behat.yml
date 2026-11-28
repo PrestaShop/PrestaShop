@@ -168,6 +168,8 @@ default:
         - Tests\Integration\Behaviour\Features\Context\Domain\ZoneFeatureContext
         - Tests\Integration\Behaviour\Features\Context\CartFeatureContext
         - Tests\Integration\Behaviour\Features\Context\CartRuleFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\FeatureFlagFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\Domain\Discount\DiscountFeatureContext
         - Tests\Integration\Behaviour\Features\Context\CategoryFeatureContext
         - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
@@ -198,6 +200,7 @@ default:
         - Tests\Integration\Behaviour\Features\Context\Domain\Product\StockAssertionFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCustomizationFieldsFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateShippingFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStockFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\ProductFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\TaxFeatureContext
