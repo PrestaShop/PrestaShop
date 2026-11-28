@@ -28,6 +28,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotUpdateCategorySta
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\FailedToDeleteCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoriesTree;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryIsEnabled;
@@ -45,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
+use PrestaShopBundle\Entity\MutationAction;
 use PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
@@ -551,25 +553,29 @@ class CategoryController extends PrestaShopAdminController
         $idParent = (int) $this->getConfiguration()->get('PS_HOME_CATEGORY');
 
         if ($deleteCategoriesForm->isSubmitted()) {
-            try {
-                $categoriesDeleteData = $deleteCategoriesForm->getData();
-                $idParent = (int) $categoriesDeleteData['categories_to_delete_parent'];
-                $categoryIds = array_map(function ($categoryId) {
-                    return (int) $categoryId;
-                }, $categoriesDeleteData['categories_to_delete']);
+            $categoriesDeleteData = $deleteCategoriesForm->getData();
+            $idParent = (int) $categoriesDeleteData['categories_to_delete_parent'];
+            $categoryIds = array_map(function ($categoryId) {
+                return (int) $categoryId;
+            }, $categoriesDeleteData['categories_to_delete']);
 
+            try {
                 $command = new BulkDeleteCategoriesCommand(
                     $categoryIds,
                     $categoriesDeleteData['delete_mode']
                 );
 
                 $this->dispatchCommand($command);
+                $this->recordBulkCategoryDeleteMutations($categoryIds);
 
                 $this->addFlash(
                     'success',
                     $this->trans('The selection has been successfully deleted.', [], 'Admin.Notifications.Success')
                 );
             } catch (CategoryException $e) {
+                $this->recordBulkCategoryDeleteMutations(
+                    $this->getSuccessfulCategoryIdsBeforeFailure($categoryIds, $e)
+                );
                 $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
             }
         }
@@ -597,12 +603,14 @@ class CategoryController extends PrestaShopAdminController
             $idParent = (int) $categoriesDeleteData['categories_to_delete_parent'];
 
             try {
+                $categoryId = (int) reset($categoriesDeleteData['categories_to_delete']);
                 $command = new DeleteCategoryCommand(
-                    (int) reset($categoriesDeleteData['categories_to_delete']),
+                    $categoryId,
                     $categoriesDeleteData['delete_mode']
                 );
 
                 $this->dispatchCommand($command);
+                $this->recordMutation('category', $categoryId, MutationAction::DELETE);
 
                 $this->addFlash('success', $this->trans('Successful deletion', [], 'Admin.Notifications.Success'));
             } catch (CategoryException $e) {
@@ -796,6 +804,52 @@ class CategoryController extends PrestaShopAdminController
         }
 
         return $toolbarButtons;
+    }
+
+    /**
+     * @param int[] $categoryIds
+     */
+    private function recordBulkCategoryDeleteMutations(array $categoryIds): void
+    {
+        foreach ($categoryIds as $categoryId) {
+            $this->recordMutation('category', $categoryId, MutationAction::DELETE, ['bulk' => true]);
+        }
+    }
+
+    /**
+     * @param int[] $categoryIds
+     *
+     * @return int[]
+     */
+    private function getSuccessfulCategoryIdsBeforeFailure(array $categoryIds, CategoryException $exception): array
+    {
+        $failedCategoryId = $this->getFailedCategoryId($exception);
+        if (null === $failedCategoryId) {
+            return [];
+        }
+
+        $failedIndex = array_search($failedCategoryId, $categoryIds, true);
+        if (false === $failedIndex) {
+            return [];
+        }
+
+        return array_slice($categoryIds, 0, $failedIndex);
+    }
+
+    private function getFailedCategoryId(CategoryException $exception): ?int
+    {
+        if ($exception instanceof CategoryNotFoundException) {
+            return $exception->getCategoryId()->getValue();
+        }
+
+        if (
+            $exception instanceof CannotDeleteRootCategoryForShopException
+            || $exception instanceof FailedToDeleteCategoryException
+        ) {
+            return $exception->getCategoryId()?->getValue();
+        }
+
+        return null;
     }
 
     /**

@@ -10,6 +10,8 @@ use PrestaShop\PrestaShop\Core\Domain\ApiClient\ValueObject\CreatedApiClient;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertiesFormDataPersister;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Mutation\BackOfficeMutationLogger;
+use PrestaShopBundle\Entity\MutationAction;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
@@ -46,24 +48,40 @@ final class FormHandler implements FormHandlerInterface
     private $extraPropertiesFormDataPersister;
 
     /**
+     * @var BackOfficeMutationLogger|null
+     */
+    private $mutationLogger;
+
+    /**
+     * @var string|null
+     */
+    private $mutationTable;
+
+    /**
      * @param FormDataHandlerInterface $dataHandler
      * @param HookDispatcherInterface $hookDispatcher
      * @param TranslatorInterface $translator
      * @param bool $isDemoModeEnabled
      * @param ExtraPropertiesFormDataPersister $extraPropertiesFormDataPersister
+     * @param BackOfficeMutationLogger|null $mutationLogger
+     * @param string|null $mutationTable
      */
     public function __construct(
         FormDataHandlerInterface $dataHandler,
         HookDispatcherInterface $hookDispatcher,
         TranslatorInterface $translator,
         $isDemoModeEnabled,
-        ExtraPropertiesFormDataPersister $extraPropertiesFormDataPersister
+        ExtraPropertiesFormDataPersister $extraPropertiesFormDataPersister,
+        ?BackOfficeMutationLogger $mutationLogger = null,
+        ?string $mutationTable = null
     ) {
         $this->dataHandler = $dataHandler;
         $this->hookDispatcher = $hookDispatcher;
         $this->translator = $translator;
         $this->isDemoModeEnabled = $isDemoModeEnabled;
         $this->extraPropertiesFormDataPersister = $extraPropertiesFormDataPersister;
+        $this->mutationLogger = $mutationLogger;
+        $this->mutationTable = $mutationTable;
     }
 
     /**
@@ -133,6 +151,7 @@ final class FormHandler implements FormHandlerInterface
         $newId = $this->dataHandler->update($id, $data);
 
         $entityId = $this->resolveExtraPropertyEntityId($newId ?? $id);
+
         if (null !== $entityId) {
             $this->extraPropertiesFormDataPersister->persist(
                 $form,
@@ -145,6 +164,11 @@ final class FormHandler implements FormHandlerInterface
             'id' => $id,
             'form_data' => &$data,
         ]);
+
+        $this->recordMutation(
+            MutationAction::UPDATE,
+            $id
+        );
 
         return FormHandlerResult::createWithId($newId ?? $id);
     }
@@ -179,6 +203,11 @@ final class FormHandler implements FormHandlerInterface
             'id' => $id,
             'form_data' => &$data,
         ]);
+
+        $this->recordMutation(
+            MutationAction::CREATE,
+            $entityId
+        );
 
         return FormHandlerResult::createWithId($id);
     }
@@ -222,5 +251,16 @@ final class FormHandler implements FormHandlerInterface
         }
 
         return null;
+    }
+
+    private function recordMutation(
+        MutationAction $operationType,
+        ?int $objectId
+    ): void {
+        if (null === $this->mutationLogger || null === $this->mutationTable || null === $objectId) {
+            return;
+        }
+
+        $this->mutationLogger->record($this->mutationTable, $objectId, $operationType);
     }
 }
