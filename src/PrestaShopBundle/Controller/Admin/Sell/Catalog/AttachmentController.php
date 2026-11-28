@@ -19,6 +19,7 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\CannotUpdateAttachmen
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\EmptyFileException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\EmptySearchException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\EmptySearchInputException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachment;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInformation;
@@ -249,12 +250,27 @@ class AttachmentController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('read', 'AdminProducts') || is_granted('read', 'AdminAttachments')")]
     public function searchAction(string $searchPhrase): JsonResponse
     {
+        return $this->searchAttachments($searchPhrase);
+    }
+
+    /**
+     * Same search with the phrase in the query string: in the path, a "/" splits the route and the web server
+     * refuses its encoded form.
+     */
+    #[AdminSecurity("is_granted('read', 'AdminProducts') || is_granted('read', 'AdminAttachments')")]
+    public function searchByQueryAction(Request $request): JsonResponse
+    {
+        return $this->searchAttachments($request->query->getString('query'));
+    }
+
+    private function searchAttachments(string $searchPhrase): JsonResponse
+    {
         try {
             /** @var AttachmentInformation[] $attachments */
-            $attachments = $this->dispatchCommand(new SearchAttachment($searchPhrase));
-        } catch (EmptySearchException $e) {
+            $attachments = $this->dispatchQuery(new SearchAttachment($searchPhrase));
+        } catch (EmptySearchException|EmptySearchInputException $e) {
             return $this->json(
-                [$e, 'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
                 Response::HTTP_NOT_FOUND
             );
         }
