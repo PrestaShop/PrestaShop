@@ -67,7 +67,6 @@ class ImportLocalizationPackType extends TranslatorAwareType
                     LocalizationPackImportConfigInterface::CONTENT_TAXES,
                     LocalizationPackImportConfigInterface::CONTENT_CURRENCIES,
                     LocalizationPackImportConfigInterface::CONTENT_LANGUAGES,
-                    LocalizationPackImportConfigInterface::CONTENT_UNITS,
                 ],
                 'choice_translation_domain' => false,
             ])
