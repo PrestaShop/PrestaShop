@@ -72,9 +72,9 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
 
     /**
      * This method is derived from DoctrineOrmMappingsPass::createAnnotationMappingDriver, sadly the driver includes
-     * ALL the files present in the folder and as modules include an index.php file containing an exit statement the
+     * ALL the files present in the folder and as modules include index.php files containing an exit statement the
      * whole process was stopped. So we manually create the DoctrineOrmMappingsPass so that AnnotationDriver ignores
-     * the index.php file.
+     * every index.php file of the folder and its sub-folders.
      *
      * @param string $moduleNamespace
      * @param string $moduleEntityDirectory
@@ -85,9 +85,12 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
     {
         $reader = new Reference('annotation_reader');
         $driverDefinition = new Definition('Doctrine\ORM\Mapping\Driver\AnnotationDriver', [$reader, [$moduleEntityDirectory]]);
-        $indexFile = $moduleEntityDirectory . '/index.php';
-        if (file_exists($indexFile)) {
-            $driverDefinition->addMethodCall('addExcludePaths', [[$indexFile]]);
+        $indexFiles = [];
+        foreach ((new Finder())->files()->in($moduleEntityDirectory)->name('index.php') as $indexFile) {
+            $indexFiles[] = $indexFile->getPathname();
+        }
+        if (!empty($indexFiles)) {
+            $driverDefinition->addMethodCall('addExcludePaths', [$indexFiles]);
         }
 
         return new DoctrineOrmMappingsPass($driverDefinition, [$moduleNamespace], [], false, []);
