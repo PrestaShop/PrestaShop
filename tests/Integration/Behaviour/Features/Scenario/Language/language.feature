@@ -74,6 +74,78 @@ Feature: Language
     When I delete the language "spanish"
     And the robots.txt file hasn't a rule where the directory "/ag/app/" is allowed
 
+  Scenario: Add a language whose ISO code is not a known one
+    When I add a new language "swiss" with the following details:
+      | name            | Deutsch CH (German) |
+      | isoCode         | ch                  |
+      | tagIETF         | de-ch               |
+      | shortDateFormat | d.m.Y               |
+      | fullDateFormat  | d.m.Y H:i:s         |
+      | isRtl           | 0                   |
+      | isActive        | 1                   |
+      | shop            | shop1               |
+    Then the language "swiss" should have the following details:
+      | name            | Deutsch CH (German) |
+      | isoCode         | ch                  |
+      | tagIETF         | de-ch               |
+      | locale          | de-CH               |
+      | shortDateFormat | d.m.Y               |
+      | fullDateFormat  | d.m.Y H:i:s         |
+      | isRtl           | 0                   |
+      | isActive        | 1                   |
+      | shop            | shop1               |
+    # A tag without a region gives no locale
+    When I add a new language "kosovo" with the following details:
+      | name            | Shqip XK (Albanian) |
+      | isoCode         | xk                  |
+      | tagIETF         | sq                  |
+      | shortDateFormat | d.m.Y               |
+      | fullDateFormat  | d.m.Y H:i:s         |
+      | isRtl           | 0                   |
+      | isActive        | 1                   |
+      | shop            | shop1               |
+    Then the language "kosovo" should have the following details:
+      | name            | Shqip XK (Albanian) |
+      | isoCode         | xk                  |
+      | tagIETF         | sq                  |
+      | locale          |                     |
+      | shortDateFormat | d.m.Y               |
+      | fullDateFormat  | d.m.Y H:i:s         |
+      | isRtl           | 0                   |
+      | isActive        | 1                   |
+      | shop            | shop1               |
+    # Changing only the ISO code derives the locale from the stored tag
+    When I update the language "kosovo" with the following details:
+      | tagIETF | sq-xk |
+    And I update the language "kosovo" with the following details:
+      | isoCode | xq |
+    Then the language "kosovo" should have the following details:
+      | name            | Shqip XK (Albanian) |
+      | isoCode         | xq                  |
+      | tagIETF         | sq-xk               |
+      | locale          | sq-XK               |
+      | shortDateFormat | d.m.Y               |
+      | fullDateFormat  | d.m.Y H:i:s         |
+      | isRtl           | 0                   |
+      | isActive        | 1                   |
+      | shop            | shop1               |
+    # A tag without a region keeps the existing locale
+    When I update the language "french" with the following details:
+      | isoCode | xf |
+    Then the language "french" should have the following details:
+      | name            | Français (French) |
+      | isoCode         | xf                |
+      | tagIETF         | fr                |
+      | locale          | fr-FR             |
+      | shortDateFormat | d/m/Y             |
+      | fullDateFormat  | d/m/Y H:i:s       |
+      | isRtl           | 0                 |
+      | isActive        | 1                 |
+      | shop            | shop1             |
+    ## Reset
+    When I delete the language "swiss"
+    And I delete the language "kosovo"
+
   Scenario: Edit language
     When I update the language "french" with the following details:
       | name            | Language    |
