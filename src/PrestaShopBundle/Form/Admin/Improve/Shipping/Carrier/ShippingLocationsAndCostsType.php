@@ -22,7 +22,9 @@ use PrestaShopBundle\Translation\TranslatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Validator\Constraint;
 
 class ShippingLocationsAndCostsType extends TranslatorAwareType
 {
@@ -133,6 +135,10 @@ class ShippingLocationsAndCostsType extends TranslatorAwareType
                 'label' => null,
                 'allow_add' => true,
                 'allow_delete' => true,
+                // The costs of a free carrier are hidden and not saved, so they are not validated either
+                'validation_groups' => static function (FormInterface $form): array {
+                    return $form->getParent()->get('is_free')->getData() ? [] : [Constraint::DEFAULT_GROUP];
+                },
             ])
         ;
     }
