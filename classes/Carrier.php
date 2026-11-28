@@ -220,6 +220,18 @@ class CarrierCore extends ObjectModel
         Cache::clean('Carrier::*');
     }
 
+    public function update($nullValues = false)
+    {
+        // An update leaving the reference empty keeps the stored one
+        if (!$this->id_reference && $this->id) {
+            $this->id_reference = (int) Db::getInstance()->getValue(
+                'SELECT `id_reference` FROM `' . _DB_PREFIX_ . $this->def['table'] . '` WHERE `id_carrier` = ' . (int) $this->id
+            );
+        }
+
+        return parent::update($nullValues);
+    }
+
     /**
      * Adds current Carrier as a new Object to the database.
      *
