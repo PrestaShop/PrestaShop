@@ -11,6 +11,8 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use Configuration;
 use Country;
+use Doctrine\DBAL\ArrayParameterType;
+use Doctrine\DBAL\Connection;
 use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
@@ -408,6 +410,12 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
                 ? (int) State::getIdByName($data['state'])
                 : 0,
         ];
+        // The multistore checkboxes of the form: a checked one overrides its field for the shop context
+        foreach ($data as $field => $value) {
+            if (str_starts_with($field, 'multistore_')) {
+                $configuration[$field] = PrimitiveUtils::castStringBooleanIntoBoolean($value);
+            }
+        }
 
         /** @var ContactDetailsConfiguration $contactDetailsConfig */
         $contactDetailsConfig = $this->getContainer()->get(ContactDetailsConfiguration::class);
@@ -431,6 +439,30 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
                 Assert::assertSame($data[$field], $actual[$field], $field);
             }
         }
+    }
+
+    /**
+     * @Then the shop :shopReference should only override the contact details :configurationKeys
+     */
+    public function assertShopOverridesOnlyContactDetails(string $shopReference, string $configurationKeys): void
+    {
+        /** @var Connection $connection */
+        $connection = $this->getContainer()->get('doctrine.dbal.default_connection');
+        $overridden = $connection->createQueryBuilder()
+            ->select('c.name')
+            ->from(_DB_PREFIX_ . 'configuration', 'c')
+            ->where('c.id_shop = :shopId')
+            ->andWhere('c.name IN (:keys)')
+            ->setParameter('shopId', (int) SharedStorage::getStorage()->get($shopReference))
+            ->setParameter('keys', [
+                'PS_SHOP_ADDR1', 'PS_SHOP_ADDR2', 'PS_SHOP_CITY', 'PS_SHOP_CODE', 'PS_SHOP_COUNTRY', 'PS_SHOP_COUNTRY_ID', 'PS_SHOP_DETAILS',
+                'PS_SHOP_EMAIL', 'PS_SHOP_FAX', 'PS_SHOP_NAME', 'PS_SHOP_PHONE', 'PS_SHOP_STATE', 'PS_SHOP_STATE_ID',
+            ], ArrayParameterType::STRING)
+            ->orderBy('c.name', 'ASC')
+            ->executeQuery()
+            ->fetchFirstColumn();
+
+        Assert::assertSame(PrimitiveUtils::castStringArrayIntoArray($configurationKeys), $overridden);
     }
 
     /**
@@ -477,6 +509,29 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
     {
         $errors = SharedStorage::getStorage()->get('contact_details_last_errors');
         Assert::assertNotEmpty($errors, 'Expected validation errors but none were returned');
+    }
+
+    /**
+     * @Then saving contact details should fail with the error :errorKey
+     */
+    public function assertContactDetailsValidationErrorKey(string $errorKey): void
+    {
+        $errors = SharedStorage::getStorage()->get('contact_details_last_errors');
+        Assert::assertContains($errorKey, array_column($errors, 'key'));
+    }
+
+    /**
+     * Stores a country containing states without a state, as saved before the State became required.
+     *
+     * @Given the contact details of all shops have the country :countryName and no state
+     */
+    public function setAllShopsContactDetailsCountryWithoutState(string $countryName): void
+    {
+        $countryId = (int) Country::getIdByName($this->getDefaultLangId(), $countryName);
+        Configuration::updateGlobalValue('PS_SHOP_COUNTRY_ID', $countryId);
+        Configuration::updateGlobalValue('PS_SHOP_COUNTRY', $countryName);
+        Configuration::updateGlobalValue('PS_SHOP_STATE_ID', 0);
+        Configuration::updateGlobalValue('PS_SHOP_STATE', '');
     }
 
     // ──────────────────────────────────────────────────────────────────────────

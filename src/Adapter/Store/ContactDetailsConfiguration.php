@@ -11,27 +11,37 @@ namespace PrestaShop\PrestaShop\Adapter\Store;
 use Country;
 use Exception;
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
 use State;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Validate;
 
 final class ContactDetailsConfiguration extends AbstractMultistoreConfiguration
 {
+    private const TEXT_FIELD_KEYS = [
+        'name' => 'PS_SHOP_NAME',
+        'email' => 'PS_SHOP_EMAIL',
+        'registration_number' => 'PS_SHOP_DETAILS',
+        'address1' => 'PS_SHOP_ADDR1',
+        'address2' => 'PS_SHOP_ADDR2',
+        'postcode' => 'PS_SHOP_CODE',
+        'city' => 'PS_SHOP_CITY',
+        'phone' => 'PS_SHOP_PHONE',
+        'fax' => 'PS_SHOP_FAX',
+    ];
+
     public function getConfiguration(): array
     {
-        return [
-            'name' => $this->configuration->get('PS_SHOP_NAME'),
-            'email' => $this->configuration->get('PS_SHOP_EMAIL'),
-            'registration_number' => $this->configuration->get('PS_SHOP_DETAILS'),
-            'address1' => $this->configuration->get('PS_SHOP_ADDR1'),
-            'address2' => $this->configuration->get('PS_SHOP_ADDR2'),
-            'postcode' => $this->configuration->get('PS_SHOP_CODE'),
-            'city' => $this->configuration->get('PS_SHOP_CITY'),
-            'id_country' => (int) $this->configuration->get('PS_SHOP_COUNTRY_ID') ?: null,
-            'id_state' => (int) $this->configuration->get('PS_SHOP_STATE_ID') ?: null,
-            'phone' => $this->configuration->get('PS_SHOP_PHONE'),
-            'fax' => $this->configuration->get('PS_SHOP_FAX'),
-        ];
+        $shopConstraint = $this->getShopConstraint();
+        $configuration = [];
+        foreach (self::TEXT_FIELD_KEYS as $field => $key) {
+            $configuration[$field] = $this->configuration->get($key, null, $shopConstraint);
+        }
+        $configuration['id_country'] = (int) $this->configuration->get('PS_SHOP_COUNTRY_ID', null, $shopConstraint) ?: null;
+        $configuration['id_state'] = (int) $this->configuration->get('PS_SHOP_STATE_ID', null, $shopConstraint) ?: null;
+
+        return $configuration;
     }
 
     /**
@@ -48,38 +58,47 @@ final class ContactDetailsConfiguration extends AbstractMultistoreConfiguration
         $country = $countryId ? new Country($countryId, $langId) : null;
         $state = ($stateId && $countryId) ? new State($stateId) : null;
 
-        $errors = $this->collectValidationErrors($configuration, $state, $countryId);
+        // A Country overridden for the shop alone keeps the State inherited from all shops, which may belong to
+        // another country: the State is then overridden along with it, emptied.
+        if ($state !== null && (int) $state->id_country !== $countryId
+            && $this->isOverriddenForShop($configuration, 'id_country')
+            && !$this->isOverriddenForShop($configuration, 'id_state')
+        ) {
+            $configuration[MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . 'id_state'] = true;
+            $state = null;
+        }
+
+        // A shop removing its Country override inherits the Country again, while the disabled field still submits
+        // its own one. Its State override is kept only if it belongs to the inherited Country: an empty one (whose
+        // row is hidden with a country without states) or one of another country is removed with it.
+        if ($this->isOverrideRemovedForShop($configuration, 'id_country', 'PS_SHOP_COUNTRY_ID')) {
+            $countryId = $this->getInheritedCountryId();
+            $country = $countryId ? new Country($countryId, $langId) : null;
+            if ($this->isOverriddenForShop($configuration, 'id_state')
+                && ($state === null || (int) $state->id_country !== $countryId)
+            ) {
+                unset($configuration[MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . 'id_state']);
+                $state = null;
+            }
+        }
+
+        $errors = $this->collectValidationErrors($configuration, $country, $state, $countryId);
         if (!empty($errors)) {
             return $errors;
         }
 
-        $this->configuration->set('PS_SHOP_NAME', $configuration['name']);
-        $this->configuration->set('PS_SHOP_EMAIL', $configuration['email']);
-        $this->configuration->set('PS_SHOP_DETAILS', $configuration['registration_number'] ?? '');
-        $this->configuration->set('PS_SHOP_ADDR1', $configuration['address1'] ?? '');
-        $this->configuration->set('PS_SHOP_ADDR2', $configuration['address2'] ?? '');
-        $this->configuration->set('PS_SHOP_CODE', $configuration['postcode'] ?? '');
-        $this->configuration->set('PS_SHOP_CITY', $configuration['city'] ?? '');
-        $this->configuration->set('PS_SHOP_PHONE', $configuration['phone'] ?? '');
-        $this->configuration->set('PS_SHOP_FAX', $configuration['fax'] ?? '');
-
-        if ($country !== null) {
-            $this->configuration->set('PS_SHOP_COUNTRY_ID', $countryId);
-            // The name, not the ISO code: legacy stored Country::$name here and this value is
-            // read by mail templates and third-party code as a display name.
-            $this->configuration->set('PS_SHOP_COUNTRY', $country->name);
-        } else {
-            $this->configuration->set('PS_SHOP_COUNTRY_ID', 0);
-            $this->configuration->set('PS_SHOP_COUNTRY', '');
+        $shopConstraint = $this->getShopConstraint();
+        foreach (self::TEXT_FIELD_KEYS as $field => $key) {
+            $this->updateConfigurationValue($key, $field, [$field => $configuration[$field] ?? ''] + $configuration, $shopConstraint);
         }
 
-        if ($state !== null) {
-            $this->configuration->set('PS_SHOP_STATE_ID', $stateId);
-            $this->configuration->set('PS_SHOP_STATE', $state->name);
-        } else {
-            $this->configuration->set('PS_SHOP_STATE_ID', 0);
-            $this->configuration->set('PS_SHOP_STATE', '');
-        }
+        // The name keys follow the override checkbox of their id field, which is the only one the form shows.
+        $this->updateConfigurationValue('PS_SHOP_COUNTRY_ID', 'id_country', ['id_country' => $country !== null ? $countryId : 0] + $configuration, $shopConstraint);
+        // The name, not the ISO code: legacy stored Country::$name here and this value is
+        // read by mail templates and third-party code as a display name.
+        $this->updateConfigurationValue('PS_SHOP_COUNTRY', 'id_country', ['id_country' => $country !== null ? $country->name : ''] + $configuration, $shopConstraint);
+        $this->updateConfigurationValue('PS_SHOP_STATE_ID', 'id_state', ['id_state' => $state !== null ? $stateId : 0] + $configuration, $shopConstraint);
+        $this->updateConfigurationValue('PS_SHOP_STATE', 'id_state', ['id_state' => $state !== null ? $state->name : ''] + $configuration, $shopConstraint);
 
         return [];
     }
@@ -103,7 +122,55 @@ final class ContactDetailsConfiguration extends AbstractMultistoreConfiguration
         return $resolver;
     }
 
-    private function collectValidationErrors(array $configuration, ?State $state, int $countryId): array
+    private function isOverriddenForShop(array $configuration, string $field): bool
+    {
+        return $this->multistoreFeature->isUsed()
+            && !$this->shopContext->isAllShopContext()
+            && isset($configuration[MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . $field]);
+    }
+
+    private function isSavedForContext(array $configuration, string $field): bool
+    {
+        return !$this->multistoreFeature->isUsed()
+            || $this->shopContext->isAllShopContext()
+            || isset($configuration[MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . $field]);
+    }
+
+    private function isOverrideRemovedForShop(array $configuration, string $field, string $key): bool
+    {
+        return $this->multistoreFeature->isUsed()
+            && !$this->shopContext->isAllShopContext()
+            && !isset($configuration[MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . $field])
+            && $this->hasShopValue($key);
+    }
+
+    private function getInheritedCountryId(): int
+    {
+        $shopConstraint = $this->shopContext->isShopContext()
+            ? ShopConstraint::shopGroup((int) $this->shopContext->getContextShopGroup()->id)
+            : ShopConstraint::allShops();
+
+        return (int) $this->configuration->get('PS_SHOP_COUNTRY_ID', null, $shopConstraint);
+    }
+
+    /**
+     * Whether the key has a value of its own in the current shop or shop group context, not an inherited one.
+     */
+    private function hasShopValue(string $key): bool
+    {
+        $shopConstraint = $this->getShopConstraint();
+        if ($shopConstraint === null) {
+            return false;
+        }
+
+        $strictConstraint = $shopConstraint->getShopId() !== null
+            ? ShopConstraint::shop($shopConstraint->getShopId()->getValue(), true)
+            : ShopConstraint::shopGroup($shopConstraint->getShopGroupId()->getValue(), true);
+
+        return $this->configuration->has($key, $strictConstraint);
+    }
+
+    private function collectValidationErrors(array $configuration, ?Country $country, ?State $state, int $countryId): array
     {
         $errors = [];
 
@@ -138,6 +205,17 @@ final class ContactDetailsConfiguration extends AbstractMultistoreConfiguration
         if ($state !== null && (int) $state->id_country !== $countryId) {
             $errors[] = [
                 'key' => 'The selected state does not belong to the selected country.',
+                'domain' => 'Admin.Shopparameters.Notification',
+                'parameters' => [],
+            ];
+        }
+
+        // Only when this save writes the Country or the State: a shop inheriting both cannot fix them here.
+        if ($country !== null && $country->contains_states && $state === null
+            && ($this->isSavedForContext($configuration, 'id_country') || $this->isSavedForContext($configuration, 'id_state'))
+        ) {
+            $errors[] = [
+                'key' => 'An address located in a country containing states must have a state selected.',
                 'domain' => 'Admin.Shopparameters.Notification',
                 'parameters' => [],
             ];
