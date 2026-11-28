@@ -151,7 +151,11 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
         $invoice_address = new Address((int) $this->order->id_address_invoice);
         $country = new Country((int) $invoice_address->id_country);
-        $formatted_invoice_address = AddressFormat::generateAddress($invoice_address, $invoiceAddressPatternRules, '<br />', ' ');
+        // Invoices issued before this column existed, and orders whose address has since been removed,
+        // fall back to the live one exactly as they did before.
+        $formatted_invoice_address = !empty($this->order_invoice->customer_address)
+            ? $this->order_invoice->customer_address
+            : AddressFormat::generateAddress($invoice_address, $invoiceAddressPatternRules, '<br />', ' ');
 
         $delivery_address = null;
         $formatted_delivery_address = '';
