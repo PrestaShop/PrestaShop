@@ -13,33 +13,38 @@ import prestashop from 'prestashop';
  */
 function handleCountryChange(selectors) {
   $('body').on('change', selectors.country, (event) => {
-    const requestData = {
-      id_country: $(selectors.country).val(),
-      id_address: $(`${selectors.address} form`).data('id-address'),
-    };
-    const getFormViewUrl = $(`${selectors.address} form`).data('refresh-url');
-    const formFieldsSelector = `${selectors.address} input`;
     const target = $(event.target);
 
-    const submitButton = $(`${selectors.address} [type="submit"]`);
+    const addressForm = target.closest(selectors.address);
+    const dataHolder = target.closest('form');
+
+    const requestData = {
+      id_country: target.val(),
+      id_address: dataHolder.data('id-address'),
+      type: addressForm.find('[name="saveAddress"]').val(),
+    };
+    const getFormViewUrl = dataHolder.data('refresh-url');
+
+    const submitButton = addressForm.find('[type="submit"]');
     submitButton.prop('disabled', true);
 
     $.post(getFormViewUrl, requestData).then((resp) => {
       const inputs = [];
 
       // Store fields values before updating form
-      $(formFieldsSelector).each(function () {
+      addressForm.find('input').each(function () {
         inputs[$(this).prop('name')] = $(this).val();
       });
 
-      $(target.closest(selectors.address)).replaceWith(resp.address_form);
+      const updatedForm = $(resp.address_form);
+      addressForm.replaceWith(updatedForm);
 
       // Restore fields values
-      $(formFieldsSelector).each(function () {
+      updatedForm.find('input').each(function () {
         $(this).val(inputs[$(this).prop('name')]);
       });
 
-      prestashop.emit('updatedAddressForm', {target: $(selectors.address), resp});
+      prestashop.emit('updatedAddressForm', {target: updatedForm, resp});
     }).fail((resp) => {
       submitButton.prop('disabled', false);
       prestashop.emit('handleError', {eventType: 'updateAddressForm', resp});
