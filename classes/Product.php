@@ -5798,6 +5798,7 @@ class ProductCore extends ObjectModel
         $results_array = [];
 
         if (is_array($query_result)) {
+            SpecificPrice::prefetchCouldHaveSpecificPrice(array_column($query_result, 'id_product'));
             foreach ($query_result as $row) {
                 if ($row2 = Product::getProductProperties($id_lang, $row)) {
                     $results_array[] = $row2;
