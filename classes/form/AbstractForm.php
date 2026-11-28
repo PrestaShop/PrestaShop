@@ -132,7 +132,9 @@ abstract class AbstractFormCore implements FormInterface
     {
         foreach ($this->formFields as $field) {
             if ($field->isRequired()) {
-                if (!$field->getValue()) {
+                $value = $field->getValue();
+
+                if (!$value || (is_string($value) && '' === trim($value))) {
                     $field->addError(
                         $this->constraintTranslator->translate('required')
                     );
