@@ -926,14 +926,15 @@ class CartRuleCore extends ObjectModel
         // Check if the free gift product is still available.
         // Skip for finalized orders (useOrderPrices = true) to avoid removing already-placed cart rules
         // if the gift product later becomes unavailable.
-        if (self::isDiscountFeatureFlagEnabled() && (int) $this->gift_product && !$useOrderPrices) {
+        if ((int) $this->gift_product && !$useOrderPrices) {
             $giftProduct = new Product((int) $this->gift_product);
 
             if (!Validate::isLoadedObject($giftProduct)) {
                 return (!$display_error) ? false : $this->trans('The gift product does not exist.', [], 'Shop.Notifications.Error');
             }
 
-            if (!(int) $giftProduct->available_for_order) {
+            // A gift that cannot be ordered blocks the checkout and the customer cannot remove it from the cart
+            if (!(int) $giftProduct->active || !(int) $giftProduct->available_for_order) {
                 return (!$display_error) ? false : $this->trans('The gift product is not available for order.', [], 'Shop.Notifications.Error');
             }
 

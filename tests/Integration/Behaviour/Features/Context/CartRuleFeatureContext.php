@@ -647,6 +647,9 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
             'You cannot use this voucher in an empty cart' => 114,
             'You cannot use this voucher anymore (usage limit reached)' => 115,
             'You cannot use this voucher' => 116,
+            'The gift product is not available for order' => 117,
+            'The gift product is out of stock' => 118,
+            'The gift product does not meet the minimum quantity' => 119,
         ];
 
         foreach ($map as $errorPart => $code) {

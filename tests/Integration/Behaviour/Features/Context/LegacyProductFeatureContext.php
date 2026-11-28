@@ -342,6 +342,28 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Given /^product "(.+)" can no longer be ordered$/
+     */
+    public function productWithNameCanNoLongerBeOrdered(string $productName): void
+    {
+        $this->checkProductWithNameExists($productName);
+        $this->updateCachedProduct($productName);
+        $this->getProductWithName($productName)->available_for_order = false;
+        $this->getProductWithName($productName)->save();
+    }
+
+    /**
+     * @Given /^product "(.+)" is no longer active$/
+     */
+    public function productWithNameIsNoLongerActive(string $productName): void
+    {
+        $this->checkProductWithNameExists($productName);
+        $this->updateCachedProduct($productName);
+        $this->getProductWithName($productName)->active = false;
+        $this->getProductWithName($productName)->save();
+    }
+
+    /**
      * @Given /^the product "(.+)" (allows|denies) order if out of stock/
      *
      * @param string $productName
