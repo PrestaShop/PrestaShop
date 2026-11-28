@@ -137,11 +137,7 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     public function getModule(string $moduleName): ModuleInterface
     {
-        $filePath = $this->getModulePath($moduleName);
-
-        $filemtime = $filePath === null
-            ? 0
-            : (int) @filemtime($filePath);
+        $filemtime = $this->getModuleFilemtime($moduleName);
 
         $cacheKey = $this->getCacheKey($moduleName);
 
@@ -166,6 +162,27 @@ class ModuleRepository implements ModuleRepositoryInterface
         $this->cacheProvider->save($cacheKey, $coreModule);
 
         return $this->enrichModuleAttributesFromHook($coreModule);
+    }
+
+    /*
+     * WHY: a directory's mtime only moves when an entry is added, renamed or removed inside it, not
+     * when a file it already contains is edited in place. Keying the cache on the module folder alone
+     * therefore missed the one change a developer makes most often - bumping $this->version in the main
+     * class - and the stale module was served until something else cleared the cache. Every attribute
+     * cached here is read from that file, so its own mtime has to be part of the freshness check. The
+     * folder is still consulted so that adding or removing files keeps invalidating the entry.
+     */
+    private function getModuleFilemtime(string $moduleName): int
+    {
+        $modulePath = $this->getModulePath($moduleName);
+        if ($modulePath === null) {
+            return 0;
+        }
+
+        return max(
+            (int) @filemtime($modulePath),
+            (int) @filemtime($modulePath . '/' . $moduleName . '.php')
+        );
     }
 
     public function getModulePath(string $moduleName): ?string
