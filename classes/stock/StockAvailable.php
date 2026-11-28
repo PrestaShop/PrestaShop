@@ -325,7 +325,7 @@ class StockAvailableCore extends ObjectModel
         }
 
         // Get the total quantity of all combinations
-        $total_quantity = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+        $total_quantity = (int) Db::getInstance()->getValue(
             '
 			SELECT SUM(quantity) as quantity
 			FROM ' . _DB_PREFIX_ . 'stock_available
