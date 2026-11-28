@@ -314,3 +314,7 @@ services:
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\StoreFormDataProvider:
     autowire: true
     public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ShopGroupFormDataProvider:
+    autowire: true
+    public: false
