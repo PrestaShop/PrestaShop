@@ -10,6 +10,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\RemoveProductsFromAttachmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Command\RemoveAllAssociatedProductAttachmentsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Command\SetAssociatedProductAttachmentsCommand;
@@ -114,6 +115,21 @@ class UpdateAttachmentFeatureContext extends AbstractProductFeatureContext
     {
         $this->getCommandBus()->handle(new RemoveAllAssociatedProductAttachmentsCommand(
             $this->getSharedStorage()->get($productReference)
+        ));
+    }
+
+    /**
+     * @When I remove products :productReferences from attachment :attachmentReference
+     *
+     * productReferences transformation handled by @see StringToArrayTransformContext
+     *
+     * @param string[] $productReferences
+     */
+    public function removeProductsFromAttachment(array $productReferences, string $attachmentReference): void
+    {
+        $this->getCommandBus()->handle(new RemoveProductsFromAttachmentCommand(
+            $this->getSharedStorage()->get($attachmentReference),
+            array_map(fn (string $productReference): int => $this->getSharedStorage()->get($productReference), $productReferences)
         ));
     }
 }
