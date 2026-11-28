@@ -151,3 +151,27 @@ Feature: Cart calculation with cart rules giving gift
     When I apply the voucher code "foo12"
     Then I should have 6 products in my cart
     And my cart total should be 126.8692 tax included
+
+  @restore-cart-rules-after-scenario
+  Scenario: a separate gift rule and a separate percentage rule are applied in the same order with and without shipping
+    Given there is a product in the catalog named "product20" with a price of 100.0 and 1000 items in stock
+    And there is a product in the catalog named "product21" with a price of 10.0 and 1000 items in stock
+    And there is a cart rule "cartrule20" with following properties:
+      | name[en-US]   | cartrule20 |
+      | priority      | 1          |
+      | free_shipping | false      |
+      | code          | foo20      |
+      | gift_product  | product21  |
+    And there is a cart rule "cartrule21" with following properties:
+      | name[en-US]         | cartrule21 |
+      | priority            | 1          |
+      | free_shipping       | false      |
+      | code                | foo21      |
+      | discount_percentage | 50         |
+    And I add 1 items of product "product20" in my cart
+    When I apply the voucher code "foo20"
+    And I apply the voucher code "foo21"
+    Then I should have 2 products in my cart
+    # the gift rule sorts before the percentage rule, so the 50% applies to 100.00 and not to 110.00
+    And my cart total without shipping should be 50.0 tax included
+    And my cart total should be 57.0 tax included
