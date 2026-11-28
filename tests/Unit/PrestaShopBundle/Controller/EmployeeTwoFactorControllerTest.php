@@ -14,6 +14,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\GenerateEmployeeBackupCodesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\InitializeEmployeeTotpSecretCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\PrepareEmployeeBackupCodeRegenerationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\RegenerateEmployeeBackupCodesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeTwoFactorException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeTwoFactorSettings;
 use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\EmployeeTwoFactorSettings;
@@ -28,6 +29,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Environment;
 
 class EmployeeTwoFactorControllerTest extends TestCase
 {
@@ -138,14 +140,54 @@ class EmployeeTwoFactorControllerTest extends TestCase
         self::assertSame([], $session->getFlashBag()->peek('backup_codes'));
     }
 
-    private function createController(CommandBusInterface $bus): array
+    public function testInvalidRegenerationCodeRendersTheExistingWordingWithoutFlashingCodes(): void
+    {
+        $bus = $this->createMock(CommandBusInterface::class);
+        $bus->expects(self::exactly(2))->method('handle')->willReturnCallback(static function (object $message) {
+            if ($message instanceof RegenerateEmployeeBackupCodesCommand) {
+                throw new EmployeeTwoFactorException('Invalid code', EmployeeTwoFactorException::INVALID_CODE);
+            }
+            self::assertInstanceOf(GetEmployeeTwoFactorSettings::class, $message);
+
+            return new EmployeeTwoFactorSettings(true, true, ['totp'], 'totp', '', '');
+        });
+        $controller = $this->getMockBuilder(EmployeeController::class)->onlyMethods(['generateSidebarLink'])->getMock();
+        $controller->expects(self::once())->method('generateSidebarLink')->with('AdminEmployees')->willReturn('/help');
+        [$controller, $session, $container] = $this->createController($bus, $controller);
+        $twig = $this->createMock(Environment::class);
+        $twig->expects(self::once())->method('render')->willReturnCallback(static function (string $view, array $parameters): string {
+            self::assertSame('@PrestaShop/Admin/Configure/AdvancedParameters/Employee/confirm_regenerate_backup_codes.html.twig', $view);
+            self::assertSame('The verification code is not valid.', $parameters['authenticationError']);
+            self::assertSame([], $parameters['authenticationErrorData']);
+
+            return 'Confirmation with invalid code';
+        });
+        $container->set('twig', $twig);
+        $tokens = $this->createMock(UserTokenManager::class);
+        $tokens->method('getSymfonyToken')->willReturn('admin-token');
+        $request = Request::create('/employee/42?preferProvider=totp', 'POST', ['_token' => 'csrf-token', '_auth_code' => 'invalid']);
+        $request->attributes->set('_legacy_controller', 'AdminEmployees');
+
+        $response = $controller->regenerateBackupCodesAction(42, $request, $tokens);
+
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('Confirmation with invalid code', $response->getContent());
+        self::assertSame([], $session->getFlashBag()->peek('backup_codes'));
+        self::assertSame([], $session->getFlashBag()->peek('error'));
+    }
+
+    private function createController(CommandBusInterface $bus, ?EmployeeController $controller = null): array
     {
         $csrf = $this->createMock(CsrfTokenManagerInterface::class);
         $csrf->method('isTokenValid')->willReturn(true);
         $router = $this->createMock(RouterInterface::class);
         $router->method('generate')->willReturn('/employee/42');
         $translator = $this->createMock(TranslatorInterface::class);
-        $translator->method('trans')->willReturnCallback(static fn (string $message): string => $message);
+        $translator->method('trans')->willReturnCallback(static function (string $message): string {
+            self::assertNotSame('code_invalid', $message);
+
+            return $message;
+        });
         $session = new Session(new MockArraySessionStorage());
         $request = Request::create('/employee/42');
         $request->setSession($session);
@@ -157,9 +199,9 @@ class EmployeeTwoFactorControllerTest extends TestCase
         $container->set('router', $router);
         $container->set('request_stack', $stack);
         $container->set(TranslatorInterface::class, $translator);
-        $controller = new EmployeeController();
+        $controller ??= new EmployeeController();
         $controller->setContainer($container);
 
-        return [$controller, $session];
+        return [$controller, $session, $container];
     }
 }

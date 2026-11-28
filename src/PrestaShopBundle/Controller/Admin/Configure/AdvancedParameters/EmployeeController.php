@@ -525,7 +525,7 @@ class EmployeeController extends PrestaShopAdminController
             $this->flashBackupCodes($result, true);
         } catch (EmployeeTwoFactorException $e) {
             if (EmployeeTwoFactorException::INVALID_CODE === $e->getCode()) {
-                return $this->renderBackupCodeConfirmation($employeeId, $request, $userTokenManager, 'code_invalid');
+                return $this->renderBackupCodeConfirmation($employeeId, $request, $userTokenManager, 'The verification code is not valid.');
             }
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         } catch (EmployeeException $e) {
@@ -710,7 +710,6 @@ class EmployeeController extends PrestaShopAdminController
                 EmployeeTwoFactorException::TOO_MANY_ATTEMPTS => $this->trans('Too many verification attempts. Please try again later.', [], 'Admin.Login.Notification'),
                 EmployeeTwoFactorException::TOO_MANY_EMAILS => $this->trans('Too many requests for an authentication code. Please try again later.', [], 'Admin.Login.Notification'),
                 EmployeeTwoFactorException::EMAIL_DELIVERY_FAILED => $this->trans('The authentication email could not be sent. Please try again later.', [], 'Admin.Login.Notification'),
-                EmployeeTwoFactorException::INVALID_CODE => $this->trans('code_invalid', [], 'Admin.Login.Notification'),
                 EmployeeTwoFactorException::CONCURRENT_UPDATE => $this->trans('Your two-factor authentication settings changed during this operation. Reload your profile and try again.', [], 'Admin.Advparameters.Notification'),
             ],
             EmployeeConstraintException::class => [

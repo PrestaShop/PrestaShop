@@ -16,6 +16,7 @@ use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\Translation\Loader\ArrayLoader as TranslationArrayLoader;
 use Symfony\Component\Translation\Translator;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
@@ -78,19 +79,26 @@ class EmployeeTwoFactorFormsTest extends TestCase
         self::assertSame(1, $xpath->query('//noscript//button[@type="submit" and @form="employee-initialize-totp-form"]')->length);
     }
 
-    public function testEmailOnlyConfirmationHasADedicatedCsrfProtectedResendWithoutJavascript(): void
+    #[DataProvider('confirmationErrors')]
+    public function testEmailOnlyConfirmationHasADedicatedCsrfProtectedResendWithoutJavascript(?string $authenticationError): void
     {
         $loader = new FilesystemLoader();
         $loader->addPath(dirname(__DIR__, 4) . '/src/PrestaShopBundle/Resources/views', 'PrestaShop');
         $twig = new Environment(new ChainLoader([new ArrayLoader([
             '@PrestaShop/Admin/layout.html.twig' => '{% block content %}{% endblock %}',
         ]), $loader]));
-        $twig->addExtension(new TranslationExtension(new Translator('en')));
+        $translator = new Translator('en');
+        $translator->addLoader('array', new TranslationArrayLoader());
+        $translator->addResource('array', [
+            'The verification code is not valid.' => 'Translated invalid verification code',
+        ], 'en', 'Admin.Login.Notification');
+        $twig->addExtension(new TranslationExtension($translator));
         $twig->addFunction(new TwigFunction('path', static fn (string $name): string => '/' . $name));
         $twig->addFunction(new TwigFunction('csrf_token', static fn (string $id): string => 'csrf-' . $id));
         $html = $twig->render('@PrestaShop/Admin/Configure/AdvancedParameters/Employee/confirm_regenerate_backup_codes.html.twig', [
             'employeeId' => 42,
-            'authenticationError' => null,
+            'authenticationError' => $authenticationError,
+            'authenticationErrorData' => [],
             'emailCodePreparationRequired' => false,
             'providerSwitchRoute' => 'admin_employees_prepare_regenerate_backup_codes',
             'providerSwitchRouteParams' => ['employeeId' => 42, 'sendCode' => 1],
@@ -109,10 +117,18 @@ class EmployeeTwoFactorFormsTest extends TestCase
             'submitLabel' => 'Regenerate backup codes',
             'logoutPath' => null,
         ]);
+        self::assertSame(null !== $authenticationError, str_contains($html, 'Translated invalid verification code'));
+        self::assertStringNotContainsString('code_invalid', $html);
         self::assertStringContainsString('Resend code', $html);
         self::assertStringContainsString('method="post" action="/admin_employees_prepare_regenerate_backup_codes"', $html);
         self::assertStringContainsString('name="_token_prepare_backup_codes" value="csrf-prepare_backup_codes_42"', $html);
         self::assertSame(2, substr_count($html, '<form method="post"'));
+    }
+
+    public static function confirmationErrors(): iterable
+    {
+        yield 'no error' => [null];
+        yield 'invalid code' => ['The verification code is not valid.'];
     }
 
     public static function backupCodeStates(): iterable

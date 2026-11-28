@@ -429,6 +429,35 @@ final class EmployeeTrustedDevicePersistenceTest extends KernelTestCase
         }
     }
 
+    public function testLegacyEmailChangeInvalidatesAnIssuedEmailOtp(): void
+    {
+        $now = new DateTimeImmutable('2026-11-28 12:00:00.123456', new DateTimeZone('UTC'));
+        $state = $this->repository->getEmailOtpState($this->employeeId);
+        $version = (int) $state['two_factor_trusted_version'];
+        $challenge = new EmployeeEmailOtp($this->employeeId, '654321', $now, EmployeeEmailOtp::LOGIN, $version);
+        self::assertTrue($this->repository->replaceEmailOtp($challenge, $state));
+
+        $employee = new LegacyEmployee($this->employeeId);
+        $employee->email = 'changed-' . $this->employeeId . '@example.com';
+        $employee->setFieldsToUpdate(['email' => true]);
+        self::assertTrue($employee->update());
+
+        $updated = $this->repository->getEmailOtpState($this->employeeId);
+        self::assertSame($employee->email, $updated['email']);
+        self::assertSame($version + 1, (int) $updated['two_factor_trusted_version']);
+        self::assertSame(1, (int) $updated['active']);
+        self::assertSame(1, (int) $updated['two_factor_enabled']);
+        self::assertSame(1, (int) $updated['two_factor_email_enabled']);
+        self::assertSame($challenge->code, $updated['two_factor_email_auth_code']);
+        self::assertSame($version, (int) $updated['two_factor_email_auth_code_version']);
+        self::assertFalse($this->repository->consumeEmailOtp($challenge, $now));
+        self::assertSame($challenge->code, $this->row()['two_factor_email_auth_code']);
+
+        $replacement = new EmployeeEmailOtp($this->employeeId, '987654', $now, EmployeeEmailOtp::LOGIN, $version + 1);
+        self::assertTrue($this->repository->replaceEmailOtp($replacement, $updated));
+        self::assertTrue($this->repository->consumeEmailOtp($replacement, $now));
+    }
+
     public function testDirectBackupAndEmailWritesPreserveTrust(): void
     {
         $this->repository->initializeTotpSecret($this->employeeId, 'draft-secret');
