@@ -124,6 +124,7 @@ Feature: Update product details from Back Office (BO)
       | emotion | disgust       |                      |
       | element | poo           | en-US:Poo;fr-FR:Caca |
     And feature value "candy" should not exist
+    And feature value "candy" should have no translations
     And feature value "poo" should be associated to feature "element"
 
   Scenario: I can remove all feature values from a Product
@@ -142,6 +143,7 @@ Feature: Update product details from Back Office (BO)
     When I remove all feature values from product "lightMagicBook"
     Then product "lightMagicBook" should have no feature values
     And feature value "light" should not exist
+    And feature value "light" should have no translations
 
   Scenario: I can not set the same feature twice
     Given I add product "lightMagicBook" with following information:
