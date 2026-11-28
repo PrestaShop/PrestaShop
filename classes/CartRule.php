@@ -933,6 +933,14 @@ class CartRuleCore extends ObjectModel
                 return (!$display_error) ? false : $this->trans('The gift product does not exist.', [], 'Shop.Notifications.Error');
             }
 
+            // An offline product is as unusable as a deleted one: the front office refuses to sell it, so a
+            // discount that offers it cannot be honoured. Read from the product's shop row, exactly like
+            // available_for_order below - both are 'shop' => true, so a product taken offline in one shop
+            // only stops the discount in that shop and nowhere else.
+            if (!(int) $giftProduct->active) {
+                return (!$display_error) ? false : $this->trans('The gift product is no longer available.', [], 'Shop.Notifications.Error');
+            }
+
             if (!(int) $giftProduct->available_for_order) {
                 return (!$display_error) ? false : $this->trans('The gift product is not available for order.', [], 'Shop.Notifications.Error');
             }
