@@ -8,6 +8,13 @@ updates:
       time: "04:00"
     open-pull-requests-limit: 10
     target-branch: develop
+    groups:
+      ui-tests-minor-and-patch:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
     reviewers:
       - "PrestaShop/qa-automation"
     labels:
