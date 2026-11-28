@@ -201,6 +201,9 @@ input[type="color"]:hover,
 }
 //tag
 .tagify-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   min-height: 30px;
   padding: 0 3px;
   overflow: auto;
@@ -231,7 +234,8 @@ input[type="color"]:hover,
   }
 
   > input {
-    width: 140px;
+    flex: 1 1 140px;
+    min-width: 0;
     height: auto;
     margin-top: 2px;
     border: 0 none;
