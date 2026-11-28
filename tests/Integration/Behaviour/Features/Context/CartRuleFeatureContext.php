@@ -387,6 +387,25 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Given /^cart rule "(.+)" applies its discount to the selected product "(.+)"$/
+     */
+    public function cartRuleAppliesToTheSelectedProduct(string $cartRuleName, string $productReference): void
+    {
+        $productId = $this->referenceToId($productReference);
+        $cartRule = new CartRule($this->getCartRuleId($cartRuleName));
+        $cartRule->product_restriction = true;
+        $cartRule->reduction_product = DiscountSettings::PRODUCT_SEGMENT;
+        $cartRule->save();
+        $this->cartRules[$cartRuleName] = $cartRule;
+
+        Db::getInstance()->insert('cart_rule_product_rule_group', ['id_cart_rule' => (int) $cartRule->id, 'quantity' => 1]);
+        $productRuleGroupId = Db::getInstance()->Insert_ID();
+        Db::getInstance()->insert('cart_rule_product_rule', ['id_product_rule_group' => $productRuleGroupId, 'type' => 'products']);
+        $productRuleId = Db::getInstance()->Insert_ID();
+        Db::getInstance()->insert('cart_rule_product_rule_value', ['id_product_rule' => $productRuleId, 'id_item' => $productId]);
+    }
+
+    /**
      * @When /^I enable cart rule "(.+)"$/
      */
     public function enableCartRule($cartRuleName)
