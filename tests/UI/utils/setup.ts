@@ -9,6 +9,10 @@ import {
   config,
 } from 'chai';
 
+import {
+  checkNoRealGatewayData,
+} from '@utils/preflight';
+
 let screenshotNumber: number = 1;
 
 /**
@@ -23,6 +27,10 @@ let screenshotNumber: number = 1;
 before(async function () {
   config.truncateThreshold = 0;
 
+  // Refuse to run against a database containing real payment data before any
+  // campaign can mutate the shop (see utils/preflight.ts).
+  await checkNoRealGatewayData();
+
   this.browser = await utilsPlaywright.createBrowser();
 });
 
@@ -31,7 +39,12 @@ before(async function () {
  * @description Close browser after finish the run
  */
 after(async function () {
-  await utilsPlaywright.closeBrowser(this.browser);
+  // Guarded: when the global before hook (preflight, browser creation) threw,
+  // this hook still runs and this.browser is undefined; closing it would bury
+  // the real abort under an unrelated after-hook failure.
+  if (void 0 !== this.browser) {
+    await utilsPlaywright.closeBrowser(this.browser);
+  }
 });
 
 const takeScreenShotAfterStep = async (browser: Browser, screenshotPath: string) => {
