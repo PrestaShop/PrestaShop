@@ -45,4 +45,27 @@ class KpiRowPresenterTest extends TestCase
 
         $this->assertEquals('abcd', current($result['kpis']));
     }
+
+    public function testSkipsKpisRenderedEmpty()
+    {
+        $presenter = new KpiRowPresenter();
+
+        $kpiRowMock = $this->createMock(KpiRowInterface::class);
+        $hiddenKpiMock = $this->createMock(KpiInterface::class);
+        $visibleKpiMock = $this->createMock(KpiInterface::class);
+
+        $kpiRowMock
+            ->method('getKpis')
+            ->willReturn([$hiddenKpiMock, $visibleKpiMock]);
+        $hiddenKpiMock
+            ->method('render')
+            ->willReturn('');
+        $visibleKpiMock
+            ->method('render')
+            ->willReturn('abcd');
+
+        $result = $presenter->present($kpiRowMock);
+
+        $this->assertSame(['abcd'], $result['kpis']);
+    }
 }

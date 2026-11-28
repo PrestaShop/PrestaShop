@@ -4,6 +4,7 @@
  #}
 
 {% block kpi_row %}
+  {% if kpiRow.kpis is not empty %}
   <div class="card card-kpis">
 
     <div class="kpi-row">
@@ -21,4 +22,5 @@
     {% endif %}
 
   </div>
+  {% endif %}
 {% endblock %}
