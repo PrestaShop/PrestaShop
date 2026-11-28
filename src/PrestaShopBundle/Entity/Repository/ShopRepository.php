@@ -4,6 +4,8 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Entity\Repository;
 
 /**
@@ -36,8 +38,10 @@ class ShopRepository extends \Doctrine\ORM\EntityRepository
             ->join('s.shopGroup', 'sg')
             ->where('s.active = true')
             ->andWhere('s.deleted = false')
-            ->andWhere('LOWER(s.name) LIKE :searchTerm')
-            ->setParameter('searchTerm', '%' . strtolower($searchTerm) . '%');
+            // Escaped so that % and _ are searched as typed instead of acting as LIKE wildcards, with "!" as escape
+            // character: a backslash would depend on the NO_BACKSLASH_ESCAPES SQL mode of the server
+            ->andWhere("LOWER(s.name) LIKE :searchTerm ESCAPE '!'")
+            ->setParameter('searchTerm', '%' . strtr(strtolower($searchTerm), ['!' => '!!', '%' => '!%', '_' => '!_']) . '%');
 
         return $qb->getQuery()->getResult();
     }

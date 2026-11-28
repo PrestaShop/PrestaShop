@@ -72,6 +72,7 @@ final class SecurityAttributeLinterCommand extends Command
         'admin_reset_password',
         'admin_security_compromised',
         'admin_shops_search',
+        'admin_shops_search_by_query',
         'admin_theme_customize_layouts',
     ];
 

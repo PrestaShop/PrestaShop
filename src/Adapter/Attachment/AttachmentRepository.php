@@ -104,7 +104,9 @@ class AttachmentRepository extends AbstractObjectModelRepository
 
     public function search(string $searchPhrase): array
     {
-        $searchPhrase = sprintf('%%%s%%', strtolower($searchPhrase));
+        // Escaped so that % and _ are searched as typed instead of acting as LIKE wildcards, with "!" as escape
+        // character: a backslash would depend on the NO_BACKSLASH_ESCAPES SQL mode of the server
+        $searchPhrase = '%' . strtr(strtolower($searchPhrase), ['!' => '!!', '%' => '!%', '_' => '!_']) . '%';
         $qb = $this->connection->createQueryBuilder();
         $qb->select('a.*')
             ->from($this->dbPrefix . 'attachment', 'a')
@@ -122,9 +124,9 @@ class AttachmentRepository extends AbstractObjectModelRepository
             )
             ->andWhere(
                 $qb->expr()->or(
-                    $qb->expr()->like('LOWER(a.file_name)', ':searchPhrase'),
-                    $qb->expr()->like('LOWER(al.name)', ':searchPhrase'),
-                    $qb->expr()->like('LOWER(al.description)', ':searchPhrase')
+                    $qb->expr()->like('LOWER(a.file_name)', ':searchPhrase', "'!'"),
+                    $qb->expr()->like('LOWER(al.name)', ':searchPhrase', "'!'"),
+                    $qb->expr()->like('LOWER(al.description)', ':searchPhrase', "'!'")
                 )
             )
             ->setParameter('searchPhrase', $searchPhrase)

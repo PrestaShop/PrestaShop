@@ -17,8 +17,8 @@ const initMultistoreDropdown = () => {
   const MultistoreDropdownMap = ComponentsMap.multistoreDropdown;
   const $searchInput = $(MultistoreDropdownMap.searchInput);
   const router = new Router();
-  const route = router.generate('admin_shops_search', {
-    searchTerm: '__QUERY__',
+  const route = router.generate('admin_shops_search_by_query', {
+    query: '__QUERY__',
   });
 
   if ($(MultistoreDropdownMap.scrollbar).length > 0) {
