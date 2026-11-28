@@ -394,6 +394,11 @@ class ProductCore extends ObjectModel
     /** @var array */
     protected static $_cacheFeatures = [];
 
+    /**
+     * @var array<string, array{images: array, combination_images: array|false}> image rows by "id_product-id_lang-id_shop"
+     */
+    protected static $_cacheImages = [];
+
     /** @var array */
     protected static $_frontFeaturesCache = [];
 
@@ -1211,6 +1216,7 @@ class ProductCore extends ObjectModel
         static::$loaded_classes = [];
         static::$productPropertiesCache = [];
         static::$_cacheFeatures = [];
+        static::$_cacheImages = [];
         static::$_frontFeaturesCache = [];
         static::$_prices = [];
         static::$_pricesLevel2 = [];
@@ -2673,6 +2679,11 @@ class ProductCore extends ObjectModel
             return false;
         }
 
+        $cacheKey = self::getImagesCacheKey((int) $this->id, (int) $id_lang);
+        if (isset(self::$_cacheImages[$cacheKey])) {
+            return self::$_cacheImages[$cacheKey]['combination_images'];
+        }
+
         $result = Db::getInstance()->executeS(
             'SELECT pai.`id_image`, pai.`id_product_attribute`, il.`legend`
             FROM `' . _DB_PREFIX_ . 'product_attribute_image` pai
@@ -3290,6 +3301,11 @@ class ProductCore extends ObjectModel
      */
     public function getImages($id_lang, ?Context $context = null)
     {
+        $cacheKey = self::getImagesCacheKey((int) $this->id, (int) $id_lang);
+        if (isset(self::$_cacheImages[$cacheKey])) {
+            return self::$_cacheImages[$cacheKey]['images'];
+        }
+
         return Db::getInstance()->executeS(
             '
             SELECT image_shop.`cover`, i.`id_image`, il.`legend`, i.`position`
@@ -4678,6 +4694,70 @@ class ProductCore extends ObjectModel
     /**
      * @param int[] $product_ids
      */
+    /**
+     * Loads the images and combination images of several products at once, for getImages() and getCombinationImages()
+     *
+     * @param int[] $productIds
+     */
+    public static function cacheProductsImages(array $productIds, int $idLang): void
+    {
+        $idsToLoad = [];
+        foreach (array_unique(array_map('intval', $productIds)) as $idProduct) {
+            if ($idProduct > 0 && !isset(self::$_cacheImages[self::getImagesCacheKey($idProduct, $idLang)])) {
+                $idsToLoad[] = $idProduct;
+            }
+        }
+        if (empty($idsToLoad)) {
+            return;
+        }
+
+        // A product without image is cached too, so it is not queried again
+        $images = array_fill_keys($idsToLoad, []);
+        $combinationImages = array_fill_keys($idsToLoad, false);
+
+        $rows = Db::getInstance()->executeS('
+            SELECT i.`id_product`, image_shop.`cover`, i.`id_image`, il.`legend`, i.`position`
+            FROM `' . _DB_PREFIX_ . 'image` i
+            ' . Shop::addSqlAssociation('image', 'i') . '
+            LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = ' . $idLang . ')
+            WHERE i.`id_product` IN (' . implode(',', $idsToLoad) . ')
+            ORDER BY i.`id_product`, `position`'
+        ) ?: [];
+        foreach ($rows as $row) {
+            $idProduct = (int) $row['id_product'];
+            unset($row['id_product']);
+            $images[$idProduct][] = $row;
+        }
+
+        if (Combination::isFeatureActive()) {
+            $rows = Db::getInstance()->executeS(
+                'SELECT i.`id_product`, pai.`id_image`, pai.`id_product_attribute`, il.`legend`
+                FROM `' . _DB_PREFIX_ . 'product_attribute_image` pai
+                LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (il.`id_image` = pai.`id_image`)
+                INNER JOIN `' . _DB_PREFIX_ . 'image` i ON (i.`id_image` = pai.`id_image`)
+                WHERE i.`id_product` IN (' . implode(',', $idsToLoad) . ') AND il.`id_lang` = ' . $idLang . '
+                ORDER BY i.`id_product`, i.`position`'
+            ) ?: [];
+            foreach ($rows as $row) {
+                $idProduct = (int) $row['id_product'];
+                unset($row['id_product']);
+                $combinationImages[$idProduct][$row['id_product_attribute']][] = $row;
+            }
+        }
+
+        foreach ($idsToLoad as $idProduct) {
+            self::$_cacheImages[self::getImagesCacheKey($idProduct, $idLang)] = [
+                'images' => $images[$idProduct],
+                'combination_images' => $combinationImages[$idProduct],
+            ];
+        }
+    }
+
+    private static function getImagesCacheKey(int $idProduct, int $idLang): string
+    {
+        return $idProduct . '-' . $idLang . '-' . (int) Context::getContext()->shop->id;
+    }
+
     public static function cacheProductsFeatures($product_ids)
     {
         if (!Feature::isFeatureActive()) {
