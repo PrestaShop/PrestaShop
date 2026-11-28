@@ -48,6 +48,7 @@
   import PSCheckbox from '@app/widgets/ps-checkbox.vue';
   import {defineComponent} from 'vue';
   import translate from '@app/pages/stock/mixins/translate';
+  import stockQueryParams from '@app/pages/stock/store/query-params';
 
   export default defineComponent({
     props: {
@@ -69,10 +70,8 @@
         return window.data.stockImportUrl;
       },
       stockExportUrl(): string {
-        const filtersClone = {...this.filters};
-        const params = $.param(filtersClone);
-
-        return `${window.data.stockExportUrl}&${params}`;
+        // Same query string the listing sends, so the export covers what the merchant is looking at.
+        return `${window.data.stockExportUrl}&${stockQueryParams(this.filters)}`;
       },
     },
     methods: {
