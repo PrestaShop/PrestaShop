@@ -6,10 +6,13 @@
 
 {% block content %}
   {{ include('@PrestaShop/Admin/Sell/Catalog/Attachment/Blocks/form.html.twig', {attachmentId: attachmentId}) }}
+
+  {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: attachmentProductGrid}) }}
 {% endblock %}
 
 {% block javascripts %}
   {{ parent() }}
 
   <script src="{{ asset('themes/new-theme/public/attachment.bundle.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/associated_products.bundle.js') }}"></script>
 {% endblock %}
