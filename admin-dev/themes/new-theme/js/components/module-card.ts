@@ -417,10 +417,18 @@ export default class ModuleCard {
         }
       })
       .fail(() => {
-        const moduleItem = jqElementObj.closest('module-item-list');
-        const techName = moduleItem.data('techName');
+        // WHY: the module item carries `module-item-list` as a CLASS - see moduleItemListSelector above,
+        // and ModuleCardMap.moduleItemList - so the bare element-name selector used here matched nothing
+        // and the name was always undefined. The message read "for module undefined", which is what the
+        // merchant sees when an action fails.
+        const techName = jqElementObj
+          .closest(this.moduleItemListSelector)
+          .attr('data-tech-name');
+
         $.growl.error({
-          message: `Could not perform action ${action} for module ${techName}`,
+          message: techName
+            ? `Could not perform action ${action} for module ${techName}`
+            : `Could not perform action ${action}`,
           fixed: true,
         });
       })
