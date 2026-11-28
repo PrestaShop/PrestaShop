@@ -50,6 +50,10 @@
 		<state name="Nusa Tenggara Timur" iso_code="ID-NT" country="ID" zone="Asia"/>
 		<state name="Papua" iso_code="ID-PA" country="ID" zone="Asia"/>
 		<state name="Papua Barat" iso_code="ID-PB" country="ID" zone="Asia"/>
+		<state name="Papua Barat Daya" iso_code="ID-PD" country="ID" zone="Asia"/>
+		<state name="Papua Pegunungan" iso_code="ID-PE" country="ID" zone="Asia"/>
+		<state name="Papua Selatan" iso_code="ID-PS" country="ID" zone="Asia"/>
+		<state name="Papua Tengah" iso_code="ID-PT" country="ID" zone="Asia"/>
 		<state name="Riau" iso_code="ID-RI" country="ID" zone="Asia"/>
 		<state name="Sulawesi Barat" iso_code="ID-SR" country="ID" zone="Asia"/>
 		<state name="Sulawesi Selatan" iso_code="ID-SN" country="ID" zone="Asia"/>
