@@ -148,8 +148,6 @@ class QueryListProvider implements ProviderInterface
             'filters' => $filter->getFilters(),
             'orderBy' => $filter->getOrderBy(),
             'sortOrder' => $filter->getOrderWay(),
-            'offset' => $filter->getOffset(),
-            'limit' => $filter->getLimit(),
         ];
 
         // These are GET parameters
@@ -160,6 +158,13 @@ class QueryListProvider implements ProviderInterface
             $getParameters,
             $this->contextParametersProvider->getContextParameters(),
         );
+        // Raw filters are merged over the checked values, and getOffset() turns 0 into null.
+        if ($filter->has('offset')) {
+            $queryParameters['offset'] = $filter->get('offset');
+        }
+        if ($filter->has('limit')) {
+            $queryParameters['limit'] = $filter->get('limit');
+        }
         $queryParameters = $this->applyDefaultValues($queryParameters, $operation);
         $CQRSQuery = $this->domainSerializer->denormalize($queryParameters, $CQRSQueryClass, null, [NormalizationMapper::NORMALIZATION_MAPPING => $this->getCQRSQueryMapping($operation)]);
         $CQRSQueryResult = $this->queryBus->handle($CQRSQuery);
@@ -233,8 +238,8 @@ class QueryListProvider implements ProviderInterface
             'filters' => $paginationFilters,
             'orderBy' => $orderBy,
             'sortOrder' => $queryParameters['sortOrder'] ?? 'asc',
-            'offset' => array_key_exists('offset', $queryParameters) ? (int) $queryParameters['offset'] : null,
-            'limit' => array_key_exists('limit', $queryParameters) ? (int) $queryParameters['limit'] : null,
+            'offset' => $this->readOffset($queryParameters),
+            'limit' => $this->readLimit($queryParameters),
         ];
 
         /* remove null parameters from the request so the default filter parameters can be used instead of null values. */
@@ -254,12 +259,82 @@ class QueryListProvider implements ProviderInterface
         ]);
 
         $filters = $this->filtersBuilder->buildFilters();
-        if ($filters->getLimit() === null) {
+        // A checked client limit wins when the request filters report none.
+        if (!array_key_exists('limit', $paginationParameters) && $filters->getLimit() === null) {
             $paginationParameters['limit'] = self::DEFAULT_PAGINATED_ITEM_LIMIT;
         }
         $filters->add($paginationParameters);
 
         return $filters;
+    }
+
+    /**
+     * A negative offset becomes an HTTP 500 from Doctrine. An empty string is the same as an omitted offset.
+     *
+     * @param array<string, mixed> $queryParameters
+     */
+    private function readOffset(array $queryParameters): ?int
+    {
+        if (!array_key_exists('offset', $queryParameters) || '' === $queryParameters['offset']) {
+            return null;
+        }
+
+        $raw = $queryParameters['offset'];
+        $offset = $this->filterInteger($raw);
+        if (false === $offset || $offset < 0) {
+            throw new UnexpectedValueException(sprintf('Offset must be an integer greater than or equal to zero, %s given.', $this->stringifyRawQueryValue($raw)));
+        }
+
+        return $offset;
+    }
+
+    /**
+     * Limit 0 is stored as unset and then breaks PaginationElements. An empty string is an omitted limit.
+     *
+     * @param array<string, mixed> $queryParameters
+     */
+    private function readLimit(array $queryParameters): ?int
+    {
+        if (!array_key_exists('limit', $queryParameters) || '' === $queryParameters['limit']) {
+            return null;
+        }
+
+        $raw = $queryParameters['limit'];
+        $limit = $this->filterInteger($raw);
+        if (false === $limit || $limit < 1) {
+            throw new UnexpectedValueException(sprintf('Limit must be a positive integer, %s given.', $this->stringifyRawQueryValue($raw)));
+        }
+
+        return $limit;
+    }
+
+    /**
+     * An int, or a digit string so "010" stays 10. Signs, spaces and "1e1" are rejected.
+     */
+    private function filterInteger(mixed $raw): int|false
+    {
+        if (is_int($raw)) {
+            return $raw;
+        }
+
+        if (!is_string($raw) || 1 !== preg_match('/^\d+$/', $raw)) {
+            return false;
+        }
+
+        return (int) $raw;
+    }
+
+    private function stringifyRawQueryValue(mixed $raw): string
+    {
+        if (is_string($raw)) {
+            return '' === $raw ? "''" : $raw;
+        }
+
+        if (is_int($raw)) {
+            return (string) $raw;
+        }
+
+        return get_debug_type($raw);
     }
 
     protected function mapOrderByFieldForGrid(?string $apiOrderBy, array $filtersMapping): ?string

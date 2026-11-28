@@ -237,6 +237,14 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
             ['limit', 'offset', 'orderBy', 'sortOrder', 'filters'],
             array_map(fn (Parameter $parameter) => $parameter->getName(), $paginatedList->getParameters())
         );
+        $this->assertSame(
+            ['type' => 'integer', 'minimum' => 1],
+            $paginatedList->getParameters()[0]->getSchema()
+        );
+        $this->assertSame(
+            ['type' => 'integer', 'minimum' => 0, 'default' => 0],
+            $paginatedList->getParameters()[1]->getSchema()
+        );
         $this->assertSame('deepObject', $paginatedList->getParameters()[4]->getStyle());
         $schema = $paginatedList->getResponses()['200']->getContent()['application/json']->getSchema();
         $this->assertSame('object', $schema['type']);
