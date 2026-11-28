@@ -205,9 +205,12 @@
                   <div class="input-group-text">{{ orderCurrency.symbol }}</div>
                 </div>
               </div>
-              <p class="text-center">(max
-                {{ orderForViewing.prices.shippingRefundableAmountFormatted }}
-                tax included)</p>
+              <p class="text-center">
+                {{ '(Max %amount_refundable% %tax_method%)'|trans({
+                  '%amount_refundable%': orderForViewing.prices.shippingRefundableAmountFormatted,
+                  '%tax_method%': orderForViewing.taxMethod,
+                }, 'Admin.Orderscustomers.Help') }}
+              </p>
             </div>
           </div>
         </div>
