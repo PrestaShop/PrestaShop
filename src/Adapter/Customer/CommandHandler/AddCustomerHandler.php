@@ -75,6 +75,7 @@ final class AddCustomerHandler extends AbstractCustomerHandler implements AddCus
 
         // Check if provided groups contain the correct data (the default group must be in group list)
         $this->assertCustomerCanAccessDefaultGroup($command);
+        $this->assertGroupsExist($command->getGroupIds(), $command->getDefaultGroupId());
 
         $customer->add();
         if (null !== $command->getGroupIds()) {

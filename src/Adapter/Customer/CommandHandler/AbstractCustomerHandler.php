@@ -7,9 +7,12 @@
 namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
 
 use Customer;
+use Group;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerGroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\MissingCustomerRequiredFieldsException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
+use Validate;
 
 /**
  * Provides reusable methods for customer command handlers.
@@ -44,6 +47,31 @@ abstract class AbstractCustomerHandler
             $missingFields = array_keys($errors);
 
             throw new MissingCustomerRequiredFieldsException($missingFields, sprintf('One or more required fields for customer are missing. Missing fields are: %s', implode(',', $missingFields)));
+        }
+    }
+
+    /**
+     * @param int[]|null $groupIds
+     * @param int|string|null $defaultGroupId
+     *
+     * @throws CustomerGroupNotFoundException
+     */
+    protected function assertGroupsExist(?array $groupIds, $defaultGroupId): void
+    {
+        $idsToCheck = $groupIds ?? [];
+        if (null !== $defaultGroupId && '' !== $defaultGroupId) {
+            $idsToCheck[] = $defaultGroupId;
+        }
+
+        $missing = [];
+        foreach (array_unique(array_map('intval', $idsToCheck)) as $groupId) {
+            if (!Validate::isLoadedObject(new Group($groupId))) {
+                $missing[] = $groupId;
+            }
+        }
+
+        if (!empty($missing)) {
+            throw CustomerGroupNotFoundException::fromGroupIds($missing);
         }
     }
 }

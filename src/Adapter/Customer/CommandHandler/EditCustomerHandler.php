@@ -63,6 +63,7 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
         }
 
         $this->assertCustomerCanAccessDefaultGroup($customer, $command);
+        $this->assertGroupsExist($command->getGroupIds(), $command->getDefaultGroupId());
 
         $this->updateCustomerWithCommandData($customer, $command);
 
