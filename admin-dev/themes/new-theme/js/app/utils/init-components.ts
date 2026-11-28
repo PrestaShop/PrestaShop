@@ -9,6 +9,7 @@ import {EventEmitter} from '@components/event-emitter';
 // Core components
 import ChoiceTable from '@js/components/choice-table';
 import ChoiceTree from '@js/components/form/choice-tree';
+import ChoiceTreeWidget from '@js/components/form/choice-tree-widget';
 import ColorPicker from '@js/app/utils/colorpicker';
 import CountryDniRequiredToggler from '@components/country-dni-required-toggler';
 import CountryStateSelectionToggler from '@components/country-state-selection-toggler';
@@ -122,6 +123,7 @@ const initPrestashopComponents = (): void => {
     // @todo: add all standard components in this list
     ChoiceTable,
     ChoiceTree,
+    ChoiceTreeWidget,
     ColorPicker,
     CountryDniRequiredToggler,
     CountryStateSelectionToggler,
