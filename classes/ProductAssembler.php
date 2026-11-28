@@ -190,6 +190,7 @@ class ProductAssemblerCore
     {
         $enrichedProducts = $this->addMissingProductFieldsForMultipleProducts($rawProducts);
 
+        Product::prefetchPropertiesQuantities($enrichedProducts);
         foreach ($enrichedProducts as &$product) {
             $product = Product::getProductProperties(
                 $this->searchContext->getIdLang(),
