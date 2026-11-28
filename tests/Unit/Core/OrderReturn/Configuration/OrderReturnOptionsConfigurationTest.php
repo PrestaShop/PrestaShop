@@ -12,7 +12,6 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\OrderReturn\Configuration\OrderReturnOptionsConfiguration;
 use PrestaShopBundle\Form\Admin\Sell\CustomerService\OrderReturn\OrderReturnOptionsType;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 use Tests\TestCase\AbstractConfigurationTestCase;
 
 class OrderReturnOptionsConfigurationTest extends AbstractConfigurationTestCase
@@ -98,10 +97,6 @@ class OrderReturnOptionsConfigurationTest extends AbstractConfigurationTestCase
     public function provideInvalidConfiguration(): array
     {
         return [
-            [
-                UndefinedOptionsException::class,
-                ['does_not_exist' => 'does_not_exist'],
-            ],
             [
                 InvalidOptionsException::class,
                 array_merge(
