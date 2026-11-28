@@ -110,6 +110,34 @@ class ShopGroupCore extends ObjectModel
      *
      * @return bool
      */
+    /**
+     * Whether the customer or order sharing flags of a group must stay read-only.
+     *
+     * Turning sharing on moves these records from the scope of one shop to the scope of the
+     * whole group, so it is refused once the group already holds them: the flip would show
+     * one shop's customers and orders to another shop without warning.
+     *
+     * That reasoning needs a second shop to be true. While the group holds at most one shop
+     * the two scopes are the same set of shops, so the flag decides nothing and there is
+     * nobody to expose the data to. Without this, the first order a single-shop merchant
+     * takes locks the option for good, and the only way back is to build a second group and
+     * move the shop into it - which the sharing check in AdminShopController then refuses in
+     * turn once quantities are shared.
+     *
+     * @param int $id_shop_group Shop group identifier
+     * @param string $check 'all', 'customer' or 'order'
+     *
+     * @return bool
+     */
+    public static function isSharingLocked($id_shop_group, $check = 'all')
+    {
+        if (count(Shop::getShops(false, (int) $id_shop_group, true) ?: []) <= 1) {
+            return false;
+        }
+
+        return static::hasDependency($id_shop_group, $check);
+    }
+
     public static function hasDependency($id_shop_group, $check = 'all')
     {
         $list_shops = Shop::getShops(false, $id_shop_group, true);
