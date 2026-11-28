@@ -786,6 +786,18 @@
     <state id="ID-PB" id_country="ID" id_zone="Asia" iso_code="ID-PB" tax_behavior="0" active="1">
       <name>Papua Barat</name>
     </state>
+    <state id="ID-PD" id_country="ID" id_zone="Asia" iso_code="ID-PD" tax_behavior="0" active="1">
+      <name>Papua Barat Daya</name>
+    </state>
+    <state id="ID-PE" id_country="ID" id_zone="Asia" iso_code="ID-PE" tax_behavior="0" active="1">
+      <name>Papua Pegunungan</name>
+    </state>
+    <state id="ID-PS" id_country="ID" id_zone="Asia" iso_code="ID-PS" tax_behavior="0" active="1">
+      <name>Papua Selatan</name>
+    </state>
+    <state id="ID-PT" id_country="ID" id_zone="Asia" iso_code="ID-PT" tax_behavior="0" active="1">
+      <name>Papua Tengah</name>
+    </state>
     <state id="ID-RI" id_country="ID" id_zone="Asia" iso_code="ID-RI" tax_behavior="0" active="1">
       <name>Riau</name>
     </state>
