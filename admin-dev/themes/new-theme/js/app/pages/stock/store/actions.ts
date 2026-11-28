@@ -82,14 +82,29 @@ export const getMovements = async ({commit}: {commit: Commit}, payload: Record<s
     page_size: payload.page_size,
     page_index: payload.page_index,
     keywords: payload.keywords,
-    supplier_id: payload.suppliers,
-    category_id: payload.categories,
-    id_stock_mvt_reason: payload.id_stock_mvt_reason,
-    id_employee: payload.id_employee,
   }, isParamInvalid);
 
   Object.entries(queryParams).forEach(([key, value]) => {
     url.searchParams.append(key, String(value));
+  });
+
+  // Identifier filters may hold several values: they must be sent as lists
+  // (`param[]=1&param[]=2`) so that the API filters on all of them
+  const listParams: Record<string, any> = {
+    supplier_id: payload.suppliers,
+    category_id: payload.categories,
+    id_stock_mvt_reason: payload.id_stock_mvt_reason,
+    id_employee: payload.id_employee,
+  };
+
+  Object.entries(listParams).forEach(([key, value]) => {
+    if (isNil(value) || (Array.isArray(value) && value.length === 0)) {
+      return;
+    }
+
+    (Array.isArray(value) ? value : [value]).forEach((v: string | number) => {
+      url.searchParams.append(`${key}[]`, String(v));
+    });
   });
 
   if (payload.date_add?.sup) {
