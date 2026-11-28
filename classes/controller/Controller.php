@@ -502,8 +502,9 @@ abstract class ControllerCore
      *
      * @param string|array $js_uri Path to JS file or an array like: array(uri, ...)
      * @param bool $check_path
+     * @param array $params Optional attributes (e.g., ['type' => 'module', 'defer' => true, 'async' => true])
      */
-    public function addJS($js_uri, $check_path = true)
+    public function addJS($js_uri, $check_path = true, $params = [])
     {
         if (!is_array($js_uri)) {
             $js_uri = [$js_uri];
@@ -520,8 +521,22 @@ abstract class ControllerCore
                 $js_path = Media::getJSPath($js_file);
             }
 
-            if ($js_path && !in_array($js_path, $this->js_files)) {
-                $this->js_files[] = $js_path . ($version ? '?' . $version : '');
+            if ($js_path) {
+                $uri = $js_path . ($version ? '?' . $version : '');
+                $exists = false;
+                foreach ($this->js_files as $existing_file) {
+                    if ((is_array($existing_file) && $existing_file['uri'] === $uri) || (is_string($existing_file) && $existing_file === $uri)) {
+                        $exists = true;
+                        break;
+                    }
+                }
+                if (!$exists) {
+                    // Backwards compatibility requires arrays formatted for the templates
+                    $this->js_files[] = [
+                        'uri' => $uri,
+                        'params' => $params
+                    ];
+                }
             }
         }
     }
@@ -543,8 +558,12 @@ abstract class ControllerCore
                 $js_file = Media::getJSPath($js_file);
             }
 
-            if ($js_file && in_array($js_file, $this->js_files)) {
-                unset($this->js_files[array_search($js_file, $this->js_files)]);
+            if ($js_file) {
+                foreach ($this->js_files as $key => $existing_file) {
+                    if ((is_array($existing_file) && $existing_file['uri'] === $js_file) || (is_string($existing_file) && $existing_file === $js_file)) {
+                        unset($this->js_files[$key]);
+                    }
+                }
             }
         }
     }
