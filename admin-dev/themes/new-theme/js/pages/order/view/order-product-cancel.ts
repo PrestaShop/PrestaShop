@@ -120,26 +120,14 @@ export default class OrderProductCancel {
 
       if (productQuantity <= 0) {
         $productAmount.val(0);
+        $productAmount.removeData('suggestedAmount');
         this.updateVoucherRefund();
 
         return;
       }
-      const priceFieldName = this.isTaxIncluded ? 'productPriceTaxIncl' : 'productPriceTaxExcl';
-      const productUnitPrice = parseFloat($productQuantityInput.data(priceFieldName));
-      const amountRefundable = parseFloat($productQuantityInput.data('amountRefundable'));
-      const guessedAmount = productUnitPrice * productQuantity < amountRefundable
-        ? productUnitPrice * productQuantity
-        : amountRefundable;
-      const amountValue = parseFloat(<string>$productAmount.val());
 
-      if (this.useAmountInputs) {
-        this.updateAmountInput($productQuantityInput);
-      }
-
-      if ($productAmount.val() === '' || amountValue === 0 || amountValue > guessedAmount) {
-        $productAmount.val(guessedAmount);
-        this.updateVoucherRefund();
-      }
+      this.suggestAmount($productQuantityInput, $productAmount, productQuantity);
+      this.updateVoucherRefund();
     });
 
     $(document).on('change', OrderViewPageMap.cancelProduct.inputs.amount, () => {
@@ -162,17 +150,8 @@ export default class OrderProductCancel {
     });
   }
 
-  updateAmountInput($productQuantityInput: JQuery): void {
-    const $parentCell = $productQuantityInput.parents(OrderViewPageMap.cancelProduct.table.cell);
-    const $productAmount = $parentCell.find(OrderViewPageMap.cancelProduct.inputs.amount);
-    const productQuantity = parseInt(<string>$productQuantityInput.val(), 10);
-
-    if (productQuantity <= 0) {
-      $productAmount.val(0);
-
-      return;
-    }
-
+  // A value still equal to the last suggestion was not typed by the merchant, so it can follow the quantity.
+  private suggestAmount($productQuantityInput: JQuery, $productAmount: JQuery, productQuantity: number): void {
     const priceFieldName = this.isTaxIncluded ? 'productPriceTaxIncl' : 'productPriceTaxExcl';
     const productUnitPrice = parseFloat($productQuantityInput.data(priceFieldName));
     const amountRefundable = parseFloat($productQuantityInput.data('amountRefundable'));
@@ -180,9 +159,12 @@ export default class OrderProductCancel {
       ? productUnitPrice * productQuantity
       : amountRefundable;
     const amountValue = parseFloat(<string>$productAmount.val());
+    const previousSuggestion = parseFloat($productAmount.data('suggestedAmount'));
+    const isUntouched = !Number.isNaN(previousSuggestion) && amountValue === previousSuggestion;
 
-    if ($productAmount.val() === '' || amountValue === 0 || amountValue > guessedAmount) {
+    if ($productAmount.val() === '' || amountValue === 0 || isUntouched || amountValue > guessedAmount) {
       $productAmount.val(guessedAmount);
+      $productAmount.data('suggestedAmount', guessedAmount);
     }
   }
 
