@@ -35,12 +35,17 @@ import initEmailFields from '@js/app/utils/email-idn';
 import initNumberCommaTransformer from '@js/app/utils/number-comma-transformer';
 import initPrestashopComponents from '@app/utils/init-components';
 import watchSymfonyDebugBar from '@app/utils/watch-symfony-debug-bar';
+import initSelect2PrefixFirstRanking from '@app/utils/init-select2-ranking';
 import '@js/components/header/search-form';
 
 const {$} = window;
 
 // Theme Javascript
 window.Dropzone.autoDiscover = false;
+
+// Has to run before the UI kit builds its select2 instances on DOM ready, because an instance reads
+// the defaults when it is constructed.
+initSelect2PrefixFirstRanking();
 
 new NavBar();
 new Header();
