@@ -1365,7 +1365,9 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 $orderId,
                 $data['name'],
                 $data['type'],
-                $data['value'] ?? null
+                $data['value'] ?? null,
+                null,
+                !isset($data['tax_included']) || (bool) $data['tax_included']
             ));
         } catch (InvalidCartRuleDiscountValueException $e) {
             $this->setLastException($e);

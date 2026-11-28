@@ -42,19 +42,23 @@ class AddCartRuleToOrderCommand
      */
     private $orderInvoiceId;
 
+    private bool $valueTaxIncluded;
+
     /**
      * @param int $orderId
      * @param string $cartRuleName
      * @param string $cartRuleType
      * @param string|null $value
      * @param int|null $orderInvoiceId
+     * @param bool $valueTaxIncluded
      */
     public function __construct(
         int $orderId,
         string $cartRuleName,
         string $cartRuleType,
         ?string $value,
-        $orderInvoiceId = null
+        $orderInvoiceId = null,
+        bool $valueTaxIncluded = true
     ) {
         $this->assertCartRuleNameIsNotEmpty($cartRuleName);
         $this->assertCartRuleTypeAndValueCombination($cartRuleType, $value);
@@ -64,6 +68,16 @@ class AddCartRuleToOrderCommand
         $this->cartRuleType = $cartRuleType;
         $this->value = null !== $value ? new DecimalNumber($value) : null;
         $this->orderInvoiceId = $orderInvoiceId ? new OrderInvoiceId($orderInvoiceId) : null;
+        $this->valueTaxIncluded = $valueTaxIncluded;
+    }
+
+    /**
+     * Whether the amount was stated with tax. A shop pricing a group tax excluded needs to give a net
+     * figure, and the amount alone does not say which of the two it is.
+     */
+    public function isValueTaxIncluded(): bool
+    {
+        return $this->valueTaxIncluded;
     }
 
     /**
